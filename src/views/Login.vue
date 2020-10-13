@@ -60,12 +60,15 @@ export default {
   methods: {
 
     login() {
-      const payload = {
+      const userCredentials = {
         email: this.email,
         password: this.password
       }
 
-      console.log(payload);
+      // TODO: To check for user role, then redirect to respective pages
+      this.$store.dispatch('login', userCredentials)
+          .then(() => this.$router.push('/teachers'))
+          .catch(err => console.log(err))
     }
 
   }
