@@ -6,40 +6,57 @@ import store from '@/store/index'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router
 
 router.beforeEach((to, from, next) => {
 
-  // If path is login, check if user is logged in. If yes, then redirect to home
-  if (to.path === '/login') {
-    if (store.getters.isLoggedIn) {
-      next('/')
+    // If path is login, check if user is logged in. If yes, then redirect to home
+    if (to.path === '/login') {
+        if (store.getters.isLoggedIn) {
+            next('/')
+        }
     }
-  }
 
-  // Check if authRequired. Redirect to login if user is not logged in
-  if(to.matched.some(record => record.meta.authRequired)) {
+    // If route has guard 'checkAuth'.
+    if (to.matched.some(record => record.meta.checkAuth)) {
 
-    if (store.getters.isLoggedIn) {
+        let isAllowed = false;
 
-      let authUserDetails = store.getters.getAuthUser;
+        // Check if user is logged in.
+        if (store.getters.isLoggedIn) {
 
-      // Check if authenticated user's details does not exist. If no, get.
-      if (Object.keys(authUserDetails).length === 0 && authUserDetails.constructor === Object) {
-        store.dispatch('setAuthUser')
-      }
+            let authUserDetails = store.getters.getAuthUser;
 
-      next()
-      return
+            // Check if authenticated user's details does not exist. If no, get.
+            if (Object.keys(authUserDetails).length === 0 && authUserDetails.constructor === Object) {
+                store.dispatch('setAuthUser')
+            }
+
+            // If route has guard 'checkRole'
+            if (to.matched.some(record => record.meta.checkRole)) {
+
+              console.log(`Route: ${to.meta.checkRole}`)
+
+              console.log(`User: ${store.getters.getAuthUserRole}`)
+              // if (store.getters.getAuthUserRole) {
+              //
+              // }
+            }
+
+        }  else {
+            next('/login')
+        }
+
     }
-    next('/login')
-  } else {
-    next()
-  }
+
+    // If route is open to public, allow next
+    else {
+        next()
+    }
 
 })
