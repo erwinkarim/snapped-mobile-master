@@ -4,17 +4,18 @@ import TeacherHome from "@/views/teachers/TeacherHome";
 
 export default [
     {
-        path: '/',
-        name: 'home',
-        component: TeacherHome,
-        meta: {
-            authRequired: 'true'
-        }
-    },
-    {
         path: '/login',
         name: 'login',
         props: true,
         component: Login,
+    },
+    {
+        path: '/home',
+        name: 'home',
+        component: TeacherHome,
+        meta: {
+            checkAuth: 'true',
+            checkRole: 'Teacher'
+        }
     },
 ]
