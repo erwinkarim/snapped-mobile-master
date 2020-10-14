@@ -10,12 +10,12 @@ export default [
         component: Login,
     },
     {
-        path: '/',
+        path: '/home',
         name: 'home',
         component: TeacherHome,
         meta: {
             checkAuth: 'true',
-            checkRole: 'student'
+            checkRole: 'Teacher'
         }
-    }
+    },
 ]

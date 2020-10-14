@@ -13,7 +13,7 @@ export default {
         state.status = ''
         state.token = ''
     },
-    set_auth_user_details(state, user) {
-        state.authUser = user
+    set_auth_user_details(state, userDetails) {
+        state.authUser = userDetails
     },
 }
