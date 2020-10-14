@@ -8,6 +8,10 @@ export default {
 
     logout(payload) {
         return Repository.post('/logout', payload)
+    },
+
+    getUserDetails () {
+        return Repository.post('/details')
     }
 
 }

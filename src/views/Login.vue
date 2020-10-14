@@ -40,6 +40,8 @@
 <script>
 import AppLogo from "@/components/icons/AppLogo";
 import IconBase from "@/components/IconBase";
+import axios from "axios";
+import Repository from "@/repositories/Repository";
 
 export default {
   name: "Login",
@@ -65,12 +67,20 @@ export default {
         password: this.password
       }
 
-      // TODO: To check for user role, then redirect to respective pages
       this.$store.dispatch('login', userCredentials)
-          .then(() => this.$router.push('/teachers'))
-          .catch(err => console.log(err))
-    }
+          .then((response) => {
 
+            // Make request to get user details
+            this.$store.dispatch('setAuthUser')
+              .then(role => {
+
+                // Redirect to pages according to roles
+                if (role === 'Teacher') this.$router.push('/')
+                if (role === 'Student') this.$router.push('/students')
+              })
+                .catch(err => console.log('masalah'))
+          })
+    }
   }
 }
 </script>

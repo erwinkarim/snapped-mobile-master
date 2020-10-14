@@ -6,7 +6,7 @@ export default [
     {
         path: '/',
         name: 'home',
-        component: Home,
+        component: TeacherHome,
         meta: {
             authRequired: 'true'
         }
@@ -17,12 +17,4 @@ export default [
         props: true,
         component: Login,
     },
-    {
-        path: '/teachers',
-        name: 'teacher.home',
-        component: TeacherHome,
-        meta: {
-            authRequired: 'true'
-        }
-    }
 ]

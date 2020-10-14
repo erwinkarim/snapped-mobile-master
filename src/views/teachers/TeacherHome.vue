@@ -1,7 +1,6 @@
 <template>
 
   <div class="flex flex-col w-screen h-screen px-5">
-
     <div class="w-3/4 mt-4">
       <icon-base width="190" height="100" icon-name="app-logo" view-box="0 0 249 18">
         <AppLogo/>
@@ -15,7 +14,7 @@
             alt="..." class="shadow rounded-full max-w-full h-auto align-middle border-none"/>
       </div>
       <div class="flex flex-col w-full bg-yellow-500 text-left">
-        <h1 class="">Welcome, Nor Afiq</h1>
+        <h1 class="">Welcome, {{ username }}</h1>
 
         <div class="flex flex-row">
           <span class="pr-2">15 Jun 2020</span>
@@ -29,6 +28,15 @@
         </icon-base>
       </div>
     </div>
+
+    <div>
+      Role: {{userRole}}
+    </div>
+
+    <div class="flex flex-col text-left">
+      <section-title>Your Classes</section-title>
+    </div>
+
   </div>
 </template>
 
@@ -36,13 +44,23 @@
 import IconBase from "@/components/IconBase";
 import AppLogo from "@/components/icons/AppLogo";
 import PlusIcon from "@/components/icons/PlusIcon";
+import SectionTitle from "@/components/SectionTitle";
 
 export default {
   name: "Home",
   components: {
+    SectionTitle,
     AppLogo,
     IconBase,
     PlusIcon
+  },
+  computed: {
+    username() {
+      return this.$store.getters.getAuthUsername
+    },
+    userRole () {
+      return this.$store.getters.getAuthUserRole
+    },
   },
 }
 </script>
