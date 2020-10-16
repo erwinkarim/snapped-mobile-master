@@ -57,17 +57,17 @@ router.beforeEach((to, from, next) => {
             let authUserDetails = store.getters.getAuthUser;
             if (Object.keys(authUserDetails).length === 0 && authUserDetails.constructor === Object) {
                 store.dispatch('setAuthUser')
-            }
-
-            // If route has guard 'checkRole'
-            if (to.matched.some(record => record.meta.checkRole)) {
-
-                if (store.getters.getAuthUserRole === to.meta.checkRole) {
-                    return next()
-                } else {
-                    console.log('No Access!')
-                    return next(false)
-                }
+                    .then(response => {
+                        // If route has guard 'checkRole'
+                        if (to.matched.some(record => record.meta.checkRole)) {
+                            if (store.getters.getAuthUserRole === to.meta.checkRole) {
+                                return next()
+                            } else {
+                                console.log('No Access!')
+                                return next(false)
+                            }
+                        }
+                    })
             }
 
         } else {
