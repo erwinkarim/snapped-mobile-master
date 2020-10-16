@@ -1,6 +1,5 @@
-import Home from "@/views/Home";
 import Login from "@/views/Login";
-import TeacherHome from "@/views/teachers/TeacherHome";
+import TeacherHome from "@/views/teachers/TeacherHome/TeacherHome";
 
 export default [
     {
@@ -17,5 +16,5 @@ export default [
             checkAuth: 'true',
             checkRole: 'Teacher'
         }
-    },
+    }
 ]

@@ -1,8 +1,7 @@
 import axios from "axios"
 import store from "@/store/index"
 
-const baseDomain = 'http://snapped-system.test';
-const baseURL = `${baseDomain}/api`;
+const baseURL = process.env.VUE_APP_BACKEND_ENDPOINT;
 
 const Repository = axios.create({
     baseURL,

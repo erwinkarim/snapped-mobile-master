@@ -5,6 +5,7 @@
        :viewBox="viewBox"
        :aria-labelledby="iconName"
        role="presentation"
+       preserveAspectRatio="xMidYMid meet"
   >
     <title
         :id="iconName"
@@ -27,19 +28,19 @@ export default {
     },
     width: {
       type: [Number, String],
-      default: 18
+      default: null
     },
     height: {
       type: [Number, String],
-      default: 18
+      default: null
     },
     viewBox: {
       type: [Number, String],
-      default: "0 0 18 18"
+      default: "0 0 60 55"
     },
     iconColor: {
       type: String,
-      default: 'currentColor'
+      default: 'white'
     }
   }
 }
