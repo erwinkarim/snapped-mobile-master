@@ -75,7 +75,7 @@ export default {
               .then(role => {
 
                 // Redirect to pages according to roles
-                if (role === 'Teacher') this.$router.push({name: 'home'})
+                if (role === 'Teacher') this.$router.push({name: 'teacher.home'})
                 if (role === 'Student') this.$router.push('/students')
               })
                 .catch(err => console.log('masalah'))

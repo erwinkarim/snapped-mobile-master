@@ -1,8 +1,7 @@
 <template>
 
-  <TeacherDashboard>
-    <div class="flex flex-col w-screen px-5">
-      <div class="w-3/4 mt-10">
+  <teacher-dashboard>
+      <div class="w-3/4">
         <icon-base width="190" height="70" icon-name="app-logo" view-box="0 0 320 18">
           <AppLogo/>
         </icon-base>
@@ -35,7 +34,7 @@
           <section-title class="mb-5">Your Classes</section-title>
         </div>
 
-        <ClassesSwiper class="mt-3"/>
+        <ClassesSwiper class="w-full mt-3"/>
       </div>
 
       <!-- SECTION: CLASSES -->
@@ -53,10 +52,7 @@
         </div>
         <submission-card/>
       </div>
-
-
-    </div>
-  </TeacherDashboard>
+  </teacher-dashboard>
 
 </template>
 

@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
             store.commit('auth_success', localStorage.getItem('token'))
             store.dispatch('setAuthUser')
                 .then(response => {
-                        return next({name: 'home'})
+                        return next({name: 'teacher.home'})
                     }
                 )
 
@@ -42,7 +42,7 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
 
         if (store.getters.isLoggedIn) {
-            return next({name: 'home'})
+            return next({name: 'teacher.home'})
         }
         return next()
     }
@@ -56,6 +56,7 @@ router.beforeEach((to, from, next) => {
             // Check if authenticated user's details does not exist. If no, get.
             let authUserDetails = store.getters.getAuthUser;
             if (Object.keys(authUserDetails).length === 0 && authUserDetails.constructor === Object) {
+
                 store.dispatch('setAuthUser')
                     .then(response => {
                         // If route has guard 'checkRole'
@@ -68,6 +69,16 @@ router.beforeEach((to, from, next) => {
                             }
                         }
                     })
+            } else {
+                if (to.matched.some(record => record.meta.checkRole)) {
+
+                    if (store.getters.getAuthUserRole === to.meta.checkRole) {
+                        return next()
+                    } else {
+                        console.log('No Access here!')
+                        return next(false)
+                    }
+                }
             }
 
         } else {
