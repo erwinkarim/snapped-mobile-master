@@ -1,6 +1,8 @@
 <template>
-  <div class="h-screen">
+  <div class="h-screen pt-8">
+    <div class="flex flex-col w-screen px-5">
     <slot/>
+    </div>
     <bottom-navbar/>
   </div>
 </template>

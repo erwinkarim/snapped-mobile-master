@@ -3,40 +3,32 @@
 
     <div id="tabs" class="flex h-full">
 
-      <div class="w-1/5 pt-1 relative pl-8">
-        <router-link to="/home">
+      <div class="w-1/5 pt-1 relative pl-8"  @click="pushTo('teacher.home')">
             <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
               <HomeIcon/>
             </icon-base>
-        </router-link>
       </div>
-      <div class="w-1/5 pt-1 relative pl-5">
-        <router-link to="/classes">
+      <div class="w-1/5 pt-1 relative pl-5" @click="pushTo('teacher.classes')">
+<!--        <router-link to="{name: 'teacher.students'}">-->
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="-5 5 60 55">
             <ClassIcon/>
           </icon-base>
-        </router-link>
+<!--        </router-link>-->
       </div>
-      <div class="w-1/5 pt-1 relative pl-3">
-        <router-link to="/students">
+      <div class="w-1/5 pt-1 relative pl-3" @click="pushTo('teacher.home')">
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
             <StudentIcon/>
           </icon-base>
-        </router-link>
       </div>
-      <div class="w-1/5 pt-1 relative pl-3">
-        <router-link to="/assignments">
+      <div class="w-1/5 pt-1 relative pl-3" @click="pushTo('teacher.home')">
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
           <AssignmentIcon/>
           </icon-base>
-        </router-link>
       </div>
-      <div class="w-1/5 pt-1 relative pl-5">
-        <router-link to="/settings">
+      <div class="w-1/5 pt-1 relative pl-5" @click="pushTo('teacher.home')">
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
             <SettingIcon/>
           </icon-base>
-        </router-link>
       </div>
 
 
@@ -56,6 +48,7 @@ import ClassIcon from "@/components/icons/ClassIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import IconBase from "@/components/IconBase";
+import Router from "@/router";
 
 export default {
   name: "BottomNavbar",
@@ -67,6 +60,11 @@ export default {
     HomeIcon,
     PlusIcon,
     IconBase
+  },
+  methods: {
+    pushTo (routeName) {
+      this.$router.push({name: routeName});
+    }
   }
 }
 </script>

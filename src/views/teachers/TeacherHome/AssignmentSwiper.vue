@@ -12,8 +12,8 @@
             <div class="flex flex-row">
 
               <div class="flex flex-row w-3/4 text-left text-px-10 text-purple-secondary">
-                <div class="w-1/4"> {{item.subjectID}} </div>
-                <div class="w-1/4"> {{item.classroomID}} </div>
+                <div class="w-1/4"> {{item.subjectName}} </div>
+                <div class="w-1/4"> {{item.classroomName}} </div>
                 <div class="w-2/4"> {{ getHumanDate(item.dueDatetime)}}</div>
               </div>
 
@@ -88,8 +88,8 @@ export default {
 
               let assignmentDetail = {
                 assignmentID: item.id,
-                subjectID: item.subject_id,
-                classroomID: item.classroom_id,
+                subjectName: item.subject_name,
+                classroomName: item.classroom_name,
                 title: item.title,
                 description: item.written_description,
                 dueDatetime: item.due_datetime,

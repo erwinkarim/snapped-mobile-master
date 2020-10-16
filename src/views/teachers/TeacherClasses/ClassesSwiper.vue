@@ -3,7 +3,7 @@
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
         <div class="swiper-slide" :key="item.classID" v-for="item in classes">
-          <div class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
+          <div @click="goToClass(item.classID)" class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
 
             <div class="flex-grow">
               <icon-base width="100" height="50" icon-name="app-logo" icon-color="white" view-box="0 0 105 50">
@@ -30,40 +30,37 @@
         </div>
       </div>
       <div class="swiper-pagination"></div>
-<!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
-<!--      <div class="swiper-button-next" slot="button-next"></div>-->
+      <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
+      <!--      <div class="swiper-button-next" slot="button-next"></div>-->
     </div>
   </div>
-
 </template>
 
 <script>
-
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import 'swiper/swiper-bundle.css'
-import StackedProfilePhoto from "@/components/icons/ProfilePhotoStacked";
-import IconBase from "@/components/IconBase";
-import BookmarkIcon from "@/components/icons/BookmarkIcon";
-import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import TeacherRepository from "@/repositories/TeacherRepository";
-
+import IconBase from "@/components/IconBase";
+import ProfilePhoto from "@/components/icons/ProfilePhoto";
+import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
+import BookmarkIcon from "@/components/icons/BookmarkIcon";
+import router from "@/router";
 
 export default {
-  components: {ProfilePhotoStacked, BookmarkIcon, IconBase, StackedProfilePhoto},
+  name: "ClassesSwiper",
+  components: {BookmarkIcon, ProfilePhotoStacked, IconBase},
   directives: {
     mySwiper: directive
   },
-  data() {
+  data(){
     return {
       classes: [],
-      banners:
-          ['/1.jpg', '/2.jpg', '/3.jpg'],
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
         speed: 200,
-        slidesPerView: 2.4,
-        spaceBetween: 15,
+        slidesPerView: 2,
+        spaceBetween: 30,
         freeMode: false,
         loop: false,
         pagination: {
@@ -80,8 +77,7 @@ export default {
     }
   },
   methods: {
-    getClasses: function () {
-
+    getClasses(){
       TeacherRepository.getTeacherClasses()
           .then(response => {
 
@@ -101,14 +97,15 @@ export default {
             }
 
           })
-
+    },
+    goToClass (classID) {
+      router.push({ name: 'teacher.classes.subjects', params: { classID: classID } })
     }
   },
   mounted() {
     this.getClasses()
   }
 }
-
 </script>
 
 <style scoped>
