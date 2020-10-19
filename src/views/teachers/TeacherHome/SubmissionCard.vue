@@ -4,7 +4,7 @@
     <div class="flex flex-row items-center h-full">
 
       <div class="w-1/6 relative h-full p-0">
-        <icon-base class="absolute h-full w-5/6" icon-name="app-logo" icon-color="white" view-box="-5 0 60 55">
+        <icon-base class="absolute h-full w-5/6" icon-name="profile-photo-icon" icon-color="white" view-box="-5 0 60 55">
           <ProfilePhoto/>
         </icon-base>
       </div>
@@ -21,8 +21,8 @@
       </div>
 
       <div class="w-1/6 relative h-full pl-5">
-        <icon-base class="absolute h-full w-full" icon-name="app-logo" icon-color="white" view-box="-15 -20 60 55">
-          <RightArrowIcon/>
+        <icon-base class="absolute h-full w-full" icon-name="arrow-right-icon" icon-color="white" view-box="-15 -20 60 55">
+          <ArrowRightIcon/>
         </icon-base>
       </div>
 
@@ -34,11 +34,12 @@
 <script>
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import IconBase from "@/components/IconBase";
-import RightArrowIcon from "@/components/icons/RightArrowIcon";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
+
 export default {
 name: "SubmissionCard",
   components: {
-    RightArrowIcon,
+    ArrowRightIcon,
     IconBase,
     ProfilePhoto
 

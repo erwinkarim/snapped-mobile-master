@@ -99,7 +99,7 @@ export default {
           })
     },
     goToClass (classID) {
-      router.push({ name: 'teacher.classes.subjects', params: { classID: classID } })
+      router.push({ name: 'teacher.classes.details', params: { classID: classID } })
     }
   },
   mounted() {

@@ -15,17 +15,17 @@
           </icon-base>
 <!--        </router-link>-->
       </div>
-      <div class="w-1/5 pt-1 relative pl-3" @click="pushTo('teacher.home')">
+      <div class="w-1/5 pt-1 relative pl-3">
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
             <StudentIcon/>
           </icon-base>
       </div>
-      <div class="w-1/5 pt-1 relative pl-3" @click="pushTo('teacher.home')">
+      <div class="w-1/5 pt-1 relative pl-3">
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
           <AssignmentIcon/>
           </icon-base>
       </div>
-      <div class="w-1/5 pt-1 relative pl-5" @click="pushTo('teacher.home')">
+      <div class="w-1/5 pt-1 relative pl-5">
           <icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
             <SettingIcon/>
           </icon-base>

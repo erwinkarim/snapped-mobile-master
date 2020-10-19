@@ -1,32 +1,32 @@
 <template>
   <teacher-dashboard>
-    <page-title class="w-3/4 pt-5">Class</page-title>
+    <div class="px-5">
+      <page-title class="w-3/4 pt-5">Class</page-title>
 
-    <!-- SECTION : CLASS Overview -->
-    <div class="mt-8">
-      <section-title class="text-left mb-3 mb-5">Your Classes</section-title>
-      <div class="max-w-sm h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-6 py-3">
-        <div class="flex flex-row items-center h-full justify-between">
-          <div class="flex-col text-left text-purple-primary">
-            <div class="font-bold text-3xl">4</div>
-            <div class="text-sm">Current teaching class</div>
-          </div>
-          <div class="rounded-full flex items-center justify-center h-12 w-12 bg-yellow-primary">
-            <icon-base width="50" height="50" icon-name="app-logo" view-box="-18 -18 50 50">
-              <PlusIcon/>
-            </icon-base>
+      <!-- SECTION : CLASS Overview -->
+      <div class="mt-8">
+        <section-title class="text-left mb-3 mb-5">Your Classes</section-title>
+        <div class="max-w-sm h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-6 py-3">
+          <div class="flex flex-row items-center h-full justify-between">
+            <div class="flex-col text-left text-purple-primary">
+              <div class="font-bold text-3xl">4</div>
+              <div class="text-sm">Current teaching class</div>
+            </div>
+            <div class="rounded-full flex items-center justify-center h-12 w-12 bg-yellow-primary">
+              <icon-base width="50" height="50" icon-name="app-logo" view-box="-18 -18 50 50">
+                <PlusIcon/>
+              </icon-base>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- SECTION : CLASS Overview -->
+      <div class="mt-8">
+        <section-title class="text-left mb-3 mb-5">Class List</section-title>
+        <classes-swiper class="w-full"/>
+      </div>
     </div>
-
-    <!-- SECTION : CLASS Overview -->
-    <div class="mt-8">
-      <section-title class="text-left mb-3 mb-5">Class List</section-title>
-      <classes-swiper class="w-full"/>
-    </div>
-
-
   </teacher-dashboard>
 </template>
 
