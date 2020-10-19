@@ -1,7 +1,7 @@
 import Login from "@/views/Login";
 import TeacherHome from "@/views/teachers/TeacherHome/TeacherHome";
 import TeacherClasses from "@/views/teachers/TeacherClasses/TeacherClasses";
-import TeacherClassSubjectPage from "@/views/teachers/TeacherClasses/TeacherClassSubjectPage";
+import TeacherClassDetails from "@/views/teachers/TeacherClasses/TeacherClassDetails";
 
 export default [
     {
@@ -29,9 +29,9 @@ export default [
         },
     },
     {
-        path: '/teacher/classes/:classID/subjects',
-        name: 'teacher.classes.subjects',
-        component: TeacherClassSubjectPage,
+        path: '/teacher/classes/:classID/details',
+        name: 'teacher.classes.details',
+        component: TeacherClassDetails,
         meta: {
             checkAuth: 'true',
             checkRole: 'Teacher'

@@ -9,6 +9,9 @@ module.exports = {
     ],
     theme: {
         extend: {
+            spacing: {
+                '18': '4.5rem'
+            },
             fontSize: {
                 '2xs': '0.5rem',
                 'xs-plus': '0.8125rem',
@@ -43,9 +46,11 @@ module.exports = {
             },
             colors: {
                 'gray-secondary': '#F1F3F6',
+                'gray-tertiary': '#F7F7F7',
                 'purple-primary': '#3A4276',
                 'purple-secondary': '#7B7F9E',
-                'yellow-primary': '#FDB400'
+                'yellow-primary': '#FDB400',
+                'red-primary' : "#F53B57"
             }
         },
     },
