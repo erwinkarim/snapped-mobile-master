@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import BottomNavbar from "@/components/BottomNavbar";
+import BottomNavbar from "@/components/BottomNavbar/BottomNavbar";
 export default {
 name: "TeacherDashboard",
   components: {BottomNavbar},
