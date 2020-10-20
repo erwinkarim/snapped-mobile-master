@@ -1,7 +1,7 @@
 <template>
 
-  <teacher-dashboard>
-    <div class="px-5">
+  <teacher-dashboard class="pt-10">
+    <div class="px-5 ">
       <div class="w-3/4">
         <icon-base width="190" height="70" icon-name="app-logo" view-box="0 0 320 18">
           <AppLogo/>
