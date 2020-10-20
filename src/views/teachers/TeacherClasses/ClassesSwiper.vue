@@ -2,9 +2,11 @@
   <div>
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" :key="item.classID" v-for="item in classes">
-          <div @click="goToClass(item.classID)" class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
 
+        <div class="swiper-slide" v-for="(column, index) in classes">
+
+          <!-- CARD: CLASS DETAILS -->
+          <div v-for="(item, index) in column" @click="goToClass(item.classID)" class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3 mb-8">
             <div class="flex-grow">
               <icon-base width="100" height="50" icon-name="app-logo" icon-color="white" view-box="0 0 105 50">
                 <ProfilePhotoStacked/>
@@ -25,9 +27,10 @@
                 </icon-base>
               </div>
             </div>
-
           </div>
+
         </div>
+
       </div>
       <div class="swiper-pagination"></div>
       <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
@@ -51,6 +54,11 @@ export default {
   components: {BookmarkIcon, ProfilePhotoStacked, IconBase},
   directives: {
     mySwiper: directive
+  },
+  computed: {
+    numOfClasses () {
+      return this.classes.length
+    },
   },
   data(){
     return {
@@ -83,6 +91,9 @@ export default {
 
             const data = response.data.data
 
+            let column = [];
+            let cardsPerColumn = 2;
+
             for (let i = 0; i < data.length; i++) {
 
               let item = data[i];
@@ -93,13 +104,43 @@ export default {
                 numOfStudents: item.num_of_students
               }
 
-              this.classes.push(classDetail);
+              if (column.length < cardsPerColumn) {
+                column.push(classDetail)
+              }
+
+              if (column.length === cardsPerColumn || i === data.length) {
+                this.classes.push(column)
+                column = []
+              }
+
+
+
+
+
+              // if (typeof classBlocks[blockIndex] === 'undefined') {
+              //   console.log('first')
+              //   classBlocks[blockIndex] = [];
+              // } else if (classBlocks[blockIndex].length === 4) {
+              //   console.log('masuk')
+              //
+              //   blockIndex++;
+              //   classBlocks[blockIndex] = []
+              // }
+              //
+              // classBlocks[blockIndex].push(classDetail);
             }
 
+            console.log(this.classes)
+            // console.log(classBlocks)
+            // this.classes.push(classBlocks);
           })
     },
     goToClass (classID) {
       router.push({ name: 'teacher.classes.details', params: { classID: classID } })
+    },
+
+    checkEvenNumber (number) {
+      return number % 2 === 0
     }
   },
   mounted() {

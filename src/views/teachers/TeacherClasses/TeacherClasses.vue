@@ -1,5 +1,5 @@
 <template>
-  <teacher-dashboard>
+  <teacher-dashboard  class="pt-10">
     <div class="px-5">
       <page-title class="w-3/4 pt-5">Class</page-title>
 
@@ -40,7 +40,15 @@ import ClassesSwiper from "@/views/teachers/TeacherClasses/ClassesSwiper";
 
 export default {
   name: "TeacherClasses",
-  components: {ClassesSwiper, PlusIcon, IconBase, SectionTitle, PageTitle, TeacherDashboard}
+
+  components: {
+    ClassesSwiper,
+    PlusIcon,
+    IconBase,
+    SectionTitle,
+    PageTitle,
+    TeacherDashboard
+  }
 }
 </script>
 
