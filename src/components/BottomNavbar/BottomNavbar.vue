@@ -13,17 +13,17 @@
           <ClassIcon/>
         </bottom-navbar-icon-base>
       </router-link>
-      <router-link  :to="{name: 'teacher.home'}" class="w-1/5 pt-1 relative pl-3" exact>
+      <router-link  :to="{name: 'teacher.students'}" class="w-1/5 pt-1 relative pl-3" exact>
         <bottom-navbar-icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
           <StudentIcon/>
         </bottom-navbar-icon-base>
       </router-link>
-      <router-link  :to="{name: 'teacher.home'}" class="w-1/5 pt-1 relative pl-3" exact>
+      <router-link  :to="{name: 'teacher.assignments'}" class="w-1/5 pt-1 relative pl-3" exact>
         <bottom-navbar-icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
           <AssignmentIcon/>
         </bottom-navbar-icon-base>
       </router-link>
-      <router-link  :to="{name: 'teacher.home'}" class="w-1/5 pt-1 relative pl-5" exact>
+      <router-link  :to="{name: 'teacher.settings'}" class="w-1/5 pt-1 relative pl-5" exact>
         <bottom-navbar-icon-base class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 5 60 55">
           <SettingIcon/>
         </bottom-navbar-icon-base>
