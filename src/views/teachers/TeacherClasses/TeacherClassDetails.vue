@@ -1,25 +1,32 @@
 <template>
-  <teacher-dashboard class="pt-18">
-    <div class="px-5">
-      <div class="flex flex-row justify-between">
+  <teacher-dashboard >
+
+    <div :class="headerClass" class="w-full h-50 bg-white"  v-scroll="handleScroll">
+
+      <div class="flex flex-row w-full justify-between fixed pt-16 px-5 bg-white">
 
         <nav-back class="w-1/3"/>
 
+        <div :class="pageTitleTwoClass" class="text-xl font-bold text-purple-primary">
+          Class
+        </div>
+
         <div class="w-1/3 items-center flex flex-row justify-end">
-          <div class="relative h-full w-1/2">
-            <icon-base class="absolute" icon-name="filter-icon" icon-color="white" view-box="-15 -3 60 55">
+          <div class="relative w-1/2 h-full ">
+            <icon-base class="absolute" icon-name="filter-icon" icon-color="white" view-box="-10 -5 60 55">
               <FilterIcon/>
             </icon-base>
           </div>
-          <div class="text-lg text-red-primary">
+          <div class="text-lg text-right text-red-primary">
             Edit
           </div>
         </div>
+
       </div>
 
-      <page-title class="w-3/4 pt-3">Class</page-title>
+      <page-title :class="pageTitleClass" class="w-3/4 mt-28 px-5">Class</page-title>
 
-      <div class="relative w-full ">
+      <div :class="searchBarClass" class="px-5 pb-4">
         <div class="relative h-full pl-2">
           <icon-base class="absolute w-1/6 pt-4" icon-name="arrow-right-icon" icon-color="white" view-box="0 -2 60 55">
             <magnifying-glass-icon/>
@@ -31,8 +38,8 @@
       </div>
     </div>
 
+    <subjects-list class=""/>
 
-    <subjects-list class="mt-4"/>
   </teacher-dashboard>
 </template>
 
@@ -46,6 +53,8 @@ import IconBase from "@/components/IconBase";
 import FilterIcon from "@/components/icons/FilterIcon";
 import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
 import NavBack from "@/components/NavBack";
+import '@/directives/scroll'
+
 
 export default {
   name: "TeacherClassDetails",
@@ -61,7 +70,37 @@ export default {
   },
   data() {
     return {
-      search: ''
+      search: '',
+      isScrolledDownTwo: false,
+    }
+  },
+  computed: {
+    pageTitleClass: function() {
+      if (this.isScrolledDownTwo) {
+        return 'hidden'
+      }
+    },
+    pageTitleTwoClass: function() {
+      if (this.isScrolledDownTwo) {
+        return 'transition-opacity duration-400 opacity-100'
+      }
+
+      return 'transition-opacity duration-100 opacity-0'
+    },
+    searchBarClass: function() {
+      if (this.isScrolledDownTwo) {
+        return 'mt-28'
+      }
+    },
+    headerClass: function() {
+      if (this.isScrolledDownTwo) {
+        return 'fixed z-40'
+      }
+    },
+  },
+  methods: {
+    handleScroll: function (evt, el) {
+      this.isScrolledDownTwo  = window.scrollY > 50
     }
   }
 }

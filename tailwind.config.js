@@ -10,7 +10,12 @@ module.exports = {
     theme: {
         extend: {
             spacing: {
-                '18': '4.5rem'
+                '18': '4.5rem',
+                '26': '6.5rem',
+                '28': '7rem',
+                '58': '14.5rem',
+                '60': '15rem',
+                '62': '15.5rem',
             },
             fontSize: {
                 '2xs': '0.5rem',
@@ -39,6 +44,7 @@ module.exports = {
             height: {
                 '14': '3.5rem',
                 '18': '4.5rem',
+                '26': '6.5rem',
                 '28': '7rem',
                 '30': '7.5rem',
                 '44': '11rem',

@@ -1,10 +1,10 @@
 <template>
-  <div v-my-swiper="swiperOption">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide" :key="subject.subject_title" v-for="subject in subjects">
+
+  <div class="mb-20" :class="containerClass" v-scroll="handleScroll">
+      <div :key="subject.subject_title" v-for="subject in subjects">
 
         <!-- Subject Title + Period -->
-        <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
+        <div :class="titleClass" class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
           {{ subject.subject_title }}, {{ subject.period }}
         </div>
 
@@ -18,8 +18,8 @@
           <div class="ml-5 text-purple-primary">{{ student.first_name }}</div>
         </div>
       </div>
-    </div>
   </div>
+
 </template>
 
 <script>
@@ -27,37 +27,19 @@ import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
-
+import '@/directives/scroll'
 
 export default {
   name: "SubjectsList",
   components: {ProfilePhoto, IconBase},
-  directives: {
-    mySwiper: directive
-  },
   data() {
     return {
       loading: false,
       subjects: null,
       error: null,
-      swiperOption: {
-        initialSlide: 0,
-        direction: 'vertical',
-        speed: 200,
-        spaceBetween: 30,
-        freeMode: false,
-        loop: false,
-        pagination: {
-          el: '.swiper-pagination',
-          type: 'bullets',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev'
-        },
-        autoplay: false
-      }
+      isScrolledDownTwo: false,
+      isScrolledUp: false,
+      scrollLocation: 0
     }
   },
   created() {
@@ -65,6 +47,21 @@ export default {
   },
   watch: {
     '$route': 'fetchData'
+  },
+  computed: {
+    titleClass: function () {
+      if (this.isScrolledDownTwo) {
+        // return 'mt-60'
+      }
+    },
+    containerClass: function () {
+      if (this.isScrolledDownTwo) {
+        return 'mt-58'
+      }
+      if (this.isScrolledUp) {
+        return 'mt-0'
+      }
+    }
   },
   methods: {
 
@@ -81,6 +78,23 @@ export default {
           .catch(err => {
 
           })
+    },
+    handleScroll: function (evt, el) {
+
+      if (window.scrollY > 50 && window.scrollY > this.scrollLocation) {
+        let status = window.scrollY > 50
+        this.isScrolledDownTwo  = status
+        this.isScrolledUp  = !status
+      }
+
+      if (window.scrollY < 50 && window.scrollY < this.scrollLocation) {
+        let status = window.scrollY < 50
+        this.isScrolledUp  = status
+        this.isScrolledDownTwo  = !status
+      }
+
+      this.scrollLocation = window.scrollY
+
     }
   }
 }
