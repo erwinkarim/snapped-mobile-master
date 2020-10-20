@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen">
-    <div class="flex flex-col w-screen">
+    <div class="flex flex-col w-screen mb-24">
     <slot/>
     </div>
     <bottom-navbar/>
