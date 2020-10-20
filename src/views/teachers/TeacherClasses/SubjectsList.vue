@@ -4,7 +4,7 @@
       <div :key="subject.subject_title" v-for="subject in subjects">
 
         <!-- Subject Title + Period -->
-        <div :class="titleClass" class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
+        <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
           {{ subject.subject_title }}, {{ subject.period }}
         </div>
 
@@ -39,7 +39,8 @@ export default {
       error: null,
       isScrolledDownTwo: false,
       isScrolledUp: false,
-      scrollLocation: 0
+      scrollLocation: 0,
+      setStickySearchBar: false
     }
   },
   created() {
@@ -49,14 +50,9 @@ export default {
     '$route': 'fetchData'
   },
   computed: {
-    titleClass: function () {
-      if (this.isScrolledDownTwo) {
-        // return 'mt-60'
-      }
-    },
     containerClass: function () {
-      if (this.isScrolledDownTwo) {
-        return 'mt-58'
+      if (this.setStickySearchBar) {
+        return 'mt-17'
       }
       if (this.isScrolledUp) {
         return 'mt-0'
@@ -92,6 +88,8 @@ export default {
         this.isScrolledUp  = status
         this.isScrolledDownTwo  = !status
       }
+
+      this.setStickySearchBar  = window.scrollY > 54
 
       this.scrollLocation = window.scrollY
 
