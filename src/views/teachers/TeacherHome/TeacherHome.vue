@@ -28,7 +28,9 @@
           </icon-base>
         </div>
       </div>
+    </div>
 
+    <div class="pl-5">
       <!-- SECTION: CLASSES -->
       <div class="mt-2">
         <div class="text-left mb-3">
@@ -38,7 +40,7 @@
         <ClassesSwiper class="w-full mt-3"/>
       </div>
 
-      <!-- SECTION: CLASSES -->
+      <!-- SECTION: ASSIGNMENTS -->
       <div class="mt-6">
         <div class="text-left mb-3">
           <section-title class="mb-5">Active Assignments</section-title>
@@ -46,7 +48,7 @@
         <AssignmentSwiper class="mt-3"/>
       </div>
 
-      <!-- SECTION: CLASSES -->
+      <!-- SECTION: SUBMISSIONS -->
       <div class="mt-8">
         <div class="text-left mb-3">
           <section-title class="mb-5">Submissions</section-title>

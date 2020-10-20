@@ -2,7 +2,7 @@
   <div>
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" :key="item.classID" v-for="item in classes">
+        <div class="swiper-slide" @click="goToClass(item.classID)" :key="item.classID" v-for="item in classes">
           <div class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
 
             <div class="flex-grow">
@@ -46,6 +46,7 @@ import IconBase from "@/components/IconBase";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import TeacherRepository from "@/repositories/TeacherRepository";
+import router from "@/router";
 
 
 export default {
@@ -56,13 +57,11 @@ export default {
   data() {
     return {
       classes: [],
-      banners:
-          ['/1.jpg', '/2.jpg', '/3.jpg'],
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
         speed: 200,
-        slidesPerView: 2.4,
+        slidesPerView: 2.3,
         spaceBetween: 15,
         freeMode: false,
         loop: false,
@@ -101,8 +100,12 @@ export default {
             }
 
           })
+    },
 
-    }
+    goToClass (classID) {
+      router.push({ name: 'teacher.classes.details', params: { classID: classID } })
+    },
+
   },
   mounted() {
     this.getClasses()

@@ -112,27 +112,7 @@ export default {
                 this.classes.push(column)
                 column = []
               }
-
-
-
-
-
-              // if (typeof classBlocks[blockIndex] === 'undefined') {
-              //   console.log('first')
-              //   classBlocks[blockIndex] = [];
-              // } else if (classBlocks[blockIndex].length === 4) {
-              //   console.log('masuk')
-              //
-              //   blockIndex++;
-              //   classBlocks[blockIndex] = []
-              // }
-              //
-              // classBlocks[blockIndex].push(classDetail);
             }
-
-            console.log(this.classes)
-            // console.log(classBlocks)
-            // this.classes.push(classBlocks);
           })
     },
     goToClass (classID) {
