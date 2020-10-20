@@ -1,6 +1,6 @@
 <template>
     <button @click="goBack" class="relative h-full w-1/5 focus:bg-transparent focus:outline-none">
-      <icon-base class="absolute" icon-name="arrow-right-icon" icon-color="white" view-box="0 0 60 55">
+      <icon-base class="absolute" icon-name="arrow-right-icon" view-box="0 5 60 55">
         <arrow-back-icon/>
       </icon-base>
     </button>
