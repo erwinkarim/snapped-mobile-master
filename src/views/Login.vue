@@ -17,9 +17,9 @@
       </div>
 
       <div class="mb-8">
-        <input v-model="password"
+        <input v-model="password" type="password"
                class="appearance-none border rounded border-none w-full py-2 pl-5 pr-2 bg-gray-secondary text-gray-700 font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary h-14"
-               id="password" type="text" placeholder="Password">
+               id="password" placeholder="Password">
       </div>
 
       <button :disabled="!validateForm" @click="login" class="w-full mt-3  font-display text-purple-primary font-bold py-2 px-4 rounded-full h-14 text-lg inline-flex justify-center items-center">
