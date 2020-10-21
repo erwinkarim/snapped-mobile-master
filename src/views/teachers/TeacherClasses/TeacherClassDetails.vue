@@ -39,7 +39,7 @@
 
     </div>
 
-    <subjects-list class=""/>
+    <subjects-list class="" :search="search"/>
 
   </teacher-dashboard>
 </template>
@@ -115,7 +115,7 @@ export default {
       this.isScrolledDownOne  = window.scrollY > 32
       this.isScrolledDownTwo  = window.scrollY > 43
       this.setStickySearchBar  = window.scrollY > 54
-    },
+    }
   }
 }
 </script>
