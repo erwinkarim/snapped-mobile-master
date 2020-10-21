@@ -14,5 +14,9 @@ export default {
 
     getSubjectsWithStudentsForTeacherClass(classID) {
         return Repository.get(`${resource}/classes/${classID}/subjects`)
+    },
+
+    getTeacherStudents() {
+        return Repository.get(`${resource}/students`)
     }
 }
