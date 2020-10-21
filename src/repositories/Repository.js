@@ -1,7 +1,7 @@
 import axios from "axios"
 import store from "@/store/index"
 
-const baseURL = process.env.VUE_APP_BACKEND_ENDPOINT;
+const baseURL = process.env.VERCEL_GITHUB_COMMIT_REF === 'staging' ? process.env.VUE_APP_STAGING_BACKEND_ENDPOINT : process.env.VUE_APP_BACKEND_ENDPOINT;
 
 const Repository = axios.create({
     baseURL,
