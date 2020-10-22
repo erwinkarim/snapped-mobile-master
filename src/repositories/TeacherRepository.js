@@ -16,7 +16,11 @@ export default {
         return Repository.get(`${resource}/classes/${classID}/subjects`)
     },
 
-    getTeacherStudents() {
-        return Repository.get(`${resource}/students`)
+    getTeacherStudents({search: studentName}) {
+        return Repository.get(`${resource}/students`,{
+            params: {
+                search: studentName
+            }
+        })
     }
 }

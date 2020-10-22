@@ -31,7 +31,7 @@
 
     </div>
 
-    <students-list class="mt-48 mb-6"/>
+    <students-list class="mt-48 mb-6" :search="search"/>
 
   </teacher-dashboard>
 </template>
