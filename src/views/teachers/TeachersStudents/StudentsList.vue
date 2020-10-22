@@ -1,6 +1,7 @@
 <template>
   <div>
-      <div class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" :key="student.student_id" v-for="student in students">
+
+      <div :key="student.student_id" v-for="student in students" class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" >
         <div class="w-1/6 h-full relative">
           <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
             <profile-photo/>
@@ -8,6 +9,11 @@
         </div>
         <div class="ml-5 text-purple-primary">{{ student.name }}</div>
       </div>
+
+    <div class="mt-4 font-light text-md text-purple-secondary">
+      {{ responses }}
+    </div>
+
   </div>
 </template>
 
@@ -19,12 +25,27 @@ import ProfilePhoto from "@/components/icons/ProfilePhoto";
 export default {
   name: "StudentsList",
   components: {ProfilePhoto, IconBase},
+  props: {
+    search : String
+  },
+  computed: {
+    responses() {
+      if (this.loading === false  && (this.students === null || this.students.length === 0)) {
+        return 'Oops! No student available.'
+      }
+
+      if (this.loading === true) {
+        return ' Fetching data...'
+      }
+    }
+  },
   data() {
     return {
 
       // states
       error: null,
       loading: false,
+      awaitingSearch: false,
 
       // data
       students: null
@@ -34,7 +55,8 @@ export default {
     this.fetchData()
   },
   watch: {
-    '$route': 'fetchData'
+    '$route': 'fetchData',
+    'search' : 'searchName'
   },
   methods: {
 
@@ -42,16 +64,25 @@ export default {
       this.error = this.students = null
       this.loading = true
 
-      console.log('fetch data')
-
-      TeacherRepository.getTeacherStudents()
+      TeacherRepository.getTeacherStudents({search: this.search})
           .then(response => {
             this.students = response.data.data
+            this.loading = false
           })
           .catch(err => {
 
           })
     },
+
+    searchName() {
+      if (!this.awaitingSearch) {
+        setTimeout(() => {
+          this.fetchData();
+          this.awaitingSearch = false;
+        }, 1000); // 1 sec delay
+      }
+      this.awaitingSearch = true;
+    }
   }
 }
 </script>
