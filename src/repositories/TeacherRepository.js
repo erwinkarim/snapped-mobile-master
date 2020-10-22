@@ -17,8 +17,8 @@ export default {
     },
 
     getTeacherStudents({search: studentName}) {
-        return Repository.get(`${resource}/students`,{
-            params: {
+        return Repository.post(`${resource}/students`,{
+            filters: {
                 search: studentName
             }
         })
