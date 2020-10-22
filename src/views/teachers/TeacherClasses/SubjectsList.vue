@@ -1,23 +1,24 @@
 <template>
 
   <div class="mb-20" :class="containerClass" v-scroll="handleScroll">
-      <div :key="subject.subject_title" v-for="subject in subjects">
+    <div :key="subject.subject_title" v-for="subject in filteredSubjects">
 
-        <!-- Subject Title + Period -->
-        <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
-          {{ subject.subject_title }}, {{ subject.period }}
-        </div>
-
-        <!-- Student List for Subject -->
-        <div class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" :key="student.id" v-for="student in subject.students">
-          <div class="w-1/6 h-full relative">
-            <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
-              <profile-photo/>
-            </icon-base>
-          </div>
-          <div class="ml-5 text-purple-primary">{{ student.first_name }}</div>
-        </div>
+      <!-- Subject Title + Period -->
+      <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
+        {{ subject.subject_title }}, {{ subject.period }}
       </div>
+
+      <!-- Student List for Subject -->
+      <div class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" :key="student.id"
+           v-for="student in subject.students">
+        <div class="w-1/6 h-full relative">
+          <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
+            <profile-photo/>
+          </icon-base>
+        </div>
+        <div class="ml-5 text-purple-primary">{{ student.name }}</div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -32,22 +33,32 @@ import '@/directives/scroll'
 export default {
   name: "SubjectsList",
   components: {ProfilePhoto, IconBase},
+  props: {
+    search: String
+  },
   data() {
     return {
+
+      // States
       loading: false,
-      subjects: null,
       error: null,
       isScrolledDownTwo: false,
       isScrolledUp: false,
       scrollLocation: 0,
-      setStickySearchBar: false
+      setStickySearchBar: false,
+
+      // Data
+      subjects: null,
+      filteredSubjects: null
+
     }
   },
   created() {
     this.fetchData()
   },
   watch: {
-    '$route': 'fetchData'
+    '$route': 'fetchData',
+    'search': 'searchName'
   },
   computed: {
     containerClass: function () {
@@ -69,30 +80,45 @@ export default {
 
       TeacherRepository.getSubjectsWithStudentsForTeacherClass(classID)
           .then(response => {
-            this.subjects = response.data.data
+            this.subjects = response.data.data;
+            this.filteredSubjects = response.data.data;
           })
           .catch(err => {
 
           })
     },
+    searchName() {
+
+      // Copy original results into filterSubjects
+      this.filteredSubjects = JSON.parse(JSON.stringify(this.subjects));
+
+      this.filteredSubjects = this.filteredSubjects.map((subject) => {
+        return {
+          period: subject.period,
+          students: subject.students.filter(student => {
+            return (student.name.toLowerCase()).includes(this.search.toLowerCase())
+          }),
+          subject_title: subject.subject_title
+        }
+      })
+
+    },
     handleScroll: function (evt, el) {
 
       if (window.scrollY > 50 && window.scrollY > this.scrollLocation) {
         let status = window.scrollY > 50
-        this.isScrolledDownTwo  = status
-        this.isScrolledUp  = !status
+        this.isScrolledDownTwo = status
+        this.isScrolledUp = !status
       }
 
       if (window.scrollY < 50 && window.scrollY < this.scrollLocation) {
         let status = window.scrollY < 50
-        this.isScrolledUp  = status
-        this.isScrolledDownTwo  = !status
+        this.isScrolledUp = status
+        this.isScrolledDownTwo = !status
       }
 
-      this.setStickySearchBar  = window.scrollY > 54
-
+      this.setStickySearchBar = window.scrollY > 54
       this.scrollLocation = window.scrollY
-
     }
   }
 }
