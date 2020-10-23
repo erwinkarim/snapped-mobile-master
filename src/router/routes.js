@@ -5,6 +5,10 @@ import TeacherClassDetails from "@/views/teachers/TeacherClasses/TeacherClassDet
 import TeacherStudents from "@/views/teachers/TeachersStudents/TeacherStudents";
 import TeacherAssignments from "@/views/teachers/TeacherAssignments/TeacherAssignments";
 import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
+import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
+import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
+import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
+import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
 
 export default [
     {
@@ -54,6 +58,42 @@ export default [
             checkAuth: 'true',
             checkRole: 'Teacher'
         },
+    },
+    {
+        path: '/teacher/students/:studentID',
+        component: StudentDetails,
+        children: [
+            {
+                path: 'show',
+                name: 'teacher.students.show',
+                component: StudentBadges,
+                meta: {
+                    checkAuth: 'true',
+                    checkRole: 'Teacher'
+                },
+                props: true,
+            },
+            {
+                path: 'assignments',
+                name: 'teacher.students.show.assignments',
+                component: StudentAssignments,
+                meta: {
+                    checkAuth: 'true',
+                    checkRole: 'Teacher'
+                },
+                props: true
+            },
+            {
+                path: 'overview',
+                name: 'teacher.students.show.overview',
+                component: StudentOverview,
+                props: true,
+                meta: {
+                    checkAuth: 'true',
+                    checkRole: 'Teacher'
+                },
+            }
+        ]
     },
 
     /* TEACHER: ASSIGNMENTS */

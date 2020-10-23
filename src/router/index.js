@@ -71,7 +71,6 @@ router.beforeEach((to, from, next) => {
                     })
             } else {
                 if (to.matched.some(record => record.meta.checkRole)) {
-
                     if (store.getters.getAuthUserRole === to.meta.checkRole) {
                         return next()
                     } else {

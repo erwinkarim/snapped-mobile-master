@@ -1,5 +1,5 @@
 <template>
-  <teacher-dashboard class="">
+  <dashboard-layout class="">
     <div class="w-full bg-white flex flex-col fixed z-40">
 
       <div class="flex flex-row w-full justify-between pt-16 px-5">
@@ -33,11 +33,11 @@
 
     <students-list class="mt-48 mb-6" :search="search"/>
 
-  </teacher-dashboard>
+  </dashboard-layout>
 </template>
 
 <script>
-import TeacherDashboard from "@/views/layout/TeacherDashboard";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageTitle from "@/components/PageTitle";
 import IconBase from "@/components/IconBase";
 import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
@@ -52,7 +52,7 @@ export default {
       search: ""
     }
   },
-  components: {StudentsList, FilterIcon, NavBack, MagnifyingGlassIcon, IconBase, PageTitle, TeacherDashboard}
+  components: {StudentsList, FilterIcon, NavBack, MagnifyingGlassIcon, IconBase, PageTitle, DashboardLayout}
 }
 </script>
 
