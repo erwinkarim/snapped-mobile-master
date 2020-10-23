@@ -9,8 +9,9 @@
       </div>
 
       <!-- Student List for Subject -->
-      <div class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" :key="student.id"
-           v-for="student in subject.students">
+      <div @click="goToStudentShow(student.id)" :key="student.id" v-for="student in subject.students"
+           class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white"
+      >
         <div class="w-1/6 h-full relative">
           <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
             <profile-photo/>
@@ -29,6 +30,7 @@ import IconBase from "@/components/IconBase";
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import '@/directives/scroll'
+import router from "@/router";
 
 export default {
   name: "SubjectsList",
@@ -78,7 +80,7 @@ export default {
 
       const classID = this.$route.params.classID
 
-      TeacherRepository.getSubjectsWithStudentsForTeacherClass(classID)
+      TeacherRepository.getSubjectsWithStudentsForTeacherClass({classID: classID, search: null})
           .then(response => {
             this.subjects = response.data.data;
             this.filteredSubjects = response.data.data;
@@ -102,6 +104,11 @@ export default {
         }
       })
 
+    },
+
+
+    goToStudentShow (studentID) {
+      router.push({ name: 'teacher.students.show', params: { studentID: studentID } })
     },
     handleScroll: function (evt, el) {
 

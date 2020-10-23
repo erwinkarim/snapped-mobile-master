@@ -23,7 +23,7 @@ module.exports = {
                 '62': '15.5rem',
             },
             fontSize: {
-                '2xs': '0.5rem',
+                '2xs': '0.65rem',
                 'xs-plus': '0.8125rem',
                 'md': '1.075rem',
                 'px-10': '10px',
@@ -46,6 +46,12 @@ module.exports = {
                 '3/4' : '0.75px',
                 '1': '1px'
             },
+            borderOpacity: {
+                '5' : '0.5',
+                '10': '0.1',
+                '15': '0.15',
+                '20': '0.2'
+            },
             height: {
                 '14': '3.5rem',
                 '18': '4.5rem',
@@ -60,6 +66,7 @@ module.exports = {
                 '46': '11.5rem'
             },
             colors: {
+                'gray-primary': '#BEBEBE',
                 'gray-secondary': '#F1F3F6',
                 'gray-tertiary': '#F7F7F7',
                 'purple-primary': '#3A4276',
@@ -89,16 +96,14 @@ module.exports = {
                 '24': '6rem',
                 '26': '6.5rem',
                 '28': '7rem',
-                '30': '7.5rem',
-                '32': '8rem',
-                '34': '8.5rem',
-                '36': '9rem',
-                '38': '9.5rem',
-                '40': '10rem',
-                '42': '10.5rem',
-                '44': '11rem',
-                '46': '11.5rem',
-                '48': '12rem',
+                '90': '22.5rem',
+                '92': '23rem',
+                '94': '23.5rem',
+                '96': '24rem',
+                '98': '24.5rem'
+            },
+            boxShadow: {
+                'md-soft' : '0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.02)'
             }
         },
     },

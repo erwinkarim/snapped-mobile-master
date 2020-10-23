@@ -1,6 +1,6 @@
 <template>
 
-  <teacher-dashboard class="pt-10">
+  <dashboard-layout class="pt-10">
     <div class="px-5 ">
       <div class="w-3/4">
         <icon-base width="190" height="70" icon-name="app-logo" view-box="0 0 320 18">
@@ -57,7 +57,7 @@
       </div>
     </div>
 
-  </teacher-dashboard>
+  </dashboard-layout>
 
 </template>
 
@@ -70,14 +70,14 @@ import ClassesSwiper from "@/views/teachers/TeacherHome/ClassesSwiper";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import AssignmentSwiper from "@/views/teachers/TeacherHome/AssignmentSwiper";
 import moment from 'moment'
-import TeacherDashboard from "@/views/layout/TeacherDashboard";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 import SubmissionCard from "@/views/teachers/TeacherHome/SubmissionCard";
 
 export default {
   name: "Home",
   components: {
     SubmissionCard,
-    TeacherDashboard,
+    DashboardLayout,
     AssignmentSwiper,
     ProfilePhoto,
     ClassesSwiper,

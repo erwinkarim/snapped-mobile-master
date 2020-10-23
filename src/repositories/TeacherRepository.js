@@ -12,8 +12,12 @@ export default {
         return Repository.get(`${resource}/assignments`)
     },
 
-    getSubjectsWithStudentsForTeacherClass(classID) {
-        return Repository.get(`${resource}/classes/${classID}/subjects`)
+    getSubjectsWithStudentsForTeacherClass({classID: classID, search: studentName}) {
+        return Repository.post(`${resource}/classes/${classID}/subjects`, {
+            filters: {
+                search: studentName
+            }
+        })
     },
 
     getTeacherStudents({search: studentName}) {

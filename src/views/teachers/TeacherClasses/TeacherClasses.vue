@@ -1,5 +1,5 @@
 <template>
-  <teacher-dashboard  class="pt-10">
+  <dashboard-layout  class="pt-10">
     <div class="px-5">
       <page-title class="w-3/4 pt-5">Class</page-title>
 
@@ -27,11 +27,11 @@
         <classes-swiper class="w-full"/>
       </div>
     </div>
-  </teacher-dashboard>
+  </dashboard-layout>
 </template>
 
 <script>
-import TeacherDashboard from "@/views/layout/TeacherDashboard";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageTitle from "@/components/PageTitle";
 import SectionTitle from "@/components/SectionTitle";
 import IconBase from "@/components/IconBase";
@@ -47,7 +47,7 @@ export default {
     IconBase,
     SectionTitle,
     PageTitle,
-    TeacherDashboard
+    DashboardLayout
   }
 }
 </script>

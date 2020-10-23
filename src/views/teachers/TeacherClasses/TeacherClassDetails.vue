@@ -1,5 +1,5 @@
 <template>
-  <teacher-dashboard >
+  <dashboard-layout >
 
     <div class="w-full bg-white flex flex-col z-40"  v-scroll="handleScroll">
 
@@ -41,11 +41,11 @@
 
     <subjects-list class="" :search="search"/>
 
-  </teacher-dashboard>
+  </dashboard-layout>
 </template>
 
 <script>
-import TeacherDashboard from "@/views/layout/TeacherDashboard";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageTitle from "@/components/PageTitle";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
@@ -67,7 +67,7 @@ export default {
     SubjectsList,
     ArrowBackIcon,
     PageTitle,
-    TeacherDashboard
+    DashboardLayout
   },
   data() {
     return {

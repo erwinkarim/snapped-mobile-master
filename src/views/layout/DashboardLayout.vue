@@ -10,7 +10,7 @@
 <script>
 import BottomNavbar from "@/components/BottomNavbar/BottomNavbar";
 export default {
-name: "TeacherDashboard",
+name: "DashboardLayout",
   components: {BottomNavbar},
 }
 </script>

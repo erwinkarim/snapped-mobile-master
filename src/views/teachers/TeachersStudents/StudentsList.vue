@@ -1,13 +1,13 @@
 <template>
   <div>
 
-      <div :key="student.student_id" v-for="student in students" class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" >
+      <div  @click="goToStudentShow(student.id)" :key="student.id" v-for="student in students" class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" >
         <div class="w-1/6 h-full relative">
           <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
             <profile-photo/>
           </icon-base>
         </div>
-        <div class="ml-5 text-purple-primary">{{ student.name }}</div>
+        <div class="ml-5 text-purple-primary"> {{ student.name }}</div>
       </div>
 
     <div class="mt-4 font-light text-md text-purple-secondary">
@@ -21,6 +21,7 @@
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
+import router from "@/router";
 
 export default {
   name: "StudentsList",
@@ -82,7 +83,11 @@ export default {
         }, 1000); // 1 sec delay
       }
       this.awaitingSearch = true;
-    }
+    },
+
+    goToStudentShow (studentID) {
+      router.push({ name: 'teacher.students.show', params: { studentID: studentID } })
+    },
   }
 }
 </script>
