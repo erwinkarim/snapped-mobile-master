@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout class="">
+  <div class="">
     <div class="w-full bg-white flex flex-col fixed z-40">
 
       <div class="flex flex-row w-full justify-between pt-16 px-5">
@@ -33,7 +33,7 @@
 
     <students-list class="mt-48 mb-6" :search="search"/>
 
-  </dashboard-layout>
+  </div>
 </template>
 
 <script>

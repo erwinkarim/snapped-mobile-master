@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout >
+  <div >
 
     <div class="w-full bg-white flex flex-col z-40"  v-scroll="handleScroll">
 
@@ -41,7 +41,7 @@
 
     <subjects-list class="" :search="search"/>
 
-  </dashboard-layout>
+  </div>
 </template>
 
 <script>

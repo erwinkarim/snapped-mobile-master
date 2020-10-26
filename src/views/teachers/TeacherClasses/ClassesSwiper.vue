@@ -117,7 +117,7 @@ export default {
           })
     },
     goToClass (classID) {
-      router.push({ name: 'teacher.classes.details', params: { classID: classID } })
+      router.push({ name: 'teacher.class.details', params: { classID: classID } })
     },
     emitNumOfClasses () {
       this.$emit('numOfClasses', this.numOfClasses)

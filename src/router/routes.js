@@ -9,6 +9,7 @@ import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
 import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
 import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
 import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 
 export default [
     {
@@ -18,103 +19,115 @@ export default [
         component: Login,
     },
 
-    /* TEACHER: HOME */
+    /* TEACHER */
     {
         path: '/teacher',
-        name: 'teacher.home',
-        component: TeacherHome,
-        meta: {
-            checkAuth: 'true',
-            checkRole: 'Teacher'
-        }
-    },
-
-    /* TEACHER: CLASS */
-    {
-        path: '/teacher/classes',
-        name: 'teacher.classes',
-        component: TeacherClasses,
-        meta: {
-            checkAuth: 'true',
-            checkRole: 'Teacher'
-        },
-    },
-    {
-        path: '/teacher/classes/:classID/details',
-        name: 'teacher.classes.details',
-        component: TeacherClassDetails,
-        meta: {
-            checkAuth: 'true',
-            checkRole: 'Teacher'
-        },
-    },
-
-    /* TEACHER: STUDENTS */
-    {
-        path: '/teacher/students',
-        name: 'teacher.students',
-        component: TeacherStudents,
-        meta: {
-            checkAuth: 'true',
-            checkRole: 'Teacher'
-        },
-    },
-    {
-        path: '/teacher/students/:studentID',
-        component: StudentDetails,
+        component: DashboardLayout,
         children: [
+
+            /* TEACHER: HOME */
             {
-                path: 'show',
-                name: 'teacher.students.show',
-                component: StudentBadges,
+                path: '',
+                component: TeacherHome,
+                name: 'teacher.home',
                 meta: {
                     checkAuth: 'true',
                     checkRole: 'Teacher'
                 },
-                props: true,
             },
+
+            /* TEACHER: CLASSES */
+            {
+                path: 'classes',
+                component: TeacherClasses,
+                name: 'teacher.classes',
+                meta: {
+                    checkAuth: 'true',
+                    checkRole: 'Teacher'
+                },
+            },
+            {
+                path: 'class/:classID/details',
+                name: 'teacher.class.details',
+                component: TeacherClassDetails,
+                meta: {
+                    checkAuth: 'true',
+                    checkRole: 'Teacher'
+                },
+            },
+
+            /* TEACHER: STUDENTS */
+            {
+                path: 'students',
+                name: 'teacher.students',
+                component: TeacherStudents,
+                meta: {
+                    checkAuth: 'true',
+                    checkRole: 'Teacher'
+                },
+            },
+            {
+                path: 'student/:studentID',
+                component: StudentDetails,
+                children: [
+                    {
+                        path: 'show',
+                        name: 'teacher.student.show',
+                        component: StudentBadges,
+                        meta: {
+                            checkAuth: 'true',
+                            checkRole: 'Teacher'
+                        },
+                        props: true,
+                    },
+                    {
+                        path: 'assignments',
+                        name: 'teacher.student.show.assignments',
+                        component: StudentAssignments,
+                        meta: {
+                            checkAuth: 'true',
+                            checkRole: 'Teacher'
+                        },
+                        props: true
+                    },
+                    {
+                        path: 'overview',
+                        name: 'teacher.student.show.overview',
+                        component: StudentOverview,
+                        props: true,
+                        meta: {
+                            checkAuth: 'true',
+                            checkRole: 'Teacher'
+                        },
+                    }
+                ]
+            },
+
+            /* TEACHER: ASSIGNMENTS */
             {
                 path: 'assignments',
-                name: 'teacher.students.show.assignments',
-                component: StudentAssignments,
+                name: 'teacher.assignments',
+                component: TeacherAssignments,
                 meta: {
                     checkAuth: 'true',
                     checkRole: 'Teacher'
                 },
-                props: true
             },
+
+            /* TEACHER: SETTINGS */
             {
-                path: 'overview',
-                name: 'teacher.students.show.overview',
-                component: StudentOverview,
-                props: true,
+                path: 'settings',
+                name: 'teacher.settings',
+                component: TeacherSettings,
                 meta: {
                     checkAuth: 'true',
                     checkRole: 'Teacher'
                 },
-            }
+            },
+
         ]
     },
 
-    /* TEACHER: ASSIGNMENTS */
-    {
-        path: '/teacher/assignments',
-        name: 'teacher.assignments',
-        component: TeacherAssignments,
-        meta: {
-            checkAuth: 'true',
-            checkRole: 'Teacher'
-        },
-    },
 
-    /* TEACHER: SETTINGS */
-    {
-        path: '/teacher/settings',
-        name: 'teacher.settings',
-        component: TeacherSettings,
-        meta: {
-            checkAuth: 'true',
-            checkRole: 'Teacher'
-        },
-    },
+
 ]

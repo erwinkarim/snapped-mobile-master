@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen">
     <div class="flex flex-col w-screen mb-24">
-    <slot/>
+    <router-view/>
     </div>
     <bottom-navbar/>
   </div>

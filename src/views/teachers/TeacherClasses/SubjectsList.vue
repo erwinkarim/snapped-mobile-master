@@ -108,7 +108,7 @@ export default {
 
 
     goToStudentShow (studentID) {
-      router.push({ name: 'teacher.students.show', params: { studentID: studentID } })
+      router.push({ name: 'teacher.student.show', params: { studentID: studentID } })
     },
     handleScroll: function (evt, el) {
 

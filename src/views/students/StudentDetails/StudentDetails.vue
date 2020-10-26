@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout>
+  <div>
 
     <div class="px-5 fixed z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
@@ -37,7 +37,7 @@
 
     <router-view class="top-98 relative mb-24"/>
 
-  </dashboard-layout>
+  </div>
 </template>
 
 <script>
@@ -64,17 +64,17 @@ export default {
         {
           name: 'show',
           displayName: 'BADGES',
-          route: 'teacher.students.show'
+          route: 'teacher.student.show'
         },
         {
           name: 'assignments',
           displayName: 'ASSIGNMENT',
-          route: 'teacher.students.show.assignments'
+          route: 'teacher.student.show.assignments'
         },
         {
           name: 'overview',
           displayName: 'OVERVIEW',
-          route: 'teacher.students.show.overview'
+          route: 'teacher.student.show.overview'
         }
       ]
     }
@@ -123,10 +123,6 @@ export default {
     showTab({tabName: tabName ,route: routeName}){
       this.activeTab = tabName;
       this.navBackCounter--;
-
-      console.log(`COUNTER: ${this.navBackCounter}`)
-      console.log(`ACTIVE: ${this.activeTab}`)
-      // this.$router.push({name: routeName});
     },
     getRouteParams() {
       this.path = this.$route.path
