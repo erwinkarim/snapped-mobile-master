@@ -55,13 +55,12 @@ export default {
   directives: {
     mySwiper: directive
   },
-  computed: {
-    numOfClasses () {
-      return this.classes.length
-    },
+  watch: {
+    'numOfClasses' : 'emitNumOfClasses'
   },
   data(){
     return {
+      numOfClasses: 0,
       classes: [],
       swiperOption: {
         initialSlide: 0,
@@ -91,6 +90,8 @@ export default {
 
             const data = response.data.data
 
+            this.numOfClasses = data.length;
+
             let column = [];
             let cardsPerColumn = 2;
 
@@ -118,10 +119,9 @@ export default {
     goToClass (classID) {
       router.push({ name: 'teacher.classes.details', params: { classID: classID } })
     },
-
-    checkEvenNumber (number) {
-      return number % 2 === 0
-    }
+    emitNumOfClasses () {
+      this.$emit('numOfClasses', this.numOfClasses)
+    },
   },
   mounted() {
     this.getClasses()
