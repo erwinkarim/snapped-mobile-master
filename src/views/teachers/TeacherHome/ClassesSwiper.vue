@@ -17,7 +17,7 @@
 
             <div class="flex flex-row mt-4 text-left w-full items-end">
               <div class="text-md flex-grow pb-2">
-                <span class="">{{ item.className }} </span>
+                <span class="truncate">{{ item.className }} </span>
               </div>
               <div>
                 <icon-base width="28" height="50" icon-name="app-logo" icon-color="white" view-box="-5 5 27 27">

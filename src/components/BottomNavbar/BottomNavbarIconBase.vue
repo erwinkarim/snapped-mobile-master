@@ -59,6 +59,18 @@ export default {
   },
   watch: {
     $route(to, from) {
+      this.getActiveTab()
+    }
+  },
+  methods: {
+    isActiveTab(tabName) {
+      if (this.activeTab === tabName) {
+        return {fill: "#F53B57"};
+      }
+
+      return {fill: "#BEBEBE"};
+    },
+    getActiveTab() {
 
       if ((this.$route.path).includes('teacher/students') || (this.$route.path).includes('teacher/student')) {
         this.activeTab = 'students'
@@ -73,14 +85,8 @@ export default {
       }
     }
   },
-  methods: {
-    isActiveTab(tabName) {
-      if (this.activeTab === tabName) {
-        return {fill: "#F53B57"};
-      }
-
-      return {fill: "#BEBEBE"};
-    }
+  created() {
+    this.getActiveTab()
   }
 }
 </script>
