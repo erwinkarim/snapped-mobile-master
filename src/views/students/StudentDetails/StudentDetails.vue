@@ -8,12 +8,15 @@
       </div>
 
       <!-- SECTION: STUDENT DETAILS -->
-      <div class="flex flex-row items-center items-center mt-10 px-2">
-        <icon-base width="100" height="100" icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-          <profile-photo/>
-        </icon-base>
-        <div class="flex flex-col w-full text-left">
-          <h1 class="text-purple-primary font-bold">
+      <div class="flex flex-row items-center items-center mt-12  px-2">
+        <div class="w-3/12">
+          <icon-base  icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
+            <profile-photo/>
+          </icon-base>
+        </div>
+
+        <div class="flex flex-col w-full text-left w-3/5 truncate">
+          <h1 class="text-purple-primary font-bold ">
             {{ studentDetails.studentName }}
           </h1>
 
@@ -24,10 +27,10 @@
         </div>
       </div>
 
-      <ranking-panel/>
+      <ranking-panel class="mt-5"/>
 
       <!-- SECTION: TABS -->
-      <div class="flex mt-6 justify-between items-center">
+      <div class="flex mt-5 justify-between items-center">
         <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"  v-for="tab in tabs" :class="isActiveTab(tab.name)" class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
           {{ tab.displayName }}
         </router-link>

@@ -17,7 +17,7 @@
             <profile-photo/>
           </icon-base>
         </div>
-        <div class="ml-5 text-purple-primary">{{ student.name }}</div>
+        <div class="ml-5 text-purple-primary truncate pr-4">{{ student.name }}</div>
       </div>
     </div>
   </div>
