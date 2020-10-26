@@ -8,10 +8,10 @@
 export default {
   name: "StudentOverview",
   props: {
-    studentID: String
+    studentID:  [String, Number],
   },
   created() {
-    
+
   }
 }
 </script>

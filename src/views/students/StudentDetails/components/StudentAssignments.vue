@@ -13,9 +13,9 @@
 
       <div class="flex flex-col w-9/12 justify-between">
         <div>
-          <div class="text-left text-purple-primary text-xs-plus"> {{ assignment.title }}</div>
+          <div class="text-left text-purple-primary text-xs-plus  truncate  pr-10"> {{ assignment.title }}</div>
 
-          <div class="text-left text-purple-primary text-px-10"> {{ assignment.written_description }}</div>
+          <div class="text-left text-purple-primary text-px-10  truncate mt-2 pr-10"> {{ assignment.written_description }}</div>
 
         </div>
 
@@ -41,7 +41,7 @@ export default {
   name: "StudentAssignments",
   components: {AssignmentScoreCircle, CircleProgressBar},
   props: {
-    studentID: String
+    studentID:  [String, Number],
   },
   data() {
     return {

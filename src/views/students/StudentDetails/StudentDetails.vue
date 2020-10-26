@@ -1,19 +1,22 @@
 <template>
-  <dashboard-layout>
+  <div>
 
     <div class="px-5 fixed z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
       <div class="flex flex-row w-full justify-between pt-16">
-        <nav-back class="w-1/3"/>
+        <nav-back class="w-1/3" :counter="navBackCounter"/>
       </div>
 
       <!-- SECTION: STUDENT DETAILS -->
-      <div class="flex flex-row items-center items-center mt-10 px-2">
-        <icon-base width="100" height="100" icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-          <profile-photo/>
-        </icon-base>
-        <div class="flex flex-col w-full text-left">
-          <h1 class="text-purple-primary font-bold">
+      <div class="flex flex-row items-center items-center mt-12  px-2">
+        <div class="w-3/12">
+          <icon-base  icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
+            <profile-photo/>
+          </icon-base>
+        </div>
+
+        <div class="flex flex-col w-full text-left w-3/5 truncate">
+          <h1 class="text-purple-primary font-bold ">
             {{ studentDetails.studentName }}
           </h1>
 
@@ -24,19 +27,20 @@
         </div>
       </div>
 
-      <ranking-panel/>
+      <ranking-panel class="mt-5"/>
 
       <!-- SECTION: TABS -->
-      <div class="flex mt-6 justify-between items-center">
-        <button @click="showTab({tabName: tab.name,route: tab.route})" v-for="tab in tabs" :class="isActiveTab(tab.name)" class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1">
+      <div class="flex mt-5 justify-between items-center">
+        <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"  v-for="tab in tabs" :class="isActiveTab(tab.name)" class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
           {{ tab.displayName }}
-        </button>
+        </router-link>
       </div>
+
     </div>
 
     <router-view class="top-98 relative mb-24"/>
 
-  </dashboard-layout>
+  </div>
 </template>
 
 <script>
@@ -58,21 +62,22 @@ export default {
       studentDetails: '',
       path:'',
       activeTab: 'show',
+      navBackCounter: -1,
       tabs: [
         {
           name: 'show',
           displayName: 'BADGES',
-          route: 'teacher.students.show'
+          route: 'teacher.student.show'
         },
         {
           name: 'assignments',
           displayName: 'ASSIGNMENT',
-          route: 'teacher.students.show.assignments'
+          route: 'teacher.student.show.assignments'
         },
         {
           name: 'overview',
           displayName: 'OVERVIEW',
-          route: 'teacher.students.show.overview'
+          route: 'teacher.student.show.overview'
         }
       ]
     }
@@ -90,6 +95,9 @@ export default {
   created() {
     this.getRouteParams()
     this.fetchData()
+  },
+  mounted() {
+    this.getInitialActiveTab()
   },
   watch: {
     '$route': 'fetchData',
@@ -117,12 +125,26 @@ export default {
     },
     showTab({tabName: tabName ,route: routeName}){
       this.activeTab = tabName;
-      this.$router.push({name: routeName});
+      this.navBackCounter--;
     },
     getRouteParams() {
-
       this.path = this.$route.path
       this.studentID = this.$route.params.studentID
+    },
+    getInitialActiveTab () {
+      if (this.path === '/teacher/students/1/show') {
+        this.activeTab = 'show';
+        this.navBackCounter = -1;
+
+      }
+      if (this.path === '/teacher/students/1/assignments') {
+        this.activeTab = 'assignments';
+        this.navBackCounter = -2;
+      }
+      if (this.path === '/teacher/students/1/overview') {
+        this.activeTab = 'overview';
+        this.navBackCounter = -2;
+      }
     },
     isActiveTab(tabName){
       if (this.activeTab === tabName) {

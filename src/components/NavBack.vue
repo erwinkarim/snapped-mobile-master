@@ -13,12 +13,27 @@ import router from "@/router";
 
 export default {
   name: "NavBack",
-  components: {ArrowBackIcon, IconBase},
+  props: {
+    to: {
+      type: [String, Number],
+      default: null
+    },
+    counter: {
+      type: Number,
+      default: -1
+    }
+  },
   methods: {
     goBack () {
-      router.go(-1)
+
+      if (this.to === null) {
+        router.go(this.counter)
+      } else {
+        router.push({ name: this.to})
+      }
     }
-  }
+  },
+  components: {ArrowBackIcon, IconBase},
 }
 </script>
 

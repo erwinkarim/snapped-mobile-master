@@ -10,7 +10,7 @@
       </div>
 
       <div class="w-4/6 flex-col pl-1">
-        <div class="text-left text-purple-primary text-xs-plus mb-1">
+        <div class="text-left text-purple-primary text-xs-plus mb-1  truncate pr-4">
           Muhammad Imran Abdul Razak
         </div>
         <div class="flex flex-row text-left text-px-10 text-purple-secondary">

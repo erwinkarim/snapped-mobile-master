@@ -7,7 +7,7 @@
             <profile-photo/>
           </icon-base>
         </div>
-        <div class="ml-5 text-purple-primary"> {{ student.name }}</div>
+        <div class="ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
       </div>
 
     <div class="mt-4 font-light text-md text-purple-secondary">
@@ -86,7 +86,7 @@ export default {
     },
 
     goToStudentShow (studentID) {
-      router.push({ name: 'teacher.students.show', params: { studentID: studentID } })
+      router.push({ name: 'teacher.student.show', params: { studentID: studentID } })
     },
   }
 }
