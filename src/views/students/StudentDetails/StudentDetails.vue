@@ -60,6 +60,7 @@ export default {
     return {
       studentID: null,
       studentDetails: '',
+      studentOverview: '',
       path:'',
       activeTab: 'show',
       navBackCounter: -1,
@@ -132,17 +133,19 @@ export default {
       this.studentID = this.$route.params.studentID
     },
     getInitialActiveTab () {
-      if (this.path === '/teacher/students/1/show') {
+
+      if (this.path.includes('/show')) {
         this.activeTab = 'show';
         this.navBackCounter = -1;
-
       }
-      if (this.path === '/teacher/students/1/assignments') {
-        this.activeTab = 'assignments';
+
+      if (this.path.includes('/overview')) {
+        this.activeTab = 'overview';
         this.navBackCounter = -2;
       }
-      if (this.path === '/teacher/students/1/overview') {
-        this.activeTab = 'overview';
+
+      if (this.path.includes('/assignments')) {
+        this.activeTab = 'assignments';
         this.navBackCounter = -2;
       }
     },

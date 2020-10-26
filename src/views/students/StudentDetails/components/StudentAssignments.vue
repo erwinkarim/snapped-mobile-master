@@ -19,9 +19,9 @@
 
         </div>
 
-        <div class="flex flex-row w-full text-left text-px-10 text-purple-secondary">
-          <div class="w-1/4"> {{ assignment.subject_name }}</div>
-          <div class="w-2/4"> {{ getHumanDate(assignment.due_datetime) }}</div>
+        <div class="flex flex-row w-full text-left text-px-10 text-purple-secondary justify-between">
+          <div class="w-1/2 truncate mr-2"> {{ assignment.subject_name }}</div>
+          <div class="w-1/2"> {{ getHumanDate(assignment.due_datetime) }}</div>
         </div>
       </div>
 
