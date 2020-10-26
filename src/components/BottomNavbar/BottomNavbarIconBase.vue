@@ -75,7 +75,6 @@ export default {
   },
   methods: {
     isActiveTab(tabName) {
-      console.log(tabName);
       if (this.activeTab === tabName) {
         return {fill: "#F53B57"};
       }

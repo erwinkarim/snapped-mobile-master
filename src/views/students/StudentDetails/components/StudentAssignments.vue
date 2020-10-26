@@ -71,7 +71,6 @@ export default {
             this.assignments = response.data.data
             this.loading = false
 
-            console.log(this.assignments)
           })
           .catch(err => {
             console.log(err)
