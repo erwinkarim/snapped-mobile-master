@@ -41,7 +41,7 @@ export default {
   name: "StudentAssignments",
   components: {AssignmentScoreCircle, CircleProgressBar},
   props: {
-    studentID: String
+    studentID:  [String, Number],
   },
   data() {
     return {

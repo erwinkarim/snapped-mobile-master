@@ -4,7 +4,7 @@
     <div class="px-5 fixed z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
       <div class="flex flex-row w-full justify-between pt-16">
-        <nav-back class="w-1/3"/>
+        <nav-back class="w-1/3" :counter="navBackCounter"/>
       </div>
 
       <!-- SECTION: STUDENT DETAILS -->
@@ -28,10 +28,11 @@
 
       <!-- SECTION: TABS -->
       <div class="flex mt-6 justify-between items-center">
-        <button @click="showTab({tabName: tab.name,route: tab.route})" v-for="tab in tabs" :class="isActiveTab(tab.name)" class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1">
+        <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"  v-for="tab in tabs" :class="isActiveTab(tab.name)" class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
           {{ tab.displayName }}
-        </button>
+        </router-link>
       </div>
+
     </div>
 
     <router-view class="top-98 relative mb-24"/>
@@ -58,6 +59,7 @@ export default {
       studentDetails: '',
       path:'',
       activeTab: 'show',
+      navBackCounter: -1,
       tabs: [
         {
           name: 'show',
@@ -91,6 +93,9 @@ export default {
     this.getRouteParams()
     this.fetchData()
   },
+  mounted() {
+    this.getInitialActiveTab()
+  },
   watch: {
     '$route': 'fetchData',
     'activeTab' : 'isActiveTab'
@@ -117,12 +122,30 @@ export default {
     },
     showTab({tabName: tabName ,route: routeName}){
       this.activeTab = tabName;
-      this.$router.push({name: routeName});
+      this.navBackCounter--;
+
+      console.log(`COUNTER: ${this.navBackCounter}`)
+      console.log(`ACTIVE: ${this.activeTab}`)
+      // this.$router.push({name: routeName});
     },
     getRouteParams() {
-
       this.path = this.$route.path
       this.studentID = this.$route.params.studentID
+    },
+    getInitialActiveTab () {
+      if (this.path === '/teacher/students/1/show') {
+        this.activeTab = 'show';
+        this.navBackCounter = -1;
+
+      }
+      if (this.path === '/teacher/students/1/assignments') {
+        this.activeTab = 'assignments';
+        this.navBackCounter = -2;
+      }
+      if (this.path === '/teacher/students/1/overview') {
+        this.activeTab = 'overview';
+        this.navBackCounter = -2;
+      }
     },
     isActiveTab(tabName){
       if (this.activeTab === tabName) {
