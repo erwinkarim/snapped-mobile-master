@@ -65,7 +65,7 @@ export default {
   computed: {
     containerClass: function () {
       if (this.setStickySearchBar) {
-        return 'mt-17'
+        return 'mt-18'
       }
       if (this.isScrolledUp) {
         return 'mt-0'

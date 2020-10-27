@@ -1,7 +1,8 @@
 <template>
-  <div >
+  <div>
 
-    <div class="w-full bg-white flex flex-col z-40 "  v-scroll="handleScroll">
+    <!-- HEADER -->
+    <div class="w-full bg-white flex flex-col z-40"  v-scroll="handleScroll">
 
       <div :class="headerClass" class="flex flex-row w-full justify-between fixed pt-16 px-5 z-40 bg-white">
 
@@ -24,7 +25,7 @@
 
       </div>
 
-      <page-title :class="pageTitleClass" class="w-3/4 px-5 mt-28">Class</page-title>
+      <page-title :class="pageTitleClass" class="w-3/4 px-5 mt-26">Class</page-title>
 
       <div :class="searchBarClass" class="px-5 pb-4 w-full z-40 bg-white">
         <div class="relative h-full pl-2">
@@ -99,7 +100,7 @@ export default {
     },
     searchBarClass: function() {
       if (this.setStickySearchBar) {
-        return 'fixed top-28'
+        return 'fixed top-26'
       }
 
       return ''
