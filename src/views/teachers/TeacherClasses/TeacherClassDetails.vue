@@ -1,9 +1,9 @@
 <template>
   <div >
 
-    <div class="w-full bg-white flex flex-col z-40"  v-scroll="handleScroll">
+    <div class="w-full bg-white flex flex-col z-40 "  v-scroll="handleScroll">
 
-      <div :class="headerClass" class="flex flex-row w-full justify-between fixed pt-16 px-5 bg-white">
+      <div :class="headerClass" class="flex flex-row w-full justify-between fixed pt-16 px-5 z-40 bg-white">
 
         <nav-back class="w-1/3"/>
 
@@ -26,7 +26,7 @@
 
       <page-title :class="pageTitleClass" class="w-3/4 px-5 mt-28">Class</page-title>
 
-      <div :class="searchBarClass" class="px-5 pb-4 w-full  bg-white">
+      <div :class="searchBarClass" class="px-5 pb-4 w-full z-40 bg-white">
         <div class="relative h-full pl-2">
           <icon-base class="absolute w-1/6 pt-4" icon-name="arrow-right-icon" icon-color="white" view-box="0 -2 60 55">
             <magnifying-glass-icon/>
