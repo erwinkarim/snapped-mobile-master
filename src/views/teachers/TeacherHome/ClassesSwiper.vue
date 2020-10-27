@@ -19,7 +19,7 @@
               <div class="text-md flex-grow pb-2">
                 <span class="truncate">{{ item.className }} </span>
               </div>
-              <div>
+              <div v-if="item.isHomeroom === 'true'">
                 <icon-base width="28" height="50" icon-name="app-logo" icon-color="white" view-box="-5 5 27 27">
                   <BookmarkIcon/>
                 </icon-base>
@@ -93,7 +93,8 @@ export default {
               let classDetail = {
                 classID : item.class_id,
                 className: item.class_name,
-                numOfStudents: item.num_of_students
+                numOfStudents: item.num_of_students,
+                isHomeroom : item.homeroom
               }
 
               this.classes.push(classDetail);

@@ -1,5 +1,5 @@
 <template>
-  <div  class="pt-10">
+  <div class="pt-5">
     <div class="px-5">
       <page-title class="w-3/4 pt-5">Class</page-title>
 
