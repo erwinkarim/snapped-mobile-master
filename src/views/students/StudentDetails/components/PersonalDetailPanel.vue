@@ -45,32 +45,24 @@ export default {
     email() {
       if (typeof this.details !== "undefined") {
         if (typeof this.details.personal_details !== "undefined") {
-          return this.details.personal_details.email ?? '';
+          return this.details.personal_details.email ?? '-';
         }
       }
     },
     contactNum() {
       if (typeof this.details !== "undefined") {
         if (typeof this.details.personal_details !== "undefined") {
-          return this.details.personal_details.contact_number ?? '';
+          return this.details.personal_details.contact_number ?? '-';
         }
       }
     },
     schoolID() {
       if (typeof this.details !== "undefined") {
-        return this.details.school_id ?? '';
+        return this.details.school_id ?? '-';
       }
     }
   },
-  data() {
-    return {
-      // email: '',
-      // contactNum: '',
-      // schoolID: ''
-    }
-  },
   watch: {
-    // 'details' : 'updateData'
   },
   methods: {
     updateDate() {
