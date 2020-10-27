@@ -1,9 +1,10 @@
 <template>
-  <teacher-dashboard >
+  <div>
 
+    <!-- HEADER -->
     <div class="w-full bg-white flex flex-col z-40"  v-scroll="handleScroll">
 
-      <div :class="headerClass" class="flex flex-row w-full justify-between fixed pt-16 px-5 bg-white">
+      <div :class="headerClass" class="flex flex-row w-full justify-between fixed pt-16 px-5 z-40 bg-white">
 
         <nav-back class="w-1/3"/>
 
@@ -24,9 +25,9 @@
 
       </div>
 
-      <page-title :class="pageTitleClass" class="w-3/4 px-5 mt-28">Class</page-title>
+      <page-title :class="pageTitleClass" class="w-3/4 px-5 mt-26">Class</page-title>
 
-      <div :class="searchBarClass" class="px-5 pb-4 w-full  bg-white">
+      <div :class="searchBarClass" class="px-5 pb-4 w-full z-40 bg-white">
         <div class="relative h-full pl-2">
           <icon-base class="absolute w-1/6 pt-4" icon-name="arrow-right-icon" icon-color="white" view-box="0 -2 60 55">
             <magnifying-glass-icon/>
@@ -41,11 +42,11 @@
 
     <subjects-list class="" :search="search"/>
 
-  </teacher-dashboard>
+  </div>
 </template>
 
 <script>
-import TeacherDashboard from "@/views/layout/TeacherDashboard";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageTitle from "@/components/PageTitle";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
@@ -67,7 +68,7 @@ export default {
     SubjectsList,
     ArrowBackIcon,
     PageTitle,
-    TeacherDashboard
+    DashboardLayout
   },
   data() {
     return {
@@ -99,7 +100,7 @@ export default {
     },
     searchBarClass: function() {
       if (this.setStickySearchBar) {
-        return 'fixed top-28'
+        return 'fixed top-26'
       }
 
       return ''

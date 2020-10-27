@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen">
     <div class="flex flex-col w-screen mb-24">
-    <slot/>
+    <router-view/>
     </div>
     <bottom-navbar/>
   </div>
@@ -10,7 +10,7 @@
 <script>
 import BottomNavbar from "@/components/BottomNavbar/BottomNavbar";
 export default {
-name: "TeacherDashboard",
+name: "DashboardLayout",
   components: {BottomNavbar},
 }
 </script>

@@ -23,10 +23,10 @@ export default  {
                     }
 
                 })
-                .catch(err => {
+                .catch(error => {
                     commit('auth_error')
                     localStorage.removeItem('token')
-                    reject(err)
+                    reject(error.response.data)
                 })
         })
     },

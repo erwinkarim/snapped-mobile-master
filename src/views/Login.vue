@@ -10,19 +10,25 @@
         School Task Made Easy
       </div>
 
+      <div class="bg-red-500 mb-4 py-3 px-4 text-left text-white text-xs rounded-lg" v-if="errors.length">
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+      </div>
       <div class="mb-4">
-        <input v-model="email"
+        <input v-model="email" @click="resetError"
                class="appearance-none border rounded border-none w-full py-2 pl-5 pr-2 bg-gray-secondary text-gray-700  font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary h-14"
                id="username" type="text" placeholder="Email">
       </div>
 
       <div class="mb-8">
-        <input v-model="password" type="password"
+        <input v-model="password" type="password" @click="resetError"
                class="appearance-none border rounded border-none w-full py-2 pl-5 pr-2 bg-gray-secondary text-gray-700 font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary h-14"
                id="password" placeholder="Password">
       </div>
 
-      <button :disabled="!validateForm" @click="login" class="w-full mt-3  font-display text-purple-primary font-bold py-2 px-4 rounded-full h-14 text-lg inline-flex justify-center items-center">
+      <button :disabled="!validateForm" @click="login"
+              class="w-full mt-3  font-display text-purple-primary font-bold py-2 px-4 rounded-full h-14 text-lg inline-flex justify-center items-center">
         <span class="mr-3">Sign in</span>
         <svg width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 4H14M14 4L11.5 1M14 4L11.5 7" stroke="#3A4276" stroke-width="2"/>
@@ -49,7 +55,8 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      errors: []
     }
   },
 
@@ -72,23 +79,30 @@ export default {
 
             // Make request to get user details
             this.$store.dispatch('setAuthUser')
-              .then(role => {
+                .then(role => {
 
-                // Redirect to pages according to roles
-                if (role === 'Teacher') this.$router.push({name: 'teacher.home'})
-                if (role === 'Student') this.$router.push('/students')
-              })
-                .catch(err => console.log('masalah'))
+                  // Redirect to pages according to roles
+                  if (role === 'Teacher') this.$router.push({name: 'teacher.home'})
+                  if (role === 'Student') this.$router.push('/students')
+
+                })
           })
+          .catch(error => {
+            this.errors.push("You have entered an invalid username or password.")
+          });
+
+    },
+    resetError () {
+      this.errors = []
     }
   }
 }
 </script>
 
 <style scoped>
-  button {
-    background-color: #FDB400;
-  }
+button {
+  background-color: #FDB400;
+}
 
 
 </style>
