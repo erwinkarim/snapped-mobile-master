@@ -25,7 +25,8 @@ export default {
   props: {
     tabName: {
       type: String,
-      default: 'home'
+      default: 'home',
+      required: true
     },
     iconName: {
       type: String,
