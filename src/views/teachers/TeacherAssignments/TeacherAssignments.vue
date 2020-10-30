@@ -2,8 +2,6 @@
   <div class="pt-5">
     <div class="px-5">
 
-      <!-- TODO: INSTALL https://vcalendar.io/ -->
-
       <!-- TITLE -->
       <div class="flex flex-row justify-between pt-5 items-baseline">
         <page-title class="w-3/4 ">Assignment</page-title>
@@ -12,9 +10,7 @@
 
       <!-- Section Title -->
       <div class="flex flex-row justify-between mt-8">
-        <section-title>
-          Assignments Date
-        </section-title>
+        <section-title  title="Assignments Date"/>
         <div class="w-1/6">
           <icon-base-two stroke-color="purple-primary">
             <filter-icon/>

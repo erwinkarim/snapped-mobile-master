@@ -5,7 +5,7 @@
 
       <!-- SECTION : CLASS Overview -->
       <div class="mt-8">
-        <section-title class="text-left mb-3 mb-5">Your Classes</section-title>
+        <section-title class="text-left mb-3 mb-5" title="Your Classes"/>
         <div class="max-w-sm h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-6 py-3">
           <div class="flex flex-row items-center h-full justify-between">
             <div class="flex-col text-left text-purple-primary">
@@ -23,7 +23,7 @@
 
       <!-- SECTION : CLASS Overview -->
       <div class="mt-8" >
-        <section-title class="text-left mb-3 mb-5">Class List</section-title>
+        <section-title class="text-left mb-3 mb-5" title="Class List"/>
         <classes-swiper class="w-full" @numOfClasses="getNumOfClasses"/>
       </div>
     </div>

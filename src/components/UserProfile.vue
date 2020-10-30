@@ -1,0 +1,60 @@
+<template>
+  <div class="flex flex-row items-center items-center mt-4">
+    <icon-base width="100" height="100" icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
+      <ProfilePhoto/>
+    </icon-base>
+    <div class="flex flex-col w-full text-left">
+      <h1 class=" text-purple-primary">Welcome, <span class="font-bold truncate">{{ username }}</span></h1>
+
+      <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
+        <span class="pr-2">{{ nowDate || '' }}</span>
+        <span>{{ nowTime || '' }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import IconBase from "@/components/IconBase";
+import ProfilePhoto from "@/components/icons/ProfilePhoto";
+import moment from "moment";
+import PlusIcon from "@/components/icons/PlusIcon";
+
+export default {
+  name: "UserProfile",
+  data() {
+    return {
+      nowDatetime: moment().format()
+    }
+  },
+  computed: {
+    username() {
+      return this.$store.getters.getAuthUsername
+    },
+    nowDate() {
+      const date = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('DD MMMM YYYY')
+      return date === 'Invalid date' ? moment().format('DD MMMM YYYY') : date
+    },
+    nowTime() {
+      const time = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('hh:mm A')
+      return time === 'Invalid date' ? moment().format('hh:mm A')  : time
+    }
+  },
+  methods: {
+    datetime() {
+      this.nowDatetime = moment().format()
+    },
+  },
+  mounted() {
+    this.interval = setInterval(this.datetime, 1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
+  },
+  components: {PlusIcon, ProfilePhoto, IconBase}
+}
+</script>
+
+<style scoped>
+
+</style>
