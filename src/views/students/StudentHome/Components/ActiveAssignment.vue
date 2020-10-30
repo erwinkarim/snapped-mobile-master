@@ -38,8 +38,6 @@ export default {
   methods: {
     getAssignments: function () {
 
-      console.log('triggered')
-
       StudentRepository.getAssignments(1)
           .then(response => {
 
