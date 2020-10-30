@@ -2,66 +2,47 @@
   <section id="bottom-navigation"
            class="md:hidden block fixed inset-x-0 border-t-1/4 bottom-0 z-10 shadow bg-white h-14">
 
-    <div id="tabs" class="flex h-full">
-
-      <router-link :to="{name: 'teacher.home'}" class="w-1/5 pt-1 relative pl-8" exact>
-        <bottom-navbar-icon-base tab-name="home" class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 0 60 55">
-          <HomeIcon/>
-        </bottom-navbar-icon-base>
-      </router-link>
-      <router-link :to="{name: 'teacher.classes'}" class="w-1/5 pt-1 relative pl-5" exact>
-        <bottom-navbar-icon-base tab-name="classes" class="absolute h-full w-3/4" icon-name="app-logo" view-box="-5 0 60 55"
-                                 stroke-color="#2DEDEA">
-          <ClassIcon/>
-        </bottom-navbar-icon-base>
-      </router-link>
-      <router-link :to="{name: 'teacher.students'}" class="w-1/5  pt-1 relative pl-3" exact>
-        <bottom-navbar-icon-base tab-name="students" class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 0 60 55">
-          <StudentIcon/>
-        </bottom-navbar-icon-base>
-      </router-link>
-      <router-link :to="{name: 'teacher.assignments'}" class="w-1/5  pt-1 relative pl-3" exact>
-        <bottom-navbar-icon-base tab-name="assignments" class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 0 60 55">
-          <AssignmentIcon/>
-        </bottom-navbar-icon-base>
-      </router-link>
-      <router-link :to="{name: 'teacher.settings'}" class="w-1/5  pt-1 relative pl-5" exact>
-        <bottom-navbar-icon-base tab-name="settings" class="absolute h-full w-3/4" icon-name="app-logo" view-box="0 0 60 55">
-          <SettingIcon/>
-        </bottom-navbar-icon-base>
+    <div id="tabs" class="flex flex-row h-full items-center justify-center">
+      <router-link :to="{name: tab.routeName}" :key="tab.routeName" v-for="tab in tabs" class=" w-1/5 h-3/4 pt-1 flex flex-row justify-center items-center" exact>
+        <div class="w-5/7">
+          <bottom-navbar-icon-base :tab-name="tab.tabName" :icon="tab.icon" />
+        </div>
       </router-link>
     </div>
   </section>
 </template>
 
 <script>
-import SettingIcon from "@/components/icons/SettingIcon";
-import AssignmentIcon from "@/components/icons/AssignmentIcon";
-import StudentIcon from "@/components/icons/StudentIcon";
-import ClassIcon from "@/components/icons/ClassIcon";
-import HomeIcon from "@/components/icons/HomeIcon";
-import PlusIcon from "@/components/icons/PlusIcon";
-import IconBase from "@/components/IconBase";
+
 import BottomNavbarIconBase from "@/components/BottomNavbar/BottomNavbarIconBase";
+import teacher_tabs from "@/components/BottomNavbar/teacher_tabs";
+import student_tabs from "@/components/BottomNavbar/student_tabs";
 
 export default {
   name: "BottomNavbar",
-
+  data() {
+    return {
+      tabs: []
+    }
+  },
   components: {
     BottomNavbarIconBase,
-    SettingIcon,
-    AssignmentIcon,
-    StudentIcon,
-    ClassIcon,
-    HomeIcon,
-    PlusIcon,
-    IconBase
   },
-
+  mounted() {
+    this.getTabs()
+  },
   methods: {
-    pushTo(routeName) {
-      this.$router.push({name: routeName});
-    },
+    getTabs() {
+      let userRole = this.$store.getters.getAuthUserRole;
+
+      if (userRole === 'Teacher') {
+        this.tabs = teacher_tabs;
+      }
+      if (userRole === 'Student') {
+        this.tabs = student_tabs;
+      }
+
+    }
   }
 }
 </script>

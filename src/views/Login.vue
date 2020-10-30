@@ -83,7 +83,7 @@ export default {
 
                   // Redirect to pages according to roles
                   if (role === 'Teacher') this.$router.push({name: 'teacher.home'})
-                  if (role === 'Student') this.$router.push('/students')
+                  if (role === 'Student') this.$router.push({name: 'student.home'})
 
                 })
           })

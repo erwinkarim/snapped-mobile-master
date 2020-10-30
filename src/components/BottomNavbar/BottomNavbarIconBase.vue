@@ -2,16 +2,11 @@
   <svg xmlns="http://www.w3.org/2000/svg"
        width="100%"
        :viewBox="viewBox"
-       :aria-labelledby="iconName"
        role="presentation"
        preserveAspectRatio="xMidYMid meet"
   >
-    <title :id="iconName" lang="en">
-      {{ iconName }} icon
-    </title>
-
     <g :style="isActiveTab(tabName)" :fill="iconColor">
-      <slot/>
+      <component :is="icon" />
     </g>
   </svg>
 </template>
@@ -21,15 +16,15 @@ import IconBase from "@/components/IconBase";
 
 export default {
   name: "BottomNavbarIconBase",
-  components: {IconBase},
   props: {
     tabName: {
       type: String,
-      default: 'home'
+      default: 'home',
+      required: true
     },
-    iconName: {
-      type: String,
-      default: 'box'
+    icon: {
+      type: [Object, String],
+      default: ''
     },
     width: {
       type: [Number, String],
@@ -87,6 +82,9 @@ export default {
   },
   created() {
     this.getActiveTab()
+  },
+  components: {
+    IconBase
   }
 }
 </script>

@@ -7,33 +7,14 @@
         </icon-base>
       </div>
 
-      <!-- SECTION: USER -->
-      <div class="flex flex-row items-center items-center mt-4">
-        <icon-base width="100" height="100" icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-          <ProfilePhoto/>
-        </icon-base>
-        <div class="flex flex-col w-full text-left">
-          <h1 class=" text-purple-primary">Welcome, <span class="font-bold">{{ username }}</span></h1>
-
-          <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
-            <span class="pr-2">{{ nowDate || ''}}</span>
-            <span>{{ nowTime || '' }}</span>
-          </div>
-        </div>
-
-        <div class="rounded-full flex items-center justify-center h-12 w-12 bg-yellow-primary">
-          <icon-base width="50" height="50" icon-name="app-logo" view-box="-18 -18 50 50">
-            <PlusIcon/>
-          </icon-base>
-        </div>
-      </div>
+      <user-profile/>
     </div>
 
     <div class="pl-5">
       <!-- SECTION: CLASSES -->
       <div class="mt-2">
         <div class="text-left mb-3">
-          <section-title class="mb-5">Your Classes</section-title>
+          <section-title class="mb-5" title="Your Classes"/>
         </div>
 
         <ClassesSwiper class="w-full mt-3"/>
@@ -42,7 +23,7 @@
       <!-- SECTION: ASSIGNMENTS -->
       <div class="mt-6">
         <div class="text-left mb-3">
-          <section-title class="mb-5">Active Assignments</section-title>
+          <section-title class="mb-5" title="Active Assignments"/>
         </div>
         <AssignmentSwiper class="mt-3"/>
       </div>
@@ -50,7 +31,7 @@
       <!-- SECTION: SUBMISSIONS -->
       <div class="mt-8">
         <div class="text-left mb-3">
-          <section-title class="mb-5">Submissions</section-title>
+          <section-title class="mb-5" title="Submissions"/>
         </div>
         <submission-card/>
       </div>
@@ -68,13 +49,14 @@ import SectionTitle from "@/components/SectionTitle";
 import ClassesSwiper from "@/views/teachers/TeacherHome/ClassesSwiper";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import AssignmentSwiper from "@/views/teachers/TeacherHome/AssignmentSwiper";
-import moment from 'moment'
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import SubmissionCard from "@/views/teachers/TeacherHome/SubmissionCard";
+import UserProfile from "@/components/UserProfile";
 
 export default {
   name: "Home",
   components: {
+    UserProfile,
     SubmissionCard,
     DashboardLayout,
     AssignmentSwiper,
@@ -85,35 +67,6 @@ export default {
     IconBase,
     PlusIcon
   },
-  data() {
-    return {
-      nowDatetime: ''
-    }
-  },
-  computed: {
-    username() {
-      return this.$store.getters.getAuthUsername
-    },
-    nowDate() {
-      const date = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('YYYY-MM-DD')
-      return date === 'Invalid date' ? moment().format('YYYY-MM-DD') : date
-    },
-    nowTime() {
-      const time = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('hh:mm A')
-      return time === 'Invalid date' ? moment().format('hh:mm A')  : time
-    }
-  },
-  methods: {
-    datetime() {
-      this.nowDatetime = moment().format()
-    },
-  },
-  mounted() {
-    this.interval = setInterval(this.datetime, 1000)
-  },
-  beforeDestroy() {
-    clearInterval(this.interval)
-  }
 }
 </script>
 
