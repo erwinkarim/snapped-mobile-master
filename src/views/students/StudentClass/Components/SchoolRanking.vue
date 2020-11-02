@@ -1,12 +1,9 @@
 <template>
-
-  <layout-one>
-    <!-- Subject Title + Period -->
-    <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5 mb-5">
-      Class Ranking (Jan - Dec 2020)
-    </div>
-
+  <layout-two page-title="School Rank">
     <div class="px-5">
+
+      <list-response-bar :loading="loading" :item-length="rankings.length"/>
+
       <div v-for="(student, index) in rankings"
            class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1">
 
@@ -45,29 +42,41 @@
         </div>
       </div>
     </div>
-  </layout-one>
+  </layout-two>
 </template>
 
 <script>
-import IconBase from "@/components/IconBase";
-import ProfilePhoto from "@/components/icons/ProfilePhoto";
-import StudentRepository from "@/repositories/StudentRepository";
+import LayoutTwo from "@/views/students/StudentClass/Components/LayoutTwo";
 import IconBaseTwo from "@/components/IconBaseTwo";
+import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import GoldMedalIcon from "@/components/icons/GoldMedalIcon";
-import LayoutOne from "@/views/students/StudentClass/Components/LayoutOne";
-
+import StudentRepository from "@/repositories/StudentRepository";
+import ListResponseBar from "@/components/ListResponseBar";
 export default {
-  name: "ClassRanking",
+name: "SchoolRanking",
   data() {
     return {
+
+      // states
+      error: null,
+      loading: false,
+      awaitingSearch: false,
+
       rankings: [],
       totalNumOfStudents: 0,
     }
   },
+
   methods: {
     getRankings() {
+
+      this.loading = true;
+
       StudentRepository.getClassRanking()
           .then(response => {
+
+            this.loading = false;
+
             let data = response.data;
 
             this.totalNumOfStudents = data.total_students;
@@ -78,7 +87,7 @@ export default {
   mounted() {
     this.getRankings()
   },
-  components: {LayoutOne, GoldMedalIcon, IconBaseTwo, ProfilePhoto, IconBase}
+  components: {ListResponseBar, GoldMedalIcon, ProfilePhoto, IconBaseTwo, LayoutTwo}
 }
 </script>
 

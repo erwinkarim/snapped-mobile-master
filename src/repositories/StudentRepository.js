@@ -22,6 +22,14 @@ export default {
 
     getClassRanking() {
         return Repository.get(`${resource}/class-ranking`)
+    },
+
+    getClassTeachers() {
+        return Repository.get(`${resource}/teachers`)
+    },
+
+    getClassmates() {
+        return Repository.get(`${resource}/classmates`)
     }
 
 
