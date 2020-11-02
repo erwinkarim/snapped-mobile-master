@@ -11,7 +11,7 @@ export default [
     },
     {
         tabName: 'classes',
-        routeName: 'student.classes',
+        routeName: 'student.class',
         icon: ClassIcon
     },
     {

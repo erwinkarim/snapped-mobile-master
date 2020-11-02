@@ -20,5 +20,9 @@ export default {
         return Repository.get(`${resource}/${studentID}/assignments/marks`)
     },
 
+    getClassRanking() {
+        return Repository.get(`${resource}/class-ranking`)
+    }
+
 
 }
