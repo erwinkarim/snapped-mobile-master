@@ -67,13 +67,34 @@ export default {
     },
     getActiveTab() {
 
-      if ((this.$route.path).includes('teacher/students') || (this.$route.path).includes('teacher/student')) {
+      /* STUDENTS */
+      if ((this.$route.path).includes('teacher/students') ||
+          (this.$route.path).includes('teacher/student') ||
+          (this.$route.path).includes('teacher/student'))
+      {
         this.activeTab = 'students'
-      } else if ((this.$route.path).includes('teacher/classes') || (this.$route.path).includes('teacher/class')) {
+      }
+
+      /* CLASS */
+      else if (
+          (this.$route.path).includes('teacher/classes') ||
+          (this.$route.path).includes('teacher/class') ||
+          (this.$route.path).includes('students/class'))
+      {
         this.activeTab = 'classes'
-      } else if ((this.$route.path).includes('teacher/assignments') || (this.$route.path).includes('teacher/assignment')) {
+      }
+
+      /* ASSIGNMENTS */
+      else if (
+          (this.$route.path).includes('teacher/assignments') ||
+          (this.$route.path).includes('teacher/assignment') ||
+          (this.$route.path).includes('students/assignments')
+      ) {
         this.activeTab = 'assignments'
-      } else if ((this.$route.path).includes('teacher/settings')) {
+      }
+
+      /* */
+      else if ((this.$route.path).includes('/settings')) {
         this.activeTab = 'settings'
       } else {
         this.activeTab = 'home'
