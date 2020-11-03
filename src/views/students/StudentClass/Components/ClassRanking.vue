@@ -28,11 +28,11 @@
           <div class="flex flex-col w-full justify-between">
             <div>
               <div class="text-left text-purple-primary text-xs-plus font-bold  truncate  pr-10">
-                {{ student.student.student_name }}
+                {{ student.student.student_name || '' }}
               </div>
 
               <div class="text-left text-purple-secondary text-px-10  truncate mt-2 pr-10">
-                Class
+                {{ student.student.class_name || ''}}
               </div>
             </div>
           </div>

@@ -9,6 +9,8 @@ import ClassRanking from "@/views/students/StudentClass/Components/ClassRanking"
 import ClassTeachers from "@/views/students/StudentClass/Components/ClassTeachers";
 import ClassClassmates from "@/views/students/StudentClass/Components/ClassClassmates";
 import SchoolRanking from "@/views/students/StudentClass/Components/SchoolRanking";
+import Settings from "@/views/Settings";
+import StudentAssignments from "@/views/students/StudentAssignments/StudentAssignments";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -67,7 +69,7 @@ export default {
         {
             path: 'assignments',
             name: 'student.assignments',
-            // component: StudentAssignments,
+            component: StudentAssignments,
             meta: studentAccessControlMeta
         },
 
@@ -75,7 +77,7 @@ export default {
         {
             path: 'settings',
             name: 'student.settings',
-            // component: StudentSettings,
+            component: Settings,
             meta: studentAccessControlMeta
         },
     ]
