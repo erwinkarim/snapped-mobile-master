@@ -47,9 +47,9 @@ import PageTitle from "@/components/PageTitle";
 import SectionTitle from "@/components/SectionTitle";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
-import AssignmentList from "@/views/students/StudentAssignments/Components/AssignmentList";
+import AssignmentList from "@/views/students/StudentAssignments/Index/AssignmentList";
 export default {
-name: "StudentAssignments",
+name: "Index",
   components: {AssignmentList, FilterIcon, IconBaseTwo, SectionTitle, PageTitle}
 }
 </script>
