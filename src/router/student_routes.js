@@ -1,14 +1,16 @@
 import DashboardLayout from "@/views/layout/DashboardLayout";
-import TeacherHome from "@/views/teachers/TeacherHome/TeacherHome";
 import StudentHome from "@/views/students/StudentHome/StudentHome";
-import TeacherClasses from "@/views/teachers/TeacherClasses/TeacherClasses";
-import TeacherAssignments from "@/views/teachers/TeacherAssignments/TeacherAssignments";
-import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
 import StudentClass from "@/views/students/StudentClass/StudentClass";
 import ClassRanking from "@/views/students/StudentClass/Components/ClassRanking";
 import ClassTeachers from "@/views/students/StudentClass/Components/ClassTeachers";
 import ClassClassmates from "@/views/students/StudentClass/Components/ClassClassmates";
 import SchoolRanking from "@/views/students/StudentClass/Components/SchoolRanking";
+import Settings from "@/views/Settings";
+import AssignmentIndex from "@/views/students/StudentAssignments/Index/Index";
+import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
+import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
+import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
+import AssignmentDetails from "@/views/students/StudentAssignments/Show/Components/AssignmentDetails";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -62,12 +64,11 @@ export default {
         },
 
 
-
         /*  ASSIGNMENTS */
         {
             path: 'assignments',
             name: 'student.assignments',
-            // component: StudentAssignments,
+            component: AssignmentIndex,
             meta: studentAccessControlMeta
         },
 
@@ -75,7 +76,7 @@ export default {
         {
             path: 'settings',
             name: 'student.settings',
-            // component: StudentSettings,
+            component: Settings,
             meta: studentAccessControlMeta
         },
     ]

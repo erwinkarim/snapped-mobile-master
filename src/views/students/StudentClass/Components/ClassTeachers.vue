@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class=" w-1/12">
-          <icon-base-two v-if="teacher.isHomeroom" class="w-5/6" view-box="-2 -2 25 40">
+          <icon-base-two v-if="teacher.is_homeroom" class="w-5/6" view-box="-2 -2 25 40">
             <bookmark-icon/>
           </icon-base-two>
         </div>

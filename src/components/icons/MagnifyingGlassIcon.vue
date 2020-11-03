@@ -14,7 +14,6 @@
 export default {
   props: {
     strokeColor: String,
-    default: "#1C8FF8"
   },
   computed: {
     getStrokeColor() {
