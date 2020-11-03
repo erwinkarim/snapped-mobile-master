@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen">
-    <div class="flex flex-col w-screen mb-24">
+    <div class="flex flex-col w-screen ">
       <router-view/>
     </div>
   </div>

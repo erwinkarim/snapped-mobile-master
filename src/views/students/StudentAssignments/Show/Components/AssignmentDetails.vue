@@ -109,14 +109,14 @@
 
     <template v-slot:bottomBar >
       <div class="w-1/2 px-2">
-        <button class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+        <router-link :to="{name:'student.assignments.answer.write'}" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
           <div class="w-5/7">
             Write Answer
           </div>
           <icon-base-two class="w-1/7">
             <pen-icon/>
           </icon-base-two>
-        </button>
+        </router-link>
       </div>
       <div class="w-1/2 px-2">
         <button class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">

@@ -1,6 +1,7 @@
 import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
 import AssignmentDetails from "@/views/students/StudentAssignments/Show/Components/AssignmentDetails";
 import AlternateDashboardLayout from "@/views/layout/AlternateDashboardLayout";
+import AnswerWrite from "@/views/students/StudentAssignments/Show/Components/AnswerWrite";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -21,6 +22,13 @@ export default {
                     component: AssignmentDetails,
                     meta: studentAccessControlMeta,
                     props: true,
+                },
+                {
+                    path: 'answer/write',
+                    name: 'student.assignments.answer.write',
+                    component: AnswerWrite,
+                    meta: studentAccessControlMeta,
+                    props: true
                 }
             ]
         }
