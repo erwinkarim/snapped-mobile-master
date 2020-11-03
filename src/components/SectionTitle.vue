@@ -1,12 +1,18 @@
 <template>
   <div class="font-bold text-px-15 font-bold text-purple-primary">
-    <slot/>
+    {{title}}
   </div>
 </template>
 
 <script>
 export default {
-name: "SectionTitle"
+  name: "SectionTitle",
+  props: {
+    title: {
+      type: String,
+      required: true
+    }
+  }
 }
 </script>
 

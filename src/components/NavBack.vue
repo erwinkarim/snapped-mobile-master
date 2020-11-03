@@ -1,8 +1,8 @@
 <template>
-    <button @click="goBack" class="relative h-full w-1/5 focus:bg-transparent focus:outline-none">
-      <icon-base class="absolute" icon-name="arrow-right-icon" view-box="0 5 60 55">
-        <arrow-back-icon/>
-      </icon-base>
+    <button @click="goBack" class="focus:bg-transparent focus:outline-none">
+      <icon-base-two >
+        <arrow-back-icon :stroke-color="strokeColor"/>
+      </icon-base-two>
     </button>
 </template>
 
@@ -10,6 +10,7 @@
 import IconBase from "@/components/IconBase";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import router from "@/router";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "NavBack",
@@ -21,7 +22,8 @@ export default {
     counter: {
       type: Number,
       default: -1
-    }
+    },
+    strokeColor: String,
   },
   methods: {
     goBack () {
@@ -33,7 +35,7 @@ export default {
       }
     }
   },
-  components: {ArrowBackIcon, IconBase},
+  components: {IconBaseTwo, ArrowBackIcon, IconBase},
 }
 </script>
 
