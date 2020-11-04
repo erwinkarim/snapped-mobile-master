@@ -6,7 +6,7 @@
       <!-- -->
       <page-title-two>
         <template v-slot:leftAction>
-          <nav-back class="w-full" stroke-color="red-primary" type="cancel"/>
+          <nav-back class="w-full" stroke-color="red-primary" type="cancel" to="student.assignments.show"/>
         </template>
         <template v-slot:title>
           Answer

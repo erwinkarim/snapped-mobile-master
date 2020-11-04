@@ -23,7 +23,7 @@
 
             <!-- HEADER with Nav Back -->
             <div class="flex flex-row w-full justify-between pt-16 px-5">
-              <nav-back class="w-1/12" stroke-color="white"/>
+              <nav-back class="w-1/12" stroke-color="white" to="student.assignments"/>
             </div>
 
             <!-- TIMER -->
