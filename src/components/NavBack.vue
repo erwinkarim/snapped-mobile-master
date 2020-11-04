@@ -21,7 +21,7 @@ export default {
   name: "NavBack",
   props: {
     to: {
-      type: [String, Number],
+      type: [String, Number, Object],
       default: null
     },
     counter: {
