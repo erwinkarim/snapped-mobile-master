@@ -1,7 +1,9 @@
 import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
 import AssignmentDetails from "@/views/students/StudentAssignments/Show/Components/AssignmentDetails";
 import AlternateDashboardLayout from "@/views/layout/AlternateDashboardLayout";
-import AnswerWrite from "@/views/students/StudentAssignments/Show/Components/AnswerWrite";
+import AnswerIndex from "@/views/students/StudentAssignments/Answer/Index";
+import AnswerWrite from "@/views/students/StudentAssignments/Answer/AnswerWrite";
+import AnswerSave from "@/views/students/StudentAssignments/Answer/AnswerSave";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -24,12 +26,26 @@ export default {
                     props: true,
                 },
                 {
-                    path: 'answer/write',
-                    name: 'student.assignments.answer.write',
-                    component: AnswerWrite,
-                    meta: studentAccessControlMeta,
-                    props: true
-                }
+                    path: 'answer',
+                    component: AnswerIndex,
+                    children: [
+                        {
+                            path: 'write',
+                            name: 'student.assignments.answer.write',
+                            component: AnswerWrite,
+                            meta: studentAccessControlMeta,
+                            props: true
+                        },
+                        {
+                            path: 'save',
+                            name: 'student.assignments.answer.save',
+                            component: AnswerSave,
+                            meta: studentAccessControlMeta,
+                            props: true
+                        },
+
+                    ]
+                },
             ]
         }
     ]
