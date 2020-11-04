@@ -18,8 +18,24 @@
         </div>
       </div>
 
-      <div class="w-full bg-purple-primary">
-<!--        <assignment-calendar />-->
+      <!-- SECTION: CALENDAR -->
+      <div class="w-full bg-white border-2 border-purple-primary border-opacity-10 pb-4/5 mt-6 rounded-xl">
+
+      </div>
+
+      <!-- SECTION: ASSIGNMENT -->
+      <div class="mt-7">
+
+        <!-- Section Title -->
+        <div class="flex flex-row justify-between items-center">
+          <section-title  title="Assignments List"/>
+          <div class="text-purple-primary">
+            17 June 2020
+          </div>
+        </div>
+        <!-- Assignment List -->
+        <assignment-list class="mt-4"/>
+
       </div>
 
 
@@ -34,10 +50,11 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
 import SectionTitle from "@/components/SectionTitle";
 import AssignmentCalendar from "@/views/teachers/TeacherAssignments/Components/AssignmentCalendar";
+import AssignmentList from "@/views/teachers/TeacherAssignments/Components/AssignmentList";
 
 export default {
   name: "TeacherAssignments",
-  components: {AssignmentCalendar, SectionTitle, FilterIcon, IconBaseTwo, PageTitle, DashboardLayout}
+  components: {AssignmentCalendar, SectionTitle, FilterIcon, IconBaseTwo, PageTitle, DashboardLayout, AssignmentList}
 }
 </script>
 
