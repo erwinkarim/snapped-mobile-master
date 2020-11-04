@@ -8,7 +8,7 @@ const teacherAccessControlMeta = {
 }
 
 export default {
-    path: '/teachers',
+    path: '/teacher',
     component: AlternateDashboardLayout,
     children: [
         {
@@ -17,7 +17,7 @@ export default {
             children: [
                 {
                     path: 'show',
-                    name: 'teacher.assignments.Show',
+                    name: 'teacher.assignments.show',
                     component: AssignmentDetails,
                     meta: teacherAccessControlMeta,
                     props: true,

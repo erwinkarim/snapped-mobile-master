@@ -49,8 +49,8 @@ import PageTitle from "@/components/PageTitle";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
 import SectionTitle from "@/components/SectionTitle";
-import AssignmentCalendar from "@/views/teachers/TeacherAssignments/Components/AssignmentCalendar";
-import AssignmentList from "@/views/teachers/TeacherAssignments/Components/AssignmentList";
+import AssignmentCalendar from "@/views/teachers/TeacherAssignments/Index/Components/AssignmentCalendar";
+import AssignmentList from "@/views/teachers/TeacherAssignments/Index/Components/AssignmentList";
 
 export default {
   name: "TeacherAssignments",

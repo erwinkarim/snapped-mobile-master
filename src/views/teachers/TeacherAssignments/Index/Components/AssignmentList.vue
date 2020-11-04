@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <router-link :to="{name: 'student.assignments.show', params: { assignmentID: item.assignmentID }}" :key="item.assignmentID" v-for="item in assignments"
+        <router-link :to="{name: 'teacher.assignments.show', params: { assignmentID: item.assignmentID }}" :key="item.assignmentID" v-for="item in assignments"
                      class="max-w-sm h-30 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 pt-5 pb-3 mb-3">
             <div class="flex flex-row">
                 <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">
@@ -53,7 +53,7 @@
                             let item = data[i];
 
                             let assignmentDetail = {
-                                assignmentID: item.id,
+                                assignmentID: item.assignment_id,
                                 subjectName: item.subject_name,
                                 classroomName: item.class_name,
                                 title: item.title,
