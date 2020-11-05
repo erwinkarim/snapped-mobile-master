@@ -24,7 +24,7 @@ export default {
       }
 
       if (this.strokeColor === 'purple-primary') {
-        return '#7B7F9E';
+        return '#3A4276';
       }
 
       if (this.strokeColor === 'white') {
