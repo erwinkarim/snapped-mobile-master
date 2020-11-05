@@ -77,10 +77,6 @@ Upcoming release.
 - STUDENTS > List > Student Detail
     - Implement radial bar with percentage for Total assignments score
     - Fix rotating color for Overall Subject Score cards (previously all cards are red)
-
-### KIV
-- Logout screen. Not available in UI design (Figma).
-- UI design for null data. E.g. No classes, active assignments, submissions on Home page.    
     
 ## [1.0.0] - 2020-10-27
   
