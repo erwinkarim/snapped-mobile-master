@@ -7,7 +7,29 @@ All notable changes to this project will be documented in this file.
 Upcoming release.
 
 ### To Be Added
-#### <u>Student's View</u>
+
+
+#### Teacher's View
+
+- Settings > Logout
+- ASSIGNMENT > List
+- Assignment > List > Details
+    - List of submissions
+- Assignment > Create
+    - Form
+- Assignment > Create > Question > Create
+    - Form
+    - Manual Description
+- Assignment > Mark > Details
+    - Carousel of assignment photo answers (placeholder)
+    - Assignment details (hardcoded)
+- Assignment > Mark > Answer Preview
+    - Expanded view of photo answer
+    - Triggered via 'expand' icon or 'Marking' button on Mark > Details
+- Assignment > Mark > Add Feedback
+
+#### Student's View
+- Settings > Logout
 - LAYOUT: 
     - Bottom navigation bar with Student's quick menus
 - LOGIN
@@ -24,18 +46,33 @@ Upcoming release.
         - Search (icon) : Displays classmates
         - School Rank (text) : Displays ranking for whole school
 - CLASS > Ranking: 
-    - Lists Students ranking in the class
-    - First place has medal icon
+        - Lists Students ranking in the class
+        - First place has medal icon
 - CLASS > Teachers
-    - List all teachers for the class
-    - Homeroom teacher has yellow bookmark icon
+        - List all teachers for the class
+        - Homeroom teacher has yellow bookmark icon
 - CLASS > Classmates
-    - List all classmates in the class
+        - List all classmates in the class
 - CLASS > School Rank
-    - Currently, displaying Class Ranking (to be updated)
-    
+        - Currently, displaying Class Ranking (to be updated)
+- ASSIGNMENT > Index
+    - Placeholder for Calender
+    - Assignment List (excluding marked assignments)
+- ASSIGNMENT > Show
+    - Placeholder for Countdown Timer, Assignment details and Submissions   
+- ASSIGNMENT > Answer > Write
+    - Text area
+    - Save function (temporary save before Submit Answer)
+- ASSIGNMENT > Answer > Write
+    - Assignment title (hardcoded)
+    - Edit Answer button (returns to Answer > Write with saved answer)
+    - Remarks text area
+
+
 
 ### To Be Fixed
+
+#### Teacher's View
 - HOME
     - Implement countdown timer for active assignments
 - STUDENTS > List > Student Detail
