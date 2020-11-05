@@ -1,4 +1,3 @@
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
@@ -11,25 +10,25 @@ Upcoming release.
 
 #### Teacher's View
 
-- Settings > Logout
+- SETTINGS > Logout
 - ASSIGNMENT > List
-- Assignment > List > Details
+- ASSIGNMENT > List > Details
     - List of submissions
-- Assignment > Create
+- ASSIGNMENT > Create
     - Form
-- Assignment > Create > Question > Create
+- ASSIGNMENT > Create > Question > Create
     - Form
     - Manual Description
-- Assignment > Mark > Details
+- ASSIGNMENT > Mark > Details
     - Carousel of assignment photo answers (placeholder)
     - Assignment details (hardcoded)
-- Assignment > Mark > Answer Preview
+- ASSIGNMENT > Mark > Answer Preview
     - Expanded view of photo answer
     - Triggered via 'expand' icon or 'Marking' button on Mark > Details
-- Assignment > Mark > Add Feedback
+- ASSIGNMENT > Mark > Add Feedback
 
 #### Student's View
-- Settings > Logout
+- SETTINGS > Logout
 - LAYOUT: 
     - Bottom navigation bar with Student's quick menus
 - LOGIN
