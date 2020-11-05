@@ -5,7 +5,9 @@
       <!-- TITLE -->
       <div class="flex flex-row justify-between pt-5 items-baseline">
         <page-title class="w-3/4 ">Assignment</page-title>
-        <div class="font-bold text-red-primary"> Add New</div>
+        <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary">
+          Add New
+        </router-link>
       </div>
 
       <!-- Section Title -->
