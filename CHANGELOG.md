@@ -1,4 +1,3 @@
-
 # Change Log
 All notable changes to this project will be documented in this file.
 
@@ -7,7 +6,29 @@ All notable changes to this project will be documented in this file.
 Upcoming release.
 
 ### To Be Added
-#### <u>Student's View</u>
+
+
+#### Teacher's View
+
+- SETTINGS > Logout
+- ASSIGNMENT > List
+- ASSIGNMENT > List > Details
+    - List of submissions
+- ASSIGNMENT > Create
+    - Form
+- ASSIGNMENT > Create > Question > Create
+    - Form
+    - Manual Description
+- ASSIGNMENT > Mark > Details
+    - Carousel of assignment photo answers (placeholder)
+    - Assignment details (hardcoded)
+- ASSIGNMENT > Mark > Answer Preview
+    - Expanded view of photo answer
+    - Triggered via 'expand' icon or 'Marking' button on Mark > Details
+- ASSIGNMENT > Mark > Add Feedback
+
+#### Student's View
+- SETTINGS > Logout
 - LAYOUT: 
     - Bottom navigation bar with Student's quick menus
 - LOGIN
@@ -24,27 +45,38 @@ Upcoming release.
         - Search (icon) : Displays classmates
         - School Rank (text) : Displays ranking for whole school
 - CLASS > Ranking: 
-    - Lists Students ranking in the class
-    - First place has medal icon
+        - Lists Students ranking in the class
+        - First place has medal icon
 - CLASS > Teachers
-    - List all teachers for the class
-    - Homeroom teacher has yellow bookmark icon
+        - List all teachers for the class
+        - Homeroom teacher has yellow bookmark icon
 - CLASS > Classmates
-    - List all classmates in the class
+        - List all classmates in the class
 - CLASS > School Rank
-    - Currently, displaying Class Ranking (to be updated)
-    
+        - Currently, displaying Class Ranking (to be updated)
+- ASSIGNMENT > Index
+    - Placeholder for Calender
+    - Assignment List (excluding marked assignments)
+- ASSIGNMENT > Show
+    - Placeholder for Countdown Timer, Assignment details and Submissions   
+- ASSIGNMENT > Answer > Write
+    - Text area
+    - Save function (temporary save before Submit Answer)
+- ASSIGNMENT > Answer > Write
+    - Assignment title (hardcoded)
+    - Edit Answer button (returns to Answer > Write with saved answer)
+    - Remarks text area
+
+
 
 ### To Be Fixed
+
+#### Teacher's View
 - HOME
     - Implement countdown timer for active assignments
 - STUDENTS > List > Student Detail
     - Implement radial bar with percentage for Total assignments score
     - Fix rotating color for Overall Subject Score cards (previously all cards are red)
-
-### KIV
-- Logout screen. Not available in UI design (Figma).
-- UI design for null data. E.g. No classes, active assignments, submissions on Home page.    
     
 ## [1.0.0] - 2020-10-27
   
