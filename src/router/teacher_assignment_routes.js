@@ -4,6 +4,8 @@ import AlternateDashboardLayout from "@/views/layout/AlternateDashboardLayout";
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
 import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
+import QuestionForm from "@/views/teachers/TeacherAssignments/Create/Components/QuestionForm";
+import QuestionManualDesc from "@/views/teachers/TeacherAssignments/Create/Components/QuestionManualDesc";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
 
