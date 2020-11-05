@@ -9,7 +9,7 @@ export default {
     },
 
     getTeacherAssignments () {
-        return Repository.get(`${resource}/assignments`)
+        return Repository.post(`/assignments`)
     },
 
     getSubjectsWithStudentsForTeacherClass({classID: classID, search: studentName}) {

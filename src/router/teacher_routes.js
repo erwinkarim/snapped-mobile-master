@@ -7,7 +7,7 @@ import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
 import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
 import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
 import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
-import TeacherAssignments from "@/views/teachers/TeacherAssignments/TeacherAssignments";
+import TeacherAssignments from "@/views/teachers/TeacherAssignments/Index/TeacherAssignments";
 import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
 
 export default  {

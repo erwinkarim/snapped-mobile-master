@@ -23,7 +23,8 @@ export default {
   name: "Settings",
   methods: {
     logout() {
-
+      this.$store.dispatch('logout')
+      this.$router.push({name: 'login'})
     }
   },
   components: {PageTitle}
