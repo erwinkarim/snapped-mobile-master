@@ -1,6 +1,5 @@
 <template>
-  <div v-bind:class="customClass"
-       class="w-full flex flex-col fixed z-40  pb-12">
+  <div v-bind:class="customClass" class="w-full flex flex-col fixed z-40">
 
     <!-- HEADER -->
     <div class="flex flex-row w-full justify-between items-center pt-16 px-5">
@@ -32,6 +31,10 @@ export default {
     bottomBorder: {
       type: Boolean,
       default: true
+    },
+    bottomPadding: {
+      type: Number,
+      default: 12
     }
   },
   computed: {
@@ -40,6 +43,7 @@ export default {
       let value = '';
 
       value += this.backgroundColor;
+      value += ' pb-' + this.bottomPadding;
 
       if (this.bottomBorder) {
         value += ' border-b-1 border-gray-primary border-opacity-15'

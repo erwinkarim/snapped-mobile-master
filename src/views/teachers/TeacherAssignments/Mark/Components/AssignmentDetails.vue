@@ -4,25 +4,39 @@
     <template v-slot:content>
 
       <!-- -->
-      <page-title-two background-color="bg-black-primary" :bottom-border="false">
+      <page-title-two :background-color="isPreviewing ? 'bg-white' : 'bg-black-primary'" :bottom-border="false" :bottom-padding="4">
         <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="white"/>
+          <nav-back v-if="!isPreviewing" class="w-2/3" stroke-color="white"/>
+
+          <div @click="togglePreviewMode">
+            <icon-base-two v-if="isPreviewing" class="w-2/3" >
+              <arrow-back-icon stroke-color="purple-primary"/>
+            </icon-base-two>
+          </div>
+
         </template>
-        <template v-slot:rightAction>
-          <icon-base-two class="w-1/3 justify-end">
-            <expand-image-icon/>
-          </icon-base-two>
+        <template v-slot:title v-if="isPreviewing">
+            Answer Preview
+        </template>
+        <template v-slot:rightAction v-if="!isPreviewing">
+          <div @click="togglePreviewMode" class="flex flex-row justify-end">
+            <icon-base-two class="w-1/3">
+              <expand-image-icon/>
+            </icon-base-two>
+          </div>
         </template>
       </page-title-two>
 
       <!-- Content -->
-      <div class="relative top-34">
-        <div class="pb-11/12 bg-black-primary">
+      <div class="relative top-24">
 
+        <!-- ASSIGNMENT ANSWERS (IMAGE) -->
+        <div :class="imagePreviewClass" class="  pt-4">
+          <answer-preview-swiper :is-previewing="isPreviewing"/>
         </div>
 
         <!-- ASSIGNMENT DETAILS -->
-        <div class="mt-6 px-5">
+        <div class="mt-6 px-5" v-if="!isPreviewing">
 
           <!-- Achievements -->
           <div class="flex flex-row ">
@@ -63,8 +77,6 @@
             </div>
           </div>
 
-
-
         </div>
 
       </div>
@@ -79,10 +91,9 @@
         </icon-base-two>
       </router-link>
       <div class="w-3/8 px-2">
-        <router-link :to="{name: ''}"
-                     class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-          Marking
-        </router-link>
+        <button @click="togglePreviewMode" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+          {{ isPreviewing ? 'Add Mark' : 'Marking' }}
+        </button>
       </div>
       <div class="w-4/8 px-2">
         <button
@@ -104,10 +115,33 @@ import PageTitleTwo from "@/components/PageTitleTwo";
 import NavBack from "@/components/NavBack";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 import PageTitle from "@/components/PageTitle";
+import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Components/AnswerPreviewSwiper";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 export default {
   name: "AssignmentDetails",
+  data() {
+    return {
+      isPreviewing: false
+    }
+  },
+  computed: {
+    imagePreviewClass: function () {
+      if (this.isPreviewing) {
+        return 'bg-white px-6 pb-16';
+      } else {
+        return 'bg-black-primary px-16  pb-10'
+      }
+    }
+  },
+  methods: {
+    togglePreviewMode() {
+      this.isPreviewing = !this.isPreviewing;
+    }
+  },
   components: {
+    ArrowBackIcon,
+    AnswerPreviewSwiper,
     PageTitle,
     ExpandImageIcon, NavBack, PageTitleTwo, DialogBubbleIcon, IconBaseTwo, AssignmentDashboardLayout
   }
