@@ -39,9 +39,11 @@
          <option v-for="classroom in classrooms" :key="classroom.id">{{classroom.name}}</option>
        </select>
 
-       <button class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-         Create Question
-       </button>
+       <router-link :to="{name : 'teacher.assignments.question'}">
+         <button class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+           Create Question
+         </button>
+       </router-link>
 
        <div class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
          Set Duration
@@ -51,7 +53,6 @@
            class="pl-6 pr-2 py-5 mt-2 h-36  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"/>
 
      </div>
-
     </template>
 
     <template v-slot:bottomBar>

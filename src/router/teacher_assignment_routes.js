@@ -27,6 +27,33 @@ export default {
                     component: AssignmentForm,
                     meta: teacherAccessControlMeta,
                     props: true,
+                },
+                {
+                    path: 'question',
+                    name: 'teacher.assignments.question',
+                    component: QuestionForm,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
+                {
+                    path: 'question/description',
+                    name: 'teacher.assignments.manual-description',
+                    component: QuestionManualDesc,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                }
+            ]
+        },
+        {
+            path: 'assignments/create/question',
+            component: QuestionForm,
+            children: [
+                {
+                    path: 'show',
+                    name: 'teacher.assignments.show',
+                    component: AssignmentDetails,
+                    meta: teacherAccessControlMeta,
+                    props: true,
                 }
             ]
         },
@@ -63,6 +90,19 @@ export default {
                     ]
                 }
             ]
-        }
+        },
+        {
+            path: 'assignments/:assignmentID',
+            component: AssignmentShow,
+            children: [
+                {
+                    path: 'show',
+                    name: 'teacher.assignments.show',
+                    component: AssignmentDetails,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                }
+            ]
+        },
     ]
 }
