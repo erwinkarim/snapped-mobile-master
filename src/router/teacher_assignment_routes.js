@@ -47,19 +47,6 @@ export default {
             ]
         },
         {
-            path: 'assignments/create/question',
-            component: QuestionForm,
-            children: [
-                {
-                    path: 'show',
-                    name: 'teacher.assignments.show',
-                    component: AssignmentDetails,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                }
-            ]
-        },
-        {
             path: 'assignments/:assignmentID',
             component: AssignmentShow,
             children: [
@@ -92,19 +79,6 @@ export default {
                     ]
                 }
             ]
-        },
-        {
-            path: 'assignments/:assignmentID',
-            component: AssignmentShow,
-            children: [
-                {
-                    path: 'show',
-                    name: 'teacher.assignments.show',
-                    component: AssignmentDetails,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                }
-            ]
-        },
+        }
     ]
 }

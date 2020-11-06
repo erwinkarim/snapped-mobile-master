@@ -1,7 +1,35 @@
 <template>
-  <layout-two page-title="Class">
-        <subjects-list class="" :search="search"/>
-  </layout-two>
+  <dashboard-layout >
+
+    <template v-slot:pageHeader>
+      <page-title-three>
+        <template v-slot:leftAction>
+          <nav-back class="w-5/7" stroke-color="red-primary"/>
+        </template>
+        <template v-slot:mini-title>
+          New Assignment
+        </template>
+        <template v-slot:title>
+          New Assignments
+        </template>
+        <template v-slot:searchBar>
+          <div class="absolute w-1/12 mt-4 flex flex-row items-center justify-center ml-2">
+            <icon-base-two class=" w-5/7">
+              <magnifying-glass-icon stroke-color="purple-primary"/>
+            </icon-base-two>
+          </div>
+
+          <input v-model="search"
+                 class="pl-12 pr-2 py-3 mt-4  appearance-none border rounded rounded-xl border-none w-full bg-gray-tertiary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+                 id="username" type="text" placeholder="Search" autocomplete="off">
+        </template>
+      </page-title-three>
+    </template>
+
+    <template v-slot:content>
+      <subjects-list class="" :search="search"/>
+    </template>
+  </dashboard-layout>
 </template>
 
 <script>
@@ -16,11 +44,15 @@ import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
 import NavBack from "@/components/NavBack";
 import '@/directives/scroll'
 import LayoutTwo from "@/views/students/StudentClass/Components/LayoutTwo";
+import PageTitleThree from "@/components/PageTitleThree";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 
 export default {
   name: "TeacherClassDetails",
   components: {
+    IconBaseTwo,
+    PageTitleThree,
     LayoutTwo,
     NavBack,
     MagnifyingGlassIcon,

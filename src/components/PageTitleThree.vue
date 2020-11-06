@@ -15,12 +15,15 @@
       <div class="w-2/12">
         <slot name="rightAction"/>
       </div>
-
     </div>
 
     <page-title class="w-full px-5 mt-26 break-all overflow-hidden ">
       <slot name="title" :class="pageTitleClass"/>
     </page-title>
+
+    <div class="px-5 pb-5 w-full mt-2 flex flex-col relative justify-center">
+      <slot name="searchBar" />
+    </div>
   </div>
 </template>
 
@@ -33,6 +36,12 @@ import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
 
 export default {
   name: "PageTitleThree",
+  props: {
+    hasSearchBar: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       search: '',
