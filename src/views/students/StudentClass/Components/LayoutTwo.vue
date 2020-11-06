@@ -3,7 +3,7 @@
     <div class="w-full bg-white flex flex-col fixed z-40">
       <div class="flex flex-row w-full justify-between pt-16 px-5">
 
-        <nav-back class="w-1/3"/>
+        <nav-back class="w-1/12" :stroke-color="navbackColor"/>
 
         <div class="text-lg font-bold text-purple-primary">
           {{ pageTitle }}
@@ -48,7 +48,8 @@ import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
 export default {
   name: "LayoutTwo",
   props: {
-    pageTitle: String
+    pageTitle: String,
+    navbackColor: String
   },
   data(){
     return {

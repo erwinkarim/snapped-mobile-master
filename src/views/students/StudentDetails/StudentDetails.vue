@@ -1,40 +1,49 @@
 <template>
   <div>
 
-    <div class="px-5 fixed z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
+    <div class="fixed z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
-      <div class="flex flex-row w-full justify-between pt-16">
-        <nav-back class="w-1/3" :counter="navBackCounter"/>
-      </div>
+      <page-title-two :bottom-border="false" :bottom-padding="5" background-color="bg-transparent" :is-fixed="false">
+        <template v-slot:leftAction>
+          <nav-back class="w-full" stroke-color="red-primary" :counter="navBackCounter"/>
+        </template>
+      </page-title-two>
 
-      <!-- SECTION: STUDENT DETAILS -->
-      <div class="flex flex-row items-center items-center mt-12  px-2">
-        <div class="w-3/12">
-          <icon-base  icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-            <profile-photo/>
-          </icon-base>
-        </div>
+      <div class="px-5">
 
-        <div class="flex flex-col w-full text-left w-3/5 truncate">
-          <h1 class="text-purple-primary font-bold ">
-            {{ studentDetails.studentName }}
-          </h1>
+        <!-- SECTION: STUDENT DETAILS -->
+        <div class="flex flex-row items-center items-center px-2">
 
-          <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
-            <span class="pr-6">{{ studentDetails.className || '' }}</span>
-            <span>{{ nowDate || '' }}</span>
+          <div class="w-3/12">
+            <icon-base icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
+              <profile-photo/>
+            </icon-base>
+          </div>
+
+          <div class="flex flex-col w-full text-left w-3/5  truncate">
+            <h1 class="text-purple-primary font-bold ">
+              {{ studentDetails.studentName }}
+            </h1>
+
+            <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
+              <span class="pr-6">{{ studentDetails.className || '' }}</span>
+              <span>{{ nowDate || '' }}</span>
+            </div>
           </div>
         </div>
+
+        <ranking-panel class="mt-5"/>
+
+        <!-- SECTION: TABS -->
+        <div class="flex mt-5 justify-between items-center">
+          <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"
+                       v-for="tab in tabs" :class="isActiveTab(tab.name)"
+                       class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
+            {{ tab.displayName }}
+          </router-link>
+        </div>
       </div>
 
-      <ranking-panel class="mt-5"/>
-
-      <!-- SECTION: TABS -->
-      <div class="flex mt-5 justify-between items-center">
-        <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"  v-for="tab in tabs" :class="isActiveTab(tab.name)" class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
-          {{ tab.displayName }}
-        </router-link>
-      </div>
 
     </div>
 
@@ -53,6 +62,7 @@ import StudentRepository from "@/repositories/StudentRepository";
 import CircleProgressBar from "@/components/CircleProgressBar";
 import RankingPanel from "@/views/students/StudentDetails/components/RankingPanel";
 import router from "@/router";
+import PageTitleTwo from "@/components/PageTitleTwo";
 
 export default {
   name: "StudentDetails",
@@ -61,7 +71,7 @@ export default {
       studentID: null,
       studentDetails: '',
       studentOverview: '',
-      path:'',
+      path: '',
       activeTab: 'show',
       navBackCounter: -1,
       tabs: [
@@ -102,7 +112,7 @@ export default {
   },
   watch: {
     '$route': 'fetchData',
-    'activeTab' : 'isActiveTab'
+    'activeTab': 'isActiveTab'
   },
   methods: {
     fetchData() {
@@ -124,7 +134,7 @@ export default {
 
           })
     },
-    showTab({tabName: tabName ,route: routeName}){
+    showTab({tabName: tabName, route: routeName}) {
       this.activeTab = tabName;
       this.navBackCounter--;
     },
@@ -132,7 +142,7 @@ export default {
       this.path = this.$route.path
       this.studentID = this.$route.params.studentID
     },
-    getInitialActiveTab () {
+    getInitialActiveTab() {
 
       if (this.path.includes('/show')) {
         this.activeTab = 'show';
@@ -149,7 +159,7 @@ export default {
         this.navBackCounter = -2;
       }
     },
-    isActiveTab(tabName){
+    isActiveTab(tabName) {
       if (this.activeTab === tabName) {
         return 'bg-purple-primary text-white'
       } else {
@@ -158,7 +168,7 @@ export default {
     }
 
   },
-  components: {RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout}
+  components: {PageTitleTwo, RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout}
 }
 </script>
 
