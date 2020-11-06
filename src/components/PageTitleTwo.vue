@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:class="customClass" class="w-full flex flex-col fixed z-40">
+  <div v-bind:class="customClass" class="w-full flex flex-col z-40">
 
     <!-- HEADER -->
     <div class="flex flex-row w-full justify-between items-center pt-16 px-5">
@@ -35,6 +35,10 @@ export default {
     bottomPadding: {
       type: Number,
       default: 12
+    },
+    isFixed: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -48,6 +52,14 @@ export default {
       if (this.bottomBorder) {
         value += ' border-b-1 border-gray-primary border-opacity-15'
       }
+
+      if (this.isFixed) {
+        value += ' fixed'
+      }
+
+
+
+
 
       return value;
     }

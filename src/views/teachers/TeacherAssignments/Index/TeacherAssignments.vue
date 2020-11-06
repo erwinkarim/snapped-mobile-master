@@ -13,7 +13,7 @@
       <!-- Section Title -->
       <div class="flex flex-row justify-between mt-8">
         <section-title  title="Assignments Date"/>
-        <div class="w-1/6">
+        <div class="w-1/12">
           <icon-base-two stroke-color="purple-primary">
             <filter-icon/>
           </icon-base-two>

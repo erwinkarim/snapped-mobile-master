@@ -9,7 +9,14 @@ export default {
     },
 
     getTeacherAssignments () {
-        return Repository.post(`/assignments`)
+        return Repository.post(`/assignments`, {
+            filters : {
+                is_active : false,
+                month : null,
+                year : null,
+                subjects : null
+            }
+        })
     },
 
     getSubjectsWithStudentsForTeacherClass({classID: classID, search: studentName}) {
