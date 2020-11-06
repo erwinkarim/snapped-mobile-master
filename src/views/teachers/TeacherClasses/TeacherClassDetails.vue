@@ -12,17 +12,17 @@
         <template v-slot:title>
           New Assignments
         </template>
-        <template v-slot:searchBar>
-          <div class="absolute w-1/12 mt-4 flex flex-row items-center justify-center ml-2">
-            <icon-base-two class=" w-5/7">
-              <magnifying-glass-icon stroke-color="purple-primary"/>
-            </icon-base-two>
-          </div>
+<!--        <template v-slot:searchBar>-->
+<!--          <div class="absolute w-1/12 mt-4 flex flex-row items-center justify-center ml-2">-->
+<!--            <icon-base-two class=" w-5/7">-->
+<!--              <magnifying-glass-icon stroke-color="purple-primary"/>-->
+<!--            </icon-base-two>-->
+<!--          </div>-->
 
-          <input v-model="search"
-                 class="pl-12 pr-2 py-3 mt-4  appearance-none border rounded rounded-xl border-none w-full bg-gray-tertiary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-                 id="username" type="text" placeholder="Search" autocomplete="off">
-        </template>
+<!--          <input v-model="search"-->
+<!--                 class="pl-12 pr-2 py-3 mt-4  appearance-none border rounded rounded-xl border-none w-full bg-gray-tertiary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"-->
+<!--                 id="username" type="text" placeholder="Search" autocomplete="off">-->
+<!--        </template>-->
       </page-title-three>
     </template>
 

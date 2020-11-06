@@ -1,7 +1,10 @@
 <template>
-  <layout-two page-title="Student List" navback-color="red-primary">
-    <students-list :search="search"/>
-  </layout-two>
+
+  <dashboard-layout>
+    <template v-slot:content>
+      <students-list :search="search"/>
+    </template>
+  </dashboard-layout>
 
 </template>
 

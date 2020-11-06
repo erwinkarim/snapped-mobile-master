@@ -21,7 +21,7 @@
       <slot name="title" :class="pageTitleClass"/>
     </page-title>
 
-    <div class="px-5 pb-5 w-full mt-2 flex flex-col relative justify-center">
+    <div  class="px-5 pb-5 w-full mt-2 flex flex-col relative justify-center bg-red-300">
       <slot name="searchBar" />
     </div>
   </div>
