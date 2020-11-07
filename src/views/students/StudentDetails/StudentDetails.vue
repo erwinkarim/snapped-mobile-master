@@ -1,55 +1,59 @@
 <template>
-  <div>
+  <dashboard-layout>
 
-    <div class="fixed z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
-
-      <page-title-two :bottom-border="false" :bottom-padding="5" background-color="bg-transparent" :is-fixed="false">
+    <template v-slot:pageHeader>
+      <page-header-three>
         <template v-slot:leftAction>
-          <nav-back class="w-full" stroke-color="red-primary" :counter="navBackCounter"/>
+          <nav-back class="w-5/7" stroke-color="red-primary"/>
         </template>
-      </page-title-two>
+      </page-header-three>
+    </template>
 
-      <div class="px-5">
+    <template v-slot:content>
+      <div class="fixed top-20 px-5 pt-4 z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
-        <!-- SECTION: STUDENT DETAILS -->
-        <div class="flex flex-row items-center items-center px-2">
+          <!-- SECTION: STUDENT DETAILS -->
+          <div class="flex flex-row items-center items-center px-2">
 
-          <div class="w-3/12">
-            <icon-base icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-              <profile-photo/>
-            </icon-base>
-          </div>
+            <div class="w-3/12">
+              <icon-base icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
+                <profile-photo/>
+              </icon-base>
+            </div>
 
-          <div class="flex flex-col w-full text-left w-3/5  truncate">
-            <h1 class="text-purple-primary font-bold ">
-              {{ studentDetails.studentName }}
-            </h1>
+            <div class="flex flex-col w-full text-left w-3/5  truncate">
+              <h1 class="text-purple-primary font-bold ">
+                {{ studentDetails.studentName }}
+              </h1>
 
-            <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
-              <span class="pr-6">{{ studentDetails.className || '' }}</span>
-              <span>{{ nowDate || '' }}</span>
+              <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
+                <span class="pr-6">{{ studentDetails.className || '' }}</span>
+                <span>{{ nowDate || '' }}</span>
+              </div>
             </div>
           </div>
+
+          <ranking-panel class="mt-5"/>
+
+          <!-- SECTION: TABS -->
+          <div class="flex mt-5 justify-between items-center">
+            <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"
+                         v-for="tab in tabs" :class="isActiveTab(tab.name)"
+                         class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
+              {{ tab.displayName }}
+            </router-link>
+          </div>
         </div>
 
-        <ranking-panel class="mt-5"/>
 
-        <!-- SECTION: TABS -->
-        <div class="flex mt-5 justify-between items-center">
-          <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"
-                       v-for="tab in tabs" :class="isActiveTab(tab.name)"
-                       class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
-            {{ tab.displayName }}
-          </router-link>
-        </div>
-      </div>
+<!--      </div>-->
+
+      <router-view class="top-98 relative mb-24"/>
+
+    </template>
 
 
-    </div>
-
-    <router-view class="top-98 relative mb-24"/>
-
-  </div>
+  </dashboard-layout>
 </template>
 
 <script>
@@ -63,6 +67,7 @@ import CircleProgressBar from "@/components/CircleProgressBar";
 import RankingPanel from "@/views/students/StudentDetails/components/RankingPanel";
 import router from "@/router";
 import PageTitleTwo from "@/components/PageTitleTwo";
+import PageHeaderThree from "@/components/PageHeaderThree";
 
 export default {
   name: "StudentDetails",
@@ -168,7 +173,9 @@ export default {
     }
 
   },
-  components: {PageTitleTwo, RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout}
+  components: {
+    PageHeaderThree,
+    PageTitleTwo, RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout}
 }
 </script>
 

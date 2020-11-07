@@ -1,10 +1,8 @@
 <template>
-  <assignment-dashboard-layout>
+  <dashboard-layout :has-custom-bottom-bar="true">
 
-    <template v-slot:content>
-
-      <!-- -->
-      <page-title-two :background-color="isPreviewing ? 'bg-white' : 'bg-black-primary'" :bottom-border="false" :bottom-padding="4">
+    <template v-slot:pageHeader>
+      <page-header-three :background-color="isPreviewing ? 'bg-white' : 'bg-black-primary'" :bottom-padding="4">
         <template v-slot:leftAction>
           <nav-back v-if="!isPreviewing" class="w-2/3" stroke-color="white"/>
 
@@ -16,7 +14,7 @@
 
         </template>
         <template v-slot:title v-if="isPreviewing">
-            Answer Preview
+          Answer Preview
         </template>
         <template v-slot:rightAction v-if="!isPreviewing">
           <div @click="togglePreviewMode" class="flex flex-row justify-end">
@@ -25,7 +23,10 @@
             </icon-base-two>
           </div>
         </template>
-      </page-title-two>
+      </page-header-three>
+    </template>
+
+    <template v-slot:content>
 
       <!-- Content -->
       <div class="relative top-24">
@@ -104,11 +105,10 @@
         </button>
       </div>
     </template>
-  </assignment-dashboard-layout>
+  </dashboard-layout>
 </template>
 
 <script>
-import AssignmentDashboardLayout from "@/views/layout/AssignmentDashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import DialogBubbleIcon from "@/components/icons/DialogBubbleIcon";
 import PageTitleTwo from "@/components/PageTitleTwo";
@@ -117,6 +117,8 @@ import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 import PageTitle from "@/components/PageTitle";
 import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Components/AnswerPreviewSwiper";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import DashboardLayout from "@/views/layout/DashboardLayout";
+import PageHeaderThree from "@/components/PageHeaderThree";
 
 export default {
   name: "AssignmentDetails",
@@ -140,10 +142,12 @@ export default {
     }
   },
   components: {
+    PageHeaderThree,
+    DashboardLayout,
     ArrowBackIcon,
     AnswerPreviewSwiper,
     PageTitle,
-    ExpandImageIcon, NavBack, PageTitleTwo, DialogBubbleIcon, IconBaseTwo, AssignmentDashboardLayout
+    ExpandImageIcon, NavBack, PageTitleTwo, DialogBubbleIcon, IconBaseTwo
   }
 }
 </script>

@@ -9,11 +9,12 @@ import StudentAssignments from "@/views/students/StudentDetails/components/Stude
 import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
 import TeacherAssignments from "@/views/teachers/TeacherAssignments/Index/TeacherAssignments";
 import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
+import App from "@/App";
 
 export default  {
 
     path: '/teacher',
-    component: DashboardLayout,
+    component: App,
     children: [
 
         /* HOME */

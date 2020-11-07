@@ -1,6 +1,5 @@
 import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
 import AssignmentDetails from "@/views/teachers/TeacherAssignments/Show/Components/AssignmentDetails";
-import AlternateDashboardLayout from "@/views/layout/AlternateDashboardLayout";
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
 import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
@@ -8,6 +7,7 @@ import QuestionForm from "@/views/teachers/TeacherAssignments/Create/Components/
 import QuestionManualDesc from "@/views/teachers/TeacherAssignments/Create/Components/QuestionManualDesc";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
+import App from "@/App";
 
 
 const teacherAccessControlMeta = {
@@ -17,7 +17,7 @@ const teacherAccessControlMeta = {
 
 export default {
     path: '/teacher',
-    component: AlternateDashboardLayout,
+    component: App,
     children: [
         {
             path: 'assignments/create',
@@ -41,19 +41,6 @@ export default {
                     path: 'question/description',
                     name: 'teacher.assignments.manual-description',
                     component: QuestionManualDesc,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                }
-            ]
-        },
-        {
-            path: 'assignments/create/question',
-            component: QuestionForm,
-            children: [
-                {
-                    path: 'show',
-                    name: 'teacher.assignments.show',
-                    component: AssignmentDetails,
                     meta: teacherAccessControlMeta,
                     props: true,
                 }
@@ -92,19 +79,6 @@ export default {
                     ]
                 }
             ]
-        },
-        {
-            path: 'assignments/:assignmentID',
-            component: AssignmentShow,
-            children: [
-                {
-                    path: 'show',
-                    name: 'teacher.assignments.show',
-                    component: AssignmentDetails,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                }
-            ]
-        },
+        }
     ]
 }

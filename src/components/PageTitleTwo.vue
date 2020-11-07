@@ -57,10 +57,6 @@ export default {
         value += ' fixed'
       }
 
-
-
-
-
       return value;
     }
   }
