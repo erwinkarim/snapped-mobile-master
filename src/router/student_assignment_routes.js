@@ -1,9 +1,9 @@
 import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
 import AssignmentDetails from "@/views/students/StudentAssignments/Show/Components/AssignmentDetails";
-import AlternateDashboardLayout from "@/views/layout/AlternateDashboardLayout";
 import AnswerIndex from "@/views/students/StudentAssignments/Answer/Index";
 import AnswerWrite from "@/views/students/StudentAssignments/Answer/AnswerWrite";
 import AnswerSave from "@/views/students/StudentAssignments/Answer/AnswerSave";
+import App from "@/App";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -12,7 +12,7 @@ const studentAccessControlMeta = {
 
 export default {
     path: '/students',
-    component: AlternateDashboardLayout,
+    component: App,
     children: [
         {
             path: 'assignments/:assignmentID',

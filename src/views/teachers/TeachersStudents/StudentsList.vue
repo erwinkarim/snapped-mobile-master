@@ -1,14 +1,14 @@
 <template>
   <div>
-
-      <div  @click="goToStudentShow(student.id)" :key="student.id" v-for="student in students" class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white" >
-        <div class="w-1/6 h-full relative">
-          <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
-            <profile-photo/>
-          </icon-base>
-        </div>
-        <div class="ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
+    <div @click="goToStudentShow(student.id)" :key="student.id" v-for="student in students"
+         class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white">
+      <div class="w-1/6 h-full relative">
+        <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
+          <profile-photo/>
+        </icon-base>
       </div>
+      <div class="ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
+    </div>
 
     <div class="mt-4 font-light text-md text-purple-secondary">
       {{ responses }}
@@ -27,11 +27,11 @@ export default {
   name: "StudentsList",
   components: {ProfilePhoto, IconBase},
   props: {
-    search : String
+    search: String
   },
   computed: {
     responses() {
-      if (this.loading === false  && (this.students === null || this.students.length === 0)) {
+      if (this.loading === false && (this.students === null || this.students.length === 0)) {
         return 'Oops! No student available.'
       }
 
@@ -57,7 +57,7 @@ export default {
   },
   watch: {
     '$route': 'fetchData',
-    'search' : 'searchName'
+    'search': 'searchName'
   },
   methods: {
 
@@ -85,8 +85,8 @@ export default {
       this.awaitingSearch = true;
     },
 
-    goToStudentShow (studentID) {
-      router.push({ name: 'teacher.student.show', params: { studentID: studentID } })
+    goToStudentShow(studentID) {
+      router.push({name: 'teacher.student.show', params: {studentID: studentID}})
     },
   }
 }

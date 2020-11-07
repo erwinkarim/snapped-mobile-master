@@ -1,9 +1,12 @@
 <template>
-  <dashboard-layout class="pt-5">
+  <dashboard-layout>
+
+    <template v-slot:pageHeader>
+      <page-title title="Class" />
+    </template>
 
     <template v-slot:content>
       <div class="px-5">
-        <page-title class="w-3/4 pt-5">Class</page-title>
 
         <!-- SECTION : CLASS Overview -->
         <div class="mt-8">

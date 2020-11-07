@@ -1,15 +1,11 @@
 <template>
-    <div>
-        <router-view/>
-    </div>
+  <router-view/>
 </template>
 
 <script>
-    // import AlternateBottomBar from "@/components/BottomNavbar/AlternateBottomBar";
-    export default {
-        name: "Index",
-        // components: {AlternateBottomBar}
-    }
+export default {
+  name: "Index",
+}
 </script>
 
 <style scoped>

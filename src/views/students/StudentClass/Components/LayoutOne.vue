@@ -2,21 +2,21 @@
   <div>
     <div class="w-full bg-white flex flex-col fixed z-40">
 
-      <div class="flex flex-row w-full justify-between pt-16 px-5 items-center">
+      <page-title title="Class">
+        <template v-slot:rightAction>
+          <div class="flex flex-row justify-end w-full items-center">
+            <router-link :to="{name: 'student.class.classmates'}" class="flex flex justify-end w-2/5">
+              <icon-base-two class="w-1/3">
+                <magnifying-glass-icon stroke-color="red-primary"/>
+              </icon-base-two>
+            </router-link>
 
-        <page-title class="w-1/2">Class</page-title>
-
-        <div class="w-1/6  items-center justify-end flex flex-row">
-          <router-link :to="{name: 'student.class.classmates'}" class="w-1/3">
-            <icon-base-two >
-              <magnifying-glass-icon stroke-color="red-primary"/>
-            </icon-base-two>
-          </router-link>
-        </div>
-        <router-link :to="{name: 'student.class.school_ranking'}"  class="text-red-primary text-base">
-          School Rank
-        </router-link>
-      </div>
+            <router-link :to="{name: 'student.class.school_ranking'}"  class="text-red-primary text-base w-3/5 text-right">
+              School Rank
+            </router-link>
+          </div>
+        </template>
+      </page-title>
 
       <!-- TABS -->
       <div class="px-5 pb-4 w-full flex flex-row mt-4">

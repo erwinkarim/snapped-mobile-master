@@ -1,6 +1,5 @@
 import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
 import AssignmentDetails from "@/views/teachers/TeacherAssignments/Show/Components/AssignmentDetails";
-import AlternateDashboardLayout from "@/views/layout/AlternateDashboardLayout";
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
 import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
@@ -8,6 +7,7 @@ import QuestionForm from "@/views/teachers/TeacherAssignments/Create/Components/
 import QuestionManualDesc from "@/views/teachers/TeacherAssignments/Create/Components/QuestionManualDesc";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
+import App from "@/App";
 
 
 const teacherAccessControlMeta = {
@@ -17,7 +17,7 @@ const teacherAccessControlMeta = {
 
 export default {
     path: '/teacher',
-    component: AlternateDashboardLayout,
+    component: App,
     children: [
         {
             path: 'assignments/create',

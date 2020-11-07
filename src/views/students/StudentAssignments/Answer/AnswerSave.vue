@@ -1,17 +1,22 @@
 <template>
 
-  <assignment-dashboard-layout class="relative">
+  <dashboard-layout :has-custom-bottom-bar="true">
 
-    <template v-slot:content>
-      <!-- -->
-      <page-title-two>
+    <template v-slot:pageHeader>
+      <page-header-three>
+
         <template v-slot:leftAction>
-          <nav-back class="w-full" stroke-color="red-primary" type="cancel" to="student.assignments.show"/>
+          <nav-back class="w-2/3" stroke-color="red-primary"/>
         </template>
-        <template v-slot:title>
+
+        <template v-slot:mini-title>
           Answer
         </template>
-      </page-title-two>
+
+      </page-header-three>
+    </template>
+
+    <template v-slot:content>
 
       <div class="relative pt-40 px-6 h-full text-left text-purple-primary">
 
@@ -54,7 +59,6 @@
     </template>
 
 
-
     <template v-slot:bottomBar>
       <div class="w-full px-2">
         <button @click="showModal = true" class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
@@ -62,7 +66,7 @@
         </button>
       </div>
     </template>
-  </assignment-dashboard-layout>
+  </dashboard-layout>
 
 </template>
 
@@ -71,8 +75,9 @@ import PageTitleTwo from "@/components/PageTitleTwo";
 import NavBack from "@/components/NavBack";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import TrashIcon from "@/components/icons/TrashIcon";
-import AssignmentDashboardLayout from "@/views/layout/AssignmentDashboardLayout";
 import Modal from "@/components/Modal";
+import DashboardLayout from "@/views/layout/DashboardLayout";
+import PageHeaderThree from "@/components/PageHeaderThree";
 
 export default {
   name: "AnswerSave",
@@ -85,7 +90,9 @@ export default {
       showModal: false
     }
   },
-  components: {Modal, AssignmentDashboardLayout, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo}
+  components: {
+    PageHeaderThree,
+    DashboardLayout, Modal, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo}
 }
 </script>
 

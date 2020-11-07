@@ -1,15 +1,20 @@
 <template>
-  <dashboard-layout class="pt-5">
+  <dashboard-layout class="">
+
+    <template v-slot:pageHeader>
+        <page-title title="Assignments">
+          <template v-slot:rightAction>
+            <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary text-right">
+              Add New
+            </router-link>
+          </template>
+        </page-title>
+    </template>
+
     <template v-slot:content>
       <div class="px-5">
 
-        <!-- TITLE -->
-        <div class="flex flex-row justify-between pt-5 items-baseline">
-          <page-title class="w-3/4 ">Assignment</page-title>
-          <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary">
-            Add New
-          </router-link>
-        </div>
+
 
         <!-- Section Title -->
         <div class="flex flex-row justify-between mt-8">

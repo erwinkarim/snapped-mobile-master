@@ -1,5 +1,5 @@
 <template>
-  <assignment-dashboard-layout class="relative">
+  <dashboard-layout :has-custom-bottom-bar="true">
 
     <template v-slot:content>
       <div class="flex flex-col">
@@ -130,23 +130,22 @@
       </div>
     </template>
 
-  </assignment-dashboard-layout>
-
-
-
+  </dashboard-layout>
 </template>
 
 <script>
 import NavBack from "@/components/NavBack";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
-import AssignmentDashboardLayout from "@/views/layout/AssignmentDashboardLayout";
 import PenIcon from "@/components/icons/PenIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 
 export default {
   name: "AssignmentDetails",
-  components: {CameraIcon, PenIcon, AssignmentDashboardLayout, MagnifyingGlassIcon, IconBaseTwo, NavBack}
+  components: {
+    DashboardLayout,
+    CameraIcon, PenIcon, MagnifyingGlassIcon, IconBaseTwo, NavBack}
 }
 </script>
 
