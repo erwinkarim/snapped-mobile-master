@@ -64,7 +64,6 @@ export default {
   },
   methods: {
     updateDate() {
-      console.log('test')
 
       if (typeof this.details !== "undefined") {
         this.schoolID = this.details.school_id
