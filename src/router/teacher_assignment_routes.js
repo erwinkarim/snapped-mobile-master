@@ -59,7 +59,7 @@ export default {
                     props: true,
                 },
                 {
-                    path: 'marking',
+                    path: 'marking/:submissionID',
                     component: AssignmentMark,
                     children: [
                         {

@@ -85,7 +85,6 @@
 
               <div v-if="hasSubmissions" class="mt-4">
                 <assignment-submission-card v-for="submission in submissions" :submission="submission" :meta="meta" class="mb-3"/>
-
               </div>
               <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
                 No ongoing submissions at the moment.
@@ -162,7 +161,6 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log(`Assignment ID: ${this.assignmentID}`);
       AssignmentRepository.find(this.assignmentID)
           .then(response => {
             let data = response.data;
@@ -190,6 +188,7 @@ export default {
               let submission = data.submissions_by[i];
 
               let details = {
+                id: submission.submission_id,
                 studentID : submission.student_id,
                 studentName : submission.student_name,
                 submittedAt : submission.submission_created_at

@@ -1,6 +1,6 @@
 <template>
   <div class="px-5">
-    <div :key="assignment.id" v-for="assignment in assignments"
+    <router-link :to="{name: 'teacher.assignments.show', params: { assignmentID: assignment.id }}" :key="assignment.id" v-for="assignment in assignments"
          class="mb-3 max-w-sm h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3">
 
       <div class="">
@@ -26,7 +26,7 @@
       </div>
 
 
-    </div>
+    </router-link>
   </div>
 </template>
 
