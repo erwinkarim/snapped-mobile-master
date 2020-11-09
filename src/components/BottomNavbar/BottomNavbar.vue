@@ -1,6 +1,6 @@
 <template>
   <section id="bottom-navigation"
-           class="md:hidden block fixed inset-x-0 border-t-1/4 bottom-0 z-10 shadow bg-white h-14">
+           class="md:hidden block fixed inset-x-0 border-t-1/4 bottom-0 z-40 shadow bg-white h-14">
 
     <div id="tabs" class="flex flex-row h-full items-center justify-around">
       <router-link :to="{name: tab.routeName}" :key="tab.routeName" v-for="tab in tabs" class=" w-1/5 h-3/4 pt-1 flex flex-row justify-center items-center" exact>
