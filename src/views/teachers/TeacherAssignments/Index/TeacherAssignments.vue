@@ -1,48 +1,56 @@
 <template>
-  <div class="pt-5">
-    <div class="px-5">
+  <dashboard-layout class="">
 
-      <!-- TITLE -->
-      <div class="flex flex-row justify-between pt-5 items-baseline">
-        <page-title class="w-3/4 ">Assignment</page-title>
-        <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary">
-          Add New
-        </router-link>
-      </div>
+    <template v-slot:pageHeader>
+        <page-title title="Assignments">
+          <template v-slot:rightAction>
+            <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary text-right">
+              Add New
+            </router-link>
+          </template>
+        </page-title>
+    </template>
 
-      <!-- Section Title -->
-      <div class="flex flex-row justify-between mt-8">
-        <section-title  title="Assignments Date"/>
-        <div class="w-1/6">
-          <icon-base-two stroke-color="purple-primary">
-            <filter-icon/>
-          </icon-base-two>
-        </div>
-      </div>
+    <template v-slot:content>
+      <div class="px-5">
 
-      <!-- SECTION: CALENDAR -->
-      <div class="w-full bg-white border-2 border-purple-primary border-opacity-10 pb-4/5 mt-6 rounded-xl">
 
-      </div>
-
-      <!-- SECTION: ASSIGNMENT -->
-      <div class="mt-7">
 
         <!-- Section Title -->
-        <div class="flex flex-row justify-between items-center">
-          <section-title  title="Assignments List"/>
-          <div class="text-purple-primary">
-            17 June 2020
+        <div class="flex flex-row justify-between mt-8">
+          <section-title  title="Assignments Date"/>
+          <div class="w-1/12">
+            <icon-base-two stroke-color="purple-primary">
+              <filter-icon/>
+            </icon-base-two>
           </div>
         </div>
-        <!-- Assignment List -->
-        <assignment-list class="mt-4"/>
+
+        <!-- SECTION: CALENDAR -->
+        <div class="w-full bg-white border-2 border-purple-primary border-opacity-10 pb-4/5 mt-6 rounded-xl">
+
+        </div>
+
+        <!-- SECTION: ASSIGNMENT -->
+        <div class="mt-7">
+
+          <!-- Section Title -->
+          <div class="flex flex-row justify-between items-center">
+            <section-title  title="Assignments List"/>
+            <div class="text-purple-primary">
+              17 June 2020
+            </div>
+          </div>
+          <!-- Assignment List -->
+          <assignment-list class="mt-4"/>
+
+        </div>
+
 
       </div>
+    </template>
 
-
-    </div>
-  </div>
+  </dashboard-layout>
 </template>
 
 <script>

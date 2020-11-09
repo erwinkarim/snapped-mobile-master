@@ -1,10 +1,10 @@
 <template>
-  <assignment-dashboard-layout>
+  <dashboard-layout :has-custom-bottom-bar="true">
 
 
     <template v-slot:content>
 
-      <page-title-three class="px-2">
+      <page-header-three class="px-2">
         <template v-slot:leftAction>
           <nav-back class="w-5/7" stroke-color="red-primary"/>
         </template>
@@ -14,7 +14,7 @@
         <template v-slot:title>
           New Assignments
         </template>
-      </page-title-three>
+      </page-header-three>
 
       <!-- DESCRIPTION -->
       <div class="w-full break-words px-7 mt-3 text-left text-purple-secondary text-sm leading-snug">
@@ -74,17 +74,41 @@
         </button>
       </div>
     </template>
-  </assignment-dashboard-layout>
+
+
+    <template v-slot:bottomBar>
+      <div class="w-4/7 px-2">
+        <router-link :to="{name:''}"
+                     class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+          <div class="w-5/7">
+            Schedule Publish
+          </div>
+          <icon-base-two class="w-1/7">
+            <calendar-icon/>
+          </icon-base-two>
+        </router-link>
+      </div>
+      <div class="w-3/7 px-2">
+        <button
+            class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+          <div class="w-5/7">
+            Publish Now
+          </div>
+        </button>
+      </div>
+    </template>
+
+  </dashboard-layout>
 </template>
 
 <script>
-import AssignmentDashboardLayout from "@/views/layout/AssignmentDashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import PageTitle from "@/components/PageTitle";
 import NavBack from "@/components/NavBack";
 import PageTitleTwo from "@/components/PageTitleTwo";
-import PageTitleThree from "@/components/PageTitleThree";
+import PageHeaderThree from "@/components/PageHeaderThree";
+import DashboardLayout from "@/views/layout/DashboardLayout";
 export default {
   name: "AssignmentForm",
   data() {
@@ -129,7 +153,9 @@ export default {
       ]
     }
   },
-  components: {PageTitleThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo, AssignmentDashboardLayout}
+  components: {
+    DashboardLayout,
+    PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo}
 }
 </script>
 
