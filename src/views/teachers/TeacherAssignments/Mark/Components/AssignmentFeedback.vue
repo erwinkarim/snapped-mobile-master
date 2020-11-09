@@ -29,12 +29,6 @@
                 class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"></textarea>
       </div>
     </template>
-
-    <div class="relative pt-40 px-6 h-full">
-      <textarea v-model="feedback"
-                class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"></textarea>
-    </div>
-
   </dashboard-layout>
 
 </template>

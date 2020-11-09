@@ -7,7 +7,7 @@
           <nav-back v-if="!isPreviewing" class="w-2/3" stroke-color="white"/>
 
           <div @click="togglePreviewMode">
-            <icon-base-two v-if="isPreviewing" class="w-2/3" >
+            <icon-base-two v-if="isPreviewing" class="w-2/3">
               <arrow-back-icon stroke-color="purple-primary"/>
             </icon-base-two>
           </div>
@@ -92,8 +92,11 @@
         </icon-base-two>
       </router-link>
       <div class="w-3/8 px-2">
-        <button @click="togglePreviewMode" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-          {{ isPreviewing ? 'Add Mark' : 'Marking' }}
+        <router-link :to="{name: 'teacher.assignments.marking.add_mark'}" v-if="isPreviewing" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+          Add Mark
+        </router-link>
+        <button v-else @click="togglePreviewMode" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+          Marking
         </button>
       </div>
       <div class="w-4/8 px-2">
