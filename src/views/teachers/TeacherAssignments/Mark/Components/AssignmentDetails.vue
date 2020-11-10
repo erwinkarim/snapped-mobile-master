@@ -7,7 +7,7 @@
           <nav-back v-if="!isPreviewing" class="w-2/3" stroke-color="white"/>
 
           <div @click="togglePreviewMode">
-            <icon-base-two v-if="isPreviewing" class="w-2/3" >
+            <icon-base-two v-if="isPreviewing" class="w-2/3">
               <arrow-back-icon stroke-color="purple-primary"/>
             </icon-base-two>
           </div>
@@ -47,11 +47,11 @@
           </div>
 
           <div class="text-left mt-5 text-purple-primary font-bold tracking-normal text-xl truncate">
-            Kenali Tokoh Sejarah
+            {{ details.assignmentTitle || '' }}
           </div>
 
           <div class="text-purple-secondary font-bold text-sm mt-3 text-left truncate">
-            Muhammad Amin Firdaus Abdullah
+            {{ details.studentName || ''  }}
           </div>
 
           <div class="flex flex-row justify-between mt-4 text-sm ">
@@ -60,10 +60,10 @@
             </div>
             <div class="flex flex-row justify-end text-purple-primary text-right">
               <div class="mr-4">
-                12:25PM
+                {{ details.submittedTime || '' }}
               </div>
               <div>
-                15 June 2020
+                {{ details.submittedDate || '-' }}
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@
           <!-- MARKS -->
           <div class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
             <div class="text-purple-secondary mr-1">
-              0
+              {{ details.marks || '-' }}
             </div>
             <div class="text-purple-primary">
               /100 Marks
@@ -92,8 +92,11 @@
         </icon-base-two>
       </router-link>
       <div class="w-3/8 px-2">
-        <button @click="togglePreviewMode" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-          {{ isPreviewing ? 'Add Mark' : 'Marking' }}
+        <router-link :to="{name: 'teacher.assignments.marking.add_mark'}" v-if="isPreviewing" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+          Add Mark
+        </router-link>
+        <button v-else @click="togglePreviewMode" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+          Marking
         </button>
       </div>
       <div class="w-4/8 px-2">
@@ -119,11 +122,30 @@ import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Compon
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
+import SubmissionRepository from "@/repositories/SubmissionRepository";
 
 export default {
   name: "AssignmentDetails",
+  props: {
+    submissionID: [String, Number]
+  },
   data() {
     return {
+      details: {
+        submissionID: null,
+        studentID: null,
+        studentName: null,
+        assignmentID: null,
+        assignmentTitle: null,
+        snappedAnswer: null,
+        writtenAnswer: null,
+        marks: null,
+        createdAt: null,
+        updatedAt: null,
+        submittedTime: null,
+        submittedDate: null
+      },
       isPreviewing: false
     }
   },
@@ -137,9 +159,32 @@ export default {
     }
   },
   methods: {
+    fetchData() {
+
+      SubmissionRepository.find(this.submissionID)
+          .then(response => {
+            let data = response.data;
+
+            this.details.submissionID = data.submission_details.submission_id;
+            this.details.studentID = data.submission_details.student_id;
+            this.details.studentName = data.submission_details.student_name;
+            this.details.assignmentID = data.submission_details.assignment_id;
+            this.details.assignmentTitle = data.submission_details.assignment_title;
+            this.details.snappedAnswer = data.submission_details.snap_answer;
+            this.details.writtenAnswer = data.submission_details.written_answer;
+            this.details.createdAt = data.submission_details.created_at;
+            this.details.updatedAt = data.submission_details.updated_at;
+            this.details.submittedTime = data.submission_time;
+            this.details.submittedDate = data.submission_date;
+            this.details.marks = data.marks;
+          });
+    },
     togglePreviewMode() {
       this.isPreviewing = !this.isPreviewing;
     }
+  },
+  mounted() {
+    this.fetchData()
   },
   components: {
     PageHeaderThree,

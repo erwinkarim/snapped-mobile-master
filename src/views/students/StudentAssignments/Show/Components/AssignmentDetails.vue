@@ -46,39 +46,30 @@
               <div class="bg-gray-secondary rounded-2xl text-left py-5 px-6">
                 <!-- TITLE -->
                 <div class="font-semibold text-2xl text-purple-primary">
-                  Mengenali Tokoh
+                  {{ assignment.title || '' }}
                 </div>
 
                 <!-- DETAILS -->
-                <div class="flex flex-row justify-start text-xs-plus text-purple-secondary mt-2">
-                  <div>
-                    Sejarah
+                <div class="flex flex-row  text-xs-plus text-purple-secondary mt-2">
+                  <div class="pr-1 truncate w-3/8">
+                    {{ meta.subjectName || '' }}
                   </div>
-                  <div class="mx-3">
-                    1 Opal
+                  <div class="px-1 truncate w-2/8">
+                    {{ meta.classroomName || '' }}
                   </div>
-                  <div>
-                    17 June 2020
+                  <div class="px-1 truncate w-3/8">
+                    {{ getHumanDate(assignment.createdAt)}}
                   </div>
                 </div>
 
-                <!-- DESCRIPTION -->
-                <div class="mt-8 text-purple-primary text-xs-plus">
-                  <p class="my-5">
-                    Tuliskan tokoh-tokoh sejarah kebangsaan dan huraikan jasa mereka kepada negara. Anda boleh pilih sehingga 3 orang tokoh.
-                  </p>
-                  <p class="my-5">
-                    5 penghantar terawal dan MENEPATI kehendak soalan akan menerima markah bonus.
-                  </p>
-                  <p class="my-5">
-                    Gagal menghantar pada masa yang ditetapkan akan mengakibatkan markah ditolak.
-                  </p>
+                <!-- Written Question -->
+                <div v-if="hasWrittenQuestion" class="mt-8 text-purple-primary text-xs-plus flex flex-col">
+                  <div v-if="assignment.written_question.title" class="mb-2 truncate">
+                    {{  assignment.written_question.title }}
+                  </div>
+                  <text-multiline-truncate v-if="assignment.written_question.description" :text="assignment.written_question.description" :lines="7" />
                 </div>
 
-                <!-- READ MORE -->
-                <div class="text-red-primary font-semibold text-xs-plus">
-                  Read More
-                </div>
               </div>
             </div>
 
@@ -86,14 +77,17 @@
             <div class="mt-8 px-8">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
-                  Submission
+                  Submissions
                 </div>
-                <div>
-                  0/51
+                <div v-if="meta.totalSubmissions && meta.totalStudents" class="tracking-wide">
+                  {{meta.totalSubmissions}}/{{meta.totalStudents}}
                 </div>
               </div>
 
-              <div class="text-purple-secondary text-xs-plus text-left mt-4">
+              <div v-if="hasSubmissions" class="mt-4">
+                <assignment-submission-card v-for="submission in submissions" :submission="submission" :meta="meta" :allow-show-submission="false" class="mb-3"/>
+              </div>
+              <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
                 No ongoing submissions at the moment.
               </div>
 
@@ -140,10 +134,105 @@ import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
 import PenIcon from "@/components/icons/PenIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
 import DashboardLayout from "@/views/layout/DashboardLayout";
+import AssignmentRepository from "@/repositories/students/AssignmentRepository";
+import moment from "moment";
+import TextMultilineTruncate from "@/components/TextMultilineTruncate";
+import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
 
 export default {
   name: "AssignmentDetails",
+
+  props: {
+    assignmentID: [String, Number]
+  },
+  data() {
+    return {
+      assignment: {
+        id: null,
+        title: null,
+        createdAt: null,
+        dueAt: null,
+        written_question: {
+          title: null,
+          description: null
+        }
+      },
+      submissions: [],
+      meta: {
+        classroomID: null,
+        classroomName: null,
+        subjectID: null,
+        subjectName: null,
+        totalSubmissions: null,
+        totalStudents: null
+      }
+    }
+  },
+  computed: {
+    hasSubmissions: function () {
+      return Array.isArray(this.submissions) && this.submissions.length > 0;
+    },
+
+    hasWrittenQuestion: function () {
+      return this.assignment.written_question.title || this.assignment.written_question.description;
+    },
+  },
+  methods: {
+    fetchData() {
+      AssignmentRepository.find(this.assignmentID)
+          .then(response => {
+            let data = response.data;
+
+            // Assignment Details
+            this.assignment.id = data.assignment_details.assignment_id;
+            this.assignment.title = data.assignment_details.title;
+            this.assignment.createdAt = data.assignment_details.assignment_created_at;
+            this.assignment.dueDate = data.assignment_details.due_datetime;
+            this.assignment.written_question.title = data.assignment_details.written_question_title;
+            this.assignment.written_question.description = data.assignment_details.written_question_description;
+
+            // Assignment meta
+            this.meta.classroomID = data.assignment_details.classroom_id;
+            this.meta.classroomName = data.assignment_details.classroom_name;
+            this.meta.subjectID = data.assignment_details.subject_id;
+            this.meta.subjectName = data.assignment_details.subject_name;
+            this.meta.totalSubmissions = data.total_of_submissions;
+            this.meta.totalStudents = data.total_of_students;
+
+            // Submission
+
+            for (let i = 0; i <  data.submissions_by.length; i++) {
+
+              let submission = data.submissions_by[i];
+
+              let details = {
+                id: submission.submission_id,
+                studentID : submission.student_id,
+                studentName : submission.student_name,
+                submittedAt : submission.submission_created_at
+              }
+
+              this.submissions.push(details)
+            }
+
+          });
+    },
+    getHumanDate(datetime) {
+
+      if (datetime) {
+        return moment(datetime, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY")
+      } else {
+        return ''
+      }
+
+    }
+  },
+  mounted() {
+    this.fetchData();
+  },
   components: {
+    AssignmentSubmissionCard,
+    TextMultilineTruncate,
     DashboardLayout,
     CameraIcon, PenIcon, MagnifyingGlassIcon, IconBaseTwo, NavBack}
 }

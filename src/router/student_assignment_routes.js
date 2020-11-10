@@ -1,5 +1,4 @@
 import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
-import AssignmentDetails from "@/views/students/StudentAssignments/Show/Components/AssignmentDetails";
 import AnswerIndex from "@/views/students/StudentAssignments/Answer/Index";
 import AnswerWrite from "@/views/students/StudentAssignments/Answer/AnswerWrite";
 import AnswerSave from "@/views/students/StudentAssignments/Answer/AnswerSave";
@@ -16,12 +15,12 @@ export default {
     children: [
         {
             path: 'assignments/:assignmentID',
-            component: AssignmentShow,
+            component: App,
             children: [
                 {
                     path: 'show',
                     name: 'student.assignments.show',
-                    component: AssignmentDetails,
+                    component: AssignmentShow,
                     meta: studentAccessControlMeta,
                     props: true,
                 },
@@ -38,7 +37,28 @@ export default {
                         },
                         {
                             path: 'save',
-                            name: 'student.assignments.answer.save',
+                            name: 'student.assignments.answer.store',
+                            component: AnswerSave,
+                            meta: studentAccessControlMeta,
+                            props: true
+                        },
+
+                    ]
+                },
+                {
+                    path: 'answer/:submissionID',
+                    component: AnswerIndex,
+                    children: [
+                        {
+                            path: 'edit',
+                            name: 'student.assignments.answer.edit',
+                            component: AnswerWrite,
+                            meta: studentAccessControlMeta,
+                            props: true
+                        },
+                        {
+                            path: 'update',
+                            name: 'student.assignments.answer.update',
                             component: AnswerSave,
                             meta: studentAccessControlMeta,
                             props: true

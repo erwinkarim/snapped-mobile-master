@@ -8,6 +8,7 @@ import QuestionManualDesc from "@/views/teachers/TeacherAssignments/Create/Compo
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
 import App from "@/App";
+import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 
 
 const teacherAccessControlMeta = {
@@ -58,7 +59,7 @@ export default {
                     props: true,
                 },
                 {
-                    path: 'marking',
+                    path: 'marking/:submissionID',
                     component: AssignmentMark,
                     children: [
                         {
@@ -72,6 +73,13 @@ export default {
                             path: 'feedback',
                             name: 'teacher.assignments.marking.feedback',
                             component: AssignmentMarkFeedback,
+                            meta: teacherAccessControlMeta,
+                            props: true,
+                        },
+                        {
+                            path: 'add-mark',
+                            name: 'teacher.assignments.marking.add_mark',
+                            component: AssignmentAddMark,
                             meta: teacherAccessControlMeta,
                             props: true,
                         }
