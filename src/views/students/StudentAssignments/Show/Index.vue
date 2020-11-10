@@ -114,7 +114,7 @@
             </router-link>
         </div>
 
-        <div v-else>
+        <div v-else class="w-full flex flex-row">
           <div class="w-1/2 px-2">
             <router-link :to="{name:'student.assignments.answer.write'}"
                          class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
