@@ -2,8 +2,10 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div :class="swiperClass" class="swiper-slide  rounded-2xl" v-for="item in answers">
-
+        <div :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
+          <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
+            <img :src="path">
+          </div>
         </div>
       </div>
       <div class="swiper-pagination"></div>
@@ -19,20 +21,20 @@ import {directive} from "vue-awesome-swiper";
 export default {
   name: "AnswerPreviewSwiper",
   props: {
-    isPreviewing: Boolean
+    isPreviewing: Boolean,
+    images: Array
   },
   computed: {
     swiperClass: function () {
       if (this.isPreviewing) {
         return 'pb-16/9 bg-black-primary';
       } else {
-        return 'pb-5/4 bg-gray-secondary';
+        return 'pb-5/4';
       }
     }
   },
   data() {
     return {
-      answers: [1, 2, 3, 4, 5, 6, 7],
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',

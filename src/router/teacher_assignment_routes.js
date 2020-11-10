@@ -59,11 +59,11 @@ export default {
                     props: true,
                 },
                 {
-                    path: 'marking/:submissionID',
+                    path: 'submission/:submissionID',
                     component: AssignmentMark,
                     children: [
                         {
-                            path: '',
+                            path: 'marking',
                             name: 'teacher.assignments.marking.details',
                             component: AssignmentMarkDetails,
                             meta: teacherAccessControlMeta,
