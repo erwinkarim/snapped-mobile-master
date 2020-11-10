@@ -1,5 +1,6 @@
 <template>
-  <router-link :to="{name: 'teacher.assignments.marking.details', params: { submissionID: submission.id }}" class="max-w-sm h-18 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
+
+  <div @click="showSubmission" class="max-w-sm h-18 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
     <div class="flex flex-row items-center h-full">
 
       <div class="w-2/12">
@@ -28,19 +29,24 @@
 
     </div>
 
-  </router-link>
+  </div>
 </template>
 
 <script>
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import moment from "moment";
+import router from "@/router";
 
 export default {
   name: "AssignmentSubmissionCard",
   props: {
     submission: Object,
-    meta: Object
+    meta: Object,
+    allowShowSubmission: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
     getHumanDate(datetime) {
@@ -51,6 +57,11 @@ export default {
         return ''
       }
 
+    },
+    showSubmission(submissionID) {
+      if (this.allowShowSubmission) {
+        router.push({name: 'teacher.assignments.marking.details', params: { submissionID: this.submission.id }})
+      }
     }
   },
   components: {ProfilePhoto, IconBaseTwo}

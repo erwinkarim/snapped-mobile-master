@@ -16,7 +16,7 @@
           <div v-if="answer.length === 0" class="text-gray-primary font-bold">
             Save
           </div>
-          <router-link :to="{name: 'student.assignments.answer.save'}" v-if="answer.length > 0" class="text-red-primary font-bold">
+          <router-link :to="{name: 'student.assignments.answer.store'}" v-if="answer.length > 0" class="text-red-primary font-bold">
             Save
           </router-link>
         </template>
@@ -44,20 +44,28 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 export default {
   name: "AnswerWrite",
   props: {
-    answer: String
+    answer: String,
+    submissionID: {
+      type: [String, Number],
+      default: null
+    }
   },
   data () {
     return {
       latestAnswer: ''
     }
   },
-  mounted() {
-    this.latestAnswer = this.answer
-  },
   methods: {
     compileAnswer () {
       this.$emit('test', this.latestAnswer)
     },
+    getSubmission () {
+      console.log(this.submissionID)
+    }
+  },
+
+  mounted() {
+    this.latestAnswer = this.answer
   },
   components: {DashboardLayout, PageHeaderThree, Modal, PageTitleTwo, NavBack}
 }
