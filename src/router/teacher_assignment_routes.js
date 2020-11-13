@@ -9,6 +9,7 @@ import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Comp
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
 import App from "@/App";
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
+import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
 
 
 const teacherAccessControlMeta = {
@@ -66,6 +67,13 @@ export default {
                             path: 'marking',
                             name: 'teacher.assignments.marking.details',
                             component: AssignmentMarkDetails,
+                            meta: teacherAccessControlMeta,
+                            props: true,
+                        },
+                        {
+                            path: 'marking/:snappedAnswer',
+                            name: 'teacher.assignments.marking.snapped_answer.edit',
+                            component: EditSnappedAnswer,
                             meta: teacherAccessControlMeta,
                             props: true,
                         },

@@ -2,7 +2,7 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
+        <div @click="goToEditSnappedAnswer(path)" :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
           <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
             <img :src="path">
           </div>
@@ -17,6 +17,7 @@
 
 <script>
 import {directive} from "vue-awesome-swiper";
+import router from "@/router";
 
 export default {
   name: "AnswerPreviewSwiper",
@@ -53,6 +54,14 @@ export default {
           prevEl: '.swiper-button-prev'
         },
         autoplay: false
+      }
+    }
+  },
+  methods: {
+    goToEditSnappedAnswer (path) {
+
+      if (this.isPreviewing) {
+        router.push({ name: 'teacher.assignments.marking.snapped_answer.edit', params: { snappedAnswer : path} })
       }
     }
   },
