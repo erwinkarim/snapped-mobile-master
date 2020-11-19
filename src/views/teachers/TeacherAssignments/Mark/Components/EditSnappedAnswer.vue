@@ -104,6 +104,8 @@ export default {
   },
   props: {
     snappedAnswer: String,
+    isMarking: Boolean,
+    isMarkingPath: null
   },
   data() {
     return {
@@ -129,16 +131,6 @@ export default {
   },
   methods: {
     loadCanvas() {
-
-      // FabricJS docs: http://fabricjs.com/docs/
-
-      /* TODO:
-          - Move this component back into the Show page to allow persistence of stickers on canvas
-          - Add status isMarking to limit usage of Stickers
-          - Create multiple canvases on page http://jsfiddle.net/illumine/PSkmD/
-          -
-      */
-
       this.canvasVue = new fabric.Canvas('canvas', {
         width: this.canvasDimensions.width,
         height: this.canvasDimensions.height,

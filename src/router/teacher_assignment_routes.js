@@ -62,21 +62,22 @@ export default {
                 {
                     path: 'submission/:submissionID',
                     component: AssignmentMark,
+                    props: true,
                     children: [
                         {
-                            path: 'marking',
+                            path: '',
                             name: 'teacher.assignments.marking.details',
                             component: AssignmentMarkDetails,
                             meta: teacherAccessControlMeta,
                             props: true,
                         },
-                        {
-                            path: 'marking/:snappedAnswer',
-                            name: 'teacher.assignments.marking.snapped_answer.edit',
-                            component: EditSnappedAnswer,
-                            meta: teacherAccessControlMeta,
-                            props: true,
-                        },
+                        // {
+                        //     path: 'marking/:snappedAnswer',
+                        //     name: 'teacher.assignments.marking.snapped_answer.edit',
+                        //     component: EditSnappedAnswer,
+                        //     meta: teacherAccessControlMeta,
+                        //     props: true,
+                        // },
                         {
                             path: 'feedback',
                             name: 'teacher.assignments.marking.feedback',

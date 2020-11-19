@@ -13,9 +13,9 @@
         </template>
 
         <template v-slot:rightAction>
-          <router-link :to="{name: ''}" v-if="mark" class="text-red-primary font-bold">
+          <div @click="save" :to="{name: ''}" v-if="marks" class="text-red-primary font-bold">
             Done
-          </router-link>
+          </div>
           <div v-else class="text-gray-primary font-bold">
             Done
           </div>
@@ -28,7 +28,7 @@
         <div class="px-7 border-b-1 border-gray-primary border-opacity-15 pb-3 text-purple-primary text-sm">
           Enter the mark for this assignment
         </div>
-        <input v-model="mark" type="number" placeholder="Mark"
+        <input v-model="marks" type="number" placeholder="Mark"
                class="px-7 border-b-1 border-gray-primary border-opacity-15 py-4 text-purple-primary text-sm">
 
         <div class="px-7 pt-5 text-purple-secondary text-sm">
@@ -44,12 +44,19 @@
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
+import router from "@/router";
 
 export default {
   name: "AssignmentAddMark",
   data() {
     return {
-      mark: null
+      marks: null
+    }
+  },
+  methods: {
+    save() {
+      this.$emit('marks', this.marks)
+      router.push({name: 'teacher.assignments.marking.details'})
     }
   },
   components: {NavBack, PageHeaderThree, DashboardLayout}

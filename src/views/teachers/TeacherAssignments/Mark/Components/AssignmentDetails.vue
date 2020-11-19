@@ -31,66 +31,33 @@
 
     <div class="flex flex-col w-screen ">
 
-      <!-- Content -->
+      <!-- CONTENT -->
       <div :class="contentClass" class="relative top-24">
 
-        <!--  ASSIGNMENT ANSWERS (IMAGE) -->
-        <div v-if="hasSnappedAnswer && !isMarking.status" :class="imagePreviewClass" class="pt-4 z-10">
+        <!--  ASSIGNMENT ANSWERS-->
+        <div :class="imagePreviewClass" class="pt-4 z-10">
+
           <answer-preview-swiper
+              v-if="hasSnappedAnswer && !isMarking.status"
               :is-previewing="isPreviewing"
               :images="details.snappedAnswerPaths"
               @isMarking="enterMarkingMode"
           />
+
+          <written-answer-preview
+              v-if="hasWrittenAnswer && !isMarking.status"
+              :is-previewing="isPreviewing"
+              :answer="details.writtenAnswer"
+          />
         </div>
 
         <!-- ASSIGNMENT DETAILS -->
-        <div v-if="!isPreviewing && !isMarking.status" class="mt-6 px-5">
-
-          <!-- Achievements -->
-          <div class="flex flex-row ">
-            <div class="bg-gray-secondary rounded-full py-1 px-4 text-xs font-bold text-purple-primary uppercase">
-              First Submit
-            </div>
-          </div>
-
-          <div class="text-left mt-5 text-purple-primary font-bold tracking-normal text-xl truncate">
-            {{ details.assignmentTitle || '' }}
-          </div>
-
-          <div class="text-purple-secondary font-bold text-sm mt-3 text-left truncate">
-            {{ details.studentName || '' }}
-          </div>
-
-          <div class="flex flex-row justify-between mt-4 text-sm ">
-            <div class="text-purple-secondary text-left">
-              Time submitted
-            </div>
-            <div class="flex flex-row justify-end text-purple-primary text-right">
-              <div class="mr-4">
-                {{ details.submittedTime || '' }}
-              </div>
-              <div>
-                {{ details.submittedDate || '-' }}
-              </div>
-            </div>
-          </div>
-
-          <!-- MARKS -->
-          <div v-if="isMarked" class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
-            <div class="text-purple-secondary mr-1">
-              {{ details.marks || '-' }}
-            </div>
-            <div class="text-purple-primary">
-              /100 Marks
-            </div>
-          </div>
-          <div v-else class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
-            <div class="text-purple-primary">
-              Unmarked
-            </div>
-          </div>
-
-        </div>
+        <assignment-info
+            :show="!isPreviewing && !isMarking.status"
+            :is-marked="isMarked"
+            :details="details"
+            :new-marks="newMarks"
+        />
 
       </div>
 
@@ -104,7 +71,7 @@
 
     <!-- BOTTOM BAR -->
 
-    <div class="md:hidden block fixed inset-x-0 bottom-0 z-60 shadow pt-4 pb-6 px-5">
+    <div class="md:hidden block fixed inset-x-0 bottom-0 z-60 shadow pt-4 pb-6 px-5 bg-white">
 
       <div v-if="!isLoading" class="w-full">
         <div v-if="isMarked" class="w-full flex flex-row">
@@ -152,6 +119,7 @@
             </div>
           </div>
         </div>
+
         <div v-else class="w-full flex flex-row items-center">
           <router-link :to="{name: 'teacher.assignments.marking.feedback'}" class="w-1/8 mr-2">
             <icon-base-two class="w-7/8">
@@ -199,11 +167,15 @@ import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
 import StickerLoader from "@/views/teachers/TeacherAssignments/Mark/Components/StickerLoader";
 import {fabric} from "fabric";
 import stickers from "@/components/Stickers/Stickers";
+import TextMultilineTruncate from "@/components/TextMultilineTruncate";
+import WrittenAnswerPreview from "@/views/teachers/TeacherAssignments/Mark/Components/WrittenAnswerPreview";
+import AssignmentInfo from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentInfo";
 
 export default {
   name: "AssignmentDetails",
   props: {
-    submissionID: [String, Number]
+    submissionID: [String, Number],
+    newMarks: [String, Number]
   },
   data() {
     return {
@@ -245,9 +217,6 @@ export default {
   computed: {
 
     containerClass: function () {
-
-      console.log(this.isMarking.status)
-
       let value = 'bg-white';
 
       if (this.isMarking.status) {
@@ -290,6 +259,10 @@ export default {
       return this.details.marks !== null;
     },
 
+    hasWrittenAnswer: function () {
+      return this.details.writtenAnswer !== null && this.details.writtenAnswer !== undefined;
+    },
+
     hasSnappedAnswer: function () {
       return this.details.snappedAnswerPaths !== null && this.details.snappedAnswerPaths !== undefined;
     },
@@ -308,12 +281,15 @@ export default {
             this.details.assignmentID = data.assignment_id;
             this.details.assignmentTitle = data.assignment_title;
             this.details.writtenAnswer = data.written_answer;
-            this.details.snappedAnswerPaths = data.snap_answer_url.split(',');
             this.details.createdAt = data.created_at;
             this.details.updatedAt = data.updated_at;
             this.details.submittedTime = data.submission_time;
             this.details.submittedDate = data.submission_date;
             this.details.marks = data.marks;
+
+            if (data.snap_answer_url) {
+              this.details.snappedAnswerPaths = data.snap_answer_url.split(',');
+            }
 
             this.isLoading = false;
           });
@@ -340,8 +316,6 @@ export default {
         this.loadCanvas();
         this.loadSnappedAnswer();
       }, 100)
-
-      console.log(`Enter marking mode | Preview: ${this.isPreviewing} | Marking: ${this.isMarking.status}`)
     },
     loadCanvas() {
 
@@ -352,36 +326,47 @@ export default {
     },
     loadSnappedAnswer() {
 
-      /* TODO:
-          - Implement load snapped answer
-          - Implement navback and Done when isMarking
-      */
+
+      this.isMarking.path = 'https://snapped-dev.boneybone.com/storage/assignments/20977d8890de5201aa4f113918a54132bf4.jpg';
 
       // Load image, then set it is Canvas's background image
       fabric.Image.fromURL(this.isMarking.path, (img, error) => {
 
             let scaleFactor = this.canvasDimensions.width / img.width;
+            //
+            // console.log(`Scale factor: ${scaleFactor}`)
+            // console.log(`Path: ${this.isMarking.path}`)
+            // console.log(`Canvas: ${this.canvasVue} | Height: ${this.canvasVue.height}`)
 
-            console.log(`Scale factor: ${scaleFactor}`)
-            console.log(`Path: ${this.isMarking.path}`)
-            console.log(`Canvas: ${this.canvasVue} | Height: ${this.canvasVue.height}`)
-
-            this.canvasVue.setBackgroundImage(
-                this.isMarking.path,
-                this.canvasVue.renderAll.bind(this.canvasVue),
-                {
-                  top: this.canvasVue.height / 2,
-                  left: this.canvasVue.width / 2,
-                  originX: 'center',
-                  originY: 'center',
-                  scaleX: scaleFactor,
-                  scaleY: scaleFactor
-                }
-            );
+            // this.canvasVue.setBackgroundImage(
+            //     this.isMarking.path,
+            //     this.canvasVue.renderAll.bind(this.canvasVue),
+            //     {
+            //       top: this.canvasVue.height / 2,
+            //       left: this.canvasVue.width / 2,
+            //       originX: 'center',
+            //       originY: 'center',
+            //       scaleX: scaleFactor,
+            //       scaleY: scaleFactor
+            //     }
+            // );
           }, {
             crossOrigin: 'Anonymous'
           }
       );
+
+      // this.canvasVue.setBackgroundImage(
+      //     this.isMarking.path,
+      //     this.canvasVue.renderAll.bind(this.canvasVue),
+      //     {
+      //       top: this.canvasVue.height / 2,
+      //       left: this.canvasVue.width / 2,
+      //       originX: 'center',
+      //       originY: 'center',
+      //       scaleX: 0.5,
+      //       scaleY: 0.5
+      //     }
+      // );
 
 
     },
@@ -402,11 +387,7 @@ export default {
     },
 
     doneMarkingSnappedAnswer: function () {
-      console.log('Done Marking');
-      console.log(`Done: ${this.isMarking.path}`);
-      let dataURL = this.canvasVue.toDataURL()
-
-      console.log(dataURL)
+      let dataURL = this.canvasVue.toDataURL();
     }
 
   },
@@ -414,6 +395,9 @@ export default {
     this.fetchData()
   },
   components: {
+    AssignmentInfo,
+    WrittenAnswerPreview,
+    TextMultilineTruncate,
     StickerLoader,
     TickedBoxIcon,
     PageHeaderThree,
