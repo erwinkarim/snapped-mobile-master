@@ -1,7 +1,7 @@
 <template>
 <!--  <div class="multi-line-truncate">-->
   <div class="leading-relaxed" :style="style">
-    {{text}}
+    <slot/>
   </div>
 </template>
 

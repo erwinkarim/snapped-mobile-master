@@ -2,7 +2,7 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
+        <div @click="" :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
           <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
             <img :src="path">
           </div>
@@ -17,6 +17,7 @@
 
 <script>
 import {directive} from "vue-awesome-swiper";
+import router from "@/router";
 
 export default {
   name: "AnswerPreviewSwiper",
@@ -35,6 +36,10 @@ export default {
   },
   data() {
     return {
+
+      // STATES
+      isMarking: false,
+
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
@@ -53,6 +58,25 @@ export default {
           prevEl: '.swiper-button-prev'
         },
         autoplay: false
+      }
+    }
+  },
+  methods: {
+    enterMarkingMode(path) {
+      console.log(`Previewing: ${this.isPreviewing}`)
+      if (this.isPreviewing) {
+        this.isMarking = !this.isMarking;
+        console.log(`Toggle marking mode: ${this.isMarking}`)
+
+        this.$emit('isMarking', {
+          state: this.isMarking,
+          path: path,
+        })
+      }
+    },
+    goToEditSnappedAnswer (path) {
+      if (this.isPreviewing) {
+        router.push({ name: 'teacher.assignments.marking.snapped_answer.edit', params: { snappedAnswer : path} })
       }
     }
   },

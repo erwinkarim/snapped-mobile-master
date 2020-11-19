@@ -158,7 +158,8 @@ module.exports = {
                 'red-primary': "#F53B57",
                 'green-primary': "#05DA77",
                 'blue-secondary': '#3D79CA',
-                'black-primary' : '#2A2A2A'
+                'black-primary' : '#2A2A2A',
+                'filter-blue' : '#3A4276'
             },
             inset: {
                 '0': '0',
@@ -198,6 +199,12 @@ module.exports = {
                 '1/4': '25%',
                 '3/4': '75%',
             },
+            zIndex: {
+                '60': 60,
+                '70' : 70,
+                '80' : 80,
+                '90' : 90,
+            },
             boxShadow: {
                 'md-soft': '0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.02)'
             },
@@ -206,6 +213,7 @@ module.exports = {
                 '10': '0.1',
                 '15': '0.15',
                 '20': '0.2',
+                '40': '0.4',
                 '95': '0.95',
             }
         },

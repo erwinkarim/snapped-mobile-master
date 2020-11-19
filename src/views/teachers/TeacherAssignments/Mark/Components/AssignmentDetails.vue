@@ -1,130 +1,45 @@
 <template>
-  <dashboard-layout :has-custom-bottom-bar="true">
+    <div class="flex flex-col w-screen ">
 
-    <template v-slot:pageHeader>
-      <page-header-three :background-color="isPreviewing ? 'bg-white' : 'bg-black-primary'" :bottom-padding="4">
-        <template v-slot:leftAction>
-          <nav-back v-if="!isPreviewing" class="w-2/3" stroke-color="white"/>
+      <!-- CONTENT -->
+      <div :class="contentClass" class="relative top-24">
 
-          <div @click="togglePreviewMode">
-            <icon-base-two v-if="isPreviewing" class="w-2/3">
-              <arrow-back-icon stroke-color="purple-primary"/>
-            </icon-base-two>
-          </div>
+        <!--  ASSIGNMENT ANSWERS-->
+        <div :class="imagePreviewClass" class="pt-4 z-10">
+          <!--
+                TODO: - Implement page editSnappedAnswer.  On preview click, go to the page with image path
+                      - Allow loadCanvas, loadImage and loadSticker for demo purposes
+          -->
+          <answer-preview-swiper
+              v-if="hasSnappedAnswer && !isMarking.status"
+              :is-previewing="states.isPreviewing"
+              :images="assignmentDetails.snappedAnswerPaths"
+              @isMarking="enterMarkingMode"
+          />
 
-        </template>
-        <template v-slot:title v-if="isPreviewing">
-          Answer Preview
-        </template>
-        <template v-slot:rightAction v-if="!isPreviewing">
-          <div @click="togglePreviewMode" class="flex flex-row justify-end">
-            <icon-base-two class="w-1/3">
-              <expand-image-icon/>
-            </icon-base-two>
-          </div>
-        </template>
-      </page-header-three>
-    </template>
-
-    <template v-slot:content>
-
-      <!-- Content -->
-      <div class="relative top-24">
-
-        <!-- ASSIGNMENT ANSWERS (IMAGE) -->
-        <div v-if="hasSnappedAnswer" :class="imagePreviewClass" class="  pt-4">
-          <answer-preview-swiper :is-previewing="isPreviewing" :images="getSnappedAnswerPaths"/>
+          <written-answer-preview
+              v-if="hasWrittenAnswer && !isMarking.status"
+              :is-previewing="states.isPreviewing"
+              :answer="assignmentDetails.writtenAnswer"
+          />
         </div>
 
         <!-- ASSIGNMENT DETAILS -->
-        <div class="mt-6 px-5" v-if="!isPreviewing">
+        <assignment-info
+            :show="states.isMain"
+            :details="assignmentDetails"
+            :new-marks="newMarks"
+        />
 
-          <!-- Achievements -->
-          <div class="flex flex-row ">
-            <div class="bg-gray-secondary rounded-full py-1 px-4 text-xs font-bold text-purple-primary uppercase">
-              First Submit
-            </div>
-          </div>
-
-          <div class="text-left mt-5 text-purple-primary font-bold tracking-normal text-xl truncate">
-            {{ details.assignmentTitle || '' }}
-          </div>
-
-          <div class="text-purple-secondary font-bold text-sm mt-3 text-left truncate">
-            {{ details.studentName || ''  }}
-          </div>
-
-          <div class="flex flex-row justify-between mt-4 text-sm ">
-            <div class="text-purple-secondary text-left">
-              Time submitted
-            </div>
-            <div class="flex flex-row justify-end text-purple-primary text-right">
-              <div class="mr-4">
-                {{ details.submittedTime || '' }}
-              </div>
-              <div>
-                {{ details.submittedDate || '-' }}
-              </div>
-            </div>
-          </div>
-
-          <!-- MARKS -->
-          <div v-if="isMarked" class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
-            <div class="text-purple-secondary mr-1">
-              {{ details.marks || '-' }}
-            </div>
-            <div class="text-purple-primary">
-              /100 Marks
-            </div>
-          </div>
-          <div v-else class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
-            <div class="text-purple-primary">
-              Unmarked
-            </div>
-          </div>
-
-        </div>
 
       </div>
 
+<!--      <div v-if="isMarking.status"-->
+<!--           class="w-full h-full bg-black-primary object-cover top-0 flex flex-row justify-center items-center absolute">-->
+<!--        <canvas id="canvas"/>-->
+<!--      </div>-->
 
-    </template>
-
-    <template v-slot:bottomBar>
-
-      <div v-if="!isLoading" class="w-full">
-        <div v-if="isMarked" class="w-full flex flex-row">
-          <div class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-            Marked
-          </div>
-        </div>
-        <div v-else class="w-full flex flex-row items-center" >
-          <router-link :to="{name: 'teacher.assignments.marking.feedback'}" class="w-1/8 mr-2">
-            <icon-base-two class="w-7/8">
-              <dialog-bubble-icon/>
-            </icon-base-two>
-          </router-link>
-          <div class="w-3/8 px-2">
-            <router-link :to="{name: 'teacher.assignments.marking.add_mark'}" v-if="isPreviewing" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-              Add Mark
-            </router-link>
-            <button v-else @click="togglePreviewMode" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-              Marking
-            </button>
-          </div>
-          <div class="w-4/8 px-2">
-            <button
-                class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
-              <div class="w-5/7">
-                Set as Marked
-              </div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </template>
-  </dashboard-layout>
+    </div>
 </template>
 
 <script>
@@ -140,89 +55,150 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import SubmissionRepository from "@/repositories/SubmissionRepository";
+import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
+import StickerLoader from "@/views/teachers/TeacherAssignments/Mark/Components/StickerLoader";
+import {fabric} from "fabric";
+import stickers from "@/components/Stickers/Stickers";
+import TextMultilineTruncate from "@/components/TextMultilineTruncate";
+import WrittenAnswerPreview from "@/views/teachers/TeacherAssignments/Mark/Components/WrittenAnswerPreview";
+import AssignmentInfo from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentInfo";
 
 export default {
   name: "AssignmentDetails",
   props: {
-    submissionID: [String, Number]
+    submissionID: [String, Number],
+    newMarks: [String, Number],
+    states: Object,
+    assignmentDetails: Object
   },
   data() {
     return {
-
-      // States
-      isLoading: true,
-      isPreviewing: false,
-
-      details: {
-        submissionID: null,
-        studentID: null,
-        studentName: null,
-        assignmentID: null,
-        assignmentTitle: null,
-        snappedAnswerPaths: null,
-        writtenAnswer: null,
-        marks: null,
-        createdAt: null,
-        updatedAt: null,
-        submittedTime: null,
-        submittedDate: null
+      // Marking Mode: Canvas
+      canvasDimensions: {
+        height: 0.75 * screen.height,
+        width: screen.width
       },
+
+      isMarking: {
+        status: false,
+        path: null
+      },
+
     }
   },
   computed: {
 
+    containerClass: function () {
+      let value = 'bg-white';
+
+      if (this.isMarking.status) {
+        value = 'bg-black-primary';
+      }
+
+      return value;
+    },
+
+    contentClass: function () {
+      if (this.states.isMarking) {
+        return 'pb-16/9';
+      }
+
+      return '';
+    },
+
     imagePreviewClass: function () {
-      if (this.isPreviewing) {
+      if (this.states.isPreviewing) {
         return 'bg-white px-6 pb-16';
       } else {
         return 'bg-black-primary px-16  pb-10'
       }
     },
 
-    isMarked: function () {
-      return this.details.marks !== null;
+    hasWrittenAnswer: function () {
+      return this.assignmentDetails.writtenAnswer !== null && this.assignmentDetails.writtenAnswer !== undefined;
     },
 
     hasSnappedAnswer: function () {
-      return this.details.snappedAnswerPaths !== null && this.details.snappedAnswerPaths !== undefined;
+      return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
     },
-
-    getSnappedAnswerPaths: function () {
-      return this.details.snappedAnswerPaths.split(',');
-    }
-
   },
   methods: {
-    fetchData() {
+    enterMarkingMode(value) {
+      this.isPreviewing = false;
+      this.isMarking.status = value.state;
+      this.isMarking.path = value.path
 
-      SubmissionRepository.find(this.submissionID)
-          .then(response => {
-            let data = response.data.submission_details;
-
-            this.details.submissionID = data.submission_id;
-            this.details.studentID = data.student_id;
-            this.details.studentName = data.student_name;
-            this.details.assignmentID = data.assignment_id;
-            this.details.assignmentTitle = data.assignment_title;
-            this.details.writtenAnswer = data.written_answer;
-            this.details.snappedAnswerPaths = data.snap_answer_url;
-            this.details.createdAt = data.created_at;
-            this.details.updatedAt = data.updated_at;
-            this.details.submittedTime = data.submission_time;
-            this.details.submittedDate = data.submission_date;
-            this.details.marks = data.marks;
-
-            this.isLoading = false;
-          });
+      setTimeout(() => {
+        this.loadCanvas();
+        this.loadSnappedAnswer();
+      }, 100)
     },
-    togglePreviewMode() {
-      this.isPreviewing = !this.isPreviewing;
+    loadCanvas() {
+
+      this.canvasVue = new fabric.Canvas('canvas', {
+        width: this.canvasDimensions.width,
+        height: this.canvasDimensions.height,
+      })
+    },
+    loadSnappedAnswer() {
+
+
+      this.isMarking.path = 'https://snapped-dev.boneybone.com/storage/assignments/20977d8890de5201aa4f113918a54132bf4.jpg';
+
+      // Load image, then set it is Canvas's background image
+      fabric.Image.fromURL(this.isMarking.path, (img, error) => {
+
+            let scaleFactor = this.canvasDimensions.width / img.width;
+            //
+            // console.log(`Scale factor: ${scaleFactor}`)
+            // console.log(`Path: ${this.isMarking.path}`)
+            // console.log(`Canvas: ${this.canvasVue} | Height: ${this.canvasVue.height}`)
+
+            // this.canvasVue.setBackgroundImage(
+            //     this.isMarking.path,
+            //     this.canvasVue.renderAll.bind(this.canvasVue),
+            //     {
+            //       top: this.canvasVue.height / 2,
+            //       left: this.canvasVue.width / 2,
+            //       originX: 'center',
+            //       originY: 'center',
+            //       scaleX: scaleFactor,
+            //       scaleY: scaleFactor
+            //     }
+            // );
+          }, {
+            crossOrigin: 'Anonymous'
+          }
+      );
+
+    },
+    loadSticker(stickerName) {
+
+      console.log(`Jom load ${stickerName}`)
+      this.isSelectingSticker = false;
+
+      fabric.loadSVGFromString(stickers[stickerName], (objects, options) => {
+
+        let obj = fabric.util.groupSVGElements(objects, options);
+        obj.scaleToHeight(this.canvasVue.height / 12)
+            .set({left: this.canvasVue.width / 2, top: this.canvasVue.height / 2})
+            .setCoords();
+
+        this.canvasVue.add(obj).renderAll();
+      });
+    },
+
+    doneMarkingSnappedAnswer: function () {
+      let dataURL = this.canvasVue.toDataURL();
     }
-  },
-  mounted() {
-    this.fetchData()
+
   },
   components: {
+    AssignmentInfo,
+    WrittenAnswerPreview,
+    TextMultilineTruncate,
+    StickerLoader,
+    TickedBoxIcon,
     PageHeaderThree,
     DashboardLayout,
     ArrowBackIcon,

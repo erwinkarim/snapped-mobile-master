@@ -9,8 +9,7 @@
       <slot name="content"/>
     </div>
 
-    <div v-if="hasCustomBottomBar"
-         class="md:hidden block fixed inset-x-0 border-t-1/4 bottom-0 z-10 shadow bg-white pt-4 pb-6 px-5">
+    <div v-if="hasCustomBottomBar" :class="bottomBarClass" class="md:hidden block fixed inset-x-0  bottom-0 z-10 shadow pt-4 pb-6 px-5">
       <div class="flex flex-row h-full items-center justify-around">
         <slot name="bottomBar"/>
       </div>
@@ -39,9 +38,17 @@ export default {
       type: Boolean,
       default: false
     },
+    hasBottomBarBorder: {
+      type: Boolean,
+      default: true
+    },
     noBottomBar: {
       type: Boolean,
       default: false
+    },
+    bottomBarColor: {
+      type: String,
+      default: 'bg-white'
     },
     contentFillsScreen: {
       type: Boolean,
@@ -61,6 +68,17 @@ export default {
         value += ' h-full pb-10'
       } else {
         value += ' mb-24'
+      }
+
+      return value;
+    },
+    bottomBarClass: function () {
+      let value = '';
+
+      value += this.bottomBarColor
+
+      if (this.hasBottomBarBorder) {
+        value += ' border-t-1/4'
       }
 
       return value;
