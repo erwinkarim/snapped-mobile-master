@@ -2,7 +2,7 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div @click="enterMarkingMode(path)" :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
+        <div @click="" :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
           <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
             <img :src="path">
           </div>

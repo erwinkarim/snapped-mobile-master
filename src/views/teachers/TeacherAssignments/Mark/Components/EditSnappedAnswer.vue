@@ -2,6 +2,11 @@
 
   <div class="h-screen bg-black-primary">
 
+    <!-- SCREEN OVERLAY -->
+    <div v-if="isSelectingSticker" @click="toggleStickerBar"
+         class="fixed h-screen z-50 inset-x-0 block top-0 bg-filter-blue bg-opacity-40 ">
+    </div>
+
     <div v-if="showMarkersBar" @click="toggleMarkersBar"
          class="fixed h-screen z-50 inset-x-0 block top-0 bg-filter-blue bg-opacity-40 ">
 

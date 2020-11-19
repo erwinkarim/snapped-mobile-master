@@ -201,7 +201,9 @@ module.exports = {
             },
             zIndex: {
                 '60': 60,
-                '70' : 70
+                '70' : 70,
+                '80' : 80,
+                '90' : 90,
             },
             boxShadow: {
                 'md-soft': '0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.02)'

@@ -61,14 +61,16 @@
 export default {
   props: {
     show: Boolean,
-    isMarked: Boolean,
     details: Object,
     newMarks: [String, Number]
   },
   computed: {
     hasNewMarks() {
       return this.newMarks !== null && this.newMarks !== undefined;
-    }
+    },
+    isMarked: function () {
+      return this.details.marks !== null;
+    },
   },
   name: "AssignmentInfo"
 }
