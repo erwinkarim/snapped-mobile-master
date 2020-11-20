@@ -71,13 +71,13 @@ export default {
                             meta: teacherAccessControlMeta,
                             props: true,
                         },
-                        // {
-                        //     path: 'marking/:snappedAnswer',
-                        //     name: 'teacher.assignments.marking.snapped_answer.edit',
-                        //     component: EditSnappedAnswer,
-                        //     meta: teacherAccessControlMeta,
-                        //     props: true,
-                        // },
+                        {
+                            path: 'marking',
+                            name: 'teacher.assignments.marking.snapped_answer.edit',
+                            component: EditSnappedAnswer,
+                            meta: teacherAccessControlMeta,
+                            props: true,
+                        },
                         {
                             path: 'feedback',
                             name: 'teacher.assignments.marking.feedback',

@@ -14,7 +14,7 @@
               v-if="hasSnappedAnswer && !isMarking.status"
               :is-previewing="states.isPreviewing"
               :images="assignmentDetails.snappedAnswerPaths"
-              @isMarking="enterMarkingMode"
+              @nowMarking="enterMarkingMode"
           />
 
           <written-answer-preview
@@ -30,15 +30,14 @@
             :details="assignmentDetails"
             :new-marks="newMarks"
         />
-
-
       </div>
 
+
+        <!-- CANVAS -->
 <!--      <div v-if="isMarking.status"-->
 <!--           class="w-full h-full bg-black-primary object-cover top-0 flex flex-row justify-center items-center absolute">-->
 <!--        <canvas id="canvas"/>-->
 <!--      </div>-->
-
     </div>
 </template>
 
@@ -123,75 +122,9 @@ export default {
     },
   },
   methods: {
-    enterMarkingMode(value) {
-      this.isPreviewing = false;
-      this.isMarking.status = value.state;
-      this.isMarking.path = value.path
-
-      setTimeout(() => {
-        this.loadCanvas();
-        this.loadSnappedAnswer();
-      }, 100)
+    enterMarkingMode(path) {
+      this.$emit('nowMarking', path)
     },
-    loadCanvas() {
-
-      this.canvasVue = new fabric.Canvas('canvas', {
-        width: this.canvasDimensions.width,
-        height: this.canvasDimensions.height,
-      })
-    },
-    loadSnappedAnswer() {
-
-
-      this.isMarking.path = 'https://snapped-dev.boneybone.com/storage/assignments/20977d8890de5201aa4f113918a54132bf4.jpg';
-
-      // Load image, then set it is Canvas's background image
-      fabric.Image.fromURL(this.isMarking.path, (img, error) => {
-
-            let scaleFactor = this.canvasDimensions.width / img.width;
-            //
-            // console.log(`Scale factor: ${scaleFactor}`)
-            // console.log(`Path: ${this.isMarking.path}`)
-            // console.log(`Canvas: ${this.canvasVue} | Height: ${this.canvasVue.height}`)
-
-            // this.canvasVue.setBackgroundImage(
-            //     this.isMarking.path,
-            //     this.canvasVue.renderAll.bind(this.canvasVue),
-            //     {
-            //       top: this.canvasVue.height / 2,
-            //       left: this.canvasVue.width / 2,
-            //       originX: 'center',
-            //       originY: 'center',
-            //       scaleX: scaleFactor,
-            //       scaleY: scaleFactor
-            //     }
-            // );
-          }, {
-            crossOrigin: 'Anonymous'
-          }
-      );
-
-    },
-    loadSticker(stickerName) {
-
-      console.log(`Jom load ${stickerName}`)
-      this.isSelectingSticker = false;
-
-      fabric.loadSVGFromString(stickers[stickerName], (objects, options) => {
-
-        let obj = fabric.util.groupSVGElements(objects, options);
-        obj.scaleToHeight(this.canvasVue.height / 12)
-            .set({left: this.canvasVue.width / 2, top: this.canvasVue.height / 2})
-            .setCoords();
-
-        this.canvasVue.add(obj).renderAll();
-      });
-    },
-
-    doneMarkingSnappedAnswer: function () {
-      let dataURL = this.canvasVue.toDataURL();
-    }
-
   },
   components: {
     AssignmentInfo,

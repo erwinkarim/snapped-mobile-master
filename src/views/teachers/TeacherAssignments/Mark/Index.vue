@@ -1,14 +1,19 @@
 <template>
   <div :class="containerClass" class="h-screen">
 
-
-    <!-- MODAL -->
+    <!-- OVERLAYS -->
     <div v-if="states.isShowingModal" @click="closeModalMode"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
     </div>
+    <div v-if="states.isSelectingSticker" @click="toggleStickerBar"
+         class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-filter-blue bg-opacity-40 ">
+    </div>
+
+
+    <!-- MODAL -->
     <div v-if="states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal class="w-4/5 " modal-type="error" v-on:toggleModal="closeModalMode">
+      <modal class="w-4/5 " modal-type="error" @toggleModal="closeModalMode">
         <template slot="message">
           You must add mark for this assignment.
         </template>
@@ -53,13 +58,16 @@
 
         :assignment-details="assignmentDetails"
 
-        v-on:feedback="handleFeedback"
+        @feedback="handleFeedback"
         :feedback="submission.feedback"
 
-        v-on:marks="handleMark"
+        @marks="handleMark"
         :new-marks="submission.marks"
 
-        v-on:loadSticker="handleLoadSticker"
+        @nowMarking="handleNowMarking"
+        :now-marking="nowMarking"
+
+        :now-loading-sticker="nowLoadingSticker"
     />
 
     <!-- BOTTOM BAR -->
@@ -67,9 +75,11 @@
         :states="states"
         :isMarkedAssignment="isMarkedAssignment"
 
-        v-on:togglePreviewMode="handleTogglePreviewMode"
-        v-on:toggleStickerBar="handleToggleStickerBar"
-        v-on:submit="handleSubmission"
+        @togglePreviewMode="handleTogglePreviewMode"
+        @toggleMarkingMode="handleToggleMarkingMode"
+        @toggleStickerBar="handleToggleStickerBar"
+        @loadSticker="handleLoadSticker"
+        @submit="handleSubmission"
     />
 
   </div>
@@ -119,6 +129,9 @@ export default {
         submittedTime: null,
         submittedDate: null
       },
+
+      nowMarking: null,
+      nowLoadingSticker: null,
 
       submission: {
         feedback: '',
@@ -171,14 +184,13 @@ export default {
       let path = this.$route.name;
 
       if (path === 'teacher.assignments.marking.details') {
+        this.resetState();
         this.states.isMain = true;
-        this.states.isPreviewing = false;
-        this.states.isWritingFeedback = false;
       }
 
       if (path === 'teacher.assignments.marking.feedback') {
+        this.resetState();
         this.states.isWritingFeedback = true;
-        this.states.isMain = false;
       }
     },
 
@@ -189,6 +201,14 @@ export default {
     handleMark(value) {
       this.submission.marks = value
     },
+
+    handleNowMarking(path) {
+      this.resetState();
+      this.states.isMarking = true;
+
+      this.nowMarking = path;
+    },
+
     handleSubmission() {
 
       if (this.submission.marks === null || this.submission.marks === undefined) {
@@ -196,8 +216,6 @@ export default {
         this.states.isMain = true;
         this.states.isShowingModal = true;
       } else {
-        console.log(`SUBMIT`)
-
         MarksRepository.create(
             {
               assignmentID: this.assignmentDetails.assignmentID,
@@ -228,8 +246,12 @@ export default {
 
       if (this.states.isPreviewing) {
         this.states.isMarking = false;
-        // this.isMarking.path = null
       }
+    },
+
+    handleToggleMarkingMode () {
+      this.resetState();
+      this.states.isMain = true
     },
 
     // MODE: MODAL
@@ -240,13 +262,17 @@ export default {
 
     // MODE: STICKER
     handleToggleStickerBar() {
-      this.states.isSelectingSticker = !this.states.isSelectingSticker;
+      this.toggleStickerBar()
     },
-    handleLoadSticker() {
-      this.states.isSelectingSticker = false;
+    handleLoadSticker(stickerName) {
+      this.nowLoadingSticker = stickerName;
+      this.toggleStickerBar();
     },
     toggleStickerBar() {
-      this.isSelectingSticker = !this.isSelectingSticker;
+      let value = !this.states.isSelectingSticker;
+      this.resetState();
+      this.states.isMarking = true;
+      this.states.isSelectingSticker = value;
     },
 
     // SUBMISSION DETAILS

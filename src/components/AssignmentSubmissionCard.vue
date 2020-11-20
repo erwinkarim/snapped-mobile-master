@@ -20,7 +20,10 @@
         </div>
       </div>
 
-      <div class="w-1/12 relative h-full">
+      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">
+        <icon-base-two v-if="isMarked">
+          <success-icon/>
+        </icon-base-two>
         <!--        <icon-base class="absolute h-full w-full" icon-name="arrow-right-icon" icon-color="white"-->
         <!--                   view-box="-15 -20 60 55">-->
         <!--          <ArrowRightIcon/>-->
@@ -37,6 +40,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import moment from "moment";
 import router from "@/router";
+import SuccessIcon from "@/components/icons/SuccessIcon";
 
 export default {
   name: "AssignmentSubmissionCard",
@@ -46,6 +50,11 @@ export default {
     allowShowSubmission: {
       type: Boolean,
       default: true
+    },
+  },
+  computed: {
+    isMarked() {
+      return this.submission.marksID !== null && this.submission.marksID !== undefined;
     }
   },
   methods: {
@@ -64,7 +73,7 @@ export default {
       }
     }
   },
-  components: {ProfilePhoto, IconBaseTwo}
+  components: {SuccessIcon, ProfilePhoto, IconBaseTwo}
 }
 </script>
 

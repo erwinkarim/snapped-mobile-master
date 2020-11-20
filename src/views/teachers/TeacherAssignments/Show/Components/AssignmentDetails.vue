@@ -84,7 +84,10 @@
               </div>
 
               <div v-if="hasSubmissions" class="mt-4">
-                <assignment-submission-card v-for="submission in submissions" :submission="submission" :meta="meta" class="mb-3"/>
+                <assignment-submission-card
+                    v-for="submission in submissions"
+                    :submission="submission"
+                    :meta="meta" class="mb-3"/>
               </div>
               <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
                 No ongoing submissions at the moment.
@@ -191,7 +194,8 @@ export default {
                 id: submission.submission_id,
                 studentID : submission.student_id,
                 studentName : submission.student_name,
-                submittedAt : submission.submission_created_at
+                submittedAt : submission.submission_created_at,
+                marksID: submission.marks_id
               }
 
               this.submissions.push(details)
