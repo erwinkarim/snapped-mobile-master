@@ -184,102 +184,102 @@
         </div>
 
         <!--  Modal Calendar    -->
-<!--        <modal v-if="toggleSchedule">-->
-<!--            <h3 slot="header">Set Duration</h3>-->
-<!--            <v-date-picker slot="body"-->
-<!--                    v-model="range"-->
-<!--                    mode="dateTime"-->
-<!--                    :masks="masks"-->
-<!--                    is-range-->
-<!--            >-->
-<!--                <template v-slot="{ inputValue, inputEvents, isDragging }">-->
-<!--                    <div class="flex flex-col sm:flex-row justify-start items-center">-->
-<!--                        <div class="relative flex-grow">-->
-<!--                            <svg-->
-<!--                                    class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none"-->
-<!--                                    fill="none"-->
-<!--                                    stroke-linecap="round"-->
-<!--                                    stroke-linejoin="round"-->
-<!--                                    stroke-width="2"-->
-<!--                                    viewBox="0 0 24 24"-->
-<!--                                    stroke="currentColor"-->
-<!--                            >-->
-<!--                                <path-->
-<!--                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"-->
-<!--                                ></path>-->
-<!--                            </svg>-->
-<!--                            <input-->
-<!--                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"-->
-<!--                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"-->
-<!--                                    :value="inputValue.start"-->
-<!--                                    v-on="inputEvents.start"-->
-<!--                            />-->
-<!--                        </div>-->
-<!--                        <span class="flex-shrink-0 m-2">-->
-<!--              <svg-->
-<!--                      class="w-4 h-4 stroke-current text-gray-600"-->
-<!--                      viewBox="0 0 24 24"-->
-<!--              >-->
-<!--                <path-->
-<!--                        stroke-linecap="round"-->
-<!--                        stroke-linejoin="round"-->
-<!--                        stroke-width="2"-->
-<!--                        d="M14 5l7 7m0 0l-7 7m7-7H3"-->
-<!--                />-->
-<!--              </svg>-->
-<!--            </span>-->
-<!--                        <div class="relative flex-grow">-->
-<!--                            <svg-->
-<!--                                    class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none"-->
-<!--                                    fill="none"-->
-<!--                                    stroke-linecap="round"-->
-<!--                                    stroke-linejoin="round"-->
-<!--                                    stroke-width="2"-->
-<!--                                    viewBox="0 0 24 24"-->
-<!--                                    stroke="currentColor"-->
-<!--                            >-->
-<!--                                <path-->
-<!--                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"-->
-<!--                                ></path>-->
-<!--                            </svg>-->
-<!--                            <input-->
-<!--                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"-->
-<!--                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"-->
-<!--                                    :value="inputValue.end"-->
-<!--                                    v-on="inputEvents.end"-->
-<!--                            />-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </template>-->
-<!--            </v-date-picker>-->
-<!--            <span slot="footer">-->
-<!--                <button @click="toggleSchedule = !toggleSchedule" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">Okay</button>-->
-<!--            </span>-->
-<!--        </modal>-->
+        <modal v-if="toggleSchedule">
+            <h3 slot="header">Set Duration</h3>
+            <v-date-picker slot="body"
+                    v-model="range"
+                    mode="dateTime"
+                    :masks="masks"
+                    is-range
+            >
+                <template v-slot="{ inputValue, inputEvents, isDragging }">
+                    <div class="flex flex-col sm:flex-row justify-start items-center">
+                        <div class="relative flex-grow">
+                            <svg
+                                    class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                            >
+                                <path
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                ></path>
+                            </svg>
+                            <input
+                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
+                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
+                                    :value="inputValue.start"
+                                    v-on="inputEvents.start"
+                            />
+                        </div>
+                        <span class="flex-shrink-0 m-2">
+              <svg
+                      class="w-4 h-4 stroke-current text-gray-600"
+                      viewBox="0 0 24 24"
+              >
+                <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </span>
+                        <div class="relative flex-grow">
+                            <svg
+                                    class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                            >
+                                <path
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                ></path>
+                            </svg>
+                            <input
+                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
+                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
+                                    :value="inputValue.end"
+                                    v-on="inputEvents.end"
+                            />
+                        </div>
+                    </div>
+                </template>
+            </v-date-picker>
+            <span slot="footer">
+                <button @click="toggleSchedule = !toggleSchedule" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">Okay</button>
+            </span>
+        </modal>
 
         <!--  Modal Published   -->
-<!--        <modal v-if="published">-->
-<!--            <h3 slot="header" class="text-primary-purple">Published!</h3>-->
-<!--            <p slot="body">-->
-<!--                Got something to change? Don't worry! You can always edit your published homework-->
-<!--            </p>-->
-<!--            <span slot="footer">-->
-<!--                <button @click="reload" class="w-full font-bold rounded-full bg-yellow-primary text-purple-primary text-sm border-2 bg-white py-3 px-1 flex flex-row justify-center">-->
-<!--                    Okay-->
-<!--                </button>-->
-<!--            </span>-->
-<!--        </modal>-->
+        <modal v-if="published">
+            <h3 slot="header" class="text-primary-purple">Published!</h3>
+            <p slot="body">
+                Got something to change? Don't worry! You can always edit your published homework
+            </p>
+            <span slot="footer">
+                <button @click="reload" class="w-full font-bold rounded-full bg-yellow-primary text-purple-primary text-sm border-2 bg-white py-3 px-1 flex flex-row justify-center">
+                    Okay
+                </button>
+            </span>
+        </modal>
 
         <!--   Modal Error   -->
-<!--        <modal v-if="error" @close="error = !error">-->
-<!--            <h3 slot="header" class="text-red-primary">Error!</h3>-->
-<!--            <p slot="body">-->
-<!--                Please ensure that you have entered all the important inputs-->
-<!--            </p>-->
-<!--            <span slot="footer">-->
-<!--                <button @click="error = !error" class="w-full font-bold rounded-full bg-yellow-primary text-sm border-2 border-yellow-primary bg-white py-3 px-1 flex flex-row justify-center">Okay</button>-->
-<!--            </span>-->
-<!--        </modal>-->
+        <modal v-if="error" @close="error = !error">
+            <h3 slot="header" class="text-red-primary">Error!</h3>
+            <p slot="body">
+                Please ensure that you have entered all the important inputs
+            </p>
+            <span slot="footer">
+                <button @click="error = !error" class="w-full font-bold rounded-full bg-yellow-primary text-sm border-2 border-yellow-primary bg-white py-3 px-1 flex flex-row justify-center">Okay</button>
+            </span>
+        </modal>
         <!--  End Modal     -->
     </template>
 
