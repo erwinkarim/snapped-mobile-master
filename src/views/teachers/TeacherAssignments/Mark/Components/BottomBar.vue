@@ -2,7 +2,7 @@
 
   <!-- BOTTOM BAR -->
 
-  <div v-if="show" class="md:hidden block fixed inset-x-0 bottom-0 z-60 shadow pt-4 pb-6 px-5 bg-white">
+  <div v-if="show" :class="bottomBarClass" class="md:hidden block fixed inset-x-0 bottom-0 shadow pt-4 pb-6 px-5">
 
     <div class="w-full">
 
@@ -13,10 +13,10 @@
         </div>
       </div>
 
-      <div v-else-if="states.isMarking" class="z-60">
+      <div v-else-if="states.isMarking" class="z-70">
 
         <div v-if="states.isSelectingSticker"
-             class="fixed inset-x-0 z-60 bg-white block bottom-0 h-3/5 rounded-t-2xl shadow-xl">
+             class="fixed inset-x-0 z-70 bg-white block bottom-0 h-3/5 rounded-t-2xl shadow-xl">
           <button @click="toggleStickerBar" class="bg-gray-primary h-2 w-1/5 rounded-full mt-3"></button>
           <sticker-loader v-on:selected-sticker="handleSelectedSticker" class="mt-5"/>
         </div>
@@ -42,7 +42,7 @@
               </button>
             </div>
             <div class="w-1/3 px-1">
-              <button @click=""
+              <button @click="toggleMarkingMode"
                       class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
                 <div class="w-5/7">
                   Done
@@ -86,6 +86,7 @@ import StickerLoader from "@/views/teachers/TeacherAssignments/Mark/Components/S
 import IconBaseTwo from "@/components/IconBaseTwo";
 import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
 import DialogBubbleIcon from "@/components/icons/DialogBubbleIcon";
+import router from "@/router";
 
 export default {
   name: "BottomBar",
@@ -98,15 +99,28 @@ export default {
       show: true
     }
   },
+  computed: {
+    bottomBarClass() {
+      if (this.states.isMarking) {
+        return 'bg-black-primary z-70'
+      } else {
+        return 'bg-white z-60 '
+      }
+    }
+  },
   methods: {
     togglePreviewMode() {
       this.$emit('togglePreviewMode')
     },
+    toggleMarkingMode() {
+      this.$emit('toggleMarkingMode')
+      router.push({ name: 'teacher.assignments.marking.details'})
+    },
     toggleStickerBar() {
       this.$emit('toggleStickerBar')
     },
-    handleSelectedSticker(value) {
-      this.$emit('loadSticker', value)
+    handleSelectedSticker(stickerName) {
+      this.$emit('loadSticker', stickerName)
     },
     handleRouteChange() {
       let path = this.$route.path;
@@ -114,17 +128,11 @@ export default {
     },
 
     setAsMarked() {
-      console.log('Button pressed')
       this.$emit('submit')
     }
   },
   watch: {
     '$route': 'handleRouteChange'
-  },
-
-  mounted() {
-    console.log(`[STATES] | isMarking: ${this.states.isMarking} | isPreviewing: ${this.states.isPreviewing} | isSelectingSticker: ${this.states.isSelectingSticker}`)
-
   },
   components: {DialogBubbleIcon, TickedBoxIcon, IconBaseTwo, StickerLoader}
 }
