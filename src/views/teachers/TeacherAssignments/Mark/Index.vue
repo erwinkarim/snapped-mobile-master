@@ -79,7 +79,7 @@
         @toggleMarkingMode="handleToggleMarkingMode"
         @toggleStickerBar="handleToggleStickerBar"
         @loadSticker="handleLoadSticker"
-        @submit="handleSubmission"
+        @submit="submit"
     />
 
   </div>
@@ -209,33 +209,6 @@ export default {
       this.nowMarking = path;
     },
 
-    handleSubmission() {
-
-      if (this.submission.marks === null || this.submission.marks === undefined) {
-        this.resetState()
-        this.states.isMain = true;
-        this.states.isShowingModal = true;
-      } else {
-        MarksRepository.create(
-            {
-              assignmentID: this.assignmentDetails.assignmentID,
-              studentID: this.assignmentDetails.studentID,
-              answerID: this.assignmentDetails.submissionID,
-              // snappedAnswers: [],
-              marks: this.submission.marks,
-              feedback: this.submission.feedback
-            })
-            .then(response => {
-              let data = response.data;
-
-              let type = data.messageType;
-              let message = data.message;
-              let markID = data.id;
-
-            })
-      }
-    },
-
     // MODE: PREVIEW
     handleTogglePreviewMode() {
       this.togglePreviewMode()
@@ -299,6 +272,36 @@ export default {
 
             this.states.isLoading = false;
           });
+    },
+
+
+    submit() {
+
+      if (this.submission.marks === null || this.submission.marks === undefined) {
+        this.resetState()
+        this.states.isMain = true;
+        this.states.isShowingModal = true;
+      } else {
+        MarksRepository.create(
+            {
+              assignmentID: this.assignmentDetails.assignmentID,
+              studentID: this.assignmentDetails.studentID,
+              answerID: this.assignmentDetails.submissionID,
+              // snappedAnswers: [],
+              marks: this.submission.marks,
+              feedback: this.submission.feedback
+            })
+            .then(response => {
+              let content = response.data;
+
+              let type = content.messageType;
+              let message = content.message;
+
+              let data = content.data;
+
+              this.assignmentDetails.marks = data.marks;
+            })
+      }
     },
 
     resetState() {

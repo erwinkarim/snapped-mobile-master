@@ -69,7 +69,7 @@ export default {
       return this.newMarks !== null && this.newMarks !== undefined;
     },
     isMarked: function () {
-      return this.details.marks !== null;
+      return this.details.marks !== null && this.details.marks !== undefined;
     },
   },
   name: "AssignmentInfo"
