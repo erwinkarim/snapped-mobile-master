@@ -3,14 +3,11 @@ import AssignmentDetails from "@/views/teachers/TeacherAssignments/Show/Componen
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
 import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
-import QuestionForm from "@/views/teachers/TeacherAssignments/Create/Components/QuestionForm";
-import QuestionManualDesc from "@/views/teachers/TeacherAssignments/Create/Components/QuestionManualDesc";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
 import App from "@/App";
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
-
 
 const teacherAccessControlMeta = {
     checkAuth: 'true',
@@ -32,20 +29,6 @@ export default {
                     meta: teacherAccessControlMeta,
                     props: true,
                 },
-                {
-                    path: 'question',
-                    name: 'teacher.assignments.question',
-                    component: QuestionForm,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                },
-                {
-                    path: 'question/description',
-                    name: 'teacher.assignments.manual-description',
-                    component: QuestionManualDesc,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                }
             ]
         },
         {

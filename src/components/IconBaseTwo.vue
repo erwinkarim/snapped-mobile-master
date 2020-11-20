@@ -43,6 +43,10 @@ name: "IconBaseTwo",
         return '#3A4276'
       }
 
+      if (this.strokeColor === 'purple-secondary') {
+        return '#7B7F9E'
+      }
+
       if (this.strokeColor === 'red-primary') {
         return '#F53B57'
       }
