@@ -43,5 +43,9 @@ export default {
                 search: studentName
             }
         })
+    },
+
+    getTeacherSubjects(){
+        return Repository.get(`/subjects`)
     }
 }

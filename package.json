@@ -13,6 +13,7 @@
     "moment": "^2.29.1",
     "swiper": "^6.3.3",
     "tailwindcss": "^1.8.13",
+    "v-calendar": "^2.0.2",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
     "vue-radial-progress": "^0.3.2",
