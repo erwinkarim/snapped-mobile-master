@@ -32,7 +32,7 @@
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
-        <div class="mt-7">
+        <div class="mt-7 mb-16">
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
@@ -203,7 +203,7 @@ export default {
                 let assignmentDetail = {
                   assignmentID: item.assignment_id,
                   subjectName: item.subject_name,
-                  classroomName: item.class_name,
+                  classroomName: item.classroom_name,
                   title: item.title,
                   description: item.written_description,
                   dueDatetime: item.due_datetime,

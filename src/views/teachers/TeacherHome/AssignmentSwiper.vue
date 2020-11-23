@@ -2,28 +2,15 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" :key="assignment.assignmentID" v-for="assignment in assignments">
 
-          <router-link :to="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}" class="max-w-sm h-30 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 pt-5 pb-3">
-            <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">{{ assignment.title }}</div>
-
-            <div class="text-left text-purple-primary text-px-10 truncate pr-10">{{ assignment.description }}</div>
-
-            <div class="flex flex-row">
-
-              <div class="flex flex-row w-3/4 text-left text-px-10 text-purple-secondary">
-                <div class="w-1/4 truncate"> {{ assignment.subjectName }}</div>
-                <div class="w-1/4  truncate mx-1"> {{ assignment.classroomName }}</div>
-                <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
-              </div>
-
-              <div class="w-1/4 bg-purple-secondary rounded-full">
-
-              </div>
-            </div>
-
-          </router-link>
-        </div>
+        <assignment-card
+            v-for="assignment in assignments"
+            :key="assignment.assignmentID"
+            :assignment="assignment"
+            :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+            :description-lines="1"
+            class="mt-4 swiper-slide h-30"
+        />
       </div>
       <div class="swiper-pagination"></div>
     </div>
@@ -36,9 +23,11 @@ import 'swiper/swiper-bundle.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from 'moment'
 import AssignmentRepository from "@/repositories/AssignmentRepository";
+import AssignmentCard from "@/components/AssignmentCard";
 
 export default {
   components: {
+    AssignmentCard
 
   },
   directives: {

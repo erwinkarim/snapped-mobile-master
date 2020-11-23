@@ -11,11 +11,12 @@
       </div>
     </div>
 
-    <text-multiline-truncate class="text-left text-purple-primary text-px-10 pr-10  mb-4">
+    <text-multiline-truncate :lines="descriptionLines"
+        class="text-left text-purple-primary text-px-10 pr-10 mb-4">
       {{ assignment.description }}
     </text-multiline-truncate>
 
-    <div class="flex flex-row">
+    <div class="flex flex-row items-baseline">
 
       <div class="flex flex-row w-3/4 text-left text-px-10 text-purple-secondary">
         <div class="w-1/4 truncate"> {{ assignment.subjectName }}</div>
@@ -23,8 +24,12 @@
         <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
       </div>
 
-      <div class="w-1/4 bg-purple-secondary rounded-full">
-
+      <div class="w-1/4">
+        <countdown-timer :due-date-time="assignment.dueDatetime"
+                         :has-twenty-four-hour-limit="true"
+                         :has-clock-icon="true"
+                         class="text-xs bg-purple-primary"
+        />
       </div>
     </div>
 
@@ -34,21 +39,32 @@
 <script>
 import moment from "moment";
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
+import CountdownTimer from "@/components/CountdownTimer";
 
 export default {
   name: "AssignmentCard",
-  components: {TextMultilineTruncate},
+  components: {CountdownTimer, TextMultilineTruncate},
   props: {
     route: {
       type: Object,
       required: true
+    },
+    descriptionLines: {
+      type: Number,
+      default: 2
     },
     assignment: Object
   },
   methods: {
     getHumanDate(datetime) {
       return moment(datetime, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY")
+    },
+    startTimer() {
+      this.timerInterval = setInterval(() => (this.timePassed += 1), 1000);
     }
+  },
+  mounted() {
+    this.startTimer()
   }
 }
 </script>
