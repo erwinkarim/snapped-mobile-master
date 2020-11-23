@@ -4,6 +4,24 @@ const resource = '/assignments'
 
 export default  {
 
+
+    all(filters) {
+        return Repository.post('/assignments', {
+            filters: filters
+        })
+    },
+
+    active() {
+        return Repository.post('/assignments', {
+            filters: {
+                is_active: true,
+                month: null,
+                year: null,
+                subjects: null
+            }
+        })
+    },
+
     find(assignmentID) {
         return Repository.get(`${resource}/${assignmentID}/submissions`)
     }

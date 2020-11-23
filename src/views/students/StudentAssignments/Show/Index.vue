@@ -156,8 +156,8 @@ import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import PenIcon from "@/components/icons/PenIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
-import AssignmentRepository from "@/repositories/students/AssignmentRepository";
 import moment from "moment";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   name: "Index",

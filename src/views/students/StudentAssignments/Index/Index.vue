@@ -36,7 +36,12 @@
 
           <!-- Assignment List -->
           <div class="mt-4">
-            <assignment-card :key="assignment.assignmentID" v-for="assignment in assignments" :assignment="assignment"/>
+            <assignment-card
+                v-for="assignment in assignments"
+                :key="assignment.assignmentID"
+                :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+                :assignment="assignment"
+            />
           </div>
 
         </div>
@@ -53,23 +58,30 @@ import PageTitle from "@/components/PageTitle";
 import SectionTitle from "@/components/SectionTitle";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
-import AssignmentList from "@/views/students/StudentAssignments/Index/AssignmentList";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import AssignmentCard from "@/components/AssignmentCard";
-import AssignmentRepository from "@/repositories/students/AssignmentRepository";
 import moment from "moment";
+import StudentRepository from "@/repositories/StudentRepository";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   name: "Index",
   data() {
     return {
-      assignments: []
+      assignments: [],
+
+      filters: {
+        is_active: false,
+        month: null,
+        year: null,
+        subjects: null
+      }
     }
   },
   methods: {
     fetchData () {
 
-      AssignmentRepository.all()
+      AssignmentRepository.all(this.filters)
           .then(response => {
 
             const data = response.data.data
@@ -99,7 +111,7 @@ export default {
   mounted() {
     this.fetchData()
   },
-  components: {AssignmentCard, DashboardLayout, AssignmentList, FilterIcon, IconBaseTwo, SectionTitle, PageTitle}
+  components: {AssignmentCard, DashboardLayout, FilterIcon, IconBaseTwo, SectionTitle, PageTitle}
 }
 </script>
 

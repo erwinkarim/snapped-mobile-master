@@ -52,12 +52,8 @@ import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Compon
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
-import AssignmentRepository from "@/repositories/AssignmentRepository";
-import SubmissionRepository from "@/repositories/SubmissionRepository";
 import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
 import StickerLoader from "@/views/teachers/TeacherAssignments/Mark/Components/StickerLoader";
-import {fabric} from "fabric";
-import stickers from "@/components/Stickers/Stickers";
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
 import WrittenAnswerPreview from "@/views/teachers/TeacherAssignments/Mark/Components/WrittenAnswerPreview";
 import AssignmentInfo from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentInfo";

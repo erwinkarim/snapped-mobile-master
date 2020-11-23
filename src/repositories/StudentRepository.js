@@ -12,10 +12,6 @@ export default {
         return Repository.get(`${resource}/${studentID}/ranking`)
     },
 
-    getAssignments(studentID) {
-        return Repository.get(`${resource}/${studentID}/assignments`)
-    },
-
     getMarkedAssignments(studentID) {
         return Repository.get(`${resource}/${studentID}/assignments/marks`)
     },

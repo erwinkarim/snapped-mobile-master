@@ -17,7 +17,12 @@
           <div class="text-left mb-3">
             <section-title class="mb-5" title="Active Assignments"/>
           </div>
-          <active-assignment/>
+          <assignment-card
+              v-for="assignment in assignments"
+              :key="assignment.assignmentID"
+              :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+              :assignment="assignment"
+          />
         </div>
       </div>
     </template>
@@ -32,10 +37,48 @@ import UserProfile from "@/components/UserProfile";
 import SectionTitle from "@/components/SectionTitle";
 import ActiveAssignment from "@/views/students/StudentHome/Components/ActiveAssignment";
 import DashboardLayout from "@/views/layout/DashboardLayout";
+import AssignmentCard from "@/components/AssignmentCard";
+import StudentRepository from "@/repositories/StudentRepository";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   name: "StudentHome",
-  components: {DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase},
+  data() {
+    return {
+      assignments: [],
+    }
+  },
+  methods: {
+    getAssignments: function () {
+
+      AssignmentRepository.active()
+          .then(response => {
+
+            const data = response.data.data
+
+            for (let i = 0; i < data.length; i++) {
+
+              let item = data[i];
+
+              let assignmentDetail = {
+                assignmentID: item.assignment_id,
+                subjectName: item.subject_name,
+                classroomName: item.class_name,
+                title: item.title,
+                description: item.written_description,
+                dueDatetime: item.due_datetime,
+              }
+
+              this.assignments.push(assignmentDetail);
+            }
+
+          })
+    },
+  },
+  mounted() {
+    this.getAssignments()
+  },
+  components: {AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase},
 }
 </script>
 
