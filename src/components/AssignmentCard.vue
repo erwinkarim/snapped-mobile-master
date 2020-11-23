@@ -1,13 +1,19 @@
 <template>
-  <router-link :to="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+  <router-link :to="route"
+               class="max-w-sm rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 pt-5 pb-3 mb-3">
 
-               class="max-w-sm h-30 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 pt-5 pb-3 mb-3">
+    <div class="flex flex-row justify-between mb-4">
+      <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">
+        {{ assignment.title }}
+      </div>
+      <div class="w-1/4 text-right font-bold text-green-primary text-px-12">
+        <slot name="topRightAction"/>
+      </div>
+    </div>
 
-    <!-- TODO: Refactor into assignment cards. Refer to submission cards -->
-
-    <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">{{ assignment.title }}</div>
-
-    <div class="text-left text-purple-primary text-px-10 truncate pr-10">{{ assignment.description }}</div>
+    <text-multiline-truncate class="text-left text-purple-primary text-px-10 pr-10  mb-4">
+      {{ assignment.description }}
+    </text-multiline-truncate>
 
     <div class="flex flex-row">
 
@@ -27,10 +33,16 @@
 
 <script>
 import moment from "moment";
+import TextMultilineTruncate from "@/components/TextMultilineTruncate";
 
 export default {
   name: "AssignmentCard",
+  components: {TextMultilineTruncate},
   props: {
+    route: {
+      type: Object,
+      required: true
+    },
     assignment: Object
   },
   methods: {

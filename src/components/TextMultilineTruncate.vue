@@ -1,5 +1,4 @@
 <template>
-<!--  <div class="multi-line-truncate">-->
   <div class="leading-relaxed" :style="style">
     <slot/>
   </div>

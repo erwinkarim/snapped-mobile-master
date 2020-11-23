@@ -2,20 +2,20 @@
   <dashboard-layout :has-custom-bottom-bar="modal">
 
     <template v-slot:pageHeader>
-        <page-title title="Assignments">
-          <template v-slot:rightAction>
-            <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary text-right">
-              Add New
-            </router-link>
-          </template>
-        </page-title>
+      <page-title title="Assignments">
+        <template v-slot:rightAction>
+          <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary text-right">
+            Add New
+          </router-link>
+        </template>
+      </page-title>
     </template>
 
     <template v-slot:content>
       <div class="px-5">
         <!-- Section Title -->
-        <div class="flex flex-row justify-between mt-8">
-          <section-title  title="Assignments Date"/>
+        <div class="flex flex-row justify-between items-center mt-8">
+          <section-title title="Assignments Date"/>
           <div class="w-1/12">
             <button @click="modal = !modal">
               <icon-base-two stroke-color="purple-primary">
@@ -28,7 +28,7 @@
 
         <!-- SECTION: CALENDAR -->
         <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
-          <v-date-picker class="w-full" v-model="date" :attributes="attributes"/>
+          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full" />
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
@@ -36,72 +36,83 @@
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
-            <section-title  title="Assignments List"/>
+            <section-title title="Assignments List"/>
             <div class="text-purple-primary">
-              {{selectedDate}}
+              {{ selectedDate }}
             </div>
           </div>
           <!-- Assignment List -->
-          <assignment-list class="mt-4"/>
+          <assignment-card
+              v-for="assignment in assignments"
+              :key="assignment.assignmentID"
+              :assignment="assignment"
+              :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+              class="mt-4"
+          >
+            <template v-slot:topRightAction>
+              {{ assignment.totalSubmitted }} submitted
+            </template>
+          </assignment-card>
+
+          <div v-if="hasError" class="text-purple-secondary mt-12">
+            {{ hasError }}
+          </div>
         </div>
       </div>
     </template>
+
     <template v-slot:bottomBar>
-        <div class="w-full divide-y divide-transparent">
-            <div class="py-2">
-                <div class="grid grid-cols-2 divide-x divide-transparent">
-                    <div class="text-left px-2">
-                        Month
-                        <select v-model="selectedMonth"
-                                class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-                            <option disabled value="">Select month</option>
-                            <option v-for="month in months" :value="month.id">{{month.name}}</option>
-                        </select>
-                    </div>
-                    <div class="text-left px-2">
-                        Year
-                        <select v-model="selectedYear"
-                                class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-                            <option disabled value="">Select year</option>
-                            <option v-for="year in years" :value="year.year">{{year.year}}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center py-2">
-                <select v-model="selectedSubjects"
-                        class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-                    <option disabled value="">Select subject</option>
-                    <option v-for="subject in subjects" :value="subject.id">{{subject.name}}</option>
-                </select>
-            </div>
-            <div class="py-2">
-                <div class="grid grid-cols-2 divide-x divide-transparent">
-                    <div class="text-center">
-                        <button @click="cancelFilter" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-                            <div class="w-5/7">
-                                Cancel
-                            </div>
-                        </button>
-                    </div>
-                    <div class="text-center">
-                        <button @click="filterAssignment" class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
-                            <div class="w-5/7">
-                                Filter
-                            </div>
-                        <icon-base-two class="w-1/7">
-                            <filter-icon/>
-                        </icon-base-two>
-                    </button></div>
-                </div>
-                <div class="w-4/7 px-2">
+      <div class="w-full divide-y divide-transparent">
 
-                </div>
-                <div class="w-3/7 px-2">
-
-                </div>
+        <!-- FILTER SELECT OPTIONS -->
+        <div class="py-2">
+          <div class="grid grid-cols-2 divide-x divide-transparent">
+            <div class="text-left px-2">
+              Month
+              <select-month @selectedMonth="handleSelectedMonth"/>
             </div>
+            <div class="text-left px-2">
+              Year
+              <select-year @selectedYear="handleSelectedYear"/>
+            </div>
+          </div>
         </div>
+        <div class="text-center py-2">
+          <select-subject @selectedSubject="handleSelectedSubject"/>
+        </div>
+
+        <!-- FILTER ACTIONS -->
+        <div class="py-2">
+          <div class="grid grid-cols-2 divide-x divide-transparent">
+            <div class="text-center">
+              <button @click="toggleFilterModal"
+                      class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+                <div class="w-5/7">
+                  Cancel
+                </div>
+              </button>
+            </div>
+            <div class="text-center">
+              <button @click="clickedFilterButton"
+                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+                <div class="w-5/7">
+                  Filter
+                </div>
+                <icon-base-two class="w-1/7">
+                  <filter-icon/>
+                </icon-base-two>
+              </button>
+            </div>
+          </div>
+          <div class="w-4/7 px-2">
+
+          </div>
+          <div class="w-3/7 px-2">
+
+          </div>
+        </div>
+
+      </div>
     </template>
   </dashboard-layout>
 </template>
@@ -113,160 +124,131 @@ import PageTitle from "@/components/PageTitle";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
 import SectionTitle from "@/components/SectionTitle";
-import AssignmentCalendar from "@/views/teachers/TeacherAssignments/Index/Components/AssignmentCalendar";
-import AssignmentList from "@/views/teachers/TeacherAssignments/Index/Components/AssignmentList";
-import Calendar from 'v-calendar/lib/components/calendar.umd'
-import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import AssignmentCalendar from "@/components/AssignmentCalendar";
+
 import moment from "moment";
-import TeacherRepository from "../../../../repositories/TeacherRepository";
-Vue.component('v-calendar', Calendar)
-Vue.component('v-date-picker', DatePicker)
+import SelectMonth from "@/components/SelectMonth";
+import SelectYear from "@/components/SelectYear";
+import SelectSubject from "@/views/teachers/TeacherAssignments/Index/Components/SelectSubject";
+import AssignmentCard from "@/components/AssignmentCard";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   name: "TeacherAssignments",
   components: {
+    AssignmentCard,
+    SelectSubject,
+    SelectYear,
+    SelectMonth,
     AssignmentCalendar,
     SectionTitle,
     FilterIcon,
     IconBaseTwo,
     PageTitle,
-    DashboardLayout,
-    AssignmentList
+    DashboardLayout
   },
   data() {
     return {
-      days: [],
-      // attributes:[{
-      //   key: 'today',
-      //   highlight: true,
-      //   dates: new Date(),
-      // }],
-      date: new Date(),
+      // States
+      hasError: false,
       modal: false,
-      selectedMonth: '',
-      months: [
-          {
-              id: 1,
-              name: 'January',
-          },
-          {
-              id: 2,
-              name: 'February',
-          },
-          {
-              id: 3,
-              name: 'March'
-          },
-          {
-              id: 4,
-              name: 'April'
-          },
-          {
-              id: 5,
-              name: 'May'
-          },
-          {
-              id: 6,
-              name: 'June'
-          },
-          {
-              id: 7,
-              name: 'July'
-          },
-          {
-              id: 8,
-              name: 'August'
-          },
-          {
-              id: 9,
-              name: 'September'
-          },
-          {
-              id: 10,
-              name: 'October'
-          },
-          {
-              id: 11,
-              name: 'November'
-          },
-          {
-              id: 12,
-              name: 'December'
-          }
-      ],
-      selectedYear: '',
-      years: [
-          {
-              year: 2020
-          }
-      ],
-      subjects: '',
-      selectedSubjects: '',
+
+      assignments: [],
+
+      filters: {
+        date: null,
+        month: null,
+        year: null,
+        subjects: null
+      }
     };
   },
   computed: {
-    selectedDate(){
-        return moment(this.date).format('DD MMMM YYYY')
+    selectedDate() {
+      return moment(this.filters.date).format('DD MMMM YYYY')
     },
-    dates() {
-      return this.days.map(day => day.date);
-    },
-    attributes() {
-      return this.dates.map(date => ({
-        highlight: true,
-        dates: date,
-      }));
-    },
+    requestFilter() {
+
+      return {
+        is_active: false,
+        month: this.filters.month,
+        year: this.filters.year,
+        subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
+      }
+
+    }
+  },
+  watch: {
+    'filters.date': 'fetchData',
   },
   methods: {
-    cancelFilter(){
-       this.selectedSubjects = '',
-       this.selectedYear ='',
-       this.selectedMonth = ''
 
-       this.modal = !this.modal
-    },
-    filterAssignment(){
+    fetchData() {
 
-    },
-    getSubjects(){
-        TeacherRepository.getTeacherSubjects()
-            .then(response => {
-                const data = response.data.subjects
+      this.assignments = [];
 
-                const numOfSubjects = data.length
+      AssignmentRepository.all(this.requestFilter)
+          .then(response => {
 
-                console.log(numOfSubjects)
+            let data = response.data.data;
 
-                this.subjects = []
-                for (let i = 0; i < numOfSubjects; i++) {
+            if (data) {
 
-                    let item = data[i];
+              const data = response.data.data
 
-                    let subjectDetail = {
-                        id: item.subject_id,
-                        name: item.subject_name
-                    }
+              for (let i = 0; i < data.length; i++) {
 
-                    this.subjects.push(subjectDetail)
+                let item = data[i];
+
+                let assignmentDetail = {
+                  assignmentID: item.assignment_id,
+                  subjectName: item.subject_name,
+                  classroomName: item.class_name,
+                  title: item.title,
+                  description: item.written_description,
+                  dueDatetime: item.due_datetime,
+                  totalSubmitted: item.number_of_submissions,
                 }
-            })
+
+                this.assignments.push(assignmentDetail);
+                this.hasError = false;
+              }
+            } else {
+
+              const error = response.data.error;
+              this.hasError = error.message;
+            }
+          })
+
+      this.resetFilterModalOptions()
+
     },
-    onDayClick(day) {
-      const idx = this.days.findIndex(d => d.id === day.id);
-      if (idx >= 0) {
-        this.days.splice(idx, 1);
-      } else {
-        this.days.push({
-          id: day.id,
-          date: day.date,
-        });
-      }
+
+    handleSelectedDate(date) {
+      this.filters.date = date;
     },
-  },
-    mounted() {
-      this.getSubjects()
+    handleSelectedMonth(month) {
+      this.filters.month = month;
+    },
+    handleSelectedYear(year) {
+      this.filters.year = year;
+    },
+    handleSelectedSubject(subject) {
+      this.filters.subjects = [subject]
+    },
+    clickedFilterButton() {
+      this.toggleFilterModal()
+      this.fetchData()
+    },
+    toggleFilterModal() {
+      this.modal = !this.modal
+    },
+    resetFilterModalOptions() {
+      this.filters.month = null;
+      this.filters.year = null;
+      this.filters.subjects = null;
     }
+  },
 }
 </script>
 

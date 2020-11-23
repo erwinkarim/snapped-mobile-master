@@ -35,6 +35,7 @@ import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import 'swiper/swiper-bundle.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from 'moment'
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   components: {
@@ -75,7 +76,7 @@ export default {
     },
     getAssignments: function () {
 
-      TeacherRepository.getTeacherAssignments()
+      AssignmentRepository.active()
           .then(response => {
 
             const data = response.data.data

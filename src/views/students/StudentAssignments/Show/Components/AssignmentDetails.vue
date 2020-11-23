@@ -134,10 +134,10 @@ import MagnifyingGlassIcon from "@/components/icons/MagnifyingGlassIcon";
 import PenIcon from "@/components/icons/PenIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
 import DashboardLayout from "@/views/layout/DashboardLayout";
-import AssignmentRepository from "@/repositories/students/AssignmentRepository";
 import moment from "moment";
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
 import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   name: "AssignmentDetails",
