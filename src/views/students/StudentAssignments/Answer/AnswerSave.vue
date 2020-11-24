@@ -6,7 +6,8 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="red-primary"/>
+          <nav-back :to="{name: 'student.assignments.answer.write' , params: {assignmentDetails : assignmentDetails }}"
+                    class="w-2/3" stroke-color="red-primary"/>
         </template>
 
         <template v-slot:mini-title>
@@ -26,7 +27,7 @@
             Your answer will be submitted to
           </div>
           <div class="font-bold mt-1">
-            Mengenali Tokoh Sejarah
+            {{ assignmentDetails.title }}
           </div>
         </div>
 
@@ -34,7 +35,7 @@
           <div>
             Your Written/Snapped Answer
           </div>
-          <router-link :to="{name:'student.assignments.answer.write'}" class="flex flex-row justify-between bg-gray-secondary text-blue-secondary mt-5 px-5 py-5 rounded-lg">
+          <router-link :to="{name:'student.assignments.answer.write' , params: { assignmentDetails : assignmentDetails, isEditingAnswer: true}}" class="flex flex-row justify-between bg-gray-secondary text-blue-secondary mt-5 px-5 py-5 rounded-lg">
             <div>
               Edit Answer
             </div>
@@ -61,7 +62,7 @@
 
     <template v-slot:bottomBar>
       <div class="w-full px-2">
-        <button @click="showModal = true" class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
+        <button @click="submit" class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
             Submit Answer
         </button>
       </div>
@@ -78,16 +79,28 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import Modal from "@/components/Modal";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
+import router from "@/router";
 
 export default {
   name: "AnswerSave",
   props: {
-    answer: String
+    answer: Object,
+    assignmentDetails: Object
   },
   data() {
     return {
       remarks: '',
       showModal: false
+    }
+  },
+  methods: {
+    submit() {
+      this.$emit('submitWrittenAnswer', this.remarks)
+    }
+  },
+  mounted() {
+    if (this.answer.content === '') {
+      router.push({ name: 'student.assignments.show'})
     }
   },
   components: {

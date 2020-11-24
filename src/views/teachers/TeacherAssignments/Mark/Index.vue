@@ -282,7 +282,7 @@ export default {
         this.states.isMain = true;
         this.states.isShowingModal = true;
       } else {
-        MarksRepository.create(
+        MarksRepository.store(
             {
               assignmentID: this.assignmentDetails.assignmentID,
               studentID: this.assignmentDetails.studentID,
@@ -305,7 +305,6 @@ export default {
     },
 
     resetState() {
-
       this.states.isLoading = false;
       this.states.isMain = false;
       this.states.isPreviewing = false;
@@ -313,7 +312,6 @@ export default {
       this.states.isSelectingSticker = false;
       this.states.isWritingFeedback = false;
       this.states.isShowingModal = false
-
     }
   },
   mounted() {

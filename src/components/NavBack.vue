@@ -40,7 +40,7 @@ export default {
       if (this.to === null) {
         router.go(this.counter)
       } else {
-        router.push({ name: this.to})
+        router.push(this.to)
       }
     }
   },

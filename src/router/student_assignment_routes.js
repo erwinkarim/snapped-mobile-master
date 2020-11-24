@@ -27,6 +27,7 @@ export default {
                 {
                     path: 'answer',
                     component: AnswerIndex,
+                    props: true,
                     children: [
                         {
                             path: 'write',
