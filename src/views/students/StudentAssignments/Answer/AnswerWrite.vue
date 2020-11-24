@@ -5,7 +5,7 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="red-primary"/>
+          <nav-back :to="navBackRoute" class="w-2/3" stroke-color="red-primary"/>
         </template>
 
         <template v-slot:mini-title>
@@ -13,10 +13,15 @@
         </template>
 
         <template v-slot:rightAction>
-          <div v-if="answer.length === 0" class="text-gray-primary font-bold">
+          <div v-if="writtenAnswer.length === 0 "
+               class="text-gray-primary font-bold"
+          >
             Save
           </div>
-          <router-link :to="{name: 'student.assignments.answer.store'}" v-if="answer.length > 0" class="text-red-primary font-bold">
+          <router-link v-if="writtenAnswer.length > 0"
+                       :to="{name: 'student.assignments.answer.store', params: { assignmentDetails: assignmentDetails }}"
+                       class="text-red-primary font-bold"
+          >
             Save
           </router-link>
         </template>
@@ -25,7 +30,9 @@
 
     <template v-slot:content>
       <div class=" pt-32 px-6 h-full">
-        <textarea @keyup="compileAnswer" v-model="latestAnswer" class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"></textarea>
+        <textarea @keyup="compileAnswer" v-model="latestAnswer"
+                  class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"
+        />
       </div>
     </template>
 
@@ -44,28 +51,38 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 export default {
   name: "AnswerWrite",
   props: {
-    answer: String,
-    submissionID: {
-      type: [String, Number],
-      default: null
+    answer: Object,
+    assignmentDetails: Object,
+    isEditingAnswer: {
+      type: Boolean,
+      default: false
     }
   },
-  data () {
+  computed: {
+    writtenAnswer() {
+      return this.answer.content;
+    },
+    navBackRoute() {
+      if (this.isEditingAnswer) {
+        return {name: 'student.assignments.answer.store', params: { assignmentDetails: this.assignmentDetails }};
+      } else {
+        return {name: 'student.assignments.show'}
+      }
+    }
+  },
+  data() {
     return {
       latestAnswer: ''
     }
   },
   methods: {
-    compileAnswer () {
-      this.$emit('test', this.latestAnswer)
+    compileAnswer() {
+      this.$emit('writtenAnswer', this.latestAnswer)
     },
-    getSubmission () {
-      console.log(this.submissionID)
-    }
   },
 
   mounted() {
-    this.latestAnswer = this.answer
+    this.latestAnswer = this.writtenAnswer;
   },
   components: {DashboardLayout, PageHeaderThree, Modal, PageTitleTwo, NavBack}
 }

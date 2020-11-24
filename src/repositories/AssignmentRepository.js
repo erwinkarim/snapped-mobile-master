@@ -24,5 +24,5 @@ export default  {
 
     find(assignmentID) {
         return Repository.get(`${resource}/${assignmentID}/submissions`)
-    }
+    },
 }
