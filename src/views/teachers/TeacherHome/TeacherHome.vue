@@ -27,7 +27,7 @@
           <div class="text-left mb-3">
             <section-title class="mb-5" title="Active Assignments"/>
           </div>
-          <AssignmentSwiper class="mt-3"/>
+          <AssignmentSwiper class="mt-3 "/>
         </div>
 
         <!-- SECTION: SUBMISSIONS -->

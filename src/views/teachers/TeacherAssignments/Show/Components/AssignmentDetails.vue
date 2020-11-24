@@ -28,14 +28,19 @@
 
             <!-- TIMER -->
             <div class="w-full flex flex-row justify-center items-center mt-7">
-              <div class="flex flex-col w-1/2">
+              <div class="flex flex-col w-3/5">
                 <div class="text-white font-bold text-sm">
                   Assignment Time Remaining
                 </div>
                 <div class=" bg-green-primary mt-3 py-1 rounded-full">
 
                   <div class="text-white font-bold text-3xl tracking-wider">
-                    03:46:54
+                   <countdown-timer v-if="assignment.dueDatetime"
+                                    :due-date-time="assignment.dueDatetime"
+                                    :has-twenty-four-hour-limit="false"
+                                    :has-clock-icon="true"
+                   />
+                    <div v-else> -- : -- : -- </div>
                   </div>
                 </div>
               </div>
@@ -50,14 +55,14 @@
                 </div>
 
                 <!-- DETAILS -->
-                <div class="flex flex-row  text-xs-plus text-purple-secondary mt-2">
-                  <div class="pr-1 truncate w-3/8">
+                <div class="flex flex-row  text-xs-plus text-purple-secondary mt-2 justify-between">
+                  <div class="pr-1 truncate w-1/3">
                     {{ meta.subjectName || '' }}
                   </div>
-                  <div class="px-1 truncate w-2/8">
+                  <div class="px-1 truncate w-1/3">
                     {{ meta.classroomName || '' }}
                   </div>
-                  <div class="px-1 truncate w-3/8">
+                  <div class="px-1 truncate w-2/5">
                     {{ getHumanDate(assignment.createdAt)}}
                   </div>
                 </div>
@@ -118,10 +123,12 @@ import AssignmentRepository from "@/repositories/AssignmentRepository";
 import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
 import moment from "moment";
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
+import CountdownTimer from "@/components/CountdownTimer";
 
 export default {
   name: "AssignmentDetails",
   components: {
+    CountdownTimer,
     TextMultilineTruncate,
     AssignmentSubmissionCard,
     CameraIcon,
@@ -136,7 +143,7 @@ export default {
         id: null,
         title: null,
         createdAt: null,
-        dueAt: null,
+        dueDatetime: null,
         written_question: {
           title: null,
           description: null
@@ -172,7 +179,7 @@ export default {
             this.assignment.id = data.assignment_details.assignment_id;
             this.assignment.title = data.assignment_details.title;
             this.assignment.createdAt = data.assignment_details.assignment_created_at;
-            this.assignment.dueDate = data.assignment_details.due_datetime;
+            this.assignment.dueDatetime = data.assignment_details.due_datetime;
             this.assignment.written_question.title = data.assignment_details.written_question_title;
             this.assignment.written_question.description = data.assignment_details.written_question_description;
 
