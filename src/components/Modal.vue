@@ -2,7 +2,7 @@
   <div class="bg-white px-10 rounded-2xl pt-12 pb-10">
 
     <!-- ICON -->
-    <div class=" w-full flex flex-row items-center justify-center mb-12">
+    <div v-if="!isNoIcon" class=" w-full flex flex-row items-center justify-center mb-12">
       <div class="w-1/2">
         <component :is="iconLoader"/>
       </div>
@@ -48,6 +48,9 @@ export default {
     },
   },
   computed: {
+    isNoIcon(){
+      return this.modalType === 'no-icon'
+    },
     isErrorType() {
       return this.modalType === 'error'
     },

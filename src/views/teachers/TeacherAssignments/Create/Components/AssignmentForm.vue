@@ -16,7 +16,7 @@
         <!-- HEADER CREATE QUESTION -->
         <page-header-three v-else-if="showQuestion">
           <template v-slot:leftAction>
-              <button @click="cancelQuestion" class="w-5/7">Cancel</button>
+              <button @click="cancelQuestion" class="text-red-primary w-5/7">Cancel</button>
           </template>
           <template v-slot:mini-title>
               Create Question
@@ -30,7 +30,7 @@
         <!-- HEADER MANUAL DESCRIPTION -->
         <page-header-three v-if="showDescription">
             <template v-slot:leftAction>
-                <button @click="cancelManual" class="w-5/7">Cancel</button>
+                <button @click="cancelManual" class="text-red-primary w-5/7">Cancel</button>
             </template>
             <template v-slot:mini-title>
                 Manual Description
@@ -83,16 +83,51 @@
                 </select>
 
                 <button @click="updateShow" class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary" type="text" tag="button">
-                    <span v-if="titleQuestion && descriptionQuestion">Question</span>
-                    <span v-else>Create Question</span>
+                    <span v-if="titleQuestion && showQuestionOptions" class="grid grid-cols-2">
+                        <div>
+                            Question
+                        </div>
+                        <div class="text-blue-secondary place-self-end mr-5">
+                            Edit
+                        </div>
+                    </span>
+                    <span v-else>
+                        Create Question
+                    </span>
                 </button>
 
-                <button @click="toggleSchedule = !toggleSchedule" class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-                    Set Duration
-                </button>
+                <div v-if="!noDuration" class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+                    <div class="text-left text-purple-secondary place-self-start">
+                        <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">
+                            {{ duration || '' }}
+                        </button>
+                    </div>
+                    <div>
+                        <button @click="toggleDuration = !toggleDuration">
+                            <icon-base-two class="align-center float-right w-1/8 mr-3">
+                                <clock-icon/>
+                            </icon-base-two>
+                        </button>
+                    </div>
+                </div>
+
+                <div v-if="noDuration" class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+                    <div class="text-left place-self-start">
+                        <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">
+                            Set Duration
+                        </button>
+                    </div>
+                    <div>
+                        <button @click="toggleDuration = !toggleDuration">
+                            <icon-base-two class="align-center float-right w-1/8 mr-3">
+                                <clock-icon/>
+                            </icon-base-two>
+                        </button>
+                    </div>
+                </div>
 
                 <textarea v-model="remarks" placeholder="Remarks"
-                          class="pl-6 pr-2 py-5 mt-2 h-36  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"/>
+                          class="pl-6 pr-2 py-5 h-36 mb-26 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"/>
             </div>
         </div>
         <!-- FORM QUESTION -->
@@ -106,13 +141,17 @@
                                class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
                                type="text" placeholder="Title" autocomplete="off">
                         <div v-if="descriptionQuestion" class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-                            <div class="text-left place-self-start">
+                            <div class="text-left text-blue-secondary place-self-start">
                                <button @click="updateShowManualDescription" type="text" autocomplete="off">
                                    Edit Description
                                </button>
                             </div>
                             <div class="place-self-end">
-                                <button @click="removeDescription()">Delete</button>
+                                <button @click="removeDescription()">
+                                    <icon-base-two class="float-right w-1/7 mr-3">
+                                        <trash-icon/>
+                                    </icon-base-two>
+                                </button>
                             </div>
                         </div>
                         <div v-if="!showQuestionOptions" class="flex mb-4 -mx-1">
@@ -145,13 +184,17 @@
                         </div>
                         <!--  If IMAGE HAS BEEN SELECTED  -->
                         <div v-for="(image, key) in images" class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-                            <div class="text-left place-self-start">
+                            <div class="text-left text-blue-secondary place-self-start">
                                 <button @click="previewAssignment(key)">
                                     View Image
                                 </button>
                             </div>
                             <div class="place-self-end">
-                                <button @click="removeImage(key)">Delete</button>
+                                <button @click="removeImage(key)">
+                                    <icon-base-two class="float-right w-1/7 mr-3">
+                                        <trash-icon/>
+                                    </icon-base-two>
+                                </button>
                             </div>
                         </div>
                         <div v-if="images.length" class="flex mb-4 -mx-1">
@@ -178,112 +221,88 @@
         <!-- FORM MANUAL DESCRIPTION -->
         <div v-if="showDescription === true" class="flex-wrap relative top-12">
             <!-- DESCRIPTION -->
-            <textarea v-model="descriptionQuestion" class="w-full h-48 form-textarea block break-words px-7 mt-26 text-left text-purple-secondary text-sm leading-snug"
+            <textarea v-model="descriptionQuestion" class="w-full h-screen form-textarea block break-words px-7 mt-20 text-left text-purple-primary text-m leading-snug"
                       placeholder="Enter description"
             />
         </div>
 
-        <!--  Modal Calendar    -->
-        <modal v-if="toggleSchedule">
-            <h3 slot="header">Set Duration</h3>
-            <v-date-picker slot="body"
-                    v-model="range"
-                    mode="dateTime"
-                    :masks="masks"
-                    is-range
-            >
-                <template v-slot="{ inputValue, inputEvents, isDragging }">
-                    <div class="flex flex-col sm:flex-row justify-start items-center">
-                        <div class="relative flex-grow">
-                            <svg
-                                    class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none"
-                                    fill="none"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                            >
-                                <path
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                ></path>
-                            </svg>
-                            <input
-                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
-                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
-                                    :value="inputValue.start"
-                                    v-on="inputEvents.start"
-                            />
-                        </div>
-                        <span class="flex-shrink-0 m-2">
-              <svg
-                      class="w-4 h-4 stroke-current text-gray-600"
-                      viewBox="0 0 24 24"
-              >
-                <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </span>
-                        <div class="relative flex-grow">
-                            <svg
-                                    class="text-gray-600 w-4 h-full mx-2 absolute pointer-events-none"
-                                    fill="none"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                            >
-                                <path
-                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                ></path>
-                            </svg>
-                            <input
-                                    class="flex-grow pl-8 pr-2 py-1 bg-gray-100 border rounded w-full"
-                                    :class="isDragging ? 'text-gray-600' : 'text-gray-900'"
-                                    :value="inputValue.end"
-                                    v-on="inputEvents.end"
-                            />
-                        </div>
+        <!--  Modal Schedule    -->
+        <div v-if="toggleSchedule" @click.self="toggleSchedule = !toggleSchedule"
+             class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+            <modal class="fixed" v-if="toggleSchedule" modal-type="no-icon">
+                <h3 slot="title" class="font-bold">Schedule Publish</h3>
+                <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
+                    <div>
+                        <p class="mb-3">Pick date and time to publish the assignment.</p>
                     </div>
-                </template>
-            </v-date-picker>
-            <span slot="footer">
-                <button @click="toggleSchedule = !toggleSchedule" class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">Okay</button>
-            </span>
-        </modal>
+                        <v-date-picker class="place-self-center" v-model="published_at" mode="dateTime" />
+                </div>
+                <span slot="button">
+                    <button class="font-bold" @click="sendData">Schedule Publish</button>
+                </span>
+            </modal>
+        </div>
+
+        <!--  Modal Duration    -->
+        <div v-if="toggleDuration" @click.self="closeToggleDuration"
+             class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+            <modal class="fixed" v-if="toggleDuration" modal-type="no-icon">
+                <h3 slot="title" class="font-bold">Set Duration</h3>
+                <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">
+                    <div>
+                        <label class="text-lg font-bold">Day</label>
+                        <input v-model="durationDay" type="number" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
+                    </div>
+                    <div>
+                        <label class="text-lg font-bold">Hour</label>
+                        <input v-model="durationHour" type="number" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
+                    </div>
+                    <div>
+                        <label class="text-lg font-bold">Minute</label>
+                        <input v-model="durationMinute" type="number" placeholder="0" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
+                    </div>
+                </div>
+                <span slot="button">
+                    <button @click="closeToggleDuration">Okay</button>
+                </span>
+            </modal>
+        </div>
 
         <!--  Modal Published   -->
-        <modal v-if="published">
-            <h3 slot="header" class="text-primary-purple">Published!</h3>
-            <p slot="body">
-                Got something to change? Don't worry! You can always edit your published homework
-            </p>
-            <span slot="footer">
-                <button @click="reload" class="w-full font-bold rounded-full bg-yellow-primary text-purple-primary text-sm border-2 bg-white py-3 px-1 flex flex-row justify-center">
-                    Okay
-                </button>
-            </span>
-        </modal>
+        <div v-if="published" @click.self="published = !published"
+             class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+            <modal class="w-4/5 " v-if="published" modal-type="success">
+                <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>
+                <p slot="message">
+                    Got something to change? Don't worry! You can always edit your published homework
+                </p>
+                <span slot="button">
+                    <button class="font-bold" @click="reload">
+                        Okay
+                    </button>
+                </span>
+            </modal>
+        </div>
 
         <!--   Modal Error   -->
-        <modal v-if="error" @close="error = !error">
-            <h3 slot="header" class="text-red-primary">Error!</h3>
-            <p slot="body">
-                Please ensure that you have entered all the important inputs
-            </p>
-            <span slot="footer">
-                <button @click="error = !error" class="w-full font-bold rounded-full bg-yellow-primary text-sm border-2 border-yellow-primary bg-white py-3 px-1 flex flex-row justify-center">Okay</button>
-            </span>
+        <div v-if="error" @click.self="error = !error"
+             class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+            <modal class="w-4/5 " v-if="error" modal-type="error">
+            <div slot="message">
+                <p>
+                    <b>Please ensure that you have entered all the important inputs</b>
+                </p>
+                <ul>
+                    <li v-for="error in errors">{{ error }}</li>
+                </ul>
+            </div>
+            <span slot="button">
+            <button @click="error = !error">Okay</button>
+        </span>
         </modal>
+        </div>
         <!--  End Modal     -->
     </template>
-
-
 
     <template v-slot:bottomBar v-if="showAssignment">
       <div class="w-4/7 px-2">
@@ -328,6 +347,8 @@ import PenIcon from "@/components/icons/PenIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
 import ArrowBackIcon from "../../../../../components/icons/ArrowBackIcon";
 import Modal from "@/components/Modal";
+import TrashIcon from "../../../../../components/icons/TrashIcon";
+import ClockIcon from "../../../../../components/icons/ClockIcon";
 
 // Register components in your 'main.js'
 Vue.component('v-calendar', Calendar)
@@ -348,6 +369,7 @@ export default {
         showQuestion: false,
         showDescription: false,
         //toggle modal duration or schedule
+        toggleDuration: false,
         toggleSchedule: false,
         //toggle preview gambar
         isPreviewing:  false,
@@ -355,6 +377,7 @@ export default {
         published: false,
         //toggle modal error assignment
         error: false,
+        errors:[],
 
         //assignment page data
         teacherID: localStorage.getItem('teacherID'),
@@ -363,14 +386,14 @@ export default {
         classroom_id: '',
         subjects: '',
         classrooms: '',
-        range: {
-            start: new Date(2020, 0, 6),
-            end: new Date(2020, 0, 23),
-        },
+        //schedule publish
+        published_at: new Date,
         masks: {
             input: 'DD-MM-YYYY h:mm A',
         },
-        duration: '',
+        durationDay: 0,
+        durationHour: 0,
+        durationMinute : 0,
         remarks: '',
 
         //question page data
@@ -391,15 +414,52 @@ export default {
     }
   },
   computed:{
-        showQuestionOptions: function () {
-            this.images.length;
-            this.descriptionQuestion;
-            return this.images.length || this.descriptionQuestion;
-        },
+    showQuestionOptions: function () {
+        this.images.length;
+        this.descriptionQuestion;
+        return this.images.length || this.descriptionQuestion;
+    },
+    noDuration: function () {
+        this.durationDay;
+        this.durationHour;
+        this.durationMinute;
+        return this.durationDay <= 0 && this.durationHour <= 0 && this.durationMinute <= 0;
+    },
+    duration:function (){
+        const dayInHour = this.durationDay*24
+        let hours = parseInt(this.durationHour) + parseInt(dayInHour)
+        let minutes = parseInt(this.durationMinute)
+
+        if (hours<10){
+            hours = '0'+hours
+        }
+
+        if (minutes<10){
+            minutes = '0'+minutes
+        }
+
+        let duration = hours+':'+minutes+':00'
+
+        return duration;
+    }
   },
   watch: {
   },
   methods:{
+    // MODE: MODAL
+    closeToggleDuration() {
+        if (this.durationDay === ''){
+            this.durationDay = 0
+        }
+        if (this.durationHour === ''){
+            this.durationHour = 0
+        }
+        if (this.durationMinute === ''){
+            this.durationMinute = 0
+        }
+
+        this.toggleDuration = !this.toggleDuration
+    },
     reload(){
       window.location.reload()
     },
@@ -459,7 +519,7 @@ export default {
       this.showQuestion = !this.showQuestion;
     },
     saveQuestion() {
-        if(this.titleQuestion && (this.descriptionQuestion || this.images)) {
+        if(this.titleQuestion && (this.descriptionQuestion || this.images.length)) {
             this.titleQuestionConfirmed = this.titleQuestion
             this.descriptionConfirmed = this.descriptionQuestion
 
@@ -555,18 +615,55 @@ export default {
     removeImage(key){
         this.images.splice(key,1);
         this.snappedQuestions.splice(key,1);
-
-        // if(!this.images.length){
-        //     this.$refs.im.value = '';
-        // }
     },
       format_date(value){
           if (value) {
               return moment(String(value)).format('YYYY-MM-DD hh:mm:ss')
           }
       },
+      format_time(value){
+          if (value) {
+              return moment(String(value)).format('hh:mm:ss')
+          }
+      },
+      checkForm: function (e) {
+          if (this.title && this.subject_id && this.classroom_id && this.titleQuestion
+              && (this.snappedQuestions.length || this.descriptionQuestion) && !this.noDuration) {
+              return true;
+          }
+
+          this.errors = [];
+
+          if (!this.title) {
+              this.errors.push('Title required.');
+          }
+          if (!this.subject_id) {
+              this.errors.push('Subject required.');
+          }
+          if (!this.classroom_id) {
+              this.errors.push('Classroom required.');
+          }
+          if (!this.titleQuestion && !(this.snappedQuestions.length || this.descriptionQuestion)) {
+              this.errors.push('Question required.');
+          }
+          if(this.noDuration){
+              this.errors.push('Duration required');
+          }
+
+          // e.preventDefault();
+      },
     sendData(e){
+        this.checkForm();
         let formData = new FormData();
+
+        let dayInMinute = this.durationDay*1440
+        let hourInMinute = this.durationHour*60
+        //in minutes
+        let totalDuration = dayInMinute + hourInMinute + this.durationMinute
+
+        console.log(this.published_at)
+
+        let due_datetime = moment(this.published_at).add(totalDuration,'m').toDate();
 
         formData.append('teacher_id', this.teacherID);
         formData.append('subject_id', this.subject_id);
@@ -574,13 +671,18 @@ export default {
         formData.append('title', this.title);
         formData.append('written_question_title', this.titleQuestion);
         formData.append('written_description', this.descriptionQuestion);
-        formData.append('due_datetime', this.format_date(this.range.end));
+        formData.append('due_datetime', this.format_date(due_datetime));
+        formData.append('published_at', this.format_date(this.published_at));
         formData.append('remarks', this.remarks);
 
         for( var i = 0; i < this.snappedQuestions.length; i++ ){
             let file = this.snappedQuestions[i];
 
             formData.append('snap_question[' + i + ']', file);
+        }
+
+        if (this.toggleSchedule){
+            this.toggleSchedule = !this.toggleSchedule
         }
 
         Repository.post('/assignments/store',
@@ -592,9 +694,9 @@ export default {
       })
       .then(
           response => {
-              const data = response.data.messageType
+              const messageType = response.data.messageType
 
-              if(data === 'success'){
+              if(messageType === 'success'){
                   this.published = !this.published
               }else{
                   this.error = !this.error
@@ -629,6 +731,11 @@ export default {
       //     this.images = this.imagesConfirmed
       //
       // },
+      if(this.durationDay === ''){
+          this.durationDay = 0
+      }
+      // (this.durationHour === '')? this.durationHour = 0 : null,
+      // (this.durationMinute === '')? this.durationMinute = 0: null,
     this.titleQuestion = localStorage.getItem('titleQuestion'),
     this.descriptionQuestion = localStorage.getItem('descriptionQuestion'),
     this.getDetails()
@@ -636,6 +743,8 @@ export default {
     this.getClasses()
   },
   components: {
+      ClockIcon,
+      TrashIcon,
     Modal,
     ArrowBackIcon,
     CameraIcon,
