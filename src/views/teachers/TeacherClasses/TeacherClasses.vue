@@ -17,11 +17,11 @@
                 <div class="font-bold text-3xl" >{{numOfClasses}}</div>
                 <div class="text-sm">Current teaching class</div>
               </div>
-              <div class="rounded-full flex items-center justify-center h-12 w-12 bg-yellow-primary">
-                <icon-base width="50" height="50" icon-name="app-logo" view-box="-18 -18 50 50">
-                  <PlusIcon/>
-                </icon-base>
-              </div>
+<!--              <div class="rounded-full flex items-center justify-center h-12 w-12 bg-yellow-primary">-->
+<!--                <icon-base width="50" height="50" icon-name="app-logo" view-box="-18 -18 50 50">-->
+<!--                  <PlusIcon/>-->
+<!--                </icon-base>-->
+<!--              </div>-->
             </div>
           </div>
         </div>

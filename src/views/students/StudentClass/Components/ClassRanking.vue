@@ -8,6 +8,7 @@
 
     <div class="px-5">
       <div v-for="(student, index) in rankings"
+
            class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1">
 
         <div class="flex flex-row w-4/12 items-center">
