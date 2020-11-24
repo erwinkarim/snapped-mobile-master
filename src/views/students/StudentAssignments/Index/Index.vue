@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout>
+  <dashboard-layout :has-custom-bottom-bar="modal">
     <template v-slot:pageHeader>
       <page-title title="Assignments"/>
     </template>
@@ -11,7 +11,7 @@
         <!-- Section Title -->
         <div class="flex flex-row justify-between mt-8 items-center">
           <section-title title="Assignments Date"/>
-          <div class="w-1/12">
+          <div class="w-1/12" @click="modal = !modal">
             <icon-base-two stroke-color="purple-primary">
               <filter-icon/>
             </icon-base-two>
@@ -19,18 +19,18 @@
         </div>
 
         <!-- SECTION: CALENDAR -->
-        <div class="w-full bg-white border-2 border-purple-primary border-opacity-10 pb-4/5 mt-6 rounded-xl">
-
+        <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
+          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full" />
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
-        <div class="mt-7">
+        <div class="mt-7 mb-16">
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
             <section-title title="Assignments List"/>
             <div class="text-purple-primary">
-              17 June 2020
+              {{selectedDate}}
             </div>
           </div>
 
@@ -44,6 +44,66 @@
             />
           </div>
 
+          <div v-if="hasError" class="text-purple-secondary mt-12">
+            {{ hasError }}
+          </div>
+
+        </div>
+
+      </div>
+    </template>
+
+
+    <!-- BOTTOM BAR: FILTER PANEL-->
+    <template v-slot:bottomBar>
+      <div class="w-full divide-y divide-transparent">
+
+        <!-- FILTER SELECT OPTIONS -->
+        <div class="py-2">
+          <div class="grid grid-cols-2 divide-x divide-transparent">
+            <div class="text-left px-2">
+              Month
+              <select-month @selectedMonth="handleSelectedMonth"/>
+            </div>
+            <div class="text-left px-2">
+              Year
+              <select-year @selectedYear="handleSelectedYear"/>
+            </div>
+          </div>
+        </div>
+        <div class="text-center py-2">
+          <select-subject @selectedSubject="handleSelectedSubject"/>
+        </div>
+
+        <!-- FILTER ACTIONS -->
+        <div class="py-2">
+          <div class="grid grid-cols-2 divide-x divide-transparent">
+            <div class="text-center">
+              <button @click="toggleFilterModal"
+                      class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+                <div class="w-5/7">
+                  Cancel
+                </div>
+              </button>
+            </div>
+            <div class="text-center">
+              <button @click="clickedFilterButton"
+                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+                <div class="w-5/7">
+                  Filter
+                </div>
+                <icon-base-two class="w-1/7">
+                  <filter-icon/>
+                </icon-base-two>
+              </button>
+            </div>
+          </div>
+          <div class="w-4/7 px-2">
+
+          </div>
+          <div class="w-3/7 px-2">
+
+          </div>
         </div>
 
       </div>
@@ -60,58 +120,122 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import AssignmentCard from "@/components/AssignmentCard";
-import moment from "moment";
-import StudentRepository from "@/repositories/StudentRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
+import AssignmentCalendar from "@/components/AssignmentCalendar";
+import SelectMonth from "@/components/SelectMonth";
+import SelectYear from "@/components/SelectYear";
+import SelectSubject from "@/components/SelectSubject";
+import moment from "moment";
 
 export default {
   name: "Index",
   data() {
     return {
+
+      // States
+      hasError: false,
+      modal: false,
+
       assignments: [],
 
       filters: {
-        is_active: false,
+        date: null,
         month: null,
         year: null,
         subjects: null
       }
     }
   },
-  methods: {
-    fetchData () {
+  computed: {
+    selectedDate() {
+      return moment(this.filters.date).format('DD MMMM YYYY')
+    },
+    requestFilter() {
 
-      AssignmentRepository.all(this.filters)
+      return {
+        is_active: false,
+        month: this.filters.month,
+        year: this.filters.year,
+        subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
+      }
+
+    }
+  },
+  methods: {
+    fetchData() {
+
+      this.assignments = [];
+
+      AssignmentRepository.all(this.requestFilter)
           .then(response => {
 
-            const data = response.data.data
+            let data = response.data.data;
 
-            for (let i = 0; i < data.length; i++) {
+            if (data) {
 
-              let item = data[i];
+              const data = response.data.data
 
-              let assignmentDetail = {
-                assignmentID: item.assignment_id,
-                subjectName: item.subject_name,
-                classroomName: item.classroom_name,
-                title: item.title,
-                description: item.written_description,
-                dueDatetime: item.due_datetime,
-                totalSubmission : item.number_of_submissions
+              for (let i = 0; i < data.length; i++) {
+
+                let item = data[i];
+
+                let assignmentDetail = {
+                  assignmentID: item.assignment_id,
+                  subjectName: item.subject_name,
+                  classroomName: item.classroom_name,
+                  title: item.title,
+                  description: item.written_description,
+                  dueDatetime: item.due_datetime,
+                  totalSubmitted: item.number_of_submissions,
+                }
+
+                this.assignments.push(assignmentDetail);
+                this.hasError = false;
               }
+            } else {
 
-              this.assignments.push(assignmentDetail);
+              const error = response.data.error;
+              this.hasError = error.message;
             }
+          })
 
-          });
+      this.resetFilterModalOptions()
 
+    },
+    handleSelectedDate(date) {
+      this.filters.date = date;
+    },
+    handleSelectedMonth(month) {
+      this.filters.month = month;
+    },
+    handleSelectedYear(year) {
+      this.filters.year = year;
+    },
+    handleSelectedSubject(subject) {
+      this.filters.subjects = [subject]
+    },
+    clickedFilterButton() {
+      this.toggleFilterModal()
+      this.fetchData()
+    },
+    toggleFilterModal() {
+      this.modal = !this.modal
+    },
+    resetFilterModalOptions() {
+      this.filters.month = null;
+      this.filters.year = null;
+      this.filters.subjects = null;
     }
   },
 
   mounted() {
     this.fetchData()
   },
-  components: {AssignmentCard, DashboardLayout, FilterIcon, IconBaseTwo, SectionTitle, PageTitle}
+  components: {
+    SelectSubject,
+    SelectYear,
+    SelectMonth,
+    AssignmentCalendar, AssignmentCard, DashboardLayout, FilterIcon, IconBaseTwo, SectionTitle, PageTitle}
 }
 </script>
 

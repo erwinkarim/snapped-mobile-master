@@ -129,7 +129,7 @@ import AssignmentCalendar from "@/components/AssignmentCalendar";
 import moment from "moment";
 import SelectMonth from "@/components/SelectMonth";
 import SelectYear from "@/components/SelectYear";
-import SelectSubject from "@/views/teachers/TeacherAssignments/Index/Components/SelectSubject";
+import SelectSubject from "@/components/SelectSubject";
 import AssignmentCard from "@/components/AssignmentCard";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 
