@@ -17,15 +17,15 @@
     </div>
 
     <!-- MESSAGE -->
-    <div class="text-purple-secondary text-sm leading-relaxed">
+    <div class="text-purple-secondary text-sm leading-relaxed pb-10">
       <slot name="message"/>
     </div>
 
     <!-- BUTTON -->
-    <button @click="closeModal" :class="buttonClass"
+    <router-link @click="closeModal" :class="buttonClass"  :to="redirectRoute"
             class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7">
       <slot name="button"/>
-    </button>
+    </router-link>
 
   </div>
 </template>
@@ -46,6 +46,10 @@ export default {
       type: [Object, String],
       default: ''
     },
+    redirectRoute: {
+      type: Object,
+      default: ''
+    }
   },
   computed: {
     isNoIcon(){

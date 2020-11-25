@@ -4,7 +4,7 @@ const resource = '/marks'
 
 export default {
 
-    create({assignmentID: assignmentID, studentID: studentID, answerID: answerID, snappedAnswers: snappedAnswers, marks: marks, feedback: feedback}) {
+    store({assignmentID: assignmentID, studentID: studentID, answerID: answerID, snappedAnswers: snappedAnswers, marks: marks, feedback: feedback}) {
 
         let formData = new FormData()
 
