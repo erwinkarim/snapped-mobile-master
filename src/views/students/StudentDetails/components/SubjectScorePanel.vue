@@ -1,9 +1,6 @@
 <template>
   <div class="mt-8">
-    <section-title class="text-left">
-      Overall Subject Score
-    </section-title>
-
+    <section-title class="text-left" title="Overall Subject Score"/>
     <!-- SUBJECTS  -->
     <div class="mt-5">
       <div v-my-swiper="swiperOption">

@@ -1,15 +1,21 @@
 import Repository from "@/repositories/Repository";
 
 const resource = '/teachers'
+const token = localStorage.getItem('token')
 
 export default {
 
-    getTeacherClasses () {
-        return Repository.get(`${resource}/classes`)
+    getTeacherDetails(){
+        return Repository.post('/details',{
+            headers: {
+                Accept: "application/json",
+                Authorization: 'Bearer ' + token,
+            }
+        })
     },
 
-    getTeacherAssignments () {
-        return Repository.get(`${resource}/assignments`)
+    getTeacherClasses () {
+        return Repository.get(`${resource}/classes`)
     },
 
     getSubjectsWithStudentsForTeacherClass({classID: classID, search: studentName}) {
@@ -26,5 +32,9 @@ export default {
                 search: studentName
             }
         })
+    },
+
+    getTeacherSubjects(){
+        return Repository.get(`/subjects`)
     }
 }

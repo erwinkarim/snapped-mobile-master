@@ -2,16 +2,11 @@
   <svg xmlns="http://www.w3.org/2000/svg"
        width="100%"
        :viewBox="viewBox"
-       :aria-labelledby="iconName"
        role="presentation"
        preserveAspectRatio="xMidYMid meet"
   >
-    <title :id="iconName" lang="en">
-      {{ iconName }} icon
-    </title>
-
     <g :style="isActiveTab(tabName)" :fill="iconColor">
-      <slot/>
+      <component :is="icon" />
     </g>
   </svg>
 </template>
@@ -21,15 +16,15 @@ import IconBase from "@/components/IconBase";
 
 export default {
   name: "BottomNavbarIconBase",
-  components: {IconBase},
   props: {
     tabName: {
       type: String,
-      default: 'home'
+      default: 'home',
+      required: true
     },
-    iconName: {
-      type: String,
-      default: 'box'
+    icon: {
+      type: [Object, String],
+      default: ''
     },
     width: {
       type: [Number, String],
@@ -72,13 +67,34 @@ export default {
     },
     getActiveTab() {
 
-      if ((this.$route.path).includes('teacher/students') || (this.$route.path).includes('teacher/student')) {
+      /* STUDENTS */
+      if ((this.$route.path).includes('teacher/students') ||
+          (this.$route.path).includes('teacher/student') ||
+          (this.$route.path).includes('teacher/student'))
+      {
         this.activeTab = 'students'
-      } else if ((this.$route.path).includes('teacher/classes') || (this.$route.path).includes('teacher/class')) {
+      }
+
+      /* CLASS */
+      else if (
+          (this.$route.path).includes('teacher/classes') ||
+          (this.$route.path).includes('teacher/class') ||
+          (this.$route.path).includes('students/class'))
+      {
         this.activeTab = 'classes'
-      } else if ((this.$route.path).includes('teacher/assignments') || (this.$route.path).includes('teacher/assignment')) {
+      }
+
+      /* ASSIGNMENTS */
+      else if (
+          (this.$route.path).includes('teacher/assignments') ||
+          (this.$route.path).includes('teacher/assignment') ||
+          (this.$route.path).includes('students/assignments')
+      ) {
         this.activeTab = 'assignments'
-      } else if ((this.$route.path).includes('teacher/settings')) {
+      }
+
+      /* */
+      else if ((this.$route.path).includes('/settings')) {
         this.activeTab = 'settings'
       } else {
         this.activeTab = 'home'
@@ -87,6 +103,9 @@ export default {
   },
   created() {
     this.getActiveTab()
+  },
+  components: {
+    IconBase
   }
 }
 </script>
