@@ -6,10 +6,7 @@
 
         <!--  ASSIGNMENT ANSWERS-->
         <div :class="imagePreviewClass" class="pt-4 z-10">
-          <!--
-                TODO: - Implement page editSnappedAnswer.  On preview click, go to the page with image path
-                      - Allow loadCanvas, loadImage and loadSticker for demo purposes
-          -->
+
           <answer-preview-swiper
               v-if="hasSnappedAnswer && !isMarking.status"
               :is-previewing="states.isPreviewing"

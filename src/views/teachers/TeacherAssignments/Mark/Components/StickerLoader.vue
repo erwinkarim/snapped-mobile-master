@@ -35,7 +35,6 @@ export default {
     }
   },
   computed: {
-    // TODO: Load all stickers, then add onClick
     stickers: function () {
 
       let result = [];
