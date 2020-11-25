@@ -84,10 +84,7 @@
             <div class="mt-8 px-8">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
-                  Submissions
-                </div>
-                <div v-if="meta.totalSubmissions && meta.totalStudents" class="tracking-wide">
-                  {{ meta.totalSubmissions }}/{{ meta.totalStudents }}
+                  Submission
                 </div>
               </div>
 
@@ -113,18 +110,26 @@
 
       <div v-if="!isLoading" class="w-full">
 
-        <div v-if="hasStudentSubmission" class="w-full">
+        <div v-if="hasEditableSubmission" class="w-full">
           <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: studentSubmission.id}}"
                        class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
             Edit Answer
           </router-link>
         </div>
 
+        <div v-if="hasMarkedSubmission" class="w-full flex flex-row">
+          <div
+              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+            Marked
+          </div>
+        </div>
+
         <div v-else class="w-full flex flex-row">
 
           <div class="w-3/7 px-2">
-            <router-link :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"
-                         class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+            <router-link
+                :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"
+                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
               <div class="w-5/7">
                 Write Answer
               </div>
@@ -135,10 +140,11 @@
           </div>
           <div class="w-4/7 px-2">
 
-            <label class="w-full h-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row items-center justify-center">
+            <label
+                class="w-full h-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row items-center justify-center">
               <div class="w-5/7">
-                  Snapped Answer
-                <input  class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
+                Snapped Answer
+                <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
               </div>
               <icon-base-two class="w-1/7">
                 <camera-icon/>
@@ -192,7 +198,8 @@ export default {
         }
       },
       studentSubmission: {
-        id: null
+        id: null,
+        marks: null
       },
       submissions: [],
       meta: {
@@ -214,11 +221,15 @@ export default {
       return this.assignment.written_question.title || this.assignment.written_question.description;
     },
 
-    hasStudentSubmission: function () {
-      return this.studentSubmission.id !== null;
+    hasEditableSubmission: function () {
+      return this.studentSubmission.id !== null && this.studentSubmission.marks === null;
     },
 
-    assignmentDetails () {
+    hasMarkedSubmission: function () {
+      return this.studentSubmission.id !== null && this.studentSubmission.marks !== null;
+    },
+
+    assignmentDetails() {
       return {
         id: this.assignment.id,
         title: this.assignment.title
@@ -263,11 +274,14 @@ export default {
                 submittedAt: submission.submission_created_at
               }
 
+              // Set student's submission as marked if Mark exists
+              if (submission.submission_id === this.studentSubmission.id) {
+                submission.marks_id ? this.studentSubmission.marks = submission.marks_id : null;
+              }
               this.submissions.push(details)
             }
 
             this.isLoading = false;
-
           });
     },
     onFileSelected(e) {
@@ -277,13 +291,15 @@ export default {
         return
       }
 
-      router.push({name: 'student.assignments.answer.store', params: {
-        assignmentDetails: this.assignmentDetails,
-        answer: {
-          type: 'snapped',
-          content: [files[0]]
+      router.push({
+        name: 'student.assignments.answer.store', params: {
+          assignmentDetails: this.assignmentDetails,
+          answer: {
+            type: 'snapped',
+            content: [files[0]]
+          }
         }
-      }})
+      })
     },
     getHumanDate(datetime) {
 
