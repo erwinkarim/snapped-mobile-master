@@ -176,10 +176,14 @@ export default {
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
       }
-    }
+    },
   },
   watch: {
-    'filters.date': 'fetchData',
+    'filters.date': function (newSelect) {
+      if (newSelect != null){
+        this.fetchData()
+      }
+    }
   },
   methods: {
 

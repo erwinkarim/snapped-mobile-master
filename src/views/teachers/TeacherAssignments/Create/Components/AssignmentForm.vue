@@ -229,7 +229,7 @@
         <!--  Modal Schedule    -->
         <div v-if="toggleSchedule" @click.self="toggleSchedule = !toggleSchedule"
              class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-            <modal class="fixed" v-if="toggleSchedule" modal-type="no-icon">
+            <modal class="fixed" v-if="toggleSchedule" modal-type="no-icon" :redirect-route="{}">
                 <h3 slot="title" class="font-bold">Schedule Publish</h3>
                 <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
                     <div>
@@ -238,7 +238,7 @@
                         <v-date-picker class="place-self-center" v-model="published_at" mode="dateTime" />
                 </div>
                 <span slot="button">
-                    <button class="font-bold" @click="sendData">Schedule Publish</button>
+                    <button class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider" @click="sendData">Schedule Publish</button>
                 </span>
             </modal>
         </div>
@@ -246,7 +246,7 @@
         <!--  Modal Duration    -->
         <div v-if="toggleDuration" @click.self="closeToggleDuration"
              class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-            <modal class="fixed" v-if="toggleDuration" modal-type="no-icon">
+            <modal class="fixed" v-if="toggleDuration" modal-type="no-icon" :redirect-route="{}">
                 <h3 slot="title" class="font-bold">Set Duration</h3>
                 <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">
                     <div>
@@ -263,7 +263,7 @@
                     </div>
                 </div>
                 <span slot="button">
-                    <button @click="closeToggleDuration">Okay</button>
+                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider" @click="closeToggleDuration">Okay</button>
                 </span>
             </modal>
         </div>
@@ -271,23 +271,23 @@
         <!--  Modal Published   -->
         <div v-if="published" @click.self="published = !published"
              class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-            <modal class="w-4/5 " v-if="published" modal-type="success">
+            <modal class="w-4/5 " v-if="published" modal-type="success" :redirect-route="{}">
                 <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>
                 <p slot="message">
                     Got something to change? Don't worry! You can always edit your published homework
                 </p>
-                <span slot="button">
-                    <button class="font-bold" @click="reload">
+                <template slot="button">
+                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider" @click="reload">
                         Okay
                     </button>
-                </span>
+                </template>
             </modal>
         </div>
 
         <!--   Modal Error   -->
         <div v-if="error" @click.self="error = !error"
              class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-            <modal class="w-4/5 " v-if="error" modal-type="error">
+            <modal class="w-4/5 " v-if="error" modal-type="error" :redirect-route="{}">
             <div slot="message">
                 <p>
                     <b>Please ensure that you have entered all the important inputs</b>
@@ -296,9 +296,9 @@
                     <li v-for="error in errors">{{ error }}</li>
                 </ul>
             </div>
-            <span slot="button">
-            <button @click="error = !error">Okay</button>
-        </span>
+            <template slot="button">
+                <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider" @click="error = !error">Okay</button>
+            </template>
         </modal>
         </div>
         <!--  End Modal     -->
