@@ -20,7 +20,7 @@
 
         <!-- SECTION: CALENDAR -->
         <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
-          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full"/>
+          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full" />
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
@@ -30,7 +30,7 @@
           <div class="flex flex-row justify-between items-center">
             <section-title title="Assignments List"/>
             <div class="text-purple-primary">
-              {{ selectedDate }}
+              {{selectedDate}}
             </div>
           </div>
 
@@ -41,14 +41,8 @@
                 :key="assignment.assignmentID"
                 :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
                 :assignment="assignment"
-                :show-marks="true"
-            >
-              <template v-slot:topRightAction v-if="!assignment.marks">
-                {{ assignment.totalSubmitted }} submitted
-              </template>
-            </assignment-card>
+            />
           </div>
-
 
           <div v-if="hasError" class="text-purple-secondary mt-12">
             {{ hasError }}
@@ -135,13 +129,24 @@ import moment from "moment";
 
 export default {
   name: "Index",
+  components: {
+    SelectSubject,
+    SelectYear,
+    SelectMonth,
+    AssignmentCalendar,
+    AssignmentCard,
+    DashboardLayout,
+    FilterIcon,
+    IconBaseTwo,
+    SectionTitle,
+    PageTitle
+  },
   data() {
     return {
 
       // States
       hasError: false,
       modal: false,
-
       assignments: [],
 
       filters: {
@@ -154,18 +159,22 @@ export default {
   },
   computed: {
     selectedDate() {
-      return moment(this.filters.date).format('DD MMMM YYYY')
+      if (this.filters.date) {
+        return moment(this.filters.date).format('DD MMMM YYYY')
+      }
     },
     requestFilter() {
-
       return {
         is_active: false,
+        date: this.filters.date,
         month: this.filters.month,
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
       }
-
     }
+  },
+  watch:{
+    'filters.date': 'fetchData',
   },
   methods: {
     fetchData() {
@@ -195,13 +204,6 @@ export default {
                   totalSubmitted: item.number_of_submissions,
                 }
 
-                if (item.marks_id) {
-                  assignmentDetail['marks'] = {
-                    id: item.marks_id,
-                    value: item.marks
-                  }
-                }
-
                 this.assignments.push(assignmentDetail);
                 this.hasError = false;
               }
@@ -220,12 +222,15 @@ export default {
     },
     handleSelectedMonth(month) {
       this.filters.month = month;
+      this.filters.date = null;
     },
     handleSelectedYear(year) {
       this.filters.year = year;
+      this.filters.date = null;
     },
     handleSelectedSubject(subject) {
-      this.filters.subjects = [subject]
+      this.filters.subjects = [subject];
+      this.filters.date = null;
     },
     clickedFilterButton() {
       this.toggleFilterModal()
@@ -239,16 +244,6 @@ export default {
       this.filters.year = null;
       this.filters.subjects = null;
     }
-  },
-
-  mounted() {
-    this.fetchData()
-  },
-  components: {
-    SelectSubject,
-    SelectYear,
-    SelectMonth,
-    AssignmentCalendar, AssignmentCard, DashboardLayout, FilterIcon, IconBaseTwo, SectionTitle, PageTitle
   }
 }
 </script>
