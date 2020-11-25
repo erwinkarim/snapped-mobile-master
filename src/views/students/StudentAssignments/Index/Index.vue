@@ -41,7 +41,12 @@
                 :key="assignment.assignmentID"
                 :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
                 :assignment="assignment"
-            />
+                :show-marks="true"
+            >
+              <template v-slot:topRightAction v-if="!assignment.marks">
+                {{ assignment.totalSubmitted }} submitted
+              </template>
+            </assignment-card>
           </div>
 
           <div v-if="hasError" class="text-purple-secondary mt-12">
@@ -129,24 +134,13 @@ import moment from "moment";
 
 export default {
   name: "Index",
-  components: {
-    SelectSubject,
-    SelectYear,
-    SelectMonth,
-    AssignmentCalendar,
-    AssignmentCard,
-    DashboardLayout,
-    FilterIcon,
-    IconBaseTwo,
-    SectionTitle,
-    PageTitle
-  },
   data() {
     return {
 
       // States
       hasError: false,
       modal: false,
+
       assignments: [],
 
       filters: {
@@ -204,6 +198,13 @@ export default {
                   totalSubmitted: item.number_of_submissions,
                 }
 
+                if (item.marks_id) {
+                  assignmentDetail['marks'] = {
+                    id: item.marks_id,
+                    value: item.marks
+                  }
+                }
+
                 this.assignments.push(assignmentDetail);
                 this.hasError = false;
               }
@@ -244,7 +245,19 @@ export default {
       this.filters.year = null;
       this.filters.subjects = null;
     }
-  }
+  },
+  components: {
+    SelectSubject,
+    SelectYear,
+    SelectMonth,
+    AssignmentCalendar,
+    AssignmentCard,
+    DashboardLayout,
+    FilterIcon,
+    IconBaseTwo,
+    SectionTitle,
+    PageTitle
+  },
 }
 </script>
 
