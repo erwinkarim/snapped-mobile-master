@@ -35,7 +35,10 @@
           <div class="text-left mb-3">
             <section-title class="mb-5" title="Submissions"/>
           </div>
-          <submission-card/>
+          <assignment-submission-card
+              v-for="submission in submissions"
+              :submission="submission"
+              class="mb-3"/>
         </div>
       </div>
 
@@ -56,10 +59,47 @@ import AssignmentSwiper from "@/views/teachers/TeacherHome/AssignmentSwiper";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import SubmissionCard from "@/views/teachers/TeacherHome/SubmissionCard";
 import UserProfile from "@/components/UserProfile";
+import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
+import SubmissionRepository from "@/repositories/SubmissionRepository";
+import TeacherRepository from "@/repositories/TeacherRepository";
 
 export default {
   name: "Home",
+  data() {
+    return {
+      submissions: []
+    }
+  },
+  methods: {
+    fetchSubmissions() {
+      TeacherRepository.getSubmissions(1)
+        .then(response => {
+          let data = response.data.data;
+
+          for (let i = 0; i <  data.length; i++) {
+
+            let submission = data[i];
+
+            let details = {
+              id: submission.submission_id,
+              assignmentID: submission.assignment_id,
+              studentID : submission.student_id,
+              studentName : submission.student_name,
+              submittedAt : submission.submission_created_at,
+              classroomName : submission.classroom_name,
+              subjectName : submission.subject_name
+            }
+
+            this.submissions.push(details)
+          }
+        })
+    }
+  },
+  mounted() {
+    this.fetchSubmissions()
+  },
   components: {
+    AssignmentSubmissionCard,
     UserProfile,
     SubmissionCard,
     DashboardLayout,

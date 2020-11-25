@@ -42,6 +42,7 @@ export default  {
             path: 'class/:classID/details',
             name: 'teacher.class.details',
             component: TeacherClassDetails,
+            props: true,
             meta: {
                 checkAuth: 'true',
                 checkRole: 'Teacher'
