@@ -117,7 +117,7 @@
           </router-link>
         </div>
 
-        <div v-if="hasMarkedSubmission" class="w-full flex flex-row">
+        <div v-else-if="hasMarkedSubmission" class="w-full flex flex-row">
           <div
               class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
             Marked
@@ -222,6 +222,7 @@ export default {
     },
 
     hasEditableSubmission: function () {
+      console.log(this.studentSubmission)
       return this.studentSubmission.id !== null && this.studentSubmission.marks === null;
     },
 
@@ -280,7 +281,6 @@ export default {
               }
               this.submissions.push(details)
             }
-
             this.isLoading = false;
           });
     },

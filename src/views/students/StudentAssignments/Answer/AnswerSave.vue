@@ -6,7 +6,8 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back :to="{name: 'student.assignments.answer.write' , params: {assignmentDetails : assignmentDetails }}"
+          <nav-back type="cancel"
+              :to="{name: 'student.assignments.show'}"
                     class="w-2/3" stroke-color="red-primary"/>
         </template>
 
