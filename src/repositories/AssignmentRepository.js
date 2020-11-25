@@ -5,9 +5,16 @@ const resource = '/assignments'
 export default  {
 
 
-    all(filters) {
+    all({is_active: isActive, date: date, month: month, year: year, subjects: subjects}) {
+
         return Repository.post('/assignments', {
-            filters: filters
+            filters: {
+                is_active: isActive,
+                date: date,
+                month: month,
+                year: year,
+                subjects: subjects
+            }
         })
     },
 

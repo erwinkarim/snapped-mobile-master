@@ -3,6 +3,7 @@ import AnswerIndex from "@/views/students/StudentAssignments/Answer/Index";
 import AnswerWrite from "@/views/students/StudentAssignments/Answer/AnswerWrite";
 import AnswerSave from "@/views/students/StudentAssignments/Answer/AnswerSave";
 import App from "@/App";
+import AnswerEdit from "@/views/students/StudentAssignments/Answer/AnswerEdit";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -53,7 +54,7 @@ export default {
                         {
                             path: 'edit',
                             name: 'student.assignments.answer.edit',
-                            component: AnswerWrite,
+                            component: AnswerEdit,
                             meta: studentAccessControlMeta,
                             props: true
                         },
