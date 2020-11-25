@@ -25,7 +25,7 @@
 
             <!-- HEADER with Nav Back -->
             <div class="flex flex-row w-full justify-between pt-16 px-5">
-              <nav-back class="w-1/12" stroke-color="white" to="student.assignments"/>
+              <nav-back class="w-1/12" stroke-color="white" :to="{name: 'student.assignments'}"/>
             </div>
 
             <!-- TIMER -->
@@ -114,15 +114,16 @@
       <div v-if="!isLoading" class="w-full">
 
         <div v-if="hasStudentSubmission" class="w-full">
-            <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: studentSubmission.id}}"
-                         class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-                Edit Answer
-            </router-link>
+          <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: studentSubmission.id}}"
+                       class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+            Edit Answer
+          </router-link>
         </div>
 
         <div v-else class="w-full flex flex-row">
-          <div class="w-1/2 px-2">
-            <router-link :to="{name:'student.assignments.answer.write', params: { assignmentTitle: assignment.title }}"
+
+          <div class="w-3/7 px-2">
+            <router-link :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"
                          class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
               <div class="w-5/7">
                 Write Answer
@@ -132,16 +133,17 @@
               </icon-base-two>
             </router-link>
           </div>
-          <div class="w-1/2 px-2">
-            <button
-                class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+          <div class="w-4/7 px-2">
+
+            <label class="w-full h-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row items-center justify-center">
               <div class="w-5/7">
-                Snap Answer
+                  Snapped Answer
+                <input  class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
               </div>
               <icon-base-two class="w-1/7">
                 <camera-icon/>
               </icon-base-two>
-            </button>
+            </label>
           </div>
         </div>
 
@@ -166,6 +168,7 @@ import moment from "moment";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import CountdownTimer from "@/components/CountdownTimer";
 import Modal from "@/components/Modal";
+import router from "@/router";
 
 export default {
   name: "Index",
@@ -213,6 +216,13 @@ export default {
 
     hasStudentSubmission: function () {
       return this.studentSubmission.id !== null;
+    },
+
+    assignmentDetails () {
+      return {
+        id: this.assignment.id,
+        title: this.assignment.title
+      }
     }
   },
   methods: {
@@ -259,6 +269,21 @@ export default {
             this.isLoading = false;
 
           });
+    },
+    onFileSelected(e) {
+      let files = e.target.files || e.dataTransfer.files
+
+      if (!files.length) {
+        return
+      }
+
+      router.push({name: 'student.assignments.answer.store', params: {
+        assignmentDetails: this.assignmentDetails,
+        answer: {
+          type: 'snapped',
+          content: [files[0]]
+        }
+      }})
     },
     getHumanDate(datetime) {
 

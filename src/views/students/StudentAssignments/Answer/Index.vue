@@ -29,12 +29,12 @@
 
     <router-view
         @writtenAnswer="handleWrittenAnswer"
-        @submitWrittenAnswer="handleSubmitWrittenAnswer"
+        @snappedAnswer="handleSnappedAnswer"
+        @submit="handleSubmit"
         :assignment-details="assignmentDetails"
         :answer="answer"
     />
   </div>
-
 
 
 </template>
@@ -47,11 +47,7 @@ export default {
   name: "Index",
   components: {Modal},
   props: {
-    assignmentID: [String, Number],
-    assignmentTitle: {
-      type: String,
-      default: null
-    }
+    assignmentDetails: Object
   },
   data() {
     return {
@@ -66,51 +62,41 @@ export default {
       }
     }
   },
-  computed: {
-    assignmentDetails () {
-      return {
-        id: this.assignmentID,
-        title: this.assignmentTitle
-      }
-    }
-  },
   methods: {
     handleWrittenAnswer(value) {
       this.answer.type = 'written';
       this.answer.content = value;
     },
-    handleSubmitWrittenAnswer(remarks) {
+    handleSnappedAnswer(value) {
+      this.answer.type = 'snapped';
+      this.answer.content = value;
+    },
+    handleSubmit(remarks) {
 
-      if (this.answer.type === 'written') {
+      SubmissionRepository.store(
+          {
+            assignmentID: this.assignmentDetails.id,
+            answerType: this.answer.type,
+            answerContent: this.answer.content,
+            remarks: remarks,
+          })
+          .then(response => {
+            let content = response.data;
+            let type = content.messageType;
 
-        SubmissionRepository.store(
-            {
-              assignmentID: this.assignmentID,
-              answerType : this.answer.type,
-              answerContent: this.answer.content,
-              remarks: remarks,
-            })
-            .then(response => {
-              let content = response.data;
+            if (type === 'success') {
+              this.submissionStatus = type;
+              this.toggleModal();
+            }
+          })
 
-              let type = content.messageType;
 
-              if (type === 'success') {
-                this.submissionStatus = type;
-                this.toggleModal();
-              }
-            })
-
-      }
     },
 
-    toggleModal () {
+    toggleModal() {
       this.isShowingModal = !this.isShowingModal;
     }
   },
-  mounted() {
-    console.log(`Title: ${this.assignmentTitle}`)
-  }
 }
 </script>
 

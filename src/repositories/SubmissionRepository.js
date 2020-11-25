@@ -18,8 +18,9 @@ export default {
             formData.append('written_answer', answerContent)
         }
         if (answerType === 'snapped') {
-            // TODO: Add Snapped Answer option
-            // formData.append('snap_answer', answerContent)
+            answerContent.forEach(function (file, index) {
+                formData.append(`snap_answer[${index}]`, file);
+            });
         }
 
         return Repository.post(`${resource}/store`,
