@@ -15,6 +15,7 @@ export default  {
         return Repository.post('/assignments', {
             filters: {
                 is_active: true,
+                date: null,
                 month: null,
                 year: null,
                 subjects: null
@@ -24,5 +25,9 @@ export default  {
 
     find(assignmentID) {
         return Repository.get(`${resource}/${assignmentID}/submissions`)
+    },
+
+    getDueDates(){
+        return Repository.get('/duedates')
     }
 }

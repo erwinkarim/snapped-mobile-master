@@ -8,7 +8,7 @@
             <nav-back class="w-5/7" stroke-color="red-primary"/>
           </template>
           <template v-slot:mini-title>
-            New Assignment
+            Student List
           </template>
         </page-header-three>
     </template>

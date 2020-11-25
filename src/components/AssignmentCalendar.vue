@@ -1,5 +1,5 @@
 <template>
-  <v-calendar class="w-full"  v-model="date" :attributes="attributes" @dayclick="onDayClick"/>
+  <v-date-picker class="w-full" title-position="left" v-model="date" :attributes="attributes" :select-attribute="selectAttribute" @dayclick="onDayClick"/>
 </template>
 
 <script>
@@ -8,6 +8,7 @@
 import Vue from 'vue';
 import VCalendar from 'v-calendar';
 import moment from 'moment';
+import AssignmentRepository from "../repositories/AssignmentRepository";
 
 Vue.use(VCalendar);
 
@@ -16,11 +17,18 @@ export default {
   data() {
     return {
       days: [],
+      selectedDay: [],
       date: new Date(),
+      duedates: [],
+
+      selectAttribute: {
+        highlight: 'yellow'
+        // Don't need the date here
+      },
     };
   },
   watch: {
-    'days' : 'emitSelectedDate'
+    'selectedDay' : 'emitSelectedDate',
   },
   computed: {
     dates() {
@@ -35,19 +43,18 @@ export default {
     },
     attributes() {
       return this.dates.map(date => ({
-        highlight: true,
+        highlight: (this.todayDate.date === date) ? 'indigo':'red',
         dates: date,
       }));
-    },
+    }
   },
   methods: {
-
     onDayClick(day) {
-      const idx = this.days.findIndex(d => d.id === day.id);
+      const idx = this.selectedDay.findIndex(d => d.id === day.id);
       if (idx >= 0) {
-        this.days.splice(idx, 1);
+        this.selectedDay.splice(idx, 1);
       } else {
-        this.days = [{
+        this.selectedDay = [{
           id: day.id,
           date: day.date,
         }]
@@ -55,19 +62,43 @@ export default {
     },
 
     emitSelectedDate () {
-      if (this.days.length > 0) {
-        this.$emit('selectedDate', this.days[0]['date'])
+      if (this.selectedDay.length > 0) {
+        this.$emit('selectedDate', this.selectedDay[0]['date'])
       }
+    },
+
+    getDuedates () {
+      AssignmentRepository.getDueDates()
+              .then(response => {
+
+                const data = response.data.data
+
+                for (let i = 0; i < data.length; i++) {
+
+                  let item = data[i];
+
+                  let itemDetail = {
+                    id: item.due_datetime,
+                    date: moment(String(item.due_datetime)).toDate()
+
+                  }
+                  // console.log('hi')
+                  this.days.push(itemDetail)
+                }
+        })
     }
 
   },
   mounted() {
     // Set initial date
     this.days.push(this.todayDate)
+    this.selectedDay.push(this.todayDate)
+
+    // Get due dates
+    this.getDuedates()
   }
 }
 </script>
 
 <style scoped>
-
 </style>

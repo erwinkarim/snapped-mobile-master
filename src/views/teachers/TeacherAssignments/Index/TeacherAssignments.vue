@@ -152,7 +152,6 @@ export default {
       // States
       hasError: false,
       modal: false,
-
       assignments: [],
 
       filters: {
@@ -168,9 +167,9 @@ export default {
       return moment(this.filters.date).format('DD MMMM YYYY')
     },
     requestFilter() {
-
       return {
         is_active: false,
+        date: this.filters.date,
         month: this.filters.month,
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
