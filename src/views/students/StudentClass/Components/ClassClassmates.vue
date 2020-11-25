@@ -1,34 +1,46 @@
 <template>
   <dashboard-layout>
     <template v-slot:pageHeader>
-      <page-header-three :has-search-bar="true" :has-bottom-border="true">
+      <page-header-three
+          :has-search-bar="true"
+          :has-bottom-border="true"
+          @search="handleSearch"
+      >
         <template v-slot:leftAction>
           <nav-back class="w-5/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           Classmate List
         </template>
-        <template v-slot:rightAction>
-          <div class="flex flex-row justify-end">
-            <icon-base-two class="w-2/5" stroke-color="red-primary">
-              <filter-icon/>
-            </icon-base-two>
-          </div>
-        </template>
+        <!--        <template v-slot:rightAction>-->
+        <!--          <div class="flex flex-row justify-end">-->
+        <!--            <icon-base-two class="w-2/5" stroke-color="red-primary">-->
+        <!--              <filter-icon/>-->
+        <!--            </icon-base-two>-->
+        <!--          </div>-->
+        <!--        </template>-->
       </page-header-three>
     </template>
 
     <template v-slot:content>
       <div class="relative top-45 mb-24">
         <div class=" border-t-2 border-opacity-15 border-gray-primary">
-          <router-link  :to="{ name: '' }" :key="student.id" v-for="student in students" class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white" >
+          <!--          <router-link v-for="student in filteredStudents"-->
+          <!--                       :to="{ name: '' }" :key="student.id"-->
+          <!--                       class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white"-->
+          <!--          >-->
+          <div v-for="student in filteredStudents"
+               :key="student.id"
+               class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white"
+          >
             <div class="w-1/6 h-full relative">
-              <icon-base-two class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
+              <icon-base-two class="absolute w-full" icon-name="profile-photo-icon" icon-color="white"
+                             view-box="0 0 60 55">
                 <profile-photo/>
               </icon-base-two>
             </div>
             <div class="ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
-          </router-link>
+          </div>
         </div>
       </div>
 
@@ -55,8 +67,12 @@ export default {
   data() {
     return {
       search: '',
-      students: []
+      students: [],
+      filteredStudents: []
     }
+  },
+  watch: {
+    'search': 'filterList'
   },
   methods: {
     getClassmates() {
@@ -65,8 +81,21 @@ export default {
             let data = response.data;
 
             this.students = data.students;
+            this.filteredStudents = data.students;
             this.className = data.class_name;
           })
+    },
+    handleSearch(value) {
+      this.search = value;
+    },
+    filterList() {
+
+      // Copy original results into filterSubjects
+      this.filteredStudents = JSON.parse(JSON.stringify(this.students));
+
+      this.filteredStudents = this.filteredStudents.filter(student => {
+        return (student.name.toLowerCase()).includes(this.search.toLowerCase())
+      })
     }
   },
   mounted() {
@@ -75,7 +104,8 @@ export default {
   components: {
     NavBack,
     PageHeaderThree,
-    DashboardLayout, ProfilePhoto, MagnifyingGlassIcon, LayoutTwo, PageTitle, FilterIcon, IconBaseTwo}
+    DashboardLayout, ProfilePhoto, MagnifyingGlassIcon, LayoutTwo, PageTitle, FilterIcon, IconBaseTwo
+  }
 }
 </script>
 
