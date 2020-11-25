@@ -49,7 +49,7 @@
               :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
               class="mt-4"
           >
-            <template v-slot:topRightAction>
+            <template v-slot:topRightAction >
               {{ assignment.totalSubmitted }} submitted
             </template>
           </assignment-card>

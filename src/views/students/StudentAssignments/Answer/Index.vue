@@ -1,7 +1,6 @@
 <template>
   <div>
 
-
     <!-- OVERLAYS -->
     <div v-if="isShowingModal" @click="toggleModal"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
