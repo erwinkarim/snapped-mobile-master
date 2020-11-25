@@ -470,8 +470,6 @@ export default {
 
               const numOfSubjects = data.length
 
-              console.log(numOfSubjects)
-
               this.subjects = []
               for (let i = 0; i < numOfSubjects; i++) {
 
@@ -606,11 +604,9 @@ export default {
         });
     },
     previewAssignment(key){
-      this.previewImage = this.images[key]
-
-      console.log(this.previewImage)
-      this.showQuestion =! this.showQuestion
-      this.isPreviewing = !this.isPreviewing
+        this.previewImage = this.images[key]
+        this.showQuestion =! this.showQuestion
+        this.isPreviewing = !this.isPreviewing
     },
     removeImage(key){
         this.images.splice(key,1);
@@ -660,8 +656,6 @@ export default {
         let hourInMinute = this.durationHour*60
         //in minutes
         let totalDuration = dayInMinute + hourInMinute + this.durationMinute
-
-        console.log(this.published_at)
 
         let due_datetime = moment(this.published_at).add(totalDuration,'m').toDate();
 
@@ -731,13 +725,6 @@ export default {
       //     this.images = this.imagesConfirmed
       //
       // },
-      if(this.durationDay === ''){
-          this.durationDay = 0
-      }
-      // (this.durationHour === '')? this.durationHour = 0 : null,
-      // (this.durationMinute === '')? this.durationMinute = 0: null,
-    this.titleQuestion = localStorage.getItem('titleQuestion'),
-    this.descriptionQuestion = localStorage.getItem('descriptionQuestion'),
     this.getDetails()
     this.getSubjects()
     this.getClasses()
