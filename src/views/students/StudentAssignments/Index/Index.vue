@@ -174,7 +174,11 @@ export default {
     }
   },
   watch:{
-    'filters.date': 'fetchData',
+    'filters.date': function (newSelect) {
+      if (newSelect != null){
+        this.fetchData()
+      }
+    }
   },
   methods: {
     fetchData() {

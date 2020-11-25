@@ -233,6 +233,7 @@ export default {
     },
     handleSelectedMonth(month) {
       this.filters.month = month;
+      this.filters.date = null;
     },
     handleSelectedYear(year) {
       this.filters.year = year;
