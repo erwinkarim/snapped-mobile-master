@@ -1,8 +1,6 @@
 <template>
   <div class="mt-8 mb-4">
-    <section-title class="text-left">
-      Personal Information
-    </section-title>
+    <section-title class="text-left" title="Personal Information"/>
     <div class="mt-5">
       <div class="flex flex-row text-xs justify-between py-1">
         <div class="text-left text-purple-secondary">
@@ -66,7 +64,6 @@ export default {
   },
   methods: {
     updateDate() {
-      console.log('test')
 
       if (typeof this.details !== "undefined") {
         this.schoolID = this.details.school_id

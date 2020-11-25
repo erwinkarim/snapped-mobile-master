@@ -1,8 +1,6 @@
 <template>
   <div class="mt-8">
-    <section-title class="text-left">
-      Guardian/Parents
-    </section-title>
+    <section-title class="text-left" title="Guardian/Parents"/>
     <div class="mt-5" >
       <div
           class=" max-w-sm h-18 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
