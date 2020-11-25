@@ -9,13 +9,13 @@
         <template v-slot:mini-title>
           School Ranking
         </template>
-        <template v-slot:rightAction>
-          <div class="flex flex-row justify-end">
-            <icon-base-two class="w-2/5" stroke-color="red-primary">
-              <filter-icon/>
-            </icon-base-two>
-          </div>
-        </template>
+<!--        <template v-slot:rightAction>-->
+<!--          <div class="flex flex-row justify-end">-->
+<!--            <icon-base-two class="w-2/5" stroke-color="red-primary">-->
+<!--              <filter-icon/>-->
+<!--            </icon-base-two>-->
+<!--          </div>-->
+<!--        </template>-->
       </page-header-three>
     </template>
 

@@ -14,8 +14,8 @@
           {{ submission.studentName || '' }}
         </div>
         <div class="flex flex-row text-left text-px-10 text-purple-secondary">
-          <div class="w-1/4 truncate"> {{ meta.subjectName || '' }}</div>
-          <div class="w-1/4 truncate"> {{ meta.classroomName || '' }}</div>
+          <div class="w-1/4 truncate"> {{ subjectName }}</div>
+          <div class="w-1/4 truncate"> {{ classroomName }}</div>
           <div class="w-2/4 truncate"> {{ getHumanDate(submission.submittedAt) }}</div>
         </div>
       </div>
@@ -46,7 +46,10 @@ export default {
   name: "AssignmentSubmissionCard",
   props: {
     submission: Object,
-    meta: Object,
+    meta: {
+      type: Object,
+      default: null
+    },
     allowShowSubmission: {
       type: Boolean,
       default: true
@@ -55,6 +58,26 @@ export default {
   computed: {
     isMarked() {
       return this.submission.marksID !== null && this.submission.marksID !== undefined;
+    },
+    subjectName () {
+      if (this.meta) {
+        return this.meta.subjectName;
+      } else if (this.submission.subjectName) {
+        return this.submission.subjectName
+      } else {
+        return ''
+      }
+    },
+    classroomName () {
+      if (this.meta) {
+        return this.meta.classroomName;
+      } else if (this.submission.classroomName) {
+        return this.submission.classroomName
+      } else {
+        return ''
+      }
+    },
+    submittedAt() {
     }
   },
   methods: {
@@ -69,7 +92,7 @@ export default {
     },
     showSubmission(submissionID) {
       if (this.allowShowSubmission) {
-        router.push({name: 'teacher.assignments.marking.details', params: { submissionID: this.submission.id }})
+        router.push({name: 'teacher.assignments.marking.details', params: { assignmentID: this.submission.assignmentID, submissionID: this.submission.id }})
       }
     }
   },

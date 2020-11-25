@@ -18,6 +18,16 @@ export default {
         return Repository.get(`${resource}/classes`)
     },
 
+    getSubmissions(latest = null) {
+
+        let endpoint = `${resource}/submissions`;
+
+        if (latest) endpoint += '?latest=' + latest;
+
+        return Repository.get(endpoint)
+
+    },
+
     getSubjectsWithStudentsForTeacherClass({classID: classID, search: studentName}) {
         return Repository.post(`${resource}/classes/${classID}/subjects`, {
             filters: {
