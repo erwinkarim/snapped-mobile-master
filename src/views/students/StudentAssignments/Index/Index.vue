@@ -129,13 +129,24 @@ import moment from "moment";
 
 export default {
   name: "Index",
+  components: {
+    SelectSubject,
+    SelectYear,
+    SelectMonth,
+    AssignmentCalendar,
+    AssignmentCard,
+    DashboardLayout,
+    FilterIcon,
+    IconBaseTwo,
+    SectionTitle,
+    PageTitle
+  },
   data() {
     return {
 
       // States
       hasError: false,
       modal: false,
-
       assignments: [],
 
       filters: {
@@ -148,18 +159,22 @@ export default {
   },
   computed: {
     selectedDate() {
-      return moment(this.filters.date).format('DD MMMM YYYY')
+      if (this.filters.date) {
+        return moment(this.filters.date).format('DD MMMM YYYY')
+      }
     },
     requestFilter() {
-
       return {
         is_active: false,
+        date: this.filters.date,
         month: this.filters.month,
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
       }
-
     }
+  },
+  watch:{
+    'filters.date': 'fetchData',
   },
   methods: {
     fetchData() {
@@ -207,12 +222,15 @@ export default {
     },
     handleSelectedMonth(month) {
       this.filters.month = month;
+      this.filters.date = null;
     },
     handleSelectedYear(year) {
       this.filters.year = year;
+      this.filters.date = null;
     },
     handleSelectedSubject(subject) {
-      this.filters.subjects = [subject]
+      this.filters.subjects = [subject];
+      this.filters.date = null;
     },
     clickedFilterButton() {
       this.toggleFilterModal()
@@ -226,16 +244,7 @@ export default {
       this.filters.year = null;
       this.filters.subjects = null;
     }
-  },
-
-  mounted() {
-    this.fetchData()
-  },
-  components: {
-    SelectSubject,
-    SelectYear,
-    SelectMonth,
-    AssignmentCalendar, AssignmentCard, DashboardLayout, FilterIcon, IconBaseTwo, SectionTitle, PageTitle}
+  }
 }
 </script>
 
