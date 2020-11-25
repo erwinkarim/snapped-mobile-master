@@ -164,7 +164,9 @@ export default {
   },
   computed: {
     selectedDate() {
-      return moment(this.filters.date).format('DD MMMM YYYY')
+      if (this.filters.date) {
+        return moment(this.filters.date).format('DD MMMM YYYY')
+      }
     },
     requestFilter() {
       return {
@@ -174,7 +176,6 @@ export default {
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
       }
-
     }
   },
   watch: {
@@ -228,12 +229,15 @@ export default {
     },
     handleSelectedMonth(month) {
       this.filters.month = month;
+      this.filters.date = null;
     },
     handleSelectedYear(year) {
       this.filters.year = year;
+      this.filters.date = null;
     },
     handleSelectedSubject(subject) {
       this.filters.subjects = [subject]
+      this.filters.date = null;
     },
     clickedFilterButton() {
       this.toggleFilterModal()
@@ -247,7 +251,7 @@ export default {
       this.filters.year = null;
       this.filters.subjects = null;
     }
-  },
+  }
 }
 </script>
 
