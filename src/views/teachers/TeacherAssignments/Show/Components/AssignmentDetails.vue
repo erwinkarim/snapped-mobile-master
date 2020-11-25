@@ -202,7 +202,8 @@ export default {
                 studentID : submission.student_id,
                 studentName : submission.student_name,
                 submittedAt : submission.submission_created_at,
-                marksID: submission.marks_id
+                marksID: submission.marks_id,
+                assignmentID: data.assignment_details.assignment_id
               }
 
               this.submissions.push(details)

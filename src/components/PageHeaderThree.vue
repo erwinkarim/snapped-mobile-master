@@ -41,7 +41,7 @@
           <magnifying-glass-icon stroke-color="purple-primary"/>
         </icon-base-two>
       </div>
-      <input v-model="search"
+      <input v-model="search" @keyup="emitSearch"
              class="pl-12 pr-2 py-3 mt-4  appearance-none border rounded rounded-xl border-none w-full bg-gray-tertiary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
              type="text" placeholder="Search" autocomplete="off">
     </div>
@@ -153,6 +153,9 @@ export default {
       this.isScrolledDownOne = window.scrollY > 32
       this.isScrolledDownTwo = window.scrollY > 43
       this.setStickySearchBar = window.scrollY > 54
+    },
+    emitSearch(value) {
+      this.$emit('search', this.search)
     }
   },
   components: {MagnifyingGlassIcon, PageTitle, FilterIcon, IconBaseTwo, NavBack}

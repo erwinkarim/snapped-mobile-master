@@ -3,14 +3,16 @@
   <!-- ADJUST RELATIVE TOP -->
   <dashboard-layout :has-fixed-header="true">
     <template v-slot:pageHeader>
-        <page-header-three :has-search-bar="true">
-          <template v-slot:leftAction>
-            <nav-back class="w-5/7" stroke-color="red-primary"/>
-          </template>
-          <template v-slot:mini-title>
-            Student List
-          </template>
-        </page-header-three>
+      <page-header-three :has-search-bar="true"
+                         @search="handleSearch"
+      >
+        <template v-slot:leftAction>
+          <nav-back class="w-5/7" stroke-color="red-primary"/>
+        </template>
+        <template v-slot:mini-title>
+          Student List
+        </template>
+      </page-header-three>
     </template>
     <template v-slot:content>
       <students-list :search="search" class="relative top-46 mb-24"/>
@@ -37,9 +39,15 @@ export default {
       search: ""
     }
   },
+  methods: {
+    handleSearch(value) {
+      this.search = value
+    }
+  },
   components: {
     PageHeaderThree,
-    LayoutTwo, StudentsList, FilterIcon, NavBack, MagnifyingGlassIcon, IconBase, PageTitle, DashboardLayout}
+    LayoutTwo, StudentsList, FilterIcon, NavBack, MagnifyingGlassIcon, IconBase, PageTitle, DashboardLayout
+  }
 }
 </script>
 

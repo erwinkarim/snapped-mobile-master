@@ -2,15 +2,19 @@
   <dashboard-layout>
 
     <template v-slot:pageHeader>
-      <page-header-three :has-search-bar="true" :has-scroll-animation="true">
+      <page-header-three
+          :has-search-bar="true"
+          :has-scroll-animation="true"
+          @search="handleSearch"
+      >
         <template v-slot:leftAction>
           <nav-back class="w-5/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
-          New Assignment
+          {{ className }}
         </template>
         <template v-slot:title>
-          New Assignments
+          {{ className }}
         </template>
       </page-header-three>
     </template>
@@ -29,6 +33,12 @@ import NavBack from "@/components/NavBack";
 import SubjectsList from "@/views/teachers/TeacherClasses/SubjectsList";
 export default {
   name: "TeacherClassDetails",
+  props: {
+    className: {
+      type: String,
+      default: 'Class'
+    }
+  },
   components: {
     SubjectsList,
     NavBack,
@@ -40,6 +50,11 @@ export default {
       search: ''
     }
   },
+  methods: {
+    handleSearch (value) {
+      this.search = value
+    }
+  }
 }
 </script>
 

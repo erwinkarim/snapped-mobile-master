@@ -222,7 +222,6 @@ export default {
     },
 
     hasEditableSubmission: function () {
-      console.log(this.studentSubmission)
       return this.studentSubmission.id !== null && this.studentSubmission.marks === null;
     },
 
