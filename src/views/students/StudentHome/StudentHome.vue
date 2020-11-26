@@ -63,7 +63,7 @@ export default {
               let assignmentDetail = {
                 assignmentID: item.assignment_id,
                 subjectName: item.subject_name,
-                classroomName: item.class_name,
+                classroomName: item.classroom_name,
                 title: item.title,
                 description: item.written_description,
                 dueDatetime: item.due_datetime,
