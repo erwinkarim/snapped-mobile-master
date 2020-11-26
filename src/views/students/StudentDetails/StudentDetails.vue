@@ -4,51 +4,50 @@
     <template v-slot:pageHeader>
       <page-header-three>
         <template v-slot:leftAction>
-          <nav-back class="w-2/7" stroke-color="red-primary"/>
+          <nav-back :to="handleNavBackRoute" class="w-2/7" stroke-color="red-primary"/>
         </template>
       </page-header-three>
     </template>
 
     <template v-slot:content>
-      <div class="fixed top-20 px-5 pt-4 z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
+      <div
+          class="fixed top-20 px-5 pt-4 z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
-          <!-- SECTION: STUDENT DETAILS -->
-          <div class="flex flex-row items-center items-center px-2">
+        <!-- SECTION: STUDENT DETAILS -->
+        <div class="flex flex-row items-center items-center px-2">
 
-            <div class="w-3/12">
-              <icon-base icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-                <profile-photo/>
-              </icon-base>
-            </div>
-
-            <div class="flex flex-col w-full text-left w-3/5  truncate">
-              <h1 class="text-purple-primary font-bold ">
-                {{ studentDetails.studentName }}
-              </h1>
-
-              <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
-                <span class="pr-6">{{ studentDetails.className || '' }}</span>
-                <span>{{ nowDate || '' }}</span>
-              </div>
-            </div>
+          <div class="w-3/12">
+            <icon-base icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
+              <profile-photo/>
+            </icon-base>
           </div>
 
-          <ranking-panel class="mt-5"/>
+          <div class="flex flex-col w-full text-left w-3/5  truncate">
+            <h1 class="text-purple-primary font-bold ">
+              {{ studentDetails.studentName }}
+            </h1>
 
-          <!-- SECTION: TABS -->
-          <div class="flex mt-5 justify-between items-center">
-            <router-link @click.native="showTab({tabName: tab.name,route: tab.route})" :to="{name: tab.route}"
-                         v-for="tab in tabs" :class="isActiveTab(tab.name)"
-                         class="text-xs font-bold py-2 px-4 rounded-lg w-full mx-1" exact>
-              {{ tab.displayName }}
-            </router-link>
+            <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
+              <span class="pr-6">{{ studentDetails.className || '' }}</span>
+              <span>{{ nowDate || '' }}</span>
+            </div>
           </div>
         </div>
 
+        <ranking-panel class="mt-5"/>
 
-<!--      </div>-->
+        <!-- SECTION: TABS -->
+        <tab-bar
+            :user-role="authUser.role"
+            :is-auth-student="isAuthStudent"
+        />
 
-      <router-view class="top-98 relative mb-24"/>
+      </div>
+
+      <router-view class="top-98 relative mb-24"
+                   :user-role="authUser.role"
+                   :is-auth-student="isAuthStudent"
+      />
 
     </template>
 
@@ -68,37 +67,49 @@ import RankingPanel from "@/views/students/StudentDetails/components/RankingPane
 import router from "@/router";
 import PageTitleTwo from "@/components/PageTitleTwo";
 import PageHeaderThree from "@/components/PageHeaderThree";
+import TabBar from "@/views/students/StudentDetails/components/TabBar";
 
 export default {
   name: "StudentDetails",
+  props: {
+    studentID: [String, Number]
+  },
   data() {
     return {
-      studentID: null,
+      authUser: null,
       studentDetails: '',
       studentOverview: '',
       path: '',
-      activeTab: 'show',
-      navBackCounter: -1,
-      tabs: [
-        {
-          name: 'show',
-          displayName: 'BADGES',
-          route: 'teacher.student.show'
-        },
-        {
-          name: 'assignments',
-          displayName: 'ASSIGNMENT',
-          route: 'teacher.student.show.assignments'
-        },
-        {
-          name: 'overview',
-          displayName: 'OVERVIEW',
-          route: 'teacher.student.show.overview'
-        }
-      ]
+      navBackRoute: 'home'
     }
   },
+  watch: {
+    '$route': 'handleRouteChange',
+  },
   computed: {
+    handleNavBackRoute() {
+      if (this.navBackRoute === 'home') {
+        if (this.userRole === 'Student') {
+          return {name: 'student.home'}
+        }
+        if (this.userRole === 'Teacher') {
+          return {name: 'teacher.home'}
+        }
+      } else {
+        return {name: this.navBackRoute.name, params: this.navBackRoute.params}
+      }
+    },
+    userRole() {
+      return this.authUser.role;
+    },
+    isAuthStudent() {
+      if (this.authUser.role === 'Student') {
+        return parseInt(this.authUser.id) === parseInt(this.studentID)
+      } else {
+        return null
+      }
+    },
+
     nowDate() {
       const date = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('YYYY-MM-DD')
       return date === 'Invalid date' ? moment().format('DD MMMM YYYY') : date
@@ -106,20 +117,18 @@ export default {
     nowTime() {
       const time = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('hh:mm A')
       return time === 'Invalid date' ? moment().format('hh:mm A') : time
-    }
+    },
   },
-  created() {
-    this.getRouteParams()
-    this.fetchData()
-  },
-  mounted() {
-    this.getInitialActiveTab()
-  },
-  watch: {
-    '$route': 'fetchData',
-    'activeTab': 'isActiveTab'
-  },
+
   methods: {
+
+    handleRouteChange() {
+      if (this.userRole !== 'Teacher' && !this.isAuthStudent) {
+        if (this.$route.name !== 'student.profile.show') {
+          router.push({name: 'student.profile.show'})
+        }
+      }
+    },
     fetchData() {
 
       StudentRepository.getOverview(this.studentID)
@@ -133,49 +142,53 @@ export default {
               contactNum: data.data.personal_details.contact_number,
               email: data.data.personal_details.email
             }
-
-          })
-          .catch(err => {
-
           })
     },
-    showTab({tabName: tabName, route: routeName}) {
-      this.activeTab = tabName;
-      this.navBackCounter--;
-    },
+
     getRouteParams() {
       this.path = this.$route.path
-      this.studentID = this.$route.params.studentID
     },
-    getInitialActiveTab() {
 
-      if (this.path.includes('/show')) {
-        this.activeTab = 'show';
-        this.navBackCounter = -1;
-      }
 
-      if (this.path.includes('/overview')) {
-        this.activeTab = 'overview';
-        this.navBackCounter = -2;
-      }
+    getAuthUser() {
+      let user = this.$store.getters.getAuthUser
 
-      if (this.path.includes('/assignments')) {
-        this.activeTab = 'assignments';
-        this.navBackCounter = -2;
-      }
-    },
-    isActiveTab(tabName) {
-      if (this.activeTab === tabName) {
-        return 'bg-purple-primary text-white'
-      } else {
-        return 'text-gray-primary'
+      this.authUser = {
+        id: user.id,
+        role: user.role
       }
     }
 
   },
+
+  beforeRouteEnter(to, from, next) {
+    return next(vm => {
+      vm.prevRoute = from
+    })
+  },
+
+  created() {
+    if (this.$route.name !== 'student.profile.show') {
+      router.push({name: 'student.profile.show'})
+    }
+    this.fetchData()
+    this.getAuthUser()
+  },
+  mounted() {
+    if (this.prevRoute.name) {
+      this.navBackRoute = {
+        name: this.prevRoute.name,
+        params: this.prevRoute.params
+      };
+    } else {
+      this.navBackRoute = 'home'
+    }
+  },
   components: {
+    TabBar,
     PageHeaderThree,
-    PageTitleTwo, RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout}
+    PageTitleTwo, RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout
+  }
 }
 </script>
 

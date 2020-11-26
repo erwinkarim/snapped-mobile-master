@@ -274,7 +274,6 @@ export default {
             let content = response.data;
             let type = content.messageType;
 
-            console.log(type);
             if (type === 'success') {
               this.submissionStatus = type;
               this.toggleModal();

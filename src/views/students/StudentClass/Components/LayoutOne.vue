@@ -67,21 +67,6 @@ export default {
         return 'bg-gray-secondary text-purple-primary text-opacity-75'
       }
     },
-    getInitialActiveTab() {
-
-      let path = this.$route.path;
-
-      if (path.includes('/teachers')) {
-        this.activeTab = 'teachers';
-      }
-
-      if (path.includes('/ranking')) {
-        this.activeTab = 'classmates';
-      }
-    },
-  },
-  created() {
-    this.getInitialActiveTab()
   },
   components: {MagnifyingGlassIcon, IconBaseTwo, PageTitle}
 }

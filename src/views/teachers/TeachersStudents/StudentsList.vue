@@ -86,7 +86,7 @@ export default {
     },
 
     goToStudentShow(studentID) {
-      router.push({name: 'teacher.student.show', params: {studentID: studentID}})
+      router.push({name: 'student.profile.show', params: {studentID: studentID}})
     },
   }
 }

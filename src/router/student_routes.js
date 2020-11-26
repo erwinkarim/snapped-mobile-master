@@ -36,6 +36,7 @@ export default {
         {
             path: 'profile/:studentID',
             component: StudentDetails,
+            props: true,
             children: [
                 {
                     path: 'show',

@@ -103,12 +103,10 @@ export default {
           subject_title: subject.subject_title
         }
       })
-
     },
 
-
     goToStudentShow (studentID) {
-      router.push({ name: 'teacher.student.show', params: { studentID: studentID } })
+      router.push({ name: 'student.profile.show', params: { studentID: studentID } })
     },
     handleScroll: function (evt, el) {
 
