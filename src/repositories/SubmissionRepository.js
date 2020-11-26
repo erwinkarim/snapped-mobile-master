@@ -31,5 +31,30 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+    },
+
+    update({submissionID: submissionID, assignmentID: assignmentID, answerType: answerType, answerContent: answerContent, remarks: remarks}) {
+
+        let formData = new FormData()
+
+        formData.append('assignment_id', assignmentID)
+        formData.append('remarks', remarks)
+
+        if (answerType === 'written') {
+            formData.append('written_answer', answerContent)
+        }
+        if (answerType === 'snapped') {
+            answerContent.forEach(function (file, index) {
+                formData.append(`snap_answer[${index}]`, file);
+            });
+        }
+
+        return Repository.post(`${resource}/${submissionID}/update`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
     }
 }

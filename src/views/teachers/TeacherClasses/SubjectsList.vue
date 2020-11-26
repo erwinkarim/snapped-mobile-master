@@ -65,7 +65,7 @@ export default {
   computed: {
     containerClass: function () {
       if (this.setStickySearchBar) {
-        return 'mt-18'
+        return 'mt-20'
       }
       if (this.isScrolledUp) {
         return 'mt-0'
@@ -112,19 +112,19 @@ export default {
     },
     handleScroll: function (evt, el) {
 
-      if (window.scrollY > 50 && window.scrollY > this.scrollLocation) {
-        let status = window.scrollY > 50
+      if (window.scrollY > 60 && window.scrollY > this.scrollLocation) {
+        let status = window.scrollY > 60
         this.isScrolledDownTwo = status
         this.isScrolledUp = !status
       }
 
-      if (window.scrollY < 50 && window.scrollY < this.scrollLocation) {
-        let status = window.scrollY < 50
+      if (window.scrollY < 60 && window.scrollY < this.scrollLocation) {
+        let status = window.scrollY < 60
         this.isScrolledUp = status
         this.isScrolledDownTwo = !status
       }
 
-      this.setStickySearchBar = window.scrollY > 54
+      this.setStickySearchBar = window.scrollY > 60
       this.scrollLocation = window.scrollY
     }
   }
