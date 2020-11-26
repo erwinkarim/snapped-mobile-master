@@ -86,6 +86,7 @@
         @toggleMarkingMode="handleToggleMarkingMode"
         @toggleStickerBar="handleToggleStickerBar"
         @loadSticker="handleLoadSticker"
+        @saveEditedSnappedAnswer="handleSaveEditedSnappedAnswer"
         @submit="submit"
     />
 
@@ -118,7 +119,8 @@ export default {
         isMarking: false,
         isSelectingSticker: false,
         isWritingFeedback: false,
-        isShowingModal: false
+        isShowingModal: false,
+        isSavingEditedSnappedAnswer:false
       },
 
       // Assignment Details
@@ -149,7 +151,10 @@ export default {
 
 
   watch: {
-    '$route': 'handleRouteChange'
+    '$route': 'handleRouteChange',
+    'states.isSavingEditedSnappedAnswer': function () {
+     console.log( `Changed saving: ${this.states.isSavingEditedSnappedAnswer}`)
+    }
   },
   computed: {
 
@@ -255,6 +260,13 @@ export default {
       this.states.isSelectingSticker = value;
     },
 
+    handleSaveEditedSnappedAnswer () {
+      console.log('Handling done edit')
+      // this.resetState();
+      // this.states.isMain = true
+      this.states.isSavingEditedSnappedAnswer = true;
+    },
+
     // SUBMISSION DETAILS
     fetchData() {
       SubmissionRepository.find(this.submissionID)
@@ -312,6 +324,7 @@ export default {
     },
 
     resetState() {
+      console.log('Reseting')
       this.states.isLoading = false;
       this.states.isMain = false;
       this.states.isPreviewing = false;
@@ -319,6 +332,7 @@ export default {
       this.states.isSelectingSticker = false;
       this.states.isWritingFeedback = false;
       this.states.isShowingModal = false
+      this.states.isSavingEditedSnappedAnswer = false;
     }
   },
   mounted() {

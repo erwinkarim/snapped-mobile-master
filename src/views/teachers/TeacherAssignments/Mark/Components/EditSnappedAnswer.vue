@@ -39,16 +39,6 @@ import router from "@/router";
 
 export default {
   name: "EditSnappedAnswer",
-  components: {
-    StickerLoader,
-    TickedBoxIcon,
-    ArrowBackIcon,
-    IconBaseTwo,
-    NavBack,
-    PageHeaderThree,
-    DashboardLayout,
-    PenIcon
-  },
   props: {
     states: Object,
     nowMarking: String,
@@ -72,7 +62,8 @@ export default {
     }
   },
   watch: {
-    'states.isSelectingSticker' : 'loadSticker'
+    'states.isSelectingSticker' : 'loadSticker',
+    'states.isSavingEditedSnappedAnswer' : 'saveEditedSnappedAnswer'
   },
   computed: {
     backgroundImageScaleFactor() {
@@ -87,6 +78,24 @@ export default {
       })
     },
     loadImage() {
+
+      let http = new XMLHttpRequest();
+      http.open('HEAD', this.originalImage.path);
+      http.onload = function(e) { console.log(e); }
+      http.send();
+
+      // let image = new Image();
+      // image.src = this.originalImage.path;
+      // image.onload = function () {}
+      //
+      // this.canvasVue.setBackgroundImage( new fabric.Image(image, {
+      //   originX: 'left',
+      //   originY: 'top',
+      //   left: 0,
+      //   top: 0
+      // }), this.canvasVue.renderAll.bind(this.canvasVue));
+      // image.crossOrigin = 'Anonymous';
+
       fabric.Image.fromURL(this.originalImage.path, (img, error) => {
         this.originalImage.dimensions.width = img.width;
         this.originalImage.dimensions.height = img.height;
@@ -101,7 +110,8 @@ export default {
               originY: 'center',
               scaleX: this.backgroundImageScaleFactor,
               scaleY: this.backgroundImageScaleFactor
-            }
+            },
+            { crossOrigin: 'Anonymous' }
         );
       });
     },
@@ -122,6 +132,10 @@ export default {
         });
       }
     },
+    saveEditedSnappedAnswer() {
+      let save = this.canvasVue.toDataURL("test/png")
+      console.log(save)
+    },
     checkNowMarkingPathExists() {
       if (this.nowMarking === null || this.nowMarking === undefined) {
         router.push({ name: 'teacher.assignments.marking.details'})
@@ -132,7 +146,17 @@ export default {
     this.checkNowMarkingPathExists();
     this.loadCanvas()
     this.loadImage()
-  }
+  },
+  components: {
+    StickerLoader,
+    TickedBoxIcon,
+    ArrowBackIcon,
+    IconBaseTwo,
+    NavBack,
+    PageHeaderThree,
+    DashboardLayout,
+    PenIcon
+  },
 }
 </script>
 
