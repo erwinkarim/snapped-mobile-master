@@ -1,14 +1,27 @@
 <template>
 
-  <dashboard-layout :has-custom-bottom-bar="true">
+  <dashboard-layout :content-fills-screen="isPreviewingSnappedAnswer"
+                    :has-custom-bottom-bar="isMainPage"
+                    :no-bottom-bar=" isPreviewingSnappedAnswer"
+  >
 
     <template v-slot:pageHeader>
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back type="cancel"
-              :to="{name: 'student.assignments.show'}"
-                    class="w-2/3" stroke-color="red-primary"/>
+          <nav-back v-if="isMainPage"
+                    type="cancel"
+                    :to="{name: 'student.assignments.show'}"
+                    class="w-2/3" stroke-color="red-primary"
+          />
+
+          <div @click="toggleSnappedAnswerPreview"
+               v-if="isPreviewingSnappedAnswer"
+          >
+            <icon-base-two class="w-2/7 ml-5">
+              <arrow-back-icon/>
+            </icon-base-two>
+          </div>
         </template>
 
         <template v-slot:mini-title>
@@ -18,7 +31,7 @@
       </page-header-three>
     </template>
 
-    <template v-slot:content>
+    <template slot="content" v-if="isMainPage">
 
       <div class="relative pt-40 px-6 h-full text-left text-purple-primary">
 
@@ -63,14 +76,14 @@
             Your Snapped Answer
           </div>
           <div class="flex flex-col">
-            <div v-for="answer in snappedAnswers"
+            <div v-for="(answer,index) in snappedAnswers"
                  class="flex flex-row justify-between mt-3 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
 
-              <div @click="toggleSnappedAnswerPreview(1)">
+              <div @click="handleSnappedAnswerPreview(index)">
                 View Photo
               </div>
 
-              <div class="w-1/12">
+              <div class="w-1/12" @click="removeSnappedAnswer(index)">
                 <icon-base-two class="w-6/7">
                   <trash-icon/>
                 </icon-base-two>
@@ -87,8 +100,8 @@
               <input class="hidden" type="file" multiple @change="onFileSelected">
             </label>
           </div>
-
         </div>
+
 
         <div class="mt-6">
           <div>
@@ -101,6 +114,13 @@
           </div>
         </div>
 
+      </div>
+    </template>
+
+    <template slot="content" v-if="isPreviewingSnappedAnswer">
+      <div
+          class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
+        <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]"/>
       </div>
     </template>
 
@@ -126,6 +146,7 @@ import Modal from "@/components/Modal";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 export default {
   name: "AnswerSave",
@@ -135,8 +156,17 @@ export default {
   },
   data() {
     return {
+
+      // States
+      isMainPage: true,
+      isPreviewingSnappedAnswer: false,
+      isShowingModal: false,
+      submissionStatus: null,
+
+      snappedAnswerPreviews: [],
+      snappedAnswerPreviewIndex: null,
+
       remarks: '',
-      showModal: false,
 
       snappedAnswers: []
     }
@@ -153,8 +183,20 @@ export default {
     },
   },
   methods: {
-    toggleSnappedAnswerPreview(file) {
-      console.log('toggle now')
+
+    toggleSnappedAnswerPreview() {
+      if (this.isPreviewingSnappedAnswer) {
+        this.isMainPage = true;
+        this.isPreviewingSnappedAnswer = false;
+      } else {
+        this.isMainPage = false;
+        this.isPreviewingSnappedAnswer = true;
+      }
+    },
+
+    handleSnappedAnswerPreview(index) {
+      this.snappedAnswerPreviewIndex = index;
+      this.toggleSnappedAnswerPreview();
     },
 
     onFileSelected(e) {
@@ -164,21 +206,57 @@ export default {
         return
       }
 
-      this.snappedAnswers.push(files[0]);
+      if (files[0].type.match("image.*")) {
+        this.snappedAnswers.push(files[0]);
+        this.generateSnappedAnswerPreview(files)
+      }
+    },
 
+    generateSnappedAnswerPreview(files) {
+      files.forEach(f => {
+
+        if (!f.type.match("image.*")) {
+          return;
+        }
+
+        let reader = new FileReader();
+        let that = this;
+
+        reader.onload = function (e) {
+          that.snappedAnswerPreviews.push(e.target.result);
+        }
+
+        reader.readAsDataURL(f);
+      });
+    },
+
+    removeSnappedAnswer(index) {
+      this.snappedAnswers.splice(index, 1);
+      this.snappedAnswerPreviews.splice(index, 1);
     },
 
     submit() {
       if (this.isSnappedAnswer) {
-        this.$emit('snappedAnswer', this.snappedAnswers)
+        if (this.snappedAnswers.length > 0) {
+          this.$emit('snappedAnswer', this.snappedAnswers)
+          this.$emit('submit', this.remarks)
+        } else {
+          this.$emit('error')
+        }
       }
 
-      this.$emit('submit', this.remarks)
-    }
+      if (this.isWrittenAnswer) {
+        this.$emit('submit', this.remarks)
+      }
+
+    },
+
+
   },
   mounted() {
     if (this.isSnappedAnswer) {
       this.snappedAnswers = this.answer.content
+      this.generateSnappedAnswerPreview(this.answer.content)
     }
   },
   created() {
@@ -187,6 +265,7 @@ export default {
     }
   },
   components: {
+    ArrowBackIcon,
     PageHeaderThree,
     DashboardLayout, Modal, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo
   }
