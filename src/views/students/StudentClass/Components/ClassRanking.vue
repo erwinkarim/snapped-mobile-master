@@ -7,9 +7,12 @@
     </div>
 
     <div class="px-5">
-      <div v-for="(student, index) in rankings"
 
-           class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1">
+      <router-link  v-for="(student, index) in rankings"
+                    :key="student.student.student_id"
+                    :to="{name : 'student.profile.show', params: {studentID: student.student.student_id} }"
+           class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1"
+      >
 
         <div class="flex flex-row w-4/12 items-center">
           <!-- Ranking -->
@@ -44,7 +47,7 @@
             <gold-medal-icon/>
           </icon-base-two>
         </div>
-      </div>
+      </router-link>
     </div>
   </layout-one>
 </template>
@@ -70,6 +73,7 @@ export default {
       StudentRepository.getClassRanking()
           .then(response => {
             let data = response.data;
+
 
             this.totalNumOfStudents = data.total_students;
             this.rankings = data.data

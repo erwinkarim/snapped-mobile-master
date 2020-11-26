@@ -18,8 +18,9 @@
     <template v-slot:content>
       <div class="relative top-45 mb-24">
         <div class=" border-t-2 border-opacity-15 border-gray-primary">
-          <div v-for="student in filteredStudents"
+          <router-link v-for="student in filteredStudents"
                :key="student.id"
+                       :to="{name : 'student.profile.show', params: {studentID: student.student_id} }"
                class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white"
           >
             <div class="w-1/6 h-full relative">
@@ -29,7 +30,7 @@
               </icon-base-two>
             </div>
             <div class="ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
-          </div>
+          </router-link>
         </div>
       </div>
 
@@ -71,6 +72,7 @@ export default {
 
             this.students = data.students;
             this.filteredStudents = data.students;
+
             this.className = data.class_name;
           })
     },

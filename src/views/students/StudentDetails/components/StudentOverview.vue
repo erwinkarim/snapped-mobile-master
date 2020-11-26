@@ -33,10 +33,13 @@ import AssignmentSubmissionPanel from "@/views/students/StudentDetails/component
 import PersonalDetailPanel from "@/views/students/StudentDetails/components/PersonalDetailPanel";
 import ParentGuardianPanel from "@/views/students/StudentDetails/components/ParentGuardianPanel";
 import SubjectScorePanel from "@/views/students/StudentDetails/components/SubjectScorePanel";
+import router from "@/router";
 
 export default {
   name: "StudentOverview",
   props: {
+    userRole: String,
+    isAuthStudent:Boolean,
     studentID: [String, Number],
   },
   data() {
