@@ -5,6 +5,7 @@
                     :no-bottom-bar="isEditingWrittenAnswer || isPreviewingSnappedAnswer"
   >
 
+
     <template v-slot:pageHeader>
       <page-header-three>
 
@@ -13,14 +14,14 @@
                     :to="{name: 'student.assignments.show'}"
                     class="w-2/3" stroke-color="red-primary"/>
 
-          <div @click="toggleEditingMode" v-if="isEditingWrittenAnswer">
-            <icon-base-two class="w-3/4" >
+          <div @click="toggleEditingMode" v-if="isEditingWrittenAnswer" class="pl-3">
+            <icon-base-two class="w-2/7" >
               <arrow-back-icon/>
             </icon-base-two>
           </div>
 
           <div @click="toggleSnappedAnswerPreview" v-if="isPreviewingSnappedAnswer">
-            <icon-base-two class="w-3/4" >
+            <icon-base-two class="w-2/7 ml-3" >
               <arrow-back-icon/>
             </icon-base-two>
           </div>
@@ -44,7 +45,34 @@
 
     <template v-slot:content v-if="isMainPage">
 
-      <div class="relative pt-40 px-6 h-full text-left text-purple-primary">
+
+      <!-- OVERLAYS -->
+      <div v-if="isShowingModal" @click="toggleModal"
+            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
+      </div>
+
+      <!-- MODAL -->
+      <div v-if="isShowingModal"
+          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
+        <modal class="w-4/5 "
+               :modal-type="submissionStatus"
+               :redirect-route="{name: 'student.assignments.show'}"
+               @toggleModal="toggleModal"
+        >
+          <template slot="message">
+            <div v-if="submissionStatus === 'success'" class="w-full">
+              Got something to change? Don't worry! You can always edit your published homework
+            </div>
+          </template>
+          <template slot="button">
+            Okay
+          </template>
+        </modal>
+      </div>
+
+
+
+      <div class="relative pt-7/24 px-6 h-full text-left text-purple-primary">
 
         <!-- SUBMISSION DETAIL -->
         <div>
@@ -134,7 +162,7 @@
     <template v-if="isPreviewingSnappedAnswer" slot="content">
         <div
             class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <img :src="newAnswer[snappedAnswerPreviewIndex]" />
+          <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]" />
         </div>
     </template>
 
@@ -159,6 +187,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import TrashIcon from "@/components/icons/TrashIcon";
 import SubmissionRepository from "@/repositories/SubmissionRepository";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import Modal from "@/components/Modal";
 
 export default {
   name: "AnswerEdit",
@@ -172,7 +201,10 @@ export default {
       isMainPage: true,
       isEditingWrittenAnswer: false,
       isPreviewingSnappedAnswer: false,
+      isShowingModal: false,
+      submissionStatus: null,
 
+      snappedAnswerPreviews: [],
       snappedAnswerPreviewIndex : null,
 
       assignmentDetails: {
@@ -218,6 +250,7 @@ export default {
               this.answer.content = data.snap_answer;
 
               this.newAnswer = data.snap_answer_url.split(',');
+              this.snappedAnswerPreviews = data.snap_answer_url.split(',');
             }
 
             if (data.written_answer) {
@@ -231,8 +264,27 @@ export default {
 
     submit() {
 
-      // TODO: Request edit submission endpoint from backend
+      /*  TODO: REQUEST BACKEND HOW TO DETERMINE EXISTING PHOTO OR NEW PHOTO
+      *         TO SEND ONLY NEW PHOTO AND REMOVE ONLY CERTAIN PHOTOS
+      * */
 
+      SubmissionRepository.update(
+          {
+            submissionID: this.submissionID,
+            assignmentID: this.assignmentDetails.id,
+            answerType: this.answer.type,
+            answerContent: this.newAnswer,
+            remarks: this.remarks,
+          })
+          .then(response => {
+            let content = response.data;
+            let type = content.messageType;
+
+            if (type === 'success') {
+              this.submissionStatus = type;
+              this.toggleModal();
+            }
+          })
     },
 
     editWrittenAnswer() {
@@ -250,6 +302,8 @@ export default {
       this.toggleSnappedAnswerPreview();
     },
 
+
+
     onFileSelected(e) {
       let files = e.target.files || e.dataTransfer.files
 
@@ -257,30 +311,66 @@ export default {
         return
       }
 
-      this.newAnswer.push(files[0]);
+      if (files[0].type.match("image.*")) {
+        this.newAnswer.push(files[0]);
+        this.generateSnappedAnswerPreview(files)
+      }
+    },
+
+    generateSnappedAnswerPreview(files) {
+      files.forEach(f => {
+
+        if (!f.type.match("image.*")) {
+          return;
+        }
+
+        let reader = new FileReader();
+        let that = this;
+
+        reader.onload = function (e) {
+          that.snappedAnswerPreviews.push(e.target.result);
+        }
+
+        reader.readAsDataURL(f);
+      });
     },
 
     toggleSnappedAnswerPreview() {
-      let initialStatus = this.isPreviewingSnappedAnswer;
 
-      this.isMainPage = initialStatus;
-      this.isEditingWrittenAnswer = initialStatus;
-      this.isPreviewingSnappedAnswer = !initialStatus;
+      if (this.isPreviewingSnappedAnswer) {
+        this.isMainPage = true;
+        this.isEditingWrittenAnswer = false;
+        this.isPreviewingSnappedAnswer = false;
+      } else {
+        this.isMainPage = false;
+        this.isEditingWrittenAnswer = false;
+        this.isPreviewingSnappedAnswer = true;
+      }
     },
 
     toggleEditingMode() {
-      let initialStatus = this.isEditingWrittenAnswer;
 
-      this.isMainPage = initialStatus;
-      this.isEditingWrittenAnswer = !initialStatus;
-      this.isPreviewingSnappedAnswer = initialStatus;
+      if (this.isEditingWrittenAnswer) {
+        this.isMainPage = true;
+        this.isEditingWrittenAnswer = false;
+        this.isPreviewingSnappedAnswer = false;
+      } else {
+        this.isMainPage = false;
+        this.isEditingWrittenAnswer = true;
+        this.isPreviewingSnappedAnswer = false;
+      }
 
+      // console.log(`MAIN: ${this.isMainPage} | wRITE: ${this.isWrittenAnswer} | Snap: ${this.isSnappedAnswer}`)
+    },
+
+    toggleModal() {
+      this.isShowingModal = !this.isShowingModal;
     }
   },
   mounted() {
     this.fetchData();
   },
-  components: {ArrowBackIcon, TrashIcon, IconBaseTwo, NavBack, PageHeaderThree, DashboardLayout}
+  components: {Modal, ArrowBackIcon, TrashIcon, IconBaseTwo, NavBack, PageHeaderThree, DashboardLayout}
 }
 </script>
 

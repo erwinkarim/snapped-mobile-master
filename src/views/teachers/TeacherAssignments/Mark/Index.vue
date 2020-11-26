@@ -25,13 +25,15 @@
 
 
     <!-- HEADER -->
-    <page-header-three :background-color="headerBackgroundColor" :bottom-padding="4">
+    <page-header-three :background-color="headerBackgroundColor"
+                       :bottom-padding="8"
+    >
 
       <template v-slot:leftAction>
-        <nav-back v-if="states.isMain" class="w-2/3" :stroke-color="navBackColor"/>
+        <nav-back v-if="states.isMain" class="w-1/4" :stroke-color="navBackColor"/>
 
         <div @click="togglePreviewMode" v-if="states.isPreviewing">
-          <icon-base-two class="w-2/3">
+          <icon-base-two class="w-1/4">
             <arrow-back-icon :stroke-color="navBackColor"/>
           </icon-base-two>
         </div>
@@ -41,34 +43,39 @@
         Answer Preview
       </template>
 
-      <template v-slot:rightAction v-if="states.isMain">
-        <div @click="togglePreviewMode" class="flex flex-row justify-end">
-          <icon-base-two class="w-1/3">
-            <expand-image-icon/>
-          </icon-base-two>
+      <template v-slot:rightAction>
+        <div v-if="states.isMain" class="flex flex-row justify-end items-center mr-5" >
+          <div @click="togglePreviewMode" :to="{name: 'student.class.classmates'}" class="w-2/7 ">
+            <icon-base-two >
+              <expand-image-icon/>
+            </icon-base-two>
+          </div>
         </div>
       </template>
 
     </page-header-three>
 
     <!-- CONTENT -->
-    <router-view
+    <div class="relative">
+      <router-view
 
-        :states="states"
+          :states="states"
 
-        :assignment-details="assignmentDetails"
+          :assignment-details="assignmentDetails"
 
-        @feedback="handleFeedback"
-        :feedback="submission.feedback"
+          @feedback="handleFeedback"
+          :feedback="submission.feedback"
 
-        @marks="handleMark"
-        :new-marks="submission.marks"
+          @marks="handleMark"
+          :new-marks="submission.marks"
 
-        @nowMarking="handleNowMarking"
-        :now-marking="nowMarking"
+          @nowMarking="handleNowMarking"
+          :now-marking="nowMarking"
 
-        :now-loading-sticker="nowLoadingSticker"
-    />
+          :now-loading-sticker="nowLoadingSticker"
+      />
+    </div>
+
 
     <!-- BOTTOM BAR -->
     <bottom-bar

@@ -7,7 +7,7 @@
                          @search="handleSearch"
       >
         <template v-slot:leftAction>
-          <nav-back class="w-5/7" stroke-color="red-primary"/>
+          <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           Student List

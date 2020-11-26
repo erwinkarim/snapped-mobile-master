@@ -22,10 +22,20 @@
     </div>
 
     <!-- BUTTON -->
-    <router-link @click="closeModal" :class="buttonClass"  :to="redirectRoute"
-            class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7">
+    <router-link v-if="redirectRoute"
+                 @click="closeModal"
+                 :to="redirectRoute"
+            class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7"
+    >
       <slot name="button"/>
     </router-link>
+    <button v-else
+            @click="closeModal"
+            :class="buttonClass"
+            class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7"
+    >
+      <slot name="button"/>
+    </button>
 
   </div>
 </template>

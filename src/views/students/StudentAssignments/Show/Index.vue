@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout :has-custom-bottom-bar="true">
+  <dashboard-layout :has-fixed-header="true" :has-custom-bottom-bar="true">
 
 
     <template v-slot:content>
@@ -24,12 +24,12 @@
           <div class="absolute w-full z-20 mb-32">
 
             <!-- HEADER with Nav Back -->
-            <div class="flex flex-row w-full justify-between pt-16 px-5">
+            <div class="flex flex-row w-full justify-between pt-3/24 px-5">
               <nav-back class="w-1/12" stroke-color="white" :to="{name: 'student.assignments'}"/>
             </div>
 
             <!-- TIMER -->
-            <div class="w-full flex flex-row justify-center items-center mt-7">
+            <div class="w-full flex flex-row justify-center items-center mt-1/24">
               <div class="flex flex-col w-1/2">
                 <div class="text-white font-bold text-sm">
                   Assignment Time Remaining

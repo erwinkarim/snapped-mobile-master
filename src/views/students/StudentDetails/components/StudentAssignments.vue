@@ -36,11 +36,14 @@ import StudentRepository from "@/repositories/StudentRepository";
 import moment from "moment";
 import CircleProgressBar from "@/components/CircleProgressBar";
 import AssignmentScoreCircle from "@/views/students/StudentDetails/components/AssignmentScoreCircle";
+import router from "@/router";
 
 export default {
   name: "StudentAssignments",
   components: {AssignmentScoreCircle, CircleProgressBar},
   props: {
+    userRole: String,
+    isAuthStudent:Boolean,
     studentID:  [String, Number],
   },
   data() {
@@ -53,9 +56,6 @@ export default {
       // data
       assignments: [],
     }
-  },
-  created() {
-    this.fetchData()
   },
   watch: {
     '$route': 'fetchData',
@@ -78,6 +78,14 @@ export default {
     },
     getHumanDate(datetime) {
       return moment(datetime, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY")
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
+  created() {
+    if (this.userRole !== 'Teacher' && !this.isAuthStudent ) {
+      router.push({name:'student.profile.show'})
     }
   }
 }
