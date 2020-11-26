@@ -7,6 +7,7 @@ import SchoolRanking from "@/views/students/StudentClass/Components/SchoolRankin
 import Settings from "@/views/Settings";
 import AssignmentIndex from "@/views/students/StudentAssignments/Index/Index";
 import App from "@/App";
+import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -50,6 +51,12 @@ export default {
             path: 'class/classmates',
             name: 'student.class.classmates',
             component: ClassClassmates,
+            meta: studentAccessControlMeta,
+        },
+        {
+            path: 'class/classmates/:classmateID',
+            name: 'student.class.classmate.show',
+            component: StudentDetails,
             meta: studentAccessControlMeta,
         },
         {

@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-row w-full justify-between px-5 pt-16 items-baseline">
+  <div class="flex flex-row w-full justify-between items-center px-5 pt-1/12 items-baseline">
     <div class="text-left text-4xl font-bold text-purple-primary w-1/2">
       {{ title }}
     </div>
-    <div class="flex flex-row w-1/2 justify-end">
+    <div class="w-1/2 ">
       <slot name="rightAction"/>
     </div>
   </div>

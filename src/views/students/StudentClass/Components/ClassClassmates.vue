@@ -7,28 +7,17 @@
           @search="handleSearch"
       >
         <template v-slot:leftAction>
-          <nav-back class="w-5/7" stroke-color="red-primary"/>
+          <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           Classmate List
         </template>
-        <!--        <template v-slot:rightAction>-->
-        <!--          <div class="flex flex-row justify-end">-->
-        <!--            <icon-base-two class="w-2/5" stroke-color="red-primary">-->
-        <!--              <filter-icon/>-->
-        <!--            </icon-base-two>-->
-        <!--          </div>-->
-        <!--        </template>-->
       </page-header-three>
     </template>
 
     <template v-slot:content>
       <div class="relative top-45 mb-24">
         <div class=" border-t-2 border-opacity-15 border-gray-primary">
-          <!--          <router-link v-for="student in filteredStudents"-->
-          <!--                       :to="{ name: '' }" :key="student.id"-->
-          <!--                       class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white"-->
-          <!--          >-->
           <div v-for="student in filteredStudents"
                :key="student.id"
                class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white"

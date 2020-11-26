@@ -4,7 +4,7 @@
         <!-- HEADER NEW ASSIGNMENT -->
         <page-header-three v-if="showAssignment" class="px-2" :has-scroll-animation="true">
           <template v-slot:leftAction>
-              <nav-back class="w-5/7" stroke-color="red-primary"/>
+              <nav-back class="w-2/7" stroke-color="red-primary"/>
           </template>
           <template v-slot:mini-title>
               New Assignment
@@ -246,7 +246,7 @@
         <!--  Modal Duration    -->
         <div v-if="toggleDuration" @click.self="closeToggleDuration"
              class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-            <modal class="fixed" v-if="toggleDuration" modal-type="no-icon" :redirect-route="{}">
+            <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon" :redirect-route="{}">
                 <h3 slot="title" class="font-bold">Set Duration</h3>
                 <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">
                     <div>

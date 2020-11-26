@@ -4,10 +4,13 @@
     <template v-slot:pageHeader>
       <page-title title="Assignments">
         <template v-slot:rightAction>
-          <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary text-right">
+          <router-link :to="{name : 'teacher.assignments.create'}"
+                       class="flex flex-row justify-end items-center font-bold text-red-primary text-right"
+          >
             Add New
           </router-link>
         </template>
+
       </page-title>
     </template>
 
