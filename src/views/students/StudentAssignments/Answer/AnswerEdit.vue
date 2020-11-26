@@ -21,7 +21,7 @@
           </div>
 
           <div @click="toggleSnappedAnswerPreview" v-if="isPreviewingSnappedAnswer">
-            <icon-base-two class="w-3/4" >
+            <icon-base-two class="w-2/7 ml-3" >
               <arrow-back-icon/>
             </icon-base-two>
           </div>
@@ -162,7 +162,7 @@
     <template v-if="isPreviewingSnappedAnswer" slot="content">
         <div
             class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <img :src="newAnswer[snappedAnswerPreviewIndex]" />
+          <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]" />
         </div>
     </template>
 
@@ -204,6 +204,7 @@ export default {
       isShowingModal: false,
       submissionStatus: null,
 
+      snappedAnswerPreviews: [],
       snappedAnswerPreviewIndex : null,
 
       assignmentDetails: {
@@ -249,6 +250,7 @@ export default {
               this.answer.content = data.snap_answer;
 
               this.newAnswer = data.snap_answer_url.split(',');
+              this.snappedAnswerPreviews = data.snap_answer_url.split(',');
             }
 
             if (data.written_answer) {
@@ -262,12 +264,16 @@ export default {
 
     submit() {
 
+      /*  TODO: REQUEST BACKEND HOW TO DETERMINE EXISTING PHOTO OR NEW PHOTO
+      *         TO SEND ONLY NEW PHOTO AND REMOVE ONLY CERTAIN PHOTOS
+      * */
+
       SubmissionRepository.update(
           {
             submissionID: this.submissionID,
             assignmentID: this.assignmentDetails.id,
             answerType: this.answer.type,
-            answerContent: this.answer.content,
+            answerContent: this.newAnswer,
             remarks: this.remarks,
           })
           .then(response => {
@@ -296,6 +302,8 @@ export default {
       this.toggleSnappedAnswerPreview();
     },
 
+
+
     onFileSelected(e) {
       let files = e.target.files || e.dataTransfer.files
 
@@ -303,7 +311,28 @@ export default {
         return
       }
 
-      this.newAnswer.push(files[0]);
+      if (files[0].type.match("image.*")) {
+        this.newAnswer.push(files[0]);
+        this.generateSnappedAnswerPreview(files)
+      }
+    },
+
+    generateSnappedAnswerPreview(files) {
+      files.forEach(f => {
+
+        if (!f.type.match("image.*")) {
+          return;
+        }
+
+        let reader = new FileReader();
+        let that = this;
+
+        reader.onload = function (e) {
+          that.snappedAnswerPreviews.push(e.target.result);
+        }
+
+        reader.readAsDataURL(f);
+      });
     },
 
     toggleSnappedAnswerPreview() {

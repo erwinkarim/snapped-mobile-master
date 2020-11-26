@@ -10,14 +10,18 @@
     <!-- MODAL -->
     <div v-if="isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal class="w-4/5 "
+      <modal
              :modal-type="submissionStatus"
-             :redirect-route="{name: 'student.assignments.show'}"
+             :redirect-route="submissionStatus === 'success' ? {name: 'student.assignments.show'} : ''"
              @toggleModal="toggleModal"
+             class="w-4/5 "
       >
         <template slot="message">
           <div v-if="submissionStatus === 'success'" class="w-full">
             Got something to change? Don't worry! You can always edit your published homework
+          </div>
+          <div v-if="submissionStatus === 'error'" class="w-full">
+            Please submit a valid answer!
           </div>
         </template>
         <template slot="button">
@@ -26,9 +30,12 @@
       </modal>
     </div>
 
+
+
     <router-view
         @writtenAnswer="handleWrittenAnswer"
         @snappedAnswer="handleSnappedAnswer"
+        @error="handleError"
         @submit="handleSubmit"
         :assignment-details="assignmentDetails"
         :answer="answer"
@@ -90,6 +97,10 @@ export default {
           })
 
 
+    },
+    handleError() {
+      this.submissionStatus = 'error';
+      this.toggleModal();
     },
 
     toggleModal() {
