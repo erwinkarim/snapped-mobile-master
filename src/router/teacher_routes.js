@@ -59,42 +59,6 @@ export default  {
                 checkRole: 'Teacher'
             },
         },
-        {
-            path: 'student/:studentID',
-            component: StudentDetails,
-            children: [
-                {
-                    path: 'show',
-                    name: 'teacher.student.show',
-                    component: StudentBadges,
-                    meta: {
-                        checkAuth: 'true',
-                        checkRole: 'Teacher'
-                    },
-                    props: true,
-                },
-                {
-                    path: 'assignments',
-                    name: 'teacher.student.show.assignments',
-                    component: StudentAssignments,
-                    meta: {
-                        checkAuth: 'true',
-                        checkRole: 'Teacher'
-                    },
-                    props: true
-                },
-                {
-                    path: 'overview',
-                    name: 'teacher.student.show.overview',
-                    component: StudentOverview,
-                    props: true,
-                    meta: {
-                        checkAuth: 'true',
-                        checkRole: 'Teacher'
-                    },
-                }
-            ]
-        },
 
         /*  ASSIGNMENTS */
         {

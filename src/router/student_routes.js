@@ -8,10 +8,17 @@ import Settings from "@/views/Settings";
 import AssignmentIndex from "@/views/students/StudentAssignments/Index/Index";
 import App from "@/App";
 import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
+import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
+import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
+import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
     checkRole: 'Student'
+}
+
+const authControlMeta = {
+    checkAuth: 'true'
 }
 
 export default {
@@ -26,7 +33,33 @@ export default {
             name: 'student.home',
             meta: studentAccessControlMeta,
         },
-
+        {
+            path: 'profile/:studentID',
+            component: StudentDetails,
+            children: [
+                {
+                    path: 'show',
+                    name: 'student.profile.show',
+                    component: StudentBadges,
+                    meta: authControlMeta,
+                    props: true,
+                },
+                {
+                    path: 'assignments',
+                    name: 'student.profile.show.assignments',
+                    component: StudentAssignments,
+                    meta: authControlMeta,
+                    props: true
+                },
+                {
+                    path: 'overview',
+                    name: 'student.profile.show.overview',
+                    component: StudentOverview,
+                    meta: authControlMeta,
+                    props: true,
+                }
+            ]
+        },
 
         /*  CLASSES */
         {
@@ -45,19 +78,13 @@ export default {
                     component: ClassTeachers,
                     meta: studentAccessControlMeta,
                 },
+                {
+                    path: 'classmates',
+                    name: 'student.class.classmates',
+                    component: ClassClassmates,
+                    meta: studentAccessControlMeta,
+                },
             ]
-        },
-        {
-            path: 'class/classmates',
-            name: 'student.class.classmates',
-            component: ClassClassmates,
-            meta: studentAccessControlMeta,
-        },
-        {
-            path: 'class/classmates/:classmateID',
-            name: 'student.class.classmate.show',
-            component: StudentDetails,
-            meta: studentAccessControlMeta,
         },
         {
             path: 'school/ranking',
