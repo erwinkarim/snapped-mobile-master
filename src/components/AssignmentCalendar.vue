@@ -1,5 +1,5 @@
 <template>
-  <v-date-picker class="w-full" title-position="left" v-model="date" :attributes="attributes" :select-attribute="selectAttribute" @dayclick="onDayClick"/>
+  <v-date-picker is-expanded title-position="left" v-model="date" :attributes="attributes" :select-attribute="selectAttribute" @dayclick="onDayClick"/>
 </template>
 
 <script>
