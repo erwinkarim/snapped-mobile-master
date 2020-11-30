@@ -48,49 +48,28 @@
             </div>
 
             <!-- Assignment Detail Card -->
-            <div class="px-8 mt-8">
-              <div class="bg-gray-secondary rounded-2xl text-left py-5 px-6">
-                <!-- TITLE -->
-                <div class="font-semibold text-2xl text-purple-primary">
-                  {{ assignment.title || '' }}
-                </div>
-
-                <!-- DETAILS -->
-                <div class="flex flex-row  text-xs-plus text-purple-secondary mt-2">
-                  <div class="pr-1 truncate w-3/8">
-                    {{ meta.subjectName || '' }}
-                  </div>
-                  <div class="px-1 truncate w-2/8">
-                    {{ meta.classroomName || '' }}
-                  </div>
-                  <div class="px-1 truncate w-3/8">
-                    {{ getHumanDate(assignment.createdAt) }}
-                  </div>
-                </div>
-
-                <!-- Written Question -->
-                <div v-if="hasWrittenQuestion" class="mt-8 text-purple-primary text-xs-plus flex flex-col">
-                  <div v-if="assignment.written_question.title" class="mb-2 truncate">
-                    {{ assignment.written_question.title }}
-                  </div>
-                  <text-multiline-truncate v-if="assignment.written_question.description"
-                                           :text="assignment.written_question.description" :lines="7"/>
-                </div>
-
-              </div>
-            </div>
+            <assignment-question-card
+                :assignment="assignment"
+                :meta="meta"
+            />
 
             <!-- Submissions -->
-            <div class="mt-8 px-8">
+            <div class="mt-8 px-8  mb-32">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
                   Submission
                 </div>
               </div>
 
-              <div v-if="hasSubmissions" class="mt-4">
-                <assignment-submission-card v-for="submission in submissions" :submission="submission" :meta="meta"
-                                            :allow-show-submission="false" class="mb-3"/>
+              <div v-if="hasSubmissions" class="mt-4 ">
+                <assignment-submission-card
+                    v-for="submission in submissions"
+                    :key="submission.id"
+                    :submission="submission"
+                    :meta="meta"
+                    :allow-show-submission="false"
+                    class="mb-3"
+                />
               </div>
               <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
                 No ongoing submissions at the moment.
@@ -175,6 +154,7 @@ import AssignmentRepository from "@/repositories/AssignmentRepository";
 import CountdownTimer from "@/components/CountdownTimer";
 import Modal from "@/components/Modal";
 import router from "@/router";
+import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
 
 export default {
   name: "Index",
@@ -195,7 +175,8 @@ export default {
         written_question: {
           title: null,
           description: null
-        }
+        },
+        snap_question_paths: []
       },
       studentSubmission: {
         id: null,
@@ -215,10 +196,6 @@ export default {
   computed: {
     hasSubmissions: function () {
       return Array.isArray(this.submissions) && this.submissions.length > 0;
-    },
-
-    hasWrittenQuestion: function () {
-      return this.assignment.written_question.title || this.assignment.written_question.description;
     },
 
     hasEditableSubmission: function () {
@@ -252,6 +229,10 @@ export default {
             this.assignment.dueDatetime = data.assignment_details.due_datetime;
             this.assignment.written_question.title = data.assignment_details.written_question_title;
             this.assignment.written_question.description = data.assignment_details.written_question_description;
+
+            if (data.assignment_details.snap_question) {
+              this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
+            }
 
             // Assignment meta
             this.meta.classroomID = data.assignment_details.classroom_id;
@@ -314,6 +295,7 @@ export default {
     this.fetchData();
   },
   components: {
+    AssignmentQuestionCard,
     Modal,
     CountdownTimer,
     CameraIcon,
