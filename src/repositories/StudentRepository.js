@@ -1,8 +1,18 @@
 import Repository from "@/repositories/Repository";
 
 const resource = '/students'
+const token = localStorage.getItem('token')
 
 export default {
+
+    getStudentDetails(){
+        return Repository.post('/details',{
+            headers: {
+                Accept: "application/json",
+                Authorization: 'Bearer ' + token,
+            }
+        })
+    },
 
     getOverview(studentID) {
         return Repository.get(`${resource}/${studentID}/overview`)
