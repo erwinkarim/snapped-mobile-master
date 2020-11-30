@@ -5,12 +5,14 @@
       <div :class="contentClass" class="relative top-24">
 
         <!--  ASSIGNMENT ANSWERS-->
+
         <div :class="imagePreviewClass" class="pt-4 z-10">
 
           <answer-preview-swiper
-              v-if="hasSnappedAnswer && !isMarking.status"
+              v-if="(hasSnappedAnswer || hasMarkedSnappedAnswer) && !isMarking.status"
               :is-previewing="states.isPreviewing"
-              :images="assignmentDetails.snappedAnswerPaths"
+              :is-marked-assignment="isMarkedAssignment"
+              :images="images"
               @nowMarking="enterMarkingMode"
           />
 
@@ -61,7 +63,8 @@ export default {
     submissionID: [String, Number],
     newMarks: [String, Number],
     states: Object,
-    assignmentDetails: Object
+    assignmentDetails: Object,
+    isMarkedAssignment: Boolean
   },
   data() {
     return {
@@ -79,6 +82,14 @@ export default {
     }
   },
   computed: {
+
+    images () {
+      if(this.hasMarkedSnappedAnswer) {
+        return this.assignmentDetails.markedSnappedAnswerPaths
+      } else if(this.hasSnappedAnswer) {
+        return this.assignmentDetails.snappedAnswerPaths
+      }
+    },
 
     containerClass: function () {
       let value = 'bg-white';
@@ -112,6 +123,10 @@ export default {
 
     hasSnappedAnswer: function () {
       return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
+    },
+
+    hasMarkedSnappedAnswer: function () {
+      return this.assignmentDetails.markedSnappedAnswerPaths !== null && this.assignmentDetails.markedSnappedAnswerPaths !== undefined;
     },
   },
   methods: {

@@ -6,6 +6,7 @@ import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Component
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
 import App from "@/App";
+import AssignmentMarked from "@/views/teachers/TeacherAssignments/Marked/Index";
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
 
@@ -13,6 +14,9 @@ const teacherAccessControlMeta = {
     checkAuth: 'true',
     checkRole: 'Teacher'
 }
+
+
+// TODO: DEBUG FAULTY ROUTE GUARD. Declines first assignment page load
 
 export default {
     path: '/teacher',
@@ -53,6 +57,7 @@ export default {
                             component: AssignmentMarkDetails,
                             meta: teacherAccessControlMeta,
                             props: true,
+
                         },
                         {
                             path: 'marking',
@@ -60,6 +65,18 @@ export default {
                             component: EditSnappedAnswer,
                             meta: teacherAccessControlMeta,
                             props: true,
+                            beforeEnter: (to, from, next) => {
+                                if (!from.name) {
+                                    return next({name: 'teacher.assignments.marking.details',
+                                        params: {
+                                            assignmentID: to.params.assignmentID,
+                                            submissionID: to.params.submissionID
+                                        }
+                                    })
+                                } else {
+                                    return next()
+                                }
+                            }
                         },
                         {
                             path: 'feedback',
@@ -67,6 +84,18 @@ export default {
                             component: AssignmentMarkFeedback,
                             meta: teacherAccessControlMeta,
                             props: true,
+                            beforeEnter: (to, from, next) => {
+                                if (!from.name) {
+                                    return next({name: 'teacher.assignments.marking.details',
+                                        params: {
+                                            assignmentID: to.params.assignmentID,
+                                            submissionID: to.params.submissionID
+                                        }
+                                    })
+                                } else {
+                                    return next()
+                                }
+                            }
                         },
                         {
                             path: 'add-mark',
@@ -74,6 +103,18 @@ export default {
                             component: AssignmentAddMark,
                             meta: teacherAccessControlMeta,
                             props: true,
+                            beforeEnter: (to, from, next) => {
+                                if (!from.name) {
+                                    return next({name: 'teacher.assignments.marking.details',
+                                        params: {
+                                            assignmentID: to.params.assignmentID,
+                                            submissionID: to.params.submissionID
+                                        }
+                                    })
+                                } else {
+                                    return next()
+                                }
+                            }
                         }
 
                     ]

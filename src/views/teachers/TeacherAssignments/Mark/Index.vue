@@ -2,7 +2,7 @@
   <div :class="containerClass" class="h-screen">
 
     <!-- OVERLAYS -->
-    <div v-if="states.isShowingModal" @click="closeModalMode"
+    <div v-if="states.isShowingModal" @click="closeModalMode()"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
     </div>
     <div v-if="states.isSelectingSticker" @click="toggleStickerBar"
@@ -13,7 +13,11 @@
     <!-- MODAL -->
     <div v-if="states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal class="w-4/5 " modal-type="error" @toggleModal="closeModalMode">
+      <modal modal-type="error"
+             @toggleModal="closeModalMode()"
+             :redirect-route="{name: 'teacher.assignments.marking.add_mark'}"
+             class="w-4/5 "
+      >
         <template slot="message">
           You must add mark for this assignment.
         </template>
@@ -30,7 +34,11 @@
     >
 
       <template v-slot:leftAction>
-        <nav-back v-if="states.isMain" class="w-1/4" :stroke-color="navBackColor"/>
+        <nav-back v-if="states.isMain"
+                  :to="{name: 'teacher.assignments.show'}"
+                  class="w-1/4"
+                  :stroke-color="navBackColor"
+        />
 
         <div @click="togglePreviewMode" v-if="states.isPreviewing">
           <icon-base-two class="w-1/4 ml-6">
@@ -44,9 +52,9 @@
       </template>
 
       <template v-slot:rightAction>
-        <div v-if="states.isMain" class="flex flex-row justify-end items-center mr-5" >
+        <div v-if="states.isMain" class="flex flex-row justify-end items-center mr-5">
           <div @click="togglePreviewMode" :to="{name: 'student.class.classmates'}" class="w-2/7 ">
-            <icon-base-two >
+            <icon-base-two>
               <expand-image-icon/>
             </icon-base-two>
           </div>
@@ -60,6 +68,7 @@
       <router-view
 
           :states="states"
+          :isMarkedAssignment="isMarkedAssignment"
 
           :assignment-details="assignmentDetails"
 
@@ -71,6 +80,8 @@
 
           @nowMarking="handleNowMarking"
           :now-marking="nowMarking"
+
+          @editedSnappedAnswer="handleEditedSnappedAnswer"
 
           :now-loading-sticker="nowLoadingSticker"
       />
@@ -103,11 +114,14 @@ import BottomBar from "@/views/teachers/TeacherAssignments/Mark/Components/Botto
 import SubmissionRepository from "@/repositories/SubmissionRepository";
 import Modal from "@/components/Modal";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
+import router from "@/router";
+import moment from "moment";
 
 export default {
   name: "Index",
   props: {
-    submissionID: [String, Number]
+    submissionID: [String, Number],
+    markID:  [String, Number],
   },
   data() {
     return {
@@ -120,7 +134,7 @@ export default {
         isSelectingSticker: false,
         isWritingFeedback: false,
         isShowingModal: false,
-        isSavingEditedSnappedAnswer:false
+        isSavingEditedSnappedAnswer: false
       },
 
       // Assignment Details
@@ -132,17 +146,20 @@ export default {
         assignmentTitle: null,
         snappedAnswerPaths: null,
         writtenAnswer: null,
-        marks: null,
         createdAt: null,
         updatedAt: null,
         submittedTime: null,
-        submittedDate: null
+        submittedDate: null,
+        marksID: null,
+        marks: null,
+        markedSnappedAnswerPaths: null
       },
 
       nowMarking: null,
       nowLoadingSticker: null,
 
       submission: {
+        snappedAnswers: [],
         feedback: '',
         marks: null
       }
@@ -152,8 +169,6 @@ export default {
 
   watch: {
     '$route': 'handleRouteChange',
-    'states.isSavingEditedSnappedAnswer': function () {
-    }
   },
   computed: {
 
@@ -186,13 +201,18 @@ export default {
     },
 
     isMarkedAssignment: function () {
-      return this.assignmentDetails.marks !== null;
+      return this.assignmentDetails.marksID !== null;
     },
 
   },
   methods: {
     handleRouteChange() {
+
       let path = this.$route.name;
+
+      if (path === 'teacher.assignments.marked') {
+        this.isMarkedAssignment = true;
+      }
 
       if (path === 'teacher.assignments.marking.details') {
         this.resetState();
@@ -203,6 +223,7 @@ export default {
         this.resetState();
         this.states.isWritingFeedback = true;
       }
+
     },
 
     // SUBMISSIONS
@@ -233,7 +254,7 @@ export default {
       }
     },
 
-    handleToggleMarkingMode () {
+    handleToggleMarkingMode() {
       this.resetState();
       this.states.isMain = true
     },
@@ -259,18 +280,25 @@ export default {
       this.states.isSelectingSticker = value;
     },
 
-    handleSaveEditedSnappedAnswer () {
-      console.log('Handling done edit')
-      // this.resetState();
-      // this.states.isMain = true
+    handleSaveEditedSnappedAnswer() {
+      this.resetState();
+      this.states.isMain = true
       this.states.isSavingEditedSnappedAnswer = true;
+    },
+
+    handleEditedSnappedAnswer(dataURL) {
+      this.submission.snappedAnswers.push(dataURL)
+      router.push({name: 'teacher.assignments.marking.details'});
     },
 
     // SUBMISSION DETAILS
     fetchData() {
-      SubmissionRepository.find(this.submissionID)
+
+      if (this.isMarkedAssignment) {
+        MarksRepository.find(this.markID)
           .then(response => {
-            let data = response.data.submission_details;
+
+            let data = response.data;
 
             this.assignmentDetails.submissionID = data.submission_id;
             this.assignmentDetails.studentID = data.student_id;
@@ -280,23 +308,51 @@ export default {
             this.assignmentDetails.writtenAnswer = data.written_answer;
             this.assignmentDetails.createdAt = data.created_at;
             this.assignmentDetails.updatedAt = data.updated_at;
-            this.assignmentDetails.submittedTime = data.submission_time;
-            this.assignmentDetails.submittedDate = data.submission_date;
+            this.assignmentDetails.submittedTime = moment(data.submission_created_at, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY");
+            this.assignmentDetails.submittedDate = moment(data.submission_created_at, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY");
             this.assignmentDetails.marks = data.marks;
 
-            if (data.snap_answer_url) {
-              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split(',');
-              // this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split('|');
-              // console.log(this.assignmentDetails.snappedAnswerPaths.length);
+            if (data.marking_picture_url) {
+              this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
             }
 
-            this.states.isLoading = false;
-          });
+          })
+      } else {
+        SubmissionRepository.find(this.submissionID)
+            .then(response => {
+              let data = response.data.submission_details;
+
+              this.assignmentDetails.submissionID = data.submission_id;
+              this.assignmentDetails.studentID = data.student_id;
+              this.assignmentDetails.studentName = data.student_name;
+              this.assignmentDetails.assignmentID = data.assignment_id;
+              this.assignmentDetails.assignmentTitle = data.assignment_title;
+              this.assignmentDetails.writtenAnswer = data.written_answer;
+              this.assignmentDetails.createdAt = data.created_at;
+              this.assignmentDetails.updatedAt = data.updated_at;
+              this.assignmentDetails.submittedTime = data.submission_time;
+              this.assignmentDetails.submittedDate = data.submission_date;
+              this.assignmentDetails.marksID = data.mark_id;
+              this.assignmentDetails.marks = data.marks;
+
+              if (data.snap_answer_url) {
+                this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split('|');
+              }
+
+              if(data.marking_picture_url) {
+                this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
+              }
+
+              this.states.isLoading = false;
+
+            });
+      }
+
+
     },
 
 
     submit() {
-
       if (this.submission.marks === null || this.submission.marks === undefined) {
         this.resetState()
         this.states.isMain = true;
@@ -307,11 +363,13 @@ export default {
               assignmentID: this.assignmentDetails.assignmentID,
               studentID: this.assignmentDetails.studentID,
               answerID: this.assignmentDetails.submissionID,
-              // snappedAnswers: [],
+              snappedAnswers: this.submission.snappedAnswers,
               marks: this.submission.marks,
               feedback: this.submission.feedback
             })
             .then(response => {
+
+              console.log(response.data)
               let content = response.data;
 
               let type = content.messageType;
@@ -323,7 +381,6 @@ export default {
             })
       }
     },
-
     resetState() {
       this.states.isLoading = false;
       this.states.isMain = false;

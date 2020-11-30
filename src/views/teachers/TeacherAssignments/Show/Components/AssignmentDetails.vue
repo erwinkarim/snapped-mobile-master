@@ -23,7 +23,7 @@
 
             <!-- HEADER with Nav Back -->
             <div class="flex flex-row w-full justify-between pt-16 px-5">
-              <nav-back class="w-1/12" stroke-color="white"/>
+              <nav-back :to="{name: 'teacher.assignments'}" class="w-1/12" stroke-color="white"/>
             </div>
 
             <!-- TIMER -->
@@ -66,8 +66,10 @@
               <div v-if="hasSubmissions" class="mt-4">
                 <assignment-submission-card
                     v-for="submission in submissions"
+                    :key="submission.id"
                     :submission="submission"
-                    :meta="meta" class="mb-3"/>
+                    :meta="meta" class="mb-3"
+                />
               </div>
               <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
                 No ongoing submissions at the moment.

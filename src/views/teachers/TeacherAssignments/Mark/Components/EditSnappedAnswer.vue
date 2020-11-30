@@ -123,7 +123,7 @@ export default {
     },
     saveEditedSnappedAnswer() {
       let save = this.canvasVue.toDataURL()
-      console.log(save)
+      this.$emit('editedSnappedAnswer', save)
     },
     checkNowMarkingPathExists() {
       if (this.nowMarking === null || this.nowMarking === undefined) {
