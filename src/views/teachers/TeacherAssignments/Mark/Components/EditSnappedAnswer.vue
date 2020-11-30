@@ -14,7 +14,7 @@
       <div class="relative top-24 pb-16/9">
         <div
             class="w-full bg-black-primary h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <canvas id="canvas" crossOrigin="Anonymous" />
+          <canvas id="canvas" crossOrigin="Anonymous"/>
         </div>
 
       </div>
@@ -39,16 +39,6 @@ import router from "@/router";
 
 export default {
   name: "EditSnappedAnswer",
-  components: {
-    StickerLoader,
-    TickedBoxIcon,
-    ArrowBackIcon,
-    IconBaseTwo,
-    NavBack,
-    PageHeaderThree,
-    DashboardLayout,
-    PenIcon
-  },
   props: {
     states: Object,
     nowMarking: String,
@@ -56,7 +46,8 @@ export default {
   },
   data() {
     return {
-      canvasVue: null,
+      canvasMain: null,
+      canvasContext: null,
       originalImage: {
         path: decodeURIComponent(this.nowMarking),
         dimensions: {
@@ -72,7 +63,8 @@ export default {
     }
   },
   watch: {
-    'states.isSelectingSticker' : 'loadSticker'
+    'states.isSelectingSticker': 'loadSticker',
+    'states.isSavingEditedSnappedAnswer': 'saveEditedSnappedAnswer'
   },
   computed: {
     backgroundImageScaleFactor() {
@@ -87,6 +79,12 @@ export default {
       })
     },
     loadImage() {
+
+      let http = new XMLHttpRequest();
+      http.open('HEAD', this.originalImage.path);
+      http.onload = function(e) { console.log(e); }
+      http.send();
+
       fabric.Image.fromURL(this.originalImage.path, (img, error) => {
         this.originalImage.dimensions.width = img.width;
         this.originalImage.dimensions.height = img.height;
@@ -101,7 +99,8 @@ export default {
               originY: 'center',
               scaleX: this.backgroundImageScaleFactor,
               scaleY: this.backgroundImageScaleFactor
-            }
+            },
+            { crossOrigin: 'Anonymous' }
         );
       });
     },
@@ -122,9 +121,13 @@ export default {
         });
       }
     },
+    saveEditedSnappedAnswer() {
+      let save = this.canvasVue.toDataURL()
+      console.log(save)
+    },
     checkNowMarkingPathExists() {
       if (this.nowMarking === null || this.nowMarking === undefined) {
-        router.push({ name: 'teacher.assignments.marking.details'})
+        router.push({name: 'teacher.assignments.marking.details'})
       }
     }
   },
@@ -132,7 +135,17 @@ export default {
     this.checkNowMarkingPathExists();
     this.loadCanvas()
     this.loadImage()
-  }
+  },
+  components: {
+    StickerLoader,
+    TickedBoxIcon,
+    ArrowBackIcon,
+    IconBaseTwo,
+    NavBack,
+    PageHeaderThree,
+    DashboardLayout,
+    PenIcon
+  },
 }
 </script>
 
