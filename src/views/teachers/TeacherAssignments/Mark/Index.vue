@@ -287,6 +287,8 @@ export default {
 
             if (data.snap_answer_url) {
               this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split(',');
+              // this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split('|');
+              // console.log(this.assignmentDetails.snappedAnswerPaths.length);
             }
 
             this.states.isLoading = false;

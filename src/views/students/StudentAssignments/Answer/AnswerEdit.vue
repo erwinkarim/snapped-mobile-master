@@ -262,6 +262,7 @@ export default {
           })
     },
 
+    // TODO: Missing photo submission of student
     submit() {
 
       /*  TODO: REQUEST BACKEND HOW TO DETERMINE EXISTING PHOTO OR NEW PHOTO

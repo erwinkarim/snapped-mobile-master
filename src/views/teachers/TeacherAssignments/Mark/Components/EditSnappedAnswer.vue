@@ -14,7 +14,7 @@
       <div class="relative top-24 pb-16/9">
         <div
             class="w-full bg-black-primary h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <canvas id="canvas" crossOrigin="Anonymous" />
+          <canvas id="canvas" crossOrigin="Anonymous"/>
         </div>
 
       </div>
@@ -46,7 +46,8 @@ export default {
   },
   data() {
     return {
-      canvasVue: null,
+      canvasMain: null,
+      canvasContext: null,
       originalImage: {
         path: decodeURIComponent(this.nowMarking),
         dimensions: {
@@ -62,8 +63,8 @@ export default {
     }
   },
   watch: {
-    'states.isSelectingSticker' : 'loadSticker',
-    'states.isSavingEditedSnappedAnswer' : 'saveEditedSnappedAnswer'
+    'states.isSelectingSticker': 'loadSticker',
+    'states.isSavingEditedSnappedAnswer': 'saveEditedSnappedAnswer'
   },
   computed: {
     backgroundImageScaleFactor() {
@@ -83,18 +84,6 @@ export default {
       http.open('HEAD', this.originalImage.path);
       http.onload = function(e) { console.log(e); }
       http.send();
-
-      // let image = new Image();
-      // image.src = this.originalImage.path;
-      // image.onload = function () {}
-      //
-      // this.canvasVue.setBackgroundImage( new fabric.Image(image, {
-      //   originX: 'left',
-      //   originY: 'top',
-      //   left: 0,
-      //   top: 0
-      // }), this.canvasVue.renderAll.bind(this.canvasVue));
-      // image.crossOrigin = 'Anonymous';
 
       fabric.Image.fromURL(this.originalImage.path, (img, error) => {
         this.originalImage.dimensions.width = img.width;
@@ -133,12 +122,12 @@ export default {
       }
     },
     saveEditedSnappedAnswer() {
-      let save = this.canvasVue.toDataURL("test/png")
+      let save = this.canvasVue.toDataURL()
       console.log(save)
     },
     checkNowMarkingPathExists() {
       if (this.nowMarking === null || this.nowMarking === undefined) {
-        router.push({ name: 'teacher.assignments.marking.details'})
+        router.push({name: 'teacher.assignments.marking.details'})
       }
     }
   },
