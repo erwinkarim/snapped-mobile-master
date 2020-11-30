@@ -2,13 +2,11 @@
 
   <div class="h-screen bg-black-primary">
 
-    <div class="flex flex-row">
-      <page-header-three background-color="bg-black-primary" :bottom-padding="4">
-        <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="white"/>
-        </template>
-      </page-header-three>
-    </div>
+    <page-header-three background-color="bg-black-primary" :bottom-padding="4">
+      <template v-slot:leftAction>
+        <nav-back class="w-1/4 pl-0 ml-0" stroke-color="white"/>
+      </template>
+    </page-header-three>
 
     <div class="flex flex-col w-screen ">
       <div class="relative top-24 pb-16/9">
@@ -82,7 +80,9 @@ export default {
 
       let http = new XMLHttpRequest();
       http.open('HEAD', this.originalImage.path);
-      http.onload = function(e) { console.log(e); }
+      http.onload = function (e) {
+        console.log(e);
+      }
       http.send();
 
       fabric.Image.fromURL(this.originalImage.path, (img, error) => {
@@ -100,7 +100,7 @@ export default {
               scaleX: this.backgroundImageScaleFactor,
               scaleY: this.backgroundImageScaleFactor
             },
-            { crossOrigin: 'Anonymous' }
+            {crossOrigin: 'Anonymous'}
         );
       });
     },

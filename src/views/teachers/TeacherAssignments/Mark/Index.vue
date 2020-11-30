@@ -33,7 +33,7 @@
         <nav-back v-if="states.isMain" class="w-1/4" :stroke-color="navBackColor"/>
 
         <div @click="togglePreviewMode" v-if="states.isPreviewing">
-          <icon-base-two class="w-1/4">
+          <icon-base-two class="w-1/4 ml-6">
             <arrow-back-icon :stroke-color="navBackColor"/>
           </icon-base-two>
         </div>
@@ -153,7 +153,6 @@ export default {
   watch: {
     '$route': 'handleRouteChange',
     'states.isSavingEditedSnappedAnswer': function () {
-     console.log( `Changed saving: ${this.states.isSavingEditedSnappedAnswer}`)
     }
   },
   computed: {
@@ -326,7 +325,6 @@ export default {
     },
 
     resetState() {
-      console.log('Reseting')
       this.states.isLoading = false;
       this.states.isMain = false;
       this.states.isPreviewing = false;
