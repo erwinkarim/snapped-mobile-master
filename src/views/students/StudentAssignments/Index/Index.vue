@@ -20,7 +20,7 @@
 
         <!-- SECTION: CALENDAR -->
         <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
-          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full" />
+          <assignment-calendar @selectedDate="handleSelectedDate"/>
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
@@ -187,7 +187,6 @@ export default {
             if (data) {
 
               const data = response.data.data
-
               for (let i = 0; i < data.length; i++) {
 
                 let item = data[i];

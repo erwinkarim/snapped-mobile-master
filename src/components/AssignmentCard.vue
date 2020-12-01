@@ -15,7 +15,7 @@
       <div class="flex flex-row justify-between mb-4">
         <text-multiline-truncate
             :lines="descriptionLines"
-            class="text-left text-purple-primary text-px-10 pr-10 mb-4"
+            class="text-left text-purple-primary text-px-10 pr-10 mb-2"
         >
           {{ assignment.description }}
         </text-multiline-truncate>
@@ -24,15 +24,15 @@
 
       <div class="flex flex-row items-baseline">
 
-        <div :class="hasMarks ? 'w-full' : 'w-3/4'" class="flex flex-row text-left text-px-10 text-purple-secondary">
+        <div :class="hasMarks ? 'w-full' : 'w-5/7'" class="flex flex-row text-left text-px-10 text-purple-secondary pr-1">
           <div class="w-1/4 truncate"> {{ assignment.subjectName }}</div>
-          <div class="w-1/4  truncate mx-1"> {{ assignment.classroomName }}</div>
+          <div class="w-1/4 truncate mx-1"> {{ assignment.classroomName }}</div>
           <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
         </div>
 
-        <div class="w-1/4" v-if="!hasMarks">
+        <div class="w-2/7" v-if="!hasMarks">
           <countdown-timer :due-date-time="assignment.dueDatetime"
-                           :has-twenty-four-hour-limit="true"
+
                            :has-clock-icon="true"
                            class="text-xs bg-purple-primary"
           />

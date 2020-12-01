@@ -2,19 +2,17 @@
 
   <div class="h-screen bg-black-primary">
 
-    <div class="flex flex-row">
-      <page-header-three background-color="bg-black-primary" :bottom-padding="4">
-        <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="white"/>
-        </template>
-      </page-header-three>
-    </div>
+    <page-header-three background-color="bg-black-primary" :bottom-padding="4">
+      <template v-slot:leftAction>
+        <nav-back class="w-1/4 pl-0 ml-0" stroke-color="white"/>
+      </template>
+    </page-header-three>
 
     <div class="flex flex-col w-screen ">
       <div class="relative top-24 pb-16/9">
         <div
             class="w-full bg-black-primary h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <canvas id="canvas" crossOrigin="Anonymous" />
+          <canvas id="canvas" crossOrigin="Anonymous"/>
         </div>
 
       </div>
@@ -39,26 +37,17 @@ import router from "@/router";
 
 export default {
   name: "EditSnappedAnswer",
-  components: {
-    StickerLoader,
-    TickedBoxIcon,
-    ArrowBackIcon,
-    IconBaseTwo,
-    NavBack,
-    PageHeaderThree,
-    DashboardLayout,
-    PenIcon
-  },
   props: {
     states: Object,
-    nowMarking: String,
+    nowMarking: Object,
     nowLoadingSticker: String
   },
   data() {
     return {
-      canvasVue: null,
+      canvasMain: null,
+      canvasContext: null,
       originalImage: {
-        path: decodeURIComponent(this.nowMarking),
+        path: decodeURIComponent(this.nowMarking.dataURL),
         dimensions: {
           width: null,
           height: null
@@ -72,7 +61,8 @@ export default {
     }
   },
   watch: {
-    'states.isSelectingSticker' : 'loadSticker'
+    'states.isSelectingSticker': 'loadSticker',
+    'states.isSavingEditedSnappedAnswer': 'saveEditedSnappedAnswer'
   },
   computed: {
     backgroundImageScaleFactor() {
@@ -87,6 +77,7 @@ export default {
       })
     },
     loadImage() {
+
       fabric.Image.fromURL(this.originalImage.path, (img, error) => {
         this.originalImage.dimensions.width = img.width;
         this.originalImage.dimensions.height = img.height;
@@ -101,7 +92,8 @@ export default {
               originY: 'center',
               scaleX: this.backgroundImageScaleFactor,
               scaleY: this.backgroundImageScaleFactor
-            }
+            },
+            {crossOrigin: 'Anonymous'}
         );
       });
     },
@@ -122,9 +114,15 @@ export default {
         });
       }
     },
+    saveEditedSnappedAnswer() {
+      this.$emit('editedSnappedAnswer', {
+        index: this.nowMarking.index,
+        dataURL: this.canvasVue.toDataURL()
+      })
+    },
     checkNowMarkingPathExists() {
-      if (this.nowMarking === null || this.nowMarking === undefined) {
-        router.push({ name: 'teacher.assignments.marking.details'})
+      if (this.nowMarking.dataURL === null || this.nowMarking.dataURL === undefined) {
+        router.push({name: 'teacher.assignments.marking.details'})
       }
     }
   },
@@ -132,7 +130,17 @@ export default {
     this.checkNowMarkingPathExists();
     this.loadCanvas()
     this.loadImage()
-  }
+  },
+  components: {
+    StickerLoader,
+    TickedBoxIcon,
+    ArrowBackIcon,
+    IconBaseTwo,
+    NavBack,
+    PageHeaderThree,
+    DashboardLayout,
+    PenIcon
+  },
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div :class="containerClass" class="h-screen">
 
     <!-- OVERLAYS -->
-    <div v-if="states.isShowingModal" @click="closeModalMode"
+    <div v-if="states.isShowingModal" @click="closeModalMode()"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
     </div>
     <div v-if="states.isSelectingSticker" @click="toggleStickerBar"
@@ -13,7 +13,11 @@
     <!-- MODAL -->
     <div v-if="states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal class="w-4/5 " modal-type="error" @toggleModal="closeModalMode">
+      <modal modal-type="error"
+             @toggleModal="closeModalMode()"
+             :redirect-route="{name: 'teacher.assignments.marking.add_mark'}"
+             class="w-4/5 "
+      >
         <template slot="message">
           You must add mark for this assignment.
         </template>
@@ -30,10 +34,14 @@
     >
 
       <template v-slot:leftAction>
-        <nav-back v-if="states.isMain" class="w-1/4" :stroke-color="navBackColor"/>
+        <nav-back v-if="states.isMain"
+                  :to="{name: 'teacher.assignments.show'}"
+                  class="w-1/4"
+                  :stroke-color="navBackColor"
+        />
 
         <div @click="togglePreviewMode" v-if="states.isPreviewing">
-          <icon-base-two class="w-1/4">
+          <icon-base-two class="w-1/4 ml-6">
             <arrow-back-icon :stroke-color="navBackColor"/>
           </icon-base-two>
         </div>
@@ -44,9 +52,9 @@
       </template>
 
       <template v-slot:rightAction>
-        <div v-if="states.isMain" class="flex flex-row justify-end items-center mr-5" >
+        <div v-if="states.isMain" class="flex flex-row justify-end items-center mr-5">
           <div @click="togglePreviewMode" :to="{name: 'student.class.classmates'}" class="w-2/7 ">
-            <icon-base-two >
+            <icon-base-two>
               <expand-image-icon/>
             </icon-base-two>
           </div>
@@ -60,6 +68,7 @@
       <router-view
 
           :states="states"
+          :isMarkedAssignment="isMarkedAssignment"
 
           :assignment-details="assignmentDetails"
 
@@ -71,6 +80,8 @@
 
           @nowMarking="handleNowMarking"
           :now-marking="nowMarking"
+
+          @editedSnappedAnswer="handleEditedSnappedAnswer"
 
           :now-loading-sticker="nowLoadingSticker"
       />
@@ -86,6 +97,7 @@
         @toggleMarkingMode="handleToggleMarkingMode"
         @toggleStickerBar="handleToggleStickerBar"
         @loadSticker="handleLoadSticker"
+        @saveEditedSnappedAnswer="handleSaveEditedSnappedAnswer"
         @submit="submit"
     />
 
@@ -102,11 +114,14 @@ import BottomBar from "@/views/teachers/TeacherAssignments/Mark/Components/Botto
 import SubmissionRepository from "@/repositories/SubmissionRepository";
 import Modal from "@/components/Modal";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
+import router from "@/router";
+import moment from "moment";
 
 export default {
   name: "Index",
   props: {
-    submissionID: [String, Number]
+    submissionID: [String, Number],
+    markID: [String, Number],
   },
   data() {
     return {
@@ -118,7 +133,8 @@ export default {
         isMarking: false,
         isSelectingSticker: false,
         isWritingFeedback: false,
-        isShowingModal: false
+        isShowingModal: false,
+        isSavingEditedSnappedAnswer: false
       },
 
       // Assignment Details
@@ -130,17 +146,21 @@ export default {
         assignmentTitle: null,
         snappedAnswerPaths: null,
         writtenAnswer: null,
-        marks: null,
         createdAt: null,
         updatedAt: null,
         submittedTime: null,
-        submittedDate: null
+        submittedDate: null,
+        marksID: null,
+        marks: null,
+        markedSnappedAnswerPaths: null
       },
 
       nowMarking: null,
       nowLoadingSticker: null,
 
       submission: {
+        type: '',
+        snappedAnswers: [],
         feedback: '',
         marks: null
       }
@@ -149,7 +169,7 @@ export default {
 
 
   watch: {
-    '$route': 'handleRouteChange'
+    '$route': 'handleRouteChange',
   },
   computed: {
 
@@ -182,12 +202,13 @@ export default {
     },
 
     isMarkedAssignment: function () {
-      return this.assignmentDetails.marks !== null;
+      return this.assignmentDetails.marksID !== null && this.assignmentDetails.marksID !== undefined;
     },
 
   },
   methods: {
     handleRouteChange() {
+
       let path = this.$route.name;
 
       if (path === 'teacher.assignments.marking.details') {
@@ -199,6 +220,7 @@ export default {
         this.resetState();
         this.states.isWritingFeedback = true;
       }
+
     },
 
     // SUBMISSIONS
@@ -209,11 +231,11 @@ export default {
       this.submission.marks = value
     },
 
-    handleNowMarking(path) {
+    handleNowMarking(nowMarking) {
       this.resetState();
       this.states.isMarking = true;
 
-      this.nowMarking = path;
+      this.nowMarking = nowMarking;
     },
 
     // MODE: PREVIEW
@@ -229,7 +251,7 @@ export default {
       }
     },
 
-    handleToggleMarkingMode () {
+    handleToggleMarkingMode() {
       this.resetState();
       this.states.isMain = true
     },
@@ -255,10 +277,23 @@ export default {
       this.states.isSelectingSticker = value;
     },
 
+    handleSaveEditedSnappedAnswer() {
+      this.resetState();
+      this.states.isMain = true
+      this.states.isSavingEditedSnappedAnswer = true;
+    },
+
+    handleEditedSnappedAnswer(marked) {
+      this.assignmentDetails.snappedAnswerPaths[marked.index] = marked.dataURL;
+      router.push({name: 'teacher.assignments.marking.details'});
+    },
+
     // SUBMISSION DETAILS
     fetchData() {
+
       SubmissionRepository.find(this.submissionID)
           .then(response => {
+
             let data = response.data.submission_details;
 
             this.assignmentDetails.submissionID = data.submission_id;
@@ -271,46 +306,61 @@ export default {
             this.assignmentDetails.updatedAt = data.updated_at;
             this.assignmentDetails.submittedTime = data.submission_time;
             this.assignmentDetails.submittedDate = data.submission_date;
+            this.assignmentDetails.marksID = data.marks_id;
             this.assignmentDetails.marks = data.marks;
 
-            if (data.snap_answer_url) {
-              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split(',');
+            if (data.snap_answer) {
+              this.submission.type = 'snapped';
+              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
+            }
+
+            if (data.written_answer) {
+              this.submission.type = 'written';
+            }
+
+            if (data.marking_picture_url) {
+              this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
             }
 
             this.states.isLoading = false;
+
+            console.log(`TYPE: ${this.submission.type}`)
+
           });
     },
 
 
     submit() {
-
       if (this.submission.marks === null || this.submission.marks === undefined) {
         this.resetState()
         this.states.isMain = true;
         this.states.isShowingModal = true;
       } else {
+
         MarksRepository.store(
             {
               assignmentID: this.assignmentDetails.assignmentID,
               studentID: this.assignmentDetails.studentID,
               answerID: this.assignmentDetails.submissionID,
-              // snappedAnswers: [],
+              submissionType: this.submission.type,
+              snappedAnswers: this.assignmentDetails.snappedAnswerPaths,
               marks: this.submission.marks,
               feedback: this.submission.feedback
             })
             .then(response => {
+
               let content = response.data;
 
               let type = content.messageType;
               let message = content.message;
 
-              let data = content.data;
+              if (type === 'success') {
+                this.fetchData();
+              }
 
-              this.assignmentDetails.marks = data.marks;
             })
       }
     },
-
     resetState() {
       this.states.isLoading = false;
       this.states.isMain = false;
@@ -319,6 +369,7 @@ export default {
       this.states.isSelectingSticker = false;
       this.states.isWritingFeedback = false;
       this.states.isShowingModal = false
+      this.states.isSavingEditedSnappedAnswer = false;
     }
   },
   mounted() {

@@ -42,7 +42,7 @@
               </button>
             </div>
             <div class="w-1/3 px-1">
-              <button @click="toggleMarkingMode"
+              <button @click="saveEditedSnappedAnswer"
                       class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
                 <div class="w-5/7">
                   Done
@@ -126,7 +126,11 @@ export default {
       let path = this.$route.path;
       this.show = !(path.includes('/add-mark') || path.includes('/feedback'));
     },
+    saveEditedSnappedAnswer(){
+      this.$emit('saveEditedSnappedAnswer')
 
+      // this.toggleMarkingMode();
+    },
     setAsMarked() {
       this.$emit('submit')
     }

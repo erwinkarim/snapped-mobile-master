@@ -15,13 +15,13 @@
                     class="w-2/3" stroke-color="red-primary"/>
 
           <div @click="toggleEditingMode" v-if="isEditingWrittenAnswer" class="pl-3">
-            <icon-base-two class="w-2/7" >
+            <icon-base-two class="w-2/7">
               <arrow-back-icon/>
             </icon-base-two>
           </div>
 
           <div @click="toggleSnappedAnswerPreview" v-if="isPreviewingSnappedAnswer">
-            <icon-base-two class="w-2/7 ml-3" >
+            <icon-base-two class="w-2/7 ml-3">
               <arrow-back-icon/>
             </icon-base-two>
           </div>
@@ -48,12 +48,12 @@
 
       <!-- OVERLAYS -->
       <div v-if="isShowingModal" @click="toggleModal"
-            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
       </div>
 
       <!-- MODAL -->
       <div v-if="isShowingModal"
-          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
+           class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
         <modal class="w-4/5 "
                :modal-type="submissionStatus"
                :redirect-route="{name: 'student.assignments.show'}"
@@ -69,7 +69,6 @@
           </template>
         </modal>
       </div>
-
 
 
       <div class="relative pt-7/24 px-6 h-full text-left text-purple-primary">
@@ -117,7 +116,7 @@
                 View Photo
               </div>
 
-              <div class="w-1/12">
+              <div @click="removeSnappedAnswer(index)" class="w-1/12">
                 <icon-base-two class="w-6/7">
                   <trash-icon/>
                 </icon-base-two>
@@ -160,10 +159,10 @@
     </template>
 
     <template v-if="isPreviewingSnappedAnswer" slot="content">
-        <div
-            class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]" />
-        </div>
+      <div
+          class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
+        <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]"/>
+      </div>
     </template>
 
 
@@ -204,8 +203,10 @@ export default {
       isShowingModal: false,
       submissionStatus: null,
 
+      backendStoragePath: `${process.env.VUE_APP_BACKEND_STORAGE}/submissions/`,
+
       snappedAnswerPreviews: [],
-      snappedAnswerPreviewIndex : null,
+      snappedAnswerPreviewIndex: null,
 
       assignmentDetails: {
         id: null,
@@ -215,7 +216,7 @@ export default {
         type: null,
         content: null
       },
-      newAnswer: '',
+      newAnswer: [],
       remarks: null
     }
   },
@@ -236,8 +237,10 @@ export default {
   },
   methods: {
     fetchData() {
+
       SubmissionRepository.find(this.submissionID)
           .then(response => {
+
             const data = response.data.submission_details;
 
             // Assignment details
@@ -249,8 +252,17 @@ export default {
               this.answer.type = 'snapped';
               this.answer.content = data.snap_answer;
 
-              this.newAnswer = data.snap_answer_url.split(',');
-              this.snappedAnswerPreviews = data.snap_answer_url.split(',');
+              let originalNames = data.snap_answer.split(',');
+              let originalPaths = data.snap_answer_url.split(',');
+
+              for (let i = 0; i < originalNames.length; i++) {
+                this.createFile(originalNames[i], originalPaths[i])
+                    .then(response => {
+                      this.newAnswer.push(response)
+                    })
+              }
+
+              this.snappedAnswerPreviews = originalPaths;
             }
 
             if (data.written_answer) {
@@ -262,11 +274,14 @@ export default {
           })
     },
 
-    submit() {
+    async createFile(fileName, filePath) {
+      let response = await fetch(filePath);
+      let data = await response.blob();
 
-      /*  TODO: REQUEST BACKEND HOW TO DETERMINE EXISTING PHOTO OR NEW PHOTO
-      *         TO SEND ONLY NEW PHOTO AND REMOVE ONLY CERTAIN PHOTOS
-      * */
+      return new File([data], fileName);
+    },
+
+    submit() {
 
       SubmissionRepository.update(
           {
@@ -302,8 +317,6 @@ export default {
       this.toggleSnappedAnswerPreview();
     },
 
-
-
     onFileSelected(e) {
       let files = e.target.files || e.dataTransfer.files
 
@@ -335,6 +348,11 @@ export default {
       });
     },
 
+    removeSnappedAnswer(index) {
+      this.newAnswer.splice(index, 1);
+      this.snappedAnswerPreviews.splice(index, 1);
+    },
+
     toggleSnappedAnswerPreview() {
 
       if (this.isPreviewingSnappedAnswer) {
@@ -360,7 +378,6 @@ export default {
         this.isPreviewingSnappedAnswer = false;
       }
 
-      // console.log(`MAIN: ${this.isMainPage} | wRITE: ${this.isWrittenAnswer} | Snap: ${this.isSnappedAnswer}`)
     },
 
     toggleModal() {

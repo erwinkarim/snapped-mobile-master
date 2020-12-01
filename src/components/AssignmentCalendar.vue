@@ -1,5 +1,5 @@
 <template>
-  <v-date-picker class="w-full" title-position="left" v-model="date" :attributes="attributes" :select-attribute="selectAttribute" @dayclick="onDayClick"/>
+  <v-date-picker is-expanded title-position="left" v-model="date" :attributes="attributes" :select-attribute="selectAttribute" @dayclick="onDayClick"/>
 </template>
 
 <script>
@@ -82,7 +82,6 @@ export default {
                     date: moment(String(item.due_datetime)).toDate()
 
                   }
-                  // console.log('hi')
                   this.days.push(itemDetail)
                 }
         })

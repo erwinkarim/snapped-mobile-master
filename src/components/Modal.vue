@@ -22,15 +22,7 @@
     </div>
 
     <!-- BUTTON -->
-    <router-link v-if="redirectRoute"
-                 @click="closeModal"
-                 :to="redirectRoute"
-            class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7"
-    >
-      <slot name="button"/>
-    </router-link>
-    <button v-else
-            @click="closeModal"
+    <button  @click="closeModal"
             :class="buttonClass"
             class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7"
     >
@@ -44,6 +36,7 @@
 
 import ErrorIcon from "@/components/icons/ErrorIcon";
 import SuccessIcon from "@/components/icons/SuccessIcon";
+import router from "@/router";
 
 export default {
   name: "Modal",
@@ -58,11 +51,13 @@ export default {
     },
     redirectRoute: {
       type: Object,
-      default: ''
+      default() {
+        return {}
+      }
     }
   },
   computed: {
-    isNoIcon(){
+    isNoIcon() {
       return this.modalType === 'no-icon'
     },
     isErrorType() {
@@ -72,10 +67,10 @@ export default {
       return this.modalType === 'success'
     },
     buttonClass() {
-      let value = 'bg-yellow-primary text-purple-primary';
+      let value = ' bg-yellow-primary text-purple-primary ';
 
       if (this.isErrorType) {
-        value = 'bg-red-primary text-white';
+        value = ' bg-red-primary text-white ';
       }
 
       return value;
@@ -91,7 +86,11 @@ export default {
   },
   methods: {
     closeModal() {
-      this.$emit('toggleModal')
+      this.$emit('toggleModal');
+
+      if(Object.keys(this.redirectRoute).length > 0) {
+        router.push(this.redirectRoute);
+      }
     }
   },
   components: {
