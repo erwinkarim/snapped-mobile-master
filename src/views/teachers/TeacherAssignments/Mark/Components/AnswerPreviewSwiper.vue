@@ -23,6 +23,7 @@ export default {
   name: "AnswerPreviewSwiper",
   props: {
     isPreviewing: Boolean,
+    isMarkedAssignment: Boolean,
     images: Array
   },
   computed: {
@@ -63,7 +64,8 @@ export default {
   },
   methods: {
     enterMarkingMode (path) {
-      if (this.isPreviewing) {
+
+      if (this.isPreviewing && !this.isMarkedAssignment) {
         this.$emit('nowMarking', path)
         router.push({ name: 'teacher.assignments.marking.snapped_answer.edit'})
       }

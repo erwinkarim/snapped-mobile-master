@@ -8,8 +8,8 @@
             :key="assignment.assignmentID"
             :assignment="assignment"
             :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
-            :description-lines="1"
-            class="mt-4 swiper-slide h-30"
+            :description-lines="2"
+            class="mt-4 swiper-slide"
         />
       </div>
       <div class="swiper-pagination"></div>

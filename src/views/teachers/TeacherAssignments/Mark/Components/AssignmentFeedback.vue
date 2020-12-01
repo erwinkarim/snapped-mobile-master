@@ -5,7 +5,7 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="red-primary"/>
+          <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
 
         <template v-slot:mini-title>

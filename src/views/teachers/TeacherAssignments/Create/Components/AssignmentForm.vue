@@ -251,15 +251,15 @@
                 <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">
                     <div>
                         <label class="text-lg font-bold">Day</label>
-                        <input v-model="durationDay" type="number" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
+                        <input v-model="durationDay" type="number" min="0" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
                     </div>
                     <div>
                         <label class="text-lg font-bold">Hour</label>
-                        <input v-model="durationHour" type="number" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
+                        <input v-model="durationHour" type="number" min="0" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
                     </div>
                     <div>
                         <label class="text-lg font-bold">Minute</label>
-                        <input v-model="durationMinute" type="number" placeholder="0" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
+                        <input v-model="durationMinute" type="number" min="0" placeholder="0" class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary" name="custom-input-number" value="0">
                     </div>
                 </div>
                 <span slot="button">

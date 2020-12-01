@@ -52,7 +52,7 @@
               :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
               class="mt-4"
           >
-            <template v-slot:topRightAction >
+            <template v-slot:topRightAction>
               {{ assignment.totalSubmitted }} submitted
             </template>
           </assignment-card>
@@ -183,7 +183,7 @@ export default {
   },
   watch: {
     'filters.date': function (newSelect) {
-      if (newSelect != null){
+      if (newSelect != null) {
         this.fetchData()
       }
     }
@@ -194,12 +194,12 @@ export default {
 
       this.assignments = [];
 
+
       AssignmentRepository.all(this.requestFilter)
           .then(response => {
+            let data = response.data;
 
-            let data = response.data.data;
-
-            if (data) {
+            if (data.data) {
 
               const data = response.data.data
 
@@ -220,11 +220,12 @@ export default {
                 this.assignments.push(assignmentDetail);
                 this.hasError = false;
               }
-            } else {
-
+            } else if (data.error) {
               const error = response.data.error;
               this.hasError = error.message;
             }
+
+
           })
 
       this.resetFilterModalOptions()
