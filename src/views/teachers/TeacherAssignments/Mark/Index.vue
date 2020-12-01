@@ -121,7 +121,7 @@ export default {
   name: "Index",
   props: {
     submissionID: [String, Number],
-    markID:  [String, Number],
+    markID: [String, Number],
   },
   data() {
     return {
@@ -230,11 +230,11 @@ export default {
       this.submission.marks = value
     },
 
-    handleNowMarking(path) {
+    handleNowMarking(nowMarking) {
       this.resetState();
       this.states.isMarking = true;
 
-      this.nowMarking = path;
+      this.nowMarking = nowMarking;
     },
 
     // MODE: PREVIEW
@@ -282,20 +282,18 @@ export default {
       this.states.isSavingEditedSnappedAnswer = true;
     },
 
-    handleEditedSnappedAnswer(dataURL) {
-      this.submission.snappedAnswers.push(dataURL)
+    handleEditedSnappedAnswer(marked) {
+      this.assignmentDetails.snappedAnswerPaths[marked.index] = marked.dataURL;
       router.push({name: 'teacher.assignments.marking.details'});
     },
 
     // SUBMISSION DETAILS
     fetchData() {
 
-      console.log(`Marked: ${this.isMarkedAssignment}`)
-      if (this.isMarkedAssignment) {
-        MarksRepository.find(this.markID)
+      SubmissionRepository.find(this.submissionID)
           .then(response => {
 
-            let data = response.data;
+            let data = response.data.submission_details;
 
             this.assignmentDetails.submissionID = data.submission_id;
             this.assignmentDetails.studentID = data.student_id;
@@ -305,49 +303,22 @@ export default {
             this.assignmentDetails.writtenAnswer = data.written_answer;
             this.assignmentDetails.createdAt = data.created_at;
             this.assignmentDetails.updatedAt = data.updated_at;
-            this.assignmentDetails.submittedTime = moment(data.submission_created_at, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY");
-            this.assignmentDetails.submittedDate = moment(data.submission_created_at, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY");
+            this.assignmentDetails.submittedTime = data.submission_time;
+            this.assignmentDetails.submittedDate = data.submission_date;
+            this.assignmentDetails.marksID = data.marks_id;
             this.assignmentDetails.marks = data.marks;
+
+            if (data.snap_answer_url) {
+              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split('|');
+            }
 
             if (data.marking_picture_url) {
               this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
             }
 
-          })
-      } else {
+            this.states.isLoading = false;
 
-        SubmissionRepository.find(this.submissionID)
-            .then(response => {
-
-              let data = response.data.submission_details;
-
-              this.assignmentDetails.submissionID = data.submission_id;
-              this.assignmentDetails.studentID = data.student_id;
-              this.assignmentDetails.studentName = data.student_name;
-              this.assignmentDetails.assignmentID = data.assignment_id;
-              this.assignmentDetails.assignmentTitle = data.assignment_title;
-              this.assignmentDetails.writtenAnswer = data.written_answer;
-              this.assignmentDetails.createdAt = data.created_at;
-              this.assignmentDetails.updatedAt = data.updated_at;
-              this.assignmentDetails.submittedTime = data.submission_time;
-              this.assignmentDetails.submittedDate = data.submission_date;
-              this.assignmentDetails.marksID = data.mark_id;
-              this.assignmentDetails.marks = data.marks;
-
-              if (data.snap_answer_url) {
-                this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split('|');
-              }
-
-              if(data.marking_picture_url) {
-                this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
-              }
-
-              this.states.isLoading = false;
-
-            });
-      }
-
-
+          });
     },
 
 
@@ -362,7 +333,7 @@ export default {
               assignmentID: this.assignmentDetails.assignmentID,
               studentID: this.assignmentDetails.studentID,
               answerID: this.assignmentDetails.submissionID,
-              snappedAnswers: this.submission.snappedAnswers,
+              snappedAnswers: this.assignmentDetails.snappedAnswerPaths,
               marks: this.submission.marks,
               feedback: this.submission.feedback
             })
@@ -373,9 +344,10 @@ export default {
               let type = content.messageType;
               let message = content.message;
 
-              let data = content.data;
+              if (type === 'success') {
+                this.fetchData();
+              }
 
-              this.assignmentDetails.marks = data.marks;
             })
       }
     },

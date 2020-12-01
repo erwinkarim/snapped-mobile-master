@@ -39,7 +39,7 @@ export default {
   name: "EditSnappedAnswer",
   props: {
     states: Object,
-    nowMarking: String,
+    nowMarking: Object,
     nowLoadingSticker: String
   },
   data() {
@@ -47,7 +47,7 @@ export default {
       canvasMain: null,
       canvasContext: null,
       originalImage: {
-        path: decodeURIComponent(this.nowMarking),
+        path: decodeURIComponent(this.nowMarking.dataURL),
         dimensions: {
           width: null,
           height: null
@@ -77,13 +77,6 @@ export default {
       })
     },
     loadImage() {
-
-      let http = new XMLHttpRequest();
-      http.open('HEAD', this.originalImage.path);
-      http.onload = function (e) {
-        console.log(e);
-      }
-      http.send();
 
       fabric.Image.fromURL(this.originalImage.path, (img, error) => {
         this.originalImage.dimensions.width = img.width;
@@ -122,11 +115,13 @@ export default {
       }
     },
     saveEditedSnappedAnswer() {
-      let save = this.canvasVue.toDataURL()
-      this.$emit('editedSnappedAnswer', save)
+      this.$emit('editedSnappedAnswer', {
+        index: this.nowMarking.index,
+        dataURL: this.canvasVue.toDataURL()
+      })
     },
     checkNowMarkingPathExists() {
-      if (this.nowMarking === null || this.nowMarking === undefined) {
+      if (this.nowMarking.dataURL === null || this.nowMarking.dataURL === undefined) {
         router.push({name: 'teacher.assignments.marking.details'})
       }
     }
