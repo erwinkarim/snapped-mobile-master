@@ -117,7 +117,7 @@
                 View Photo
               </div>
 
-              <div class="w-1/12">
+              <div @click="removeSnappedAnswer(index)" class="w-1/12">
                 <icon-base-two class="w-6/7">
                   <trash-icon/>
                 </icon-base-two>
@@ -236,8 +236,10 @@ export default {
   },
   methods: {
     fetchData() {
+
       SubmissionRepository.find(this.submissionID)
           .then(response => {
+
             const data = response.data.submission_details;
 
             // Assignment details
@@ -249,8 +251,8 @@ export default {
               this.answer.type = 'snapped';
               this.answer.content = data.snap_answer;
 
-              this.newAnswer = data.snap_answer_url.split(',');
-              this.snappedAnswerPreviews = data.snap_answer_url.split(',');
+              this.newAnswer = data.snap_answer_url.split('|');
+              this.snappedAnswerPreviews = data.snap_answer_url.split('|');
             }
 
             if (data.written_answer) {
@@ -262,12 +264,7 @@ export default {
           })
     },
 
-    // TODO: Missing photo submission of student
     submit() {
-
-      /*  TODO: REQUEST BACKEND HOW TO DETERMINE EXISTING PHOTO OR NEW PHOTO
-      *         TO SEND ONLY NEW PHOTO AND REMOVE ONLY CERTAIN PHOTOS
-      * */
 
       SubmissionRepository.update(
           {
@@ -303,8 +300,6 @@ export default {
       this.toggleSnappedAnswerPreview();
     },
 
-
-
     onFileSelected(e) {
       let files = e.target.files || e.dataTransfer.files
 
@@ -336,6 +331,11 @@ export default {
       });
     },
 
+    removeSnappedAnswer(index) {
+      this.newAnswer.splice(index, 1);
+      this.snappedAnswerPreviews.splice(index, 1);
+    },
+
     toggleSnappedAnswerPreview() {
 
       if (this.isPreviewingSnappedAnswer) {
@@ -361,7 +361,6 @@ export default {
         this.isPreviewingSnappedAnswer = false;
       }
 
-      // console.log(`MAIN: ${this.isMainPage} | wRITE: ${this.isWrittenAnswer} | Snap: ${this.isSnappedAnswer}`)
     },
 
     toggleModal() {

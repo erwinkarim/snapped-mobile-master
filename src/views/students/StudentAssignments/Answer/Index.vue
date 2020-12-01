@@ -12,7 +12,7 @@
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
       <modal
              :modal-type="submissionStatus"
-             :redirect-route="submissionStatus === 'success' ? {name: 'student.assignments.show'} : ''"
+             :redirect-route="submissionStatus === 'success' ? {name: 'student.assignments.show'} : {}"
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
