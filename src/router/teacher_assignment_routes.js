@@ -15,9 +15,6 @@ const teacherAccessControlMeta = {
     checkRole: 'Teacher'
 }
 
-
-// TODO: DEBUG FAULTY ROUTE GUARD. Declines first assignment page load
-
 export default {
     path: '/teacher',
     component: App,

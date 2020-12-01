@@ -201,7 +201,7 @@ export default {
     },
 
     isMarkedAssignment: function () {
-      return this.assignmentDetails.marksID !== null;
+      return this.assignmentDetails.marksID !== null && this.assignmentDetails.marksID !== undefined;
     },
 
   },
@@ -209,10 +209,6 @@ export default {
     handleRouteChange() {
 
       let path = this.$route.name;
-
-      if (path === 'teacher.assignments.marked') {
-        this.isMarkedAssignment = true;
-      }
 
       if (path === 'teacher.assignments.marking.details') {
         this.resetState();
@@ -294,6 +290,7 @@ export default {
     // SUBMISSION DETAILS
     fetchData() {
 
+      console.log(`Marked: ${this.isMarkedAssignment}`)
       if (this.isMarkedAssignment) {
         MarksRepository.find(this.markID)
           .then(response => {
@@ -318,8 +315,10 @@ export default {
 
           })
       } else {
+
         SubmissionRepository.find(this.submissionID)
             .then(response => {
+
               let data = response.data.submission_details;
 
               this.assignmentDetails.submissionID = data.submission_id;
@@ -369,7 +368,6 @@ export default {
             })
             .then(response => {
 
-              console.log(response.data)
               let content = response.data;
 
               let type = content.messageType;

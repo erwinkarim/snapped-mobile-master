@@ -187,7 +187,6 @@ export default {
             if (data) {
 
               const data = response.data.data
-
               for (let i = 0; i < data.length; i++) {
 
                 let item = data[i];

@@ -89,11 +89,18 @@
 
       <div v-if="!isLoading" class="w-full">
 
-        <div v-if="hasEditableSubmission" class="w-full">
+        <div v-if="hasEditableSubmission && !isPastDueDate" class="w-full">
           <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: studentSubmission.id}}"
                        class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
             Edit Answer
           </router-link>
+        </div>
+
+        <div v-else-if="hasEditableSubmission && isPastDueDate" class="w-full">
+          <div
+              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+            Submitted
+          </div>
         </div>
 
         <div v-else-if="hasMarkedSubmission" class="w-full flex flex-row">
@@ -202,6 +209,10 @@ export default {
       return this.studentSubmission.id !== null && this.studentSubmission.marks === null;
     },
 
+    isPastDueDate() {
+     return  moment().format('YYYY-MM-DD hh:mm:ss') >= this.assignment.dueDatetime;
+    },
+
     hasMarkedSubmission: function () {
       return this.studentSubmission.id !== null && this.studentSubmission.marks !== null;
     },
@@ -211,13 +222,16 @@ export default {
         id: this.assignment.id,
         title: this.assignment.title
       }
-    }
+    },
+
   },
   methods: {
     fetchData() {
       AssignmentRepository.find(this.assignmentID)
           .then(response => {
             let data = response.data;
+
+            console.log(data)
 
             // Student's Submission
             this.studentSubmission.id = data.student_submission_id;

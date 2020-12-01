@@ -31,12 +31,6 @@
         />
       </div>
 
-
-        <!-- CANVAS -->
-<!--      <div v-if="isMarking.status"-->
-<!--           class="w-full h-full bg-black-primary object-cover top-0 flex flex-row justify-center items-center absolute">-->
-<!--        <canvas id="canvas"/>-->
-<!--      </div>-->
     </div>
 </template>
 
