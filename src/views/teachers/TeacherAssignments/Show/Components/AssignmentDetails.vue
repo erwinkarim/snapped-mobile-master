@@ -170,9 +170,8 @@ export default {
             this.assignment.written_question.description = data.assignment_details.written_question_description;
 
             if (data.assignment_details.snap_question_url) {
-              this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
+              this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split('|');
             }
-
 
             // Assignment meta
             this.meta.classroomID = data.assignment_details.classroom_id;

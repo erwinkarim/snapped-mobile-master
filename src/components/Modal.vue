@@ -88,7 +88,7 @@ export default {
     closeModal() {
       this.$emit('toggleModal');
 
-      if(this.redirectRoute) {
+      if(Object.keys(this.redirectRoute).length > 0) {
         router.push(this.redirectRoute);
       }
     }

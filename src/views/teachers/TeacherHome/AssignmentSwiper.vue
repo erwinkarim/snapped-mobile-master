@@ -9,7 +9,7 @@
             :assignment="assignment"
             :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
             :description-lines="2"
-            class="mt-4 swiper-slide"
+            class="mt-4 swiper-slide h-32 min-h-1/6"
         />
       </div>
       <div class="swiper-pagination"></div>
