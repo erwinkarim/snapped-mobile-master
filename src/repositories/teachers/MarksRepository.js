@@ -8,7 +8,15 @@ export default {
         return Repository.get(`${resource}/show/${id}`);
     },
 
-    store({assignmentID: assignmentID, studentID: studentID, answerID: answerID, snappedAnswers: snappedAnswers, marks: marks, feedback: feedback}) {
+    store({
+              assignmentID: assignmentID,
+              studentID: studentID,
+              answerID: answerID,
+              submissionType: submissionType,
+              snappedAnswers: snappedAnswers,
+              marks: marks,
+              feedback: feedback
+    }) {
 
         let formData = new FormData()
 
@@ -18,9 +26,11 @@ export default {
         formData.append('marks', marks)
         formData.append('feedback', feedback)
 
-        snappedAnswers.forEach(function (dataURL, index) {
-            formData.append(`marking_picture[${index}]`, dataURL);
-        });
+        if (submissionType === 'snapped') {
+            snappedAnswers.forEach(function (dataURL, index) {
+                formData.append(`marking_picture[${index}]`, dataURL);
+            });
+        }
 
         return Repository.post(`${resource}/store`,
             formData,
