@@ -614,7 +614,7 @@ export default {
     },
       format_date(value){
           if (value) {
-              return moment(String(value)).format('YYYY-MM-DD hh:mm:ss')
+              return moment(String(value)).format('YYYY-MM-DD HH:mm:ss')
           }
       },
       format_time(value){
