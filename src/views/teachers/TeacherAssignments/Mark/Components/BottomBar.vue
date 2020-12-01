@@ -127,7 +127,6 @@ export default {
       this.show = !(path.includes('/add-mark') || path.includes('/feedback'));
     },
     saveEditedSnappedAnswer(){
-      console.log('Pressed Done Edit')
       this.$emit('saveEditedSnappedAnswer')
 
       // this.toggleMarkingMode();

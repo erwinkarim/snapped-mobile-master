@@ -82,7 +82,6 @@ export default {
                     date: moment(String(item.due_datetime)).toDate()
 
                   }
-                  // console.log('hi')
                   this.days.push(itemDetail)
                 }
         })

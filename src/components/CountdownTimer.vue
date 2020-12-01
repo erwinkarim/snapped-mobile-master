@@ -75,9 +75,9 @@ export default {
 
           if (days > 30) {
             let months = Math.floor(days / 30);
-            value = `${months} months`
+            value = `${months} ${days === 1 ? 'month' : 'months'}`
           } else {
-            value = `${days} days`
+            value = `> ${days} ${days === 1 ? 'day' : 'days'}`
           }
 
         }

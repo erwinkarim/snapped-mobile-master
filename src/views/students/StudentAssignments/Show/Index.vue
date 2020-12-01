@@ -231,8 +231,6 @@ export default {
           .then(response => {
             let data = response.data;
 
-            console.log(data)
-
             // Student's Submission
             this.studentSubmission.id = data.student_submission_id;
 

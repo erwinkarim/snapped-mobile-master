@@ -2,9 +2,12 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div @click="enterMarkingMode(path)" :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
+        <div  v-for="(dataURL, index) in images"
+              @click="enterMarkingMode(dataURL, index)"
+              :class="swiperClass"
+              class=" swiper-slide rounded-2xl flex flex-col">
           <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
-            <img :src="path">
+            <img :src="dataURL">
           </div>
         </div>
       </div>
@@ -63,10 +66,9 @@ export default {
     }
   },
   methods: {
-    enterMarkingMode (path) {
-
+    enterMarkingMode (dataURL, index) {
       if (this.isPreviewing && !this.isMarkedAssignment) {
-        this.$emit('nowMarking', path)
+        this.$emit('nowMarking', {index: index, dataURL: dataURL})
         router.push({ name: 'teacher.assignments.marking.snapped_answer.edit'})
       }
     }
