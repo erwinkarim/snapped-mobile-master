@@ -159,6 +159,7 @@ export default {
       nowLoadingSticker: null,
 
       submission: {
+        type: '',
         snappedAnswers: [],
         feedback: '',
         marks: null
@@ -308,8 +309,13 @@ export default {
             this.assignmentDetails.marksID = data.marks_id;
             this.assignmentDetails.marks = data.marks;
 
-            if (data.snap_answer_url) {
-              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split('|');
+            if (data.snap_answer) {
+              this.submission.type = 'snapped';
+              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
+            }
+
+            if (data.written_answer) {
+              this.submission.type = 'written';
             }
 
             if (data.marking_picture_url) {
@@ -317,6 +323,8 @@ export default {
             }
 
             this.states.isLoading = false;
+
+            console.log(`TYPE: ${this.submission.type}`)
 
           });
     },
@@ -328,11 +336,13 @@ export default {
         this.states.isMain = true;
         this.states.isShowingModal = true;
       } else {
+
         MarksRepository.store(
             {
               assignmentID: this.assignmentDetails.assignmentID,
               studentID: this.assignmentDetails.studentID,
               answerID: this.assignmentDetails.submissionID,
+              submissionType: this.submission.type,
               snappedAnswers: this.assignmentDetails.snappedAnswerPaths,
               marks: this.submission.marks,
               feedback: this.submission.feedback
