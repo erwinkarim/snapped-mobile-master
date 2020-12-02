@@ -49,14 +49,14 @@
           </div>
           <div class="ml-5 text-purple-primary  truncate mr-4">{{ teacherDetails.contactNum }}</div>
         </div>
-        <button @click="logout" class="text-red-primary text-white py-2 mt-5 h-12 flex flex-row w-full border-b-1 items-center bg-white">
+        <div @click="logout" class="text-red-primary text-white py-2 mt-5 h-12 flex flex-row w-full border-b-1 items-center bg-white">
           <div class="w-7 h-full relative">
             <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">
               <logout-icon/>
             </icon-base>
           </div>
           <div class="ml-5 text-white-primary truncate mr-4">Log out</div>
-        </button>
+        </div>
       </div>
 <!--      <div class="flex flex-row w-full items-center justify-center mt-10">-->
 <!--        <button @click="logout"-->

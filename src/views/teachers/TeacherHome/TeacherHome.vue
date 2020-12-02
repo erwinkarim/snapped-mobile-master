@@ -38,7 +38,7 @@
           <assignment-submission-card
               v-for="submission in submissions"
               :submission="submission"
-              class="mb-3"/>
+              class="mb-6"/>
         </div>
       </div>
 
