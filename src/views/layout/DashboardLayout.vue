@@ -1,11 +1,11 @@
 <template>
-  <div class="h-screen">
+  <div class="h-full">
 
     <div class="flex flex-row">
       <slot name="pageHeader"/>
     </div>
 
-    <div :class="contentClass" class="flex flex-col w-screen ">
+    <div :class="contentClass" class="flex flex-col w-screen  ">
       <slot name="content"/>
     </div>
 

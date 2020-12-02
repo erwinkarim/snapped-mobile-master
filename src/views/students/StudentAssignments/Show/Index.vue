@@ -7,18 +7,6 @@
       <div class="flex flex-col">
         <div class="relative w-full justify-center">
 
-          <!-- Background Stack Green -->
-          <div class="absolute w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 h-screen">
-            <div class=" bg-green-primary h-1/3">
-
-            </div>
-          </div>
-          <!-- Background Stack Overlay -->
-          <div class="absolute w-full z-10  sm:z-10 md:z-20 lg:z-30 xl:z-40 h-screen">
-            <div class=" bg-black bg-opacity-10 h-1/3">
-
-            </div>
-          </div>
 
           <!-- Page Content -->
           <div class="absolute w-full z-20 mb-32">
@@ -82,6 +70,16 @@
 
         </div>
 
+
+        <div class="relative">
+          <!-- Background Stack Green -->
+          <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
+            <!-- Background Stack Overlay -->
+            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">
+            </div>
+          </div>
+        </div>
+
       </div>
     </template>
 
@@ -103,7 +101,7 @@
           </div>
         </div>
 
-        <div v-else-if="hasMarkedSubmission" class="w-full flex flex-row">
+        <div v-else-if="hasMarkedSubmission">
           <div
               class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
             Marked
@@ -112,27 +110,27 @@
 
         <div v-else class="w-full flex flex-row">
 
-          <div class="w-3/7 px-2">
+          <div class="flex-grow px-2">
             <router-link
                 :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"
                 class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
               <div class="w-5/7">
                 Write Answer
               </div>
-              <icon-base-two class="w-1/7">
+              <icon-base-two class="w-1/7 hidden xs:block">
                 <pen-icon/>
               </icon-base-two>
             </router-link>
           </div>
-          <div class="w-4/7 px-2">
+          <div class="flex-grow px-2">
 
             <label
                 class="w-full h-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row items-center justify-center">
               <div class="w-5/7">
-                Snapped Answer
+                Snap Answer
                 <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
               </div>
-              <icon-base-two class="w-1/7">
+              <icon-base-two class="hidden xs:block w-1/7">
                 <camera-icon/>
               </icon-base-two>
             </label>
@@ -210,7 +208,7 @@ export default {
     },
 
     isPastDueDate() {
-     return  moment().format('YYYY-MM-DD hh:mm:ss') >= this.assignment.dueDatetime;
+      return moment().format('YYYY-MM-DD hh:mm:ss') >= this.assignment.dueDatetime;
     },
 
     hasMarkedSubmission: function () {

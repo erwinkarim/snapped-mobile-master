@@ -3,7 +3,7 @@
 
     <template v-slot:content>
       <div class="flex flex-col">
-        <div class="relative w-full justify-center">
+        <div class="relative w-full ">
 
           <!-- Background Stack Green -->
           <div class="absolute w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 h-screen">

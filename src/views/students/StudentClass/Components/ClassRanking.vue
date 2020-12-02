@@ -17,7 +17,7 @@
         <div class="flex flex-row w-4/12 items-center">
           <!-- Ranking -->
           <div class="font-bold text-3xl w-3/7 px-2 text-center mr-1">
-            {{ student.ranking }}
+            {{student.ranking}}
           </div>
 
           <!-- Student photo -->
