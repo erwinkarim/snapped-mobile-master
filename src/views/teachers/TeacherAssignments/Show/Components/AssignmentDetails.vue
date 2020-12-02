@@ -3,29 +3,17 @@
 
     <template v-slot:content>
       <div class="flex flex-col">
-        <div class="relative w-full justify-center">
-
-          <!-- Background Stack Green -->
-          <div class="absolute w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 h-screen">
-            <div class=" bg-green-primary h-1/3">
-
-            </div>
-          </div>
-          <!-- Background Stack Overlay -->
-          <div class="absolute w-full z-10  sm:z-10 md:z-20 lg:z-30 xl:z-40 h-screen">
-            <div class=" bg-black bg-opacity-10 h-1/3">
-
-            </div>
-          </div>
+        <div class=" relative w-full top-1/12">
 
           <!-- Page Content -->
           <div class="absolute w-full z-20 mb-32">
 
             <!-- HEADER with Nav Back -->
-            <div class="flex flex-row w-full justify-between pt-16 px-5">
-              <nav-back :to="{name: 'teacher.assignments'}" class="w-1/12" stroke-color="white"/>
-            </div>
-
+            <page-header-three background-color="bg-transparent" class="relative">
+              <template v-slot:leftAction>
+                <nav-back class="w-2/7" :to="{name: 'teacher.assignments'}" stroke-color="white"/>
+              </template>
+            </page-header-three>
             <!-- TIMER -->
             <div class="w-full flex flex-row justify-center items-center mt-7">
               <div class="flex flex-col w-3/5">
@@ -35,12 +23,12 @@
                 <div class=" bg-green-primary mt-3 py-1 rounded-full">
 
                   <div class="text-white font-bold text-3xl tracking-wider">
-                   <countdown-timer v-if="assignment.dueDatetime"
-                                    :due-date-time="assignment.dueDatetime"
-                                    :has-twenty-four-hour-limit="false"
-                                    :has-clock-icon="true"
-                   />
-                    <div v-else> -- : -- : -- </div>
+                    <countdown-timer v-if="assignment.dueDatetime"
+                                     :due-date-time="assignment.dueDatetime"
+                                     :has-twenty-four-hour-limit="false"
+                                     :has-clock-icon="true"
+                    />
+                    <div v-else> -- : -- : --</div>
                   </div>
                 </div>
               </div>
@@ -59,7 +47,7 @@
                   Submission
                 </div>
                 <div v-if="meta.totalSubmissions && meta.totalStudents" class="tracking-wide">
-                  {{meta.totalSubmissions}}/{{meta.totalStudents}}
+                  {{ meta.totalSubmissions }}/{{ meta.totalStudents }}
                 </div>
               </div>
 
@@ -80,6 +68,15 @@
           </div>
 
 
+        </div>
+
+        <div class="relative">
+          <!-- Background Stack Green -->
+          <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
+            <!-- Background Stack Overlay -->
+            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">
+            </div>
+          </div>
         </div>
 
       </div>
@@ -103,10 +100,12 @@ import TextMultilineTruncate from "@/components/TextMultilineTruncate";
 import CountdownTimer from "@/components/CountdownTimer";
 import QuestionPreviewSwiper from "@/views/teachers/TeacherAssignments/Show/Components/QuestionPreviewSwiper";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
+import PageHeaderThree from "@/components/PageHeaderThree";
 
 export default {
   name: "AssignmentDetails",
   components: {
+    PageHeaderThree,
     AssignmentQuestionCard,
     QuestionPreviewSwiper,
     CountdownTimer,
@@ -183,15 +182,15 @@ export default {
 
             // Submission
 
-            for (let i = 0; i <  data.submissions_by.length; i++) {
+            for (let i = 0; i < data.submissions_by.length; i++) {
 
               let submission = data.submissions_by[i];
 
               let details = {
                 id: submission.submission_id,
-                studentID : submission.student_id,
-                studentName : submission.student_name,
-                submittedAt : submission.submission_created_at,
+                studentID: submission.student_id,
+                studentName: submission.student_name,
+                submittedAt: submission.submission_created_at,
                 marksID: submission.marks_id,
                 assignmentID: data.assignment_details.assignment_id
               }

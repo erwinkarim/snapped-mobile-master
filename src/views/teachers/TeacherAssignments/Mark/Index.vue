@@ -324,8 +324,6 @@ export default {
 
             this.states.isLoading = false;
 
-            console.log(`TYPE: ${this.submission.type}`)
-
           });
     },
 
