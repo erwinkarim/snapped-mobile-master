@@ -241,7 +241,7 @@
       <!--  Modal Schedule    -->
       <div v-if="toggleSchedule" @click.self="toggleSchedule = !toggleSchedule"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-        <modal class="fixed" v-if="toggleSchedule" modal-type="no-icon">
+        <modal class="fixed mx-1/24" v-if="toggleSchedule" modal-type="no-icon">
           <h3 slot="title" class="font-bold">Schedule Publish</h3>
           <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
             <div>
