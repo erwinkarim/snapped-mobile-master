@@ -58,12 +58,6 @@
           <div class="ml-5 text-white-primary truncate mr-4">Log out</div>
         </div>
       </div>
-<!--      <div class="flex flex-row w-full items-center justify-center mt-10">-->
-<!--        <button @click="logout"-->
-<!--                class="w-2/3 mt-3 font-display text-white font-bold py-2 px-4 rounded-full h-14 text-lg inline-flex justify-center items-center bg-red-primary">-->
-<!--          Log Out-->
-<!--        </button>-->
-<!--      </div>-->
     </template>
   </dashboard-layout>
 </template>
