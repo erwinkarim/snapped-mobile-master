@@ -63,6 +63,9 @@
             <div v-if="submissionStatus === 'success'" class="w-full">
               Got something to change? Don't worry! You can always edit your published homework
             </div>
+            <div v-if="submissionStatus === 'error'" class="w-full">
+              Oops! There seems to be an error in your submission.
+            </div>
           </template>
           <template slot="button">
             Okay
@@ -93,12 +96,6 @@
             <div @click="editWrittenAnswer">
               Edit Answer
             </div>
-
-            <div class="w-1/12">
-              <icon-base-two class="w-6/7">
-                <trash-icon/>
-              </icon-base-two>
-            </div>
           </div>
 
         </div>
@@ -109,19 +106,38 @@
             Your Snapped Answer
           </div>
           <div class="flex flex-col">
-            <div v-for="(answer, index) in newAnswer"
+
+            <!-- EXISTING SNAPPED ANSWERS -->
+            <div v-for="(answer, index) in existingSnappedAnswers"
                  class="flex flex-row justify-between mt-3 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
 
-              <div @click="handleSnappedAnswerPreview(index)">
+              <div @click="handleSnappedAnswerPreview(index, 'existing')">
                 View Photo
               </div>
 
-              <div @click="removeSnappedAnswer(index)" class="w-1/12">
+              <div @click="removeSnappedAnswer(index, 'existing')" class="w-1/12">
                 <icon-base-two class="w-6/7">
                   <trash-icon/>
                 </icon-base-two>
               </div>
             </div>
+
+            <!-- NEW SNAPPED ANSWERS -->
+            <div v-for="(answer, index) in addedSnappedAnswers"
+                 class="flex flex-row justify-between mt-3 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
+
+              <div @click="handleSnappedAnswerPreview(index, 'new')">
+                View Photo
+              </div>
+
+              <div @click="removeSnappedAnswer(index, 'new')" class="w-1/12">
+                <icon-base-two class="w-6/7">
+                  <trash-icon/>
+                </icon-base-two>
+              </div>
+            </div>
+
+
           </div>
 
 
@@ -161,7 +177,7 @@
     <template v-if="isPreviewingSnappedAnswer" slot="content">
       <div
           class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-        <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]"/>
+        <img :src="isPreviewingPath"/>
       </div>
     </template>
 
@@ -205,17 +221,29 @@ export default {
 
       backendStoragePath: `${process.env.VUE_APP_BACKEND_STORAGE}/submissions/`,
 
-      snappedAnswerPreviews: [],
-      snappedAnswerPreviewIndex: null,
+      // Previews for both existing and newly added photos
+      snappedAnswerPreviews: {
+        existing: [],
+        new: []
+      },
+      isPreviewingPath: null,
+
+      // Existing snapped answers
+      existingSnappedAnswers: [],
+      removedSnappedAnswers: [],
+      addedSnappedAnswers: [],
+
+      // Compiled answer
+      answer: {
+        type: null,
+        content: null
+      },
 
       assignmentDetails: {
         id: null,
         title: null
       },
-      answer: {
-        type: null,
-        content: null
-      },
+
       newAnswer: [],
       remarks: null
     }
@@ -247,22 +275,22 @@ export default {
             this.assignmentDetails.id = data.assignment_id;
             this.assignmentDetails.title = data.assignment_title;
 
-            // Answer
+            // Processing existing Snapped Answer
             if (data.snap_answer) {
               this.answer.type = 'snapped';
-              this.answer.content = data.snap_answer;
 
               let originalNames = data.snap_answer.split(',');
               let originalPaths = data.snap_answer_url.split(',');
 
               for (let i = 0; i < originalNames.length; i++) {
-                this.createFile(originalNames[i], originalPaths[i])
-                    .then(response => {
-                      this.newAnswer.push(response)
-                    })
+                this.existingSnappedAnswers.push({
+                  name: originalNames[i],
+                  path: originalPaths[i]
+                })
               }
 
-              this.snappedAnswerPreviews = originalPaths;
+              // Add existing Snapped Answer previews
+              this.snappedAnswerPreviews.existing = originalPaths;
             }
 
             if (data.written_answer) {
@@ -283,23 +311,38 @@ export default {
 
     submit() {
 
-      SubmissionRepository.update(
-          {
-            submissionID: this.submissionID,
-            assignmentID: this.assignmentDetails.id,
-            answerType: this.answer.type,
-            answerContent: this.newAnswer,
-            remarks: this.remarks,
-          })
-          .then(response => {
-            let content = response.data;
-            let type = content.messageType;
+      // Compile Snapped Answers, to remove and newly added.
+      if (this.answer.type === 'snapped') {
+        this.newAnswer = {
+          toRemove: this.removedSnappedAnswers,
+          toAdd: this.addedSnappedAnswers
+        }
+      }
 
-            if (type === 'success') {
-              this.submissionStatus = type;
-              this.toggleModal();
-            }
-          })
+      if ((this.snappedAnswerPreviews.existing.length + this.snappedAnswerPreviews.new.length) > 0) {
+        SubmissionRepository.update(
+            {
+              submissionID: this.submissionID,
+              assignmentID: this.assignmentDetails.id,
+              answerType: this.answer.type,
+              answerContent: this.newAnswer,
+              remarks: this.remarks,
+            })
+            .then(response => {
+              let content = response.data;
+
+              let type = content.messageType;
+
+              if (type === 'success') {
+                this.submissionStatus = type;
+                this.toggleModal();
+              }
+            })
+      } else {
+        this.submissionStatus = 'error';
+        this.toggleModal()
+      }
+
     },
 
     editWrittenAnswer() {
@@ -308,12 +351,15 @@ export default {
     },
 
     compileWrittenAnswer() {
-      this.answer.content = this.newAnswer;
-      this.toggleEditingMode();
+      if (this.newAnswer.length > 0) {
+        this.answer.content = this.newAnswer;
+        this.toggleEditingMode();
+      }
     },
 
-    handleSnappedAnswerPreview(index) {
-      this.snappedAnswerPreviewIndex = index;
+    handleSnappedAnswerPreview(index, type) {
+
+      this.isPreviewingPath = this.snappedAnswerPreviews[type][index];
       this.toggleSnappedAnswerPreview();
     },
 
@@ -325,7 +371,7 @@ export default {
       }
 
       if (files[0].type.match("image.*")) {
-        this.newAnswer.push(files[0]);
+        this.addedSnappedAnswers.push(files[0]);
         this.generateSnappedAnswerPreview(files)
       }
     },
@@ -341,16 +387,28 @@ export default {
         let that = this;
 
         reader.onload = function (e) {
-          that.snappedAnswerPreviews.push(e.target.result);
+          that.snappedAnswerPreviews.new.push(e.target.result);
         }
 
         reader.readAsDataURL(f);
       });
     },
 
-    removeSnappedAnswer(index) {
-      this.newAnswer.splice(index, 1);
-      this.snappedAnswerPreviews.splice(index, 1);
+    removeSnappedAnswer(index, type) {
+
+      if (type === 'existing') {
+        let toRemove = this.existingSnappedAnswers[index];
+        this.removedSnappedAnswers.push(toRemove.name)
+        this.existingSnappedAnswers.splice(index, 1);
+        this.snappedAnswerPreviews.existing.splice(index, 1);
+
+      }
+
+      if (type === 'new') {
+        this.addedSnappedAnswers.splice(index, 1);
+        this.snappedAnswerPreviews.new.splice(index, 1);
+      }
+
     },
 
     toggleSnappedAnswerPreview() {

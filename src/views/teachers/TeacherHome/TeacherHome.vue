@@ -3,10 +3,10 @@
 
     <template v-slot:content>
       <div class="px-5">
-        <div class="w-3/4">
-          <icon-base width="190" height="70" icon-name="app-logo" view-box="0 0 320 18">
+        <div class="w-2/7">
+          <icon-base-two>
             <AppLogo/>
-          </icon-base>
+          </icon-base-two>
         </div>
 
         <user-profile/>
@@ -62,6 +62,7 @@ import UserProfile from "@/components/UserProfile";
 import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
 import SubmissionRepository from "@/repositories/SubmissionRepository";
 import TeacherRepository from "@/repositories/TeacherRepository";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "Home",
@@ -99,6 +100,7 @@ export default {
     this.fetchSubmissions()
   },
   components: {
+    IconBaseTwo,
     AssignmentSubmissionCard,
     UserProfile,
     SubmissionCard,

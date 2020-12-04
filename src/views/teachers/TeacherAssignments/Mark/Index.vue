@@ -294,6 +294,7 @@ export default {
       SubmissionRepository.find(this.submissionID)
           .then(response => {
 
+
             let data = response.data.submission_details;
 
             this.assignmentDetails.submissionID = data.submission_id;
