@@ -2,10 +2,10 @@
   <dashboard-layout class=" pt-5">
     <template v-slot:content>
       <div class="px-5">
-        <div class="w-3/4">
-          <icon-base width="190" height="70" icon-name="app-logo" view-box="0 0 320 18">
-            <app-logo/>
-          </icon-base>
+        <div class="w-2/7">
+          <icon-base-two>
+            <AppLogo/>
+          </icon-base-two>
         </div>
         <user-profile/>
       </div>
@@ -40,6 +40,7 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import AssignmentCard from "@/components/AssignmentCard";
 import StudentRepository from "@/repositories/StudentRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "StudentHome",
@@ -78,7 +79,9 @@ export default {
   mounted() {
     this.getAssignments()
   },
-  components: {AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase},
+  components: {
+    IconBaseTwo,
+    AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase},
 }
 </script>
 
