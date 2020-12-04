@@ -44,7 +44,11 @@ export default {
             formData.append('written_answer', answerContent)
         }
         if (answerType === 'snapped') {
-            answerContent.forEach(function (file, index) {
+
+            // Process toRemove Snapped Answers
+            formData.append('to_remove', answerContent.toRemove.join())
+
+            answerContent.toAdd.forEach(function (file, index) {
                 formData.append(`snap_answer[${index}]`, file);
             });
         }
