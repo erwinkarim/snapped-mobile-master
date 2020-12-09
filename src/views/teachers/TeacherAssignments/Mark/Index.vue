@@ -84,6 +84,7 @@
           @editedSnappedAnswer="handleEditedSnappedAnswer"
 
           :now-loading-sticker="nowLoadingSticker"
+          :now-loading-text-bar="nowLoadingTextBar"
       />
     </div>
 
@@ -97,6 +98,7 @@
         @toggleMarkingMode="handleToggleMarkingMode"
         @toggleStickerBar="handleToggleStickerBar"
         @loadSticker="handleLoadSticker"
+        @loadTextBar="handleLoadTextBar"
         @saveEditedSnappedAnswer="handleSaveEditedSnappedAnswer"
         @submit="submit"
     />
@@ -157,6 +159,7 @@ export default {
 
       nowMarking: null,
       nowLoadingSticker: null,
+      nowLoadingTextBar: false,
 
       submission: {
         type: '',
@@ -270,6 +273,10 @@ export default {
       this.nowLoadingSticker = stickerName;
       this.toggleStickerBar();
     },
+    handleLoadTextBar() {
+      this.nowLoadingTextBar = !this.nowLoadingTextBar;
+    },
+
     toggleStickerBar() {
       let value = !this.states.isSelectingSticker;
       this.resetState();

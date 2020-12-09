@@ -45,12 +45,15 @@ export default {
   },
   methods: {
     getTeachers() {
-      StudentRepository.getClassTeachers()
+      StudentRepository.getClassTeachers({
+        pageNum: 1,
+        perPage: 50
+      })
           .then(response => {
             let data = response.data;
 
-            this.teachers = data.teachers;
-            this.className = data.class_name;
+            this.teachers = data.data;
+            this.className = data.meta.class_name;
           })
     }
   },

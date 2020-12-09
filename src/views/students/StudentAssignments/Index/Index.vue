@@ -30,7 +30,7 @@
           <div class="flex flex-row justify-between items-center">
             <section-title title="Assignments List"/>
             <div class="text-purple-primary">
-              {{selectedDate}}
+              {{ selectedDate }}
             </div>
           </div>
 
@@ -143,6 +143,11 @@ export default {
 
       assignments: [],
 
+      pagination: {
+        pageNum: 1,
+        perPage: 50
+      },
+
       filters: {
         date: null,
         month: null,
@@ -159,6 +164,8 @@ export default {
     },
     requestFilter() {
       return {
+        pageNum: this.pagination.pageNum,
+        perPage: this.pagination.perPage,
         is_active: false,
         date: this.filters.date,
         month: this.filters.month,
@@ -167,9 +174,9 @@ export default {
       }
     }
   },
-  watch:{
+  watch: {
     'filters.date': function (newSelect) {
-      if (newSelect != null){
+      if (newSelect != null) {
         this.fetchData()
       }
     }

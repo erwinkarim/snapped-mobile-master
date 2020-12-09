@@ -2,13 +2,26 @@ import Repository from "@/repositories/Repository";
 
 const resource = '/assignments'
 
-export default  {
+export default {
 
 
-    all({is_active: isActive, date: date, month: month, year: year, subjects: subjects}) {
+    all({
+            pageNum: pageNum,
+            perPage: perPage,
+            is_active: isActive,
+            date: date,
+            month: month,
+            year: year,
+            subjects: subjects
+        }) {
+        
+        if(!pageNum) pageNum = 1;
+        if(!perPage) perPage = 50;
 
-        return Repository.post('/assignments', {
+        return Repository.post(`/assignments?page=${pageNum}`, {
+            pageNum: pageNum,
             filters: {
+                per_page: perPage,
                 is_active: isActive,
                 date: date,
                 month: month,
@@ -34,7 +47,7 @@ export default  {
         return Repository.get(`${resource}/${assignmentID}/submissions`)
     },
 
-    getDueDates(){
+    getDueDates() {
         return Repository.get('/duedates')
     }
 }

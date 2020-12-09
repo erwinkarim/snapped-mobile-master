@@ -13,6 +13,7 @@
     <g :style="{fill: getStrokeColor}" :fill="iconColor">
       <slot/>
     </g>
+
   </svg>
 </template>
 
