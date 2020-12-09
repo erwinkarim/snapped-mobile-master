@@ -30,8 +30,12 @@ export default {
         return Repository.get(`${resource}/class-ranking`)
     },
 
-    getClassTeachers() {
-        return Repository.get(`${resource}/teachers`)
+    getClassTeachers({pageNum: pageNum, perPage: perPage}) {
+
+        if(!pageNum) pageNum = 1;
+        if(!perPage) perPage = 50;
+
+        return Repository.get(`${resource}/teachers?page=${pageNum}&per_page=${perPage}`)
     },
 
     getClassmates() {

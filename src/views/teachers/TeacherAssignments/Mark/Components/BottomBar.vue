@@ -34,7 +34,7 @@
               </button>
             </div>
             <div class="w-1/3 px-1">
-              <button
+              <button @click="loadTextBar"
                   class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">
                 <div class="w-5/7">
                   Text
@@ -118,6 +118,9 @@ export default {
     },
     toggleStickerBar() {
       this.$emit('toggleStickerBar')
+    },
+    loadTextBar(){
+      this.$emit('loadTextBar')
     },
     handleSelectedSticker(stickerName) {
       this.$emit('loadSticker', stickerName)

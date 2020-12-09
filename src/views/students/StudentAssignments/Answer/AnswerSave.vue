@@ -12,7 +12,7 @@
           <nav-back v-if="isMainPage"
                     type="cancel"
                     :to="{name: 'student.assignments.show'}"
-                    class="w-2/3" stroke-color="red-primary"
+                    class="w-2/7" stroke-color="red-primary"
           />
 
           <div @click="toggleSnappedAnswerPreview"
@@ -118,10 +118,13 @@
     </template>
 
     <template slot="content" v-if="isPreviewingSnappedAnswer">
-      <div
-          class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-        <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]"/>
+      <div class="pb-16/9  h-20 bg-white">
+        <div
+            class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
+          <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]"/>
+        </div>
       </div>
+
     </template>
 
 

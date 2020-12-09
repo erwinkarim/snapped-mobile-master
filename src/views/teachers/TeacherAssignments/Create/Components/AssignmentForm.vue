@@ -46,7 +46,7 @@
       <page-header-three v-if="isPreviewing" class="px-2">
         <template v-slot:leftAction>
           <div @click="previewAssignment">
-            <icon-base-two class="w-2/3">
+            <icon-base-two class="w-2/7 ml-2">
               <arrow-back-icon stroke-color="purple-primary"/>
             </icon-base-two>
           </div>
@@ -226,10 +226,10 @@
         </div>
       </div>
 
-      <!-- PREVIEW IMAGE -->
-      <div class="bg-white px-6 pb-16 pt-4 flex content-center" v-if="isPreviewing">
-        <div class="flex content-center mt-20">
-          <img :src="previewImage" class="preview top-12">
+      <div class="pb-16/9 mt-6 bg-white" v-if="isPreviewing">
+        <div
+            class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
+          <img :src="previewImage"/>
         </div>
       </div>
 
