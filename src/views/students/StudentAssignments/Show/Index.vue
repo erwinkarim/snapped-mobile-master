@@ -103,7 +103,7 @@
 
         <div v-else-if="hasMarkedSubmission">
           <router-link :to="{name: 'student.marked.show', params: {marksID: studentSubmission.marks_id}}"
-              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+                       class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
             View Marking
           </router-link>
         </div>
@@ -185,7 +185,7 @@ export default {
       },
       studentSubmission: {
         id: null,
-        marks: null
+        marks_id: null
       },
       submissions: [],
       meta: {
@@ -225,6 +225,7 @@ export default {
   },
   methods: {
     fetchData() {
+
       AssignmentRepository.find(this.assignmentID)
           .then(response => {
             let data = response.data;
