@@ -4,6 +4,7 @@ import AnswerWrite from "@/views/students/StudentAssignments/Answer/AnswerWrite"
 import AnswerSave from "@/views/students/StudentAssignments/Answer/AnswerSave";
 import App from "@/App";
 import AnswerEdit from "@/views/students/StudentAssignments/Answer/AnswerEdit";
+import MarkedShow from "@/views/students/StudentAssignments/Marked/Index";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -46,6 +47,13 @@ export default {
                         },
 
                     ]
+                },
+                {
+                    path: 'marked/:marksID',
+                    name: 'student.marked.show',
+                    component: MarkedShow,
+                    meta: studentAccessControlMeta,
+                    props: true,
                 },
                 {
                     path: 'answer/:submissionID',

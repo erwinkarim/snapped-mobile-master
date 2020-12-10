@@ -102,10 +102,10 @@
         </div>
 
         <div v-else-if="hasMarkedSubmission">
-          <div
+          <router-link :to="{name: 'student.marked.show', params: {marksID: studentSubmission.marks_id}}"
               class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-            Marked
-          </div>
+            View Marking
+          </router-link>
         </div>
 
         <div v-else class="w-full flex flex-row">
@@ -204,7 +204,7 @@ export default {
     },
 
     hasEditableSubmission: function () {
-      return this.studentSubmission.id !== null && this.studentSubmission.marks === null;
+      return this.studentSubmission.id !== null && this.studentSubmission.marks_id === null;
     },
 
     isPastDueDate() {
@@ -212,7 +212,7 @@ export default {
     },
 
     hasMarkedSubmission: function () {
-      return this.studentSubmission.id !== null && this.studentSubmission.marks !== null;
+      return this.studentSubmission.id !== null && this.studentSubmission.marks_id !== null;
     },
 
     assignmentDetails() {
@@ -267,7 +267,7 @@ export default {
 
               // Set student's submission as marked if Mark exists
               if (submission.submission_id === this.studentSubmission.id) {
-                submission.marks_id ? this.studentSubmission.marks = submission.marks_id : null;
+                submission.marks_id ? this.studentSubmission.marks_id = submission.marks_id : null;
               }
               this.submissions.push(details)
             }
