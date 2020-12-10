@@ -40,7 +40,8 @@ export default {
   props: {
     states: Object,
     nowMarking: Object,
-    nowLoadingSticker: String
+    nowLoadingSticker: String,
+    nowLoadingTextBar: Boolean
   },
   data() {
     return {
@@ -62,7 +63,8 @@ export default {
   },
   watch: {
     'states.isSelectingSticker': 'loadSticker',
-    'states.isSavingEditedSnappedAnswer': 'saveEditedSnappedAnswer'
+    'states.isSavingEditedSnappedAnswer': 'saveEditedSnappedAnswer',
+    'nowLoadingTextBar' : 'loadTextBar'
   },
   computed: {
     backgroundImageScaleFactor() {
@@ -113,6 +115,20 @@ export default {
           this.canvasVue.add(obj).renderAll();
         });
       }
+    },
+    loadTextBar() {
+      let textBox = new fabric.Textbox('test test', {
+        originX: "center",
+        originY: "bottom",
+        textAlign: "center",
+        fontFamily: "Segoe UI",
+        top: this.canvasVue.height / 2,
+        left: this.canvasVue.width / 2,
+        fontSize: 24,
+        fill: "#000000"
+      });
+
+      this.canvasVue.add(textBox).setActiveObject(textBox);
     },
     saveEditedSnappedAnswer() {
       this.$emit('editedSnappedAnswer', {

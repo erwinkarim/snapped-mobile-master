@@ -59,14 +59,20 @@ export default {
     '$route': 'fetchData',
     'search': 'searchName'
   },
+
   methods: {
 
     fetchData() {
       this.error = this.students = null
       this.loading = true
 
-      TeacherRepository.getTeacherStudents({search: this.search})
+      TeacherRepository.getTeacherStudents({
+        pageNum: 1,
+        perPage: 50,
+        search: this.search
+      })
           .then(response => {
+
             this.students = response.data.data
             this.loading = false
           })

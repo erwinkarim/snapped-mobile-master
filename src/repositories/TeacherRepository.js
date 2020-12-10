@@ -36,10 +36,15 @@ export default {
         })
     },
 
-    getTeacherStudents({search: studentName}) {
-        return Repository.post(`${resource}/students`,{
+    getTeacherStudents({pageNum: pageNum, perPage: perPage, search: studentName}) {
+
+        if(!pageNum) pageNum = 1;
+        if(!perPage) perPage = 50;
+
+        return Repository.post(`${resource}/students?page=${pageNum}`,{
             filters: {
-                search: studentName
+                search: studentName,
+                per_page: perPage
             }
         })
     },

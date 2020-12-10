@@ -46,7 +46,7 @@
       <page-header-three v-if="isPreviewing" class="px-2">
         <template v-slot:leftAction>
           <div @click="previewAssignment">
-            <icon-base-two class="w-2/3">
+            <icon-base-two class="w-2/7 ml-2">
               <arrow-back-icon stroke-color="purple-primary"/>
             </icon-base-two>
           </div>
@@ -100,27 +100,31 @@
                     </span>
           </button>
 
-          <div v-if="!noDuration"
-               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-            <div class="text-left text-purple-secondary place-self-start">
-              <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">
-                {{ duration || '' }}
-              </button>
+          <div v-if="due_datetime" @click="toggleDuration = !toggleDuration"
+               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-3 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+            <div class="w-2 text-purple-secondary">
+<!--              <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">-->
+<!--                {{ duration || '' }}-->
+                <p>{{ format_date2(due_datetime) }}</p>
+<!--              </button>-->
+            </div>
+            <div class="w-2 text-purple-secondary">
+              <p>{{ format_time(due_datetime) }}</p>
             </div>
             <div>
-              <button @click="toggleDuration = !toggleDuration">
-                <icon-base-two class="align-center float-right w-1/8 mr-3">
+              <button>
+                <icon-base-two class="align-center float-right w-1/5 mr-3">
                   <clock-icon/>
                 </icon-base-two>
               </button>
             </div>
           </div>
 
-          <div v-if="noDuration"
+          <div v-if="!due_datetime"
                class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
             <div class="text-left place-self-start">
               <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">
-                Set Duration
+                Set Due Date
               </button>
             </div>
             <div>
@@ -222,10 +226,10 @@
         </div>
       </div>
 
-      <!-- PREVIEW IMAGE -->
-      <div class="bg-white px-6 pb-16 pt-4 flex content-center" v-if="isPreviewing">
-        <div class="flex content-center mt-20">
-          <img :src="previewImage" class="preview top-12">
+      <div class="pb-16/9 mt-6 bg-white" v-if="isPreviewing">
+        <div
+            class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
+          <img :src="previewImage"/>
         </div>
       </div>
 
@@ -260,33 +264,47 @@
       <div v-if="toggleDuration" @click.self="closeToggleDuration"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
         <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">
-          <h3 slot="title" class="font-bold">Set Duration</h3>
-          <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">
-            <div>
-              <label class="text-lg font-bold">Day</label>
-              <input v-model="durationDay" type="number" min="0" max="100"
-                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"
-                     name="custom-input-number" value="0">
-            </div>
-            <div>
-              <label class="text-lg font-bold">Hour</label>
-              <input v-model="durationHour" type="number" min="0" max="100"
-                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"
-                     name="custom-input-number" value="0">
-            </div>
-            <div>
-              <label class="text-lg font-bold">Minute</label>
-              <input v-model="durationMinute" type="number" min="0" max="100" placeholder="0"
-                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"
-                     name="custom-input-number" value="0">
-            </div>
+          <h3 slot="title" class="font-bold">Set Due Date & Time</h3>
+          <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
+              <v-date-picker class="place-self-center" :min-date="new Date()" v-model="due_datetime" mode="dateTime"/>
           </div>
           <span slot="button">
-                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"
+                    <button class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
                             @click="closeToggleDuration">Okay</button>
                 </span>
         </modal>
       </div>
+<!--      Commented out Days, Hours, Minute-->
+<!--      <div v-if="toggleDuration" @click.self="closeToggleDuration"-->
+<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
+<!--        <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">-->
+<!--          <h3 slot="title" class="font-bold">Set Duration</h3>-->
+<!--          <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">-->
+<!--            <div>-->
+<!--              <label class="text-lg font-bold">Day</label>-->
+<!--              <input v-model="durationDay" type="number" min="0" max="100"-->
+<!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
+<!--                     name="custom-input-number" value="0">-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              <label class="text-lg font-bold">Hour</label>-->
+<!--              <input v-model="durationHour" type="number" min="0" max="100"-->
+<!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
+<!--                     name="custom-input-number" value="0">-->
+<!--            </div>-->
+<!--            <div>-->
+<!--              <label class="text-lg font-bold">Minute</label>-->
+<!--              <input v-model="durationMinute" type="number" min="0" max="100" placeholder="0"-->
+<!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
+<!--                     name="custom-input-number" value="0">-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <span slot="button">-->
+<!--                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
+<!--                            @click="closeToggleDuration">Okay</button>-->
+<!--                </span>-->
+<!--        </modal>-->
+<!--      </div>-->
 
       <!--  Modal Published   -->
       <div v-if="published" @click.self="published = !published"
@@ -420,6 +438,8 @@ export default {
       masks: {
         input: 'DD-MM-YYYY h:mm A',
       },
+      today: new Date,
+      due_datetime:'',
       durationDay: 0,
       durationHour: 0,
       durationMinute: 0,
@@ -635,6 +655,11 @@ export default {
       this.images.splice(key, 1);
       this.snappedQuestions.splice(key, 1);
     },
+    format_date2(value){
+      if (value) {
+        return moment(String(value)).format('DD/MM/YYYY')
+      }
+    },
     format_date(value) {
       if (value) {
         return moment(String(value)).format('YYYY-MM-DD HH:mm:ss')
@@ -642,7 +667,7 @@ export default {
     },
     format_time(value) {
       if (value) {
-        return moment(String(value)).format('hh:mm:ss')
+        return moment(String(value)).format('HH:mm')
       }
     },
     checkForm: function (e) {
@@ -675,12 +700,12 @@ export default {
       this.checkForm();
       let formData = new FormData();
 
-      let dayInMinute = this.durationDay * 1440
-      let hourInMinute = this.durationHour * 60
-      //in minutes
-      let totalDuration = dayInMinute + hourInMinute + this.durationMinute
-
-      let due_datetime = moment(this.published_at).add(totalDuration, 'm').toDate();
+      // let dayInMinute = this.durationDay * 1440
+      // let hourInMinute = this.durationHour * 60
+      // //in minutes
+      // let totalDuration = dayInMinute + hourInMinute + this.durationMinute
+      //
+      // let due_datetime = moment(this.published_at).add(totalDuration, 'm').toDate();
 
       formData.append('teacher_id', this.teacherID);
       formData.append('subject_id', this.subject_id);
@@ -688,7 +713,7 @@ export default {
       formData.append('title', this.title);
       formData.append('written_question_title', this.titleQuestion);
       formData.append('written_description', this.descriptionQuestion);
-      formData.append('due_datetime', this.format_date(due_datetime));
+      formData.append('due_datetime', this.format_date(this.due_datetime));
       formData.append('published_at', this.format_date(this.published_at));
       formData.append('remarks', this.remarks);
 
@@ -742,12 +767,6 @@ export default {
     },
   },
   mounted() {
-    // window.onpopstate = function(event) {
-    // alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
-
-    //     this.images = this.imagesConfirmed
-    //
-    // },
     this.getDetails()
     this.getSubjects()
     this.getClasses()
