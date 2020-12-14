@@ -37,6 +37,25 @@
         </modal>
       </div>
 
+      <!--  MODAL: DELETE   -->
+      <div v-if="isShowingDeleteModal" @click.self="toggleDeleteModal"
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+        <modal
+               modal-type="no-icon"
+               class="w-4/5 "
+        >
+          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Delete this assignment</h3>
+          <p slot="message">
+            Are you sure?
+          </p>
+          <template slot="button">
+            <div @click="deleteAssignment">
+              DELETE THIS
+            </div>
+          </template>
+        </modal>
+      </div>
+
       <!--  MODAL: SELECT DUE DATE -->
       <div v-if="isSelectingDueDate" @click.self="closeSetDueDateModal"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
@@ -84,12 +103,15 @@
           </div>
         </div>
 
-
       </div>
 
     </template>
 
     <template v-slot:bottomBar>
+      <button @click="toggleDeleteModal"
+              class="w-full font-bold rounded-full text-white text-sm bg-red-primary border-2 border-red-primary py-3 px-1 flex flex-row justify-center mr-2">
+        Delete
+      </button>
       <button @click="submit"
               class="w-full font-bold rounded-full text-purple-primary text-sm bg-white border-2 border-purple-primary py-3 px-1 flex flex-row justify-center">
         Update
@@ -107,6 +129,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ClockIcon from "@/components/icons/ClockIcon";
 import moment from "moment";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
+import router from "@/router";
 
 export default {
   name: "Index",
@@ -119,6 +142,8 @@ export default {
       // states
       isSelectingDueDate: false,
       isShowingSuccessModal: false,
+      isShowingDeleteModal: false,
+      isDeleted: false,
 
       // models
       due_datetime: ''
@@ -135,11 +160,24 @@ export default {
               }
             })
       }
+    },
 
+    deleteAssignment () {
+      AssignmentRepository.delete(this.assignmentID)
+          .then(response => {
+            if (response.data.messageType === 'success') {
+              this.toggleDeleteModal();
+              router.push({ name: 'teacher.assignments'})
+            }
+          })
     },
 
     getHumanDate(datetime) {
       return moment(datetime, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY")
+    },
+
+    toggleDeleteModal() {
+      this.isShowingDeleteModal = !this.isShowingDeleteModal
     },
 
     closeSetDueDateModal() {

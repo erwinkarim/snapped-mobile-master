@@ -55,5 +55,10 @@ export default {
         return Repository.put(`${resource}/${assignmentID}/update`, {
             due_datetime: dueDateTime
         });
+    },
+
+
+    delete(assignmentID) {
+        return Repository.delete(`${resource}/${assignmentID}/delete`);
     }
 }
