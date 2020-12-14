@@ -9,6 +9,7 @@ import App from "@/App";
 import AssignmentMarked from "@/views/teachers/TeacherAssignments/Marked/Index";
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
+import AssignmentEdit from "@/views/teachers/TeacherAssignments/Edit/Index";
 
 const teacherAccessControlMeta = {
     checkAuth: 'true',
@@ -40,6 +41,13 @@ export default {
                     path: 'show',
                     name: 'teacher.assignments.show',
                     component: AssignmentDetails,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
+                {
+                    path: 'edit',
+                    name: 'teacher.assignments.edit',
+                    component: AssignmentEdit,
                     meta: teacherAccessControlMeta,
                     props: true,
                 },
