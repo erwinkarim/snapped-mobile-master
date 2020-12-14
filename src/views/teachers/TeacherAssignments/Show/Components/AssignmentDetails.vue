@@ -13,6 +13,14 @@
               <template v-slot:leftAction>
                 <nav-back class="w-2/7" :to="{name: 'teacher.assignments'}" stroke-color="white"/>
               </template>
+
+              <template v-slot:rightAction>
+                <router-link :to="{name : 'teacher.assignments.edit'}"
+                             class="flex flex-row justify-end items-center font-semibold text-white text-right pr-5"
+                >
+                  Edit
+                </router-link>
+              </template>
             </page-header-three>
             <!-- TIMER -->
             <div class="w-full flex flex-row justify-center items-center mt-7">
@@ -33,6 +41,7 @@
                 </div>
               </div>
             </div>
+
 
             <!-- Assignment Detail Card -->
             <assignment-question-card
