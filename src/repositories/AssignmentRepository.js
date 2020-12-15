@@ -14,9 +14,9 @@ export default {
             year: year,
             subjects: subjects
         }) {
-        
-        if(!pageNum) pageNum = 1;
-        if(!perPage) perPage = 50;
+
+        if (!pageNum) pageNum = 1;
+        if (!perPage) perPage = 50;
 
         return Repository.post(`/assignments?page=${pageNum}`, {
             pageNum: pageNum,
@@ -49,5 +49,16 @@ export default {
 
     getDueDates() {
         return Repository.get('/duedates')
+    },
+
+    update(assignmentID, dueDateTime) {
+        return Repository.put(`${resource}/${assignmentID}/update`, {
+            due_datetime: dueDateTime
+        });
+    },
+
+
+    delete(assignmentID) {
+        return Repository.delete(`${resource}/${assignmentID}/delete`);
     }
 }

@@ -73,6 +73,10 @@ export default {
         value = ' bg-red-primary text-white ';
       }
 
+      if (this.isNoIcon) {
+        value = '  bg-red-primary text-white'
+      }
+
       return value;
     },
     iconLoader() {
