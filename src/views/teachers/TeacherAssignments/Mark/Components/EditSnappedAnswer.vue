@@ -125,7 +125,7 @@ export default {
         top: this.canvasVue.height / 2,
         left: this.canvasVue.width / 2,
         fontSize: 24,
-        fill: "#000000"
+        fill: "#F53B57"
       });
 
       this.canvasVue.add(textBox).setActiveObject(textBox);
