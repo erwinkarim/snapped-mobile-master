@@ -2,16 +2,16 @@
   <div :class="containerClass" class="h-screen">
 
     <!-- OVERLAYS -->
-    <div v-if="states.isShowingModal" @click="closeModalMode()"
+    <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="closeModalMode()"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
     </div>
-    <div v-if="states.isSelectingSticker" @click="toggleStickerBar"
+    <div v-if="$store.state.teacherMarking.states.isSelectingSticker" @click="toggleStickerBar"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-filter-blue bg-opacity-40 ">
     </div>
 
 
     <!-- MODAL -->
-    <div v-if="states.isShowingModal"
+    <div v-if="$store.state.teacherMarking.states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
       <modal modal-type="error"
              @toggleModal="closeModalMode()"
@@ -34,25 +34,25 @@
     >
 
       <template v-slot:leftAction>
-        <nav-back v-if="states.isMain"
+        <nav-back v-if="$store.state.teacherMarking.states.isMain"
                   :to="{name: 'teacher.assignments.show'}"
                   class="w-1/4"
                   :stroke-color="navBackColor"
         />
 
-        <div @click="togglePreviewMode" v-if="states.isPreviewing">
+        <div @click="togglePreviewMode" v-if="$store.state.teacherMarking.states.isPreviewing">
           <icon-base-two class="w-1/4 ml-6">
             <arrow-back-icon :stroke-color="navBackColor"/>
           </icon-base-two>
         </div>
       </template>
 
-      <template v-slot:title v-if="states.isPreviewing">
+      <template v-slot:title v-if="$store.state.teacherMarking.states.isPreviewing">
         Answer Preview
       </template>
 
       <template v-slot:rightAction>
-        <div v-if="states.isMain" class="flex flex-row justify-end items-center mr-5">
+        <div v-if="$store.state.teacherMarking.states.isMain" class="flex flex-row justify-end items-center mr-5">
           <div @click="togglePreviewMode" :to="{name: 'student.class.classmates'}" class="w-2/7 ">
             <icon-base-two>
               <expand-image-icon/>
@@ -65,43 +65,40 @@
 
     <!-- CONTENT -->
     <div class="relative">
-      <router-view
+<!--      <router-view-->
 
-          :states="states"
-          :isMarkedAssignment="isMarkedAssignment"
+<!--          :assignment-details="assignmentDetails"-->
 
-          :assignment-details="assignmentDetails"
+<!--          @feedback="handleFeedback"-->
+<!--          :feedback="submission.feedback"-->
 
-          @feedback="handleFeedback"
-          :feedback="submission.feedback"
+<!--          @marks="handleMark"-->
+<!--          :new-marks="submission.marks"-->
 
-          @marks="handleMark"
-          :new-marks="submission.marks"
+<!--          @nowMarking="handleNowMarking"-->
+<!--          :now-marking="nowMarking"-->
 
-          @nowMarking="handleNowMarking"
-          :now-marking="nowMarking"
+<!--          @editedSnappedAnswer="handleEditedSnappedAnswer"-->
 
-          @editedSnappedAnswer="handleEditedSnappedAnswer"
-
-          :now-loading-sticker="nowLoadingSticker"
-          :now-loading-text-bar="nowLoadingTextBar"
-      />
+<!--          :now-loading-sticker="nowLoadingSticker"-->
+<!--          :now-loading-text-bar="nowLoadingTextBar"-->
+<!--      />-->
+      <router-view/>
     </div>
 
 
     <!-- BOTTOM BAR -->
-    <bottom-bar
-        :states="states"
-        :isMarkedAssignment="isMarkedAssignment"
+<!--    <bottom-bar-->
+<!--        :states="states"-->
 
-        @togglePreviewMode="handleTogglePreviewMode"
-        @toggleMarkingMode="handleToggleMarkingMode"
-        @toggleStickerBar="handleToggleStickerBar"
-        @loadSticker="handleLoadSticker"
-        @loadTextBar="handleLoadTextBar"
-        @saveEditedSnappedAnswer="handleSaveEditedSnappedAnswer"
-        @submit="submit"
-    />
+<!--        @togglePreviewMode="handleTogglePreviewMode"-->
+<!--        @toggleMarkingMode="handleToggleMarkingMode"-->
+<!--        @toggleStickerBar="handleToggleStickerBar"-->
+<!--        @loadSticker="handleLoadSticker"-->
+<!--        @loadTextBar="handleLoadTextBar"-->
+<!--        @saveEditedSnappedAnswer="handleSaveEditedSnappedAnswer"-->
+<!--        @submit="submit"-->
+<!--    />-->
 
   </div>
 </template>
@@ -128,16 +125,16 @@ export default {
   data() {
     return {
       // States
-      states: {
-        isLoading: true,
-        isMain: true,
-        isPreviewing: false,
-        isMarking: false,
-        isSelectingSticker: false,
-        isWritingFeedback: false,
-        isShowingModal: false,
-        isSavingEditedSnappedAnswer: false
-      },
+      // states: {
+      //   isLoading: true,
+      //   isMain: true,
+      //   isPreviewing: false,
+      //   isMarking: false,
+      //   isSelectingSticker: false,
+      //   isWritingFeedback: false,
+      //   isShowingModal: false,
+      //   isSavingEditedSnappedAnswer: false
+      // },
 
       // Assignment Details
       assignmentDetails: {
@@ -179,7 +176,7 @@ export default {
     containerClass: function () {
       let value = 'bg-white';
 
-      if (this.states.isMarking) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         value = 'bg-black-primary';
       }
 
@@ -190,23 +187,23 @@ export default {
 
       let value = 'bg-black-primary';
 
-      if (this.states.isPreviewing || this.states.isWritingFeedback) {
+      if (this.$store.state.teacherMarking.states.isPreviewing || this.$store.state.teacherMarking.states.isWritingFeedback) {
         value = 'bg-white'
       }
       return value;
     },
 
     navBackColor: function () {
-      if (this.states.isPreviewing) {
+      if (this.$store.state.teacherMarking.states.isPreviewing) {
         return 'purple-primary'
       } else {
         return 'white'
       }
     },
 
-    isMarkedAssignment: function () {
-      return this.assignmentDetails.marksID !== null && this.assignmentDetails.marksID !== undefined;
-    },
+    // isMarkedAssignment: function () {
+    //   return this.assignmentDetails.marksID !== null && this.assignmentDetails.marksID !== undefined;
+    // },
 
   },
   methods: {
@@ -216,12 +213,12 @@ export default {
 
       if (path === 'teacher.assignments.marking.details') {
         this.resetState();
-        this.states.isMain = true;
+        this.$store.state.teacherMarking.states.isMain = true;
       }
 
       if (path === 'teacher.assignments.marking.feedback') {
         this.resetState();
-        this.states.isWritingFeedback = true;
+        this.$store.state.teacherMarking.states.isWritingFeedback = true;
       }
 
     },
@@ -236,7 +233,7 @@ export default {
 
     handleNowMarking(nowMarking) {
       this.resetState();
-      this.states.isMarking = true;
+      this.$store.state.teacherMarking.states.isMarking = true;
 
       this.nowMarking = nowMarking;
     },
@@ -246,23 +243,28 @@ export default {
       this.togglePreviewMode()
     },
     togglePreviewMode() {
-      this.states.isPreviewing = !this.states.isPreviewing;
-      this.states.isMain = !this.states.isMain;
+      this.$store.commit('teacherMarking/togglePreviewMode')
 
-      if (this.states.isPreviewing) {
-        this.states.isMarking = false;
-      }
+      console.log(this.$store.state.teacherMarking.states)
     },
+    // togglePreviewMode() {
+    //   this.$store.state.teacherMarking.states.isPreviewing = !this.$store.state.teacherMarking.states.isPreviewing;
+    //   this.$store.state.teacherMarking.states.isMain = !this.$store.state.teacherMarking.states.isMain;
+    //
+    //   if (this.$store.state.teacherMarking.states.isPreviewing) {
+    //     this.$store.state.teacherMarking.states.isMarking = false;
+    //   }
+    // },
 
     handleToggleMarkingMode() {
       this.resetState();
-      this.states.isMain = true
+      this.$store.state.teacherMarking.states.isMain = true
     },
 
     // MODE: MODAL
     closeModalMode() {
       this.resetState()
-      this.states.isMain = true;
+      this.$store.state.teacherMarking.states.isMain = true;
     },
 
     // MODE: STICKER
@@ -278,16 +280,16 @@ export default {
     },
 
     toggleStickerBar() {
-      let value = !this.states.isSelectingSticker;
+      let value = !this.$store.state.teacherMarking.states.isSelectingSticker;
       this.resetState();
-      this.states.isMarking = true;
-      this.states.isSelectingSticker = value;
+      this.$store.state.teacherMarking.states.isMarking = true;
+      this.$store.state.teacherMarking.states.isSelectingSticker = value;
     },
 
     handleSaveEditedSnappedAnswer() {
       this.resetState();
-      this.states.isMain = true
-      this.states.isSavingEditedSnappedAnswer = true;
+      this.$store.state.teacherMarking.states.isMain = true
+      this.$store.state.teacherMarking.states.isSavingEditedSnappedAnswer = true;
     },
 
     handleEditedSnappedAnswer(marked) {
@@ -296,51 +298,51 @@ export default {
     },
 
     // SUBMISSION DETAILS
-    fetchData() {
-
-      SubmissionRepository.find(this.submissionID)
-          .then(response => {
-
-
-            let data = response.data.submission_details;
-
-            this.assignmentDetails.submissionID = data.submission_id;
-            this.assignmentDetails.studentID = data.student_id;
-            this.assignmentDetails.studentName = data.student_name;
-            this.assignmentDetails.assignmentID = data.assignment_id;
-            this.assignmentDetails.assignmentTitle = data.assignment_title;
-            this.assignmentDetails.writtenAnswer = data.written_answer;
-            this.assignmentDetails.createdAt = data.created_at;
-            this.assignmentDetails.updatedAt = data.updated_at;
-            this.assignmentDetails.submittedTime = data.submission_time;
-            this.assignmentDetails.submittedDate = data.submission_date;
-            this.assignmentDetails.marksID = data.marks_id;
-            this.assignmentDetails.marks = data.marks;
-
-            if (data.snap_answer) {
-              this.submission.type = 'snapped';
-              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
-            }
-
-            if (data.written_answer) {
-              this.submission.type = 'written';
-            }
-
-            if (data.marking_picture_url) {
-              this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
-            }
-
-            this.states.isLoading = false;
-
-          });
-    },
+    // fetchData() {
+    //
+    //   SubmissionRepository.find(this.submissionID)
+    //       .then(response => {
+    //
+    //
+    //         let data = response.data.submission_details;
+    //
+    //         this.assignmentDetails.submissionID = data.submission_id;
+    //         this.assignmentDetails.studentID = data.student_id;
+    //         this.assignmentDetails.studentName = data.student_name;
+    //         this.assignmentDetails.assignmentID = data.assignment_id;
+    //         this.assignmentDetails.assignmentTitle = data.assignment_title;
+    //         this.assignmentDetails.writtenAnswer = data.written_answer;
+    //         this.assignmentDetails.createdAt = data.created_at;
+    //         this.assignmentDetails.updatedAt = data.updated_at;
+    //         this.assignmentDetails.submittedTime = data.submission_time;
+    //         this.assignmentDetails.submittedDate = data.submission_date;
+    //         this.assignmentDetails.marksID = data.marks_id;
+    //         this.assignmentDetails.marks = data.marks;
+    //
+    //         if (data.snap_answer) {
+    //           this.submission.type = 'snapped';
+    //           this.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
+    //         }
+    //
+    //         if (data.written_answer) {
+    //           this.submission.type = 'written';
+    //         }
+    //
+    //         if (data.marking_picture_url) {
+    //           this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
+    //         }
+    //
+    //         this.$store.state.teacherMarking.states.isLoading = false;
+    //
+    //       });
+    // },
 
 
     submit() {
       if (this.submission.marks === null || this.submission.marks === undefined) {
         this.resetState()
-        this.states.isMain = true;
-        this.states.isShowingModal = true;
+        this.$store.state.teacherMarking.states.isMain = true;
+        this.$store.state.teacherMarking.states.isShowingModal = true;
       } else {
 
         MarksRepository.store(
@@ -368,18 +370,20 @@ export default {
       }
     },
     resetState() {
-      this.states.isLoading = false;
-      this.states.isMain = false;
-      this.states.isPreviewing = false;
-      this.states.isMarking = false;
-      this.states.isSelectingSticker = false;
-      this.states.isWritingFeedback = false;
-      this.states.isShowingModal = false
-      this.states.isSavingEditedSnappedAnswer = false;
+      this.$store.state.teacherMarking.states.isLoading = false;
+      this.$store.state.teacherMarking.states.isMain = false;
+      this.$store.state.teacherMarking.states.isPreviewing = false;
+      this.$store.state.teacherMarking.states.isMarking = false;
+      this.$store.state.teacherMarking.states.isSelectingSticker = false;
+      this.$store.state.teacherMarking.states.isWritingFeedback = false;
+      this.$store.state.teacherMarking.states.isShowingModal = false
+      this.$store.state.teacherMarking.states.isSavingEditedSnappedAnswer = false;
     }
   },
   mounted() {
-    this.fetchData()
+    this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
+    // this.$store.dispatch('teacherMarking/test')
+
   },
   components: {Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree},
 

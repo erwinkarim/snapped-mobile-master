@@ -8,25 +8,20 @@
 
         <div :class="imagePreviewClass" class="pt-4 z-10">
 
-          <answer-preview-swiper
-              v-if="(hasSnappedAnswer || hasMarkedSnappedAnswer) && !isMarking.status"
-              :is-previewing="states.isPreviewing"
-              :is-marked-assignment="isMarkedAssignment"
-              :images="images"
-              @nowMarking="enterMarkingMode"
-          />
+          <answer-preview-swiper v-if="$store.getters['teacherMarking/hasSnappedAnswer']" />
+
+<!--
+          :is-previewing="states.isPreviewing"
+              :is-marked-assignment="$store.getters['teacherMarking/isMarkedAssignment']"
+              -->
 
           <written-answer-preview
-              v-if="hasWrittenAnswer && !isMarking.status"
-              :is-previewing="states.isPreviewing"
-              :answer="assignmentDetails.writtenAnswer"
+              v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !isMarking.status"
           />
         </div>
 
         <!-- ASSIGNMENT DETAILS -->
         <assignment-info
-            :show="states.isMain"
-            :details="assignmentDetails"
             :new-marks="newMarks"
         />
       </div>
@@ -56,9 +51,9 @@ export default {
   props: {
     submissionID: [String, Number],
     newMarks: [String, Number],
-    states: Object,
-    assignmentDetails: Object,
-    isMarkedAssignment: Boolean
+    // states: Object,
+    // assignmentDetails: Object,
+    // isMarkedAssignment: Boolean
   },
   data() {
     return {
@@ -77,13 +72,20 @@ export default {
   },
   computed: {
 
-    images () {
-      if(this.hasMarkedSnappedAnswer) {
-        return this.assignmentDetails.markedSnappedAnswerPaths
-      } else if(this.hasSnappedAnswer) {
-        return this.assignmentDetails.snappedAnswerPaths
-      }
+    test() {
+      return (this.$store.getters['teacherMarking/hasMarkedSnappedAnswer'] || this.$store.getters['teacherMarking/hasMarkedSnappedAnswer']);
     },
+    images () {
+      return this.$store.getters["teacherMarking/images"]
+    },
+
+    // images () {
+    //   if(this.hasMarkedSnappedAnswer) {
+    //     return this.assignmentDetails.markedSnappedAnswerPaths
+    //   } else if(this.hasSnappedAnswer) {
+    //     return this.assignmentDetails.snappedAnswerPaths
+    //   }
+    // },
 
     containerClass: function () {
       let value = 'bg-white';
@@ -96,7 +98,7 @@ export default {
     },
 
     contentClass: function () {
-      if (this.states.isMarking) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         return 'pb-16/9';
       }
 
@@ -104,29 +106,32 @@ export default {
     },
 
     imagePreviewClass: function () {
-      if (this.states.isPreviewing) {
+      if (this.$store.state.teacherMarking.states.isPreviewing) {
         return 'bg-white px-6 pb-16';
       } else {
         return 'bg-black-primary px-16  pb-10'
       }
     },
 
-    hasWrittenAnswer: function () {
-      return this.assignmentDetails.writtenAnswer !== null && this.assignmentDetails.writtenAnswer !== undefined;
-    },
-
-    hasSnappedAnswer: function () {
-      return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
-    },
-
-    hasMarkedSnappedAnswer: function () {
-      return this.assignmentDetails.markedSnappedAnswerPaths !== null && this.assignmentDetails.markedSnappedAnswerPaths !== undefined;
-    },
+    // hasWrittenAnswer: function () {
+    //   return this.assignmentDetails.writtenAnswer !== null && this.assignmentDetails.writtenAnswer !== undefined;
+    // },
+    //
+    // hasSnappedAnswer: function () {
+    //   return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
+    // },
+    //
+    // hasMarkedSnappedAnswer: function () {
+    //   return this.assignmentDetails.markedSnappedAnswerPaths !== null && this.assignmentDetails.markedSnappedAnswerPaths !== undefined;
+    // },
   },
-  methods: {
-    enterMarkingMode(path) {
-      this.$emit('nowMarking', path)
-    },
+  // methods: {
+  //   enterMarkingMode(path) {
+  //     this.$emit('nowMarking', path)
+  //   },
+  // },
+  mounted() {
+
   },
   components: {
     AssignmentInfo,

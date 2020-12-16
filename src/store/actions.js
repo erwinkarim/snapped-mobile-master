@@ -2,7 +2,6 @@ import AuthenticationRepository from "@/repositories/AuthenticationRepository";
 import axios from "axios";
 
 export default  {
-
     login({commit}, userCredentials) {
 
         return new Promise((resolve, reject) => {

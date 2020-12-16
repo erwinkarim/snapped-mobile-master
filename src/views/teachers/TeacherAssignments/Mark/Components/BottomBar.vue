@@ -131,8 +131,6 @@ export default {
     },
     saveEditedSnappedAnswer(){
       this.$emit('saveEditedSnappedAnswer')
-
-      // this.toggleMarkingMode();
     },
     setAsMarked() {
       this.$emit('submit')
