@@ -10,20 +10,11 @@
 
           <answer-preview-swiper v-if="$store.getters['teacherMarking/hasSnappedAnswer']" />
 
-<!--
-          :is-previewing="states.isPreviewing"
-              :is-marked-assignment="$store.getters['teacherMarking/isMarkedAssignment']"
-              -->
-
-          <written-answer-preview
-              v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !isMarking.status"
-          />
+          <written-answer-preview  v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !$store.state.teacherMarking.states.isMarking" />
         </div>
 
         <!-- ASSIGNMENT DETAILS -->
-        <assignment-info
-            :new-marks="newMarks"
-        />
+        <assignment-info v-if="$store.getters['teacherMarking/isMainPage']" :details="$store.state.teacherMarking.assignmentDetails" />
       </div>
 
     </div>
@@ -51,46 +42,13 @@ export default {
   props: {
     submissionID: [String, Number],
     newMarks: [String, Number],
-    // states: Object,
-    // assignmentDetails: Object,
-    // isMarkedAssignment: Boolean
-  },
-  data() {
-    return {
-      // Marking Mode: Canvas
-      canvasDimensions: {
-        height: 0.75 * screen.height,
-        width: screen.width
-      },
-
-      isMarking: {
-        status: false,
-        path: null
-      },
-
-    }
   },
   computed: {
-
-    test() {
-      return (this.$store.getters['teacherMarking/hasMarkedSnappedAnswer'] || this.$store.getters['teacherMarking/hasMarkedSnappedAnswer']);
-    },
-    images () {
-      return this.$store.getters["teacherMarking/images"]
-    },
-
-    // images () {
-    //   if(this.hasMarkedSnappedAnswer) {
-    //     return this.assignmentDetails.markedSnappedAnswerPaths
-    //   } else if(this.hasSnappedAnswer) {
-    //     return this.assignmentDetails.snappedAnswerPaths
-    //   }
-    // },
 
     containerClass: function () {
       let value = 'bg-white';
 
-      if (this.isMarking.status) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         value = 'bg-black-primary';
       }
 
@@ -112,26 +70,6 @@ export default {
         return 'bg-black-primary px-16  pb-10'
       }
     },
-
-    // hasWrittenAnswer: function () {
-    //   return this.assignmentDetails.writtenAnswer !== null && this.assignmentDetails.writtenAnswer !== undefined;
-    // },
-    //
-    // hasSnappedAnswer: function () {
-    //   return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
-    // },
-    //
-    // hasMarkedSnappedAnswer: function () {
-    //   return this.assignmentDetails.markedSnappedAnswerPaths !== null && this.assignmentDetails.markedSnappedAnswerPaths !== undefined;
-    // },
-  },
-  // methods: {
-  //   enterMarkingMode(path) {
-  //     this.$emit('nowMarking', path)
-  //   },
-  // },
-  mounted() {
-
   },
   components: {
     AssignmentInfo,

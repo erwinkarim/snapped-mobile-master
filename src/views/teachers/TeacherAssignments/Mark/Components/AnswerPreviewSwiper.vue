@@ -2,7 +2,7 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div v-for="(dataURL, index) in images"
+        <div v-for="(dataURL, index) in $store.getters['teacherMarking/images']"
              @click="enterMarkingMode(dataURL, index)"
              :class="swiperClass"
              class=" swiper-slide rounded-2xl flex flex-col">
@@ -36,11 +36,6 @@ export default {
   data() {
     return {
 
-      // STATES
-      isMarking: false,
-
-      images: this.$store.getters["teacherMarking/images"],
-
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
@@ -64,20 +59,13 @@ export default {
   },
   methods: {
     enterMarkingMode(dataURL, index) {
-      console.log('triger')
-
       this.$store.dispatch('teacherMarking/enterMarkingMode', {
         index: index,
         dataURL: dataURL
       }).then(() => {
-        console.log('then')
         router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
       })
 
-      // if (this.$store.state.teacherMarking.states.isPreviewing && !this.$store.getters["teacherMarking/isMarkedAssignment"]) {
-      //   // this.$emit('nowMarking', {index: index, dataURL: dataURL})
-      //   router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
-      // }
     }
   },
   directives: {

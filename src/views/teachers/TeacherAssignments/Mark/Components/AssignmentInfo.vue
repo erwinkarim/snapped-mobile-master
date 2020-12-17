@@ -1,5 +1,6 @@
 <template>
-  <div v-if="show" class="mt-6 px-5">
+  <div class="mt-6 px-5">
+    <!--  <div v-if="show" class="mt-6 px-5">-->
 
     <!-- Achievements -->
     <div class="flex flex-row ">
@@ -31,7 +32,8 @@
     </div>
 
     <!-- MARKS -->
-    <div v-if="isMarked" class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
+    <div v-if="$store.getters['teacherMarking/isMarkedAssignment']"
+         class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
       <div class="text-purple-secondary mr-1">
         {{ details.marks || '-' }}
       </div>
@@ -39,16 +41,7 @@
         /100 Marks
       </div>
     </div>
-    <div v-else-if="hasNewMarks" class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
-      <div class="text-purple-secondary mr-1">
-        {{ newMarks || '-' }}
-      </div>
-      <div class="text-purple-primary">
-        /100 Marks
-      </div>
-    </div>
     <div v-else class="flex flex-row font-bold text-xl mt-8 text-left tracking-wide">
-
       <div class="text-purple-primary">
         Unmarked
       </div>
@@ -59,18 +52,8 @@
 
 <script>
 export default {
-  props: {
-    show: Boolean,
-    details: Object,
-    newMarks: [String, Number]
-  },
-  computed: {
-    hasNewMarks() {
-      return this.newMarks !== null && this.newMarks !== undefined;
-    },
-    isMarked: function () {
-      return this.details.marks !== null && this.details.marks !== undefined;
-    },
+  props:{
+    details: Object
   },
   name: "AssignmentInfo"
 }

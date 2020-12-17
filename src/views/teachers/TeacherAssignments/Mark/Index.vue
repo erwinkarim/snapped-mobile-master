@@ -2,7 +2,7 @@
   <div :class="containerClass" class="h-screen">
 
     <!-- OVERLAYS -->
-    <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="closeModalMode()"
+    <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="toggleModalMode()"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
     </div>
     <div v-if="$store.state.teacherMarking.states.isSelectingSticker" @click="toggleStickerBar"
@@ -14,7 +14,7 @@
     <div v-if="$store.state.teacherMarking.states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
       <modal modal-type="error"
-             @toggleModal="closeModalMode()"
+             @toggleModal="toggleModalMode()"
              :redirect-route="{name: 'teacher.assignments.marking.add_mark'}"
              class="w-4/5 "
       >
@@ -65,40 +65,10 @@
 
     <!-- CONTENT -->
     <div class="relative">
-<!--      <router-view-->
-
-<!--          :assignment-details="assignmentDetails"-->
-
-<!--          @feedback="handleFeedback"-->
-<!--          :feedback="submission.feedback"-->
-
-<!--          @marks="handleMark"-->
-<!--          :new-marks="submission.marks"-->
-
-<!--          @nowMarking="handleNowMarking"-->
-<!--          :now-marking="nowMarking"-->
-
-<!--          @editedSnappedAnswer="handleEditedSnappedAnswer"-->
-
-<!--          :now-loading-sticker="nowLoadingSticker"-->
-<!--          :now-loading-text-bar="nowLoadingTextBar"-->
-<!--      />-->
       <router-view/>
     </div>
 
-
-    <!-- BOTTOM BAR -->
-<!--    <bottom-bar-->
-<!--        :states="states"-->
-
-<!--        @togglePreviewMode="handleTogglePreviewMode"-->
-<!--        @toggleMarkingMode="handleToggleMarkingMode"-->
-<!--        @toggleStickerBar="handleToggleStickerBar"-->
-<!--        @loadSticker="handleLoadSticker"-->
-<!--        @loadTextBar="handleLoadTextBar"-->
-<!--        @saveEditedSnappedAnswer="handleSaveEditedSnappedAnswer"-->
-<!--        @submit="submit"-->
-<!--    />-->
+    <bottom-bar/>
 
   </div>
 </template>
@@ -122,51 +92,6 @@ export default {
     submissionID: [String, Number],
     markID: [String, Number],
   },
-  data() {
-    return {
-      // States
-      // states: {
-      //   isLoading: true,
-      //   isMain: true,
-      //   isPreviewing: false,
-      //   isMarking: false,
-      //   isSelectingSticker: false,
-      //   isWritingFeedback: false,
-      //   isShowingModal: false,
-      //   isSavingEditedSnappedAnswer: false
-      // },
-
-      // Assignment Details
-      assignmentDetails: {
-        submissionID: null,
-        studentID: null,
-        studentName: null,
-        assignmentID: null,
-        assignmentTitle: null,
-        snappedAnswerPaths: null,
-        writtenAnswer: null,
-        createdAt: null,
-        updatedAt: null,
-        submittedTime: null,
-        submittedDate: null,
-        marksID: null,
-        marks: null,
-        markedSnappedAnswerPaths: null
-      },
-
-      nowMarking: null,
-      nowLoadingSticker: null,
-      nowLoadingTextBar: false,
-
-      submission: {
-        type: '',
-        snappedAnswers: [],
-        feedback: '',
-        marks: null
-      }
-    }
-  },
-
 
   watch: {
     '$route': 'handleRouteChange',
@@ -200,11 +125,6 @@ export default {
         return 'white'
       }
     },
-
-    // isMarkedAssignment: function () {
-    //   return this.assignmentDetails.marksID !== null && this.assignmentDetails.marksID !== undefined;
-    // },
-
   },
   methods: {
     handleRouteChange() {
@@ -212,178 +132,30 @@ export default {
       let path = this.$route.name;
 
       if (path === 'teacher.assignments.marking.details') {
-        this.resetState();
-        this.$store.state.teacherMarking.states.isMain = true;
+        this.$store.commit('teacherMarking/setMainMode')
       }
 
       if (path === 'teacher.assignments.marking.feedback') {
-        this.resetState();
-        this.$store.state.teacherMarking.states.isWritingFeedback = true;
+        this.$store.commit('teacherMarking/setWritingFeedbackMode')
       }
-
-    },
-
-    // SUBMISSIONS
-    handleFeedback(value) {
-      this.submission.feedback = value
-    },
-    handleMark(value) {
-      this.submission.marks = value
-    },
-
-    handleNowMarking(nowMarking) {
-      this.resetState();
-      this.$store.state.teacherMarking.states.isMarking = true;
-
-      this.nowMarking = nowMarking;
     },
 
     // MODE: PREVIEW
-    handleTogglePreviewMode() {
-      this.togglePreviewMode()
-    },
     togglePreviewMode() {
       this.$store.commit('teacherMarking/togglePreviewMode')
-
-      console.log(this.$store.state.teacherMarking.states)
-    },
-    // togglePreviewMode() {
-    //   this.$store.state.teacherMarking.states.isPreviewing = !this.$store.state.teacherMarking.states.isPreviewing;
-    //   this.$store.state.teacherMarking.states.isMain = !this.$store.state.teacherMarking.states.isMain;
-    //
-    //   if (this.$store.state.teacherMarking.states.isPreviewing) {
-    //     this.$store.state.teacherMarking.states.isMarking = false;
-    //   }
-    // },
-
-    handleToggleMarkingMode() {
-      this.resetState();
-      this.$store.state.teacherMarking.states.isMain = true
-    },
-
-    // MODE: MODAL
-    closeModalMode() {
-      this.resetState()
-      this.$store.state.teacherMarking.states.isMain = true;
-    },
-
-    // MODE: STICKER
-    handleToggleStickerBar() {
-      this.toggleStickerBar()
-    },
-    handleLoadSticker(stickerName) {
-      this.nowLoadingSticker = stickerName;
-      this.toggleStickerBar();
-    },
-    handleLoadTextBar() {
-      this.nowLoadingTextBar = !this.nowLoadingTextBar;
     },
 
     toggleStickerBar() {
-      let value = !this.$store.state.teacherMarking.states.isSelectingSticker;
-      this.resetState();
-      this.$store.state.teacherMarking.states.isMarking = true;
-      this.$store.state.teacherMarking.states.isSelectingSticker = value;
+      this.$store.commit("teacherMarking/toggleStickerBar")
     },
 
-    handleSaveEditedSnappedAnswer() {
-      this.resetState();
-      this.$store.state.teacherMarking.states.isMain = true
-      this.$store.state.teacherMarking.states.isSavingEditedSnappedAnswer = true;
-    },
-
-    handleEditedSnappedAnswer(marked) {
-      this.assignmentDetails.snappedAnswerPaths[marked.index] = marked.dataURL;
-      router.push({name: 'teacher.assignments.marking.details'});
-    },
-
-    // SUBMISSION DETAILS
-    // fetchData() {
-    //
-    //   SubmissionRepository.find(this.submissionID)
-    //       .then(response => {
-    //
-    //
-    //         let data = response.data.submission_details;
-    //
-    //         this.assignmentDetails.submissionID = data.submission_id;
-    //         this.assignmentDetails.studentID = data.student_id;
-    //         this.assignmentDetails.studentName = data.student_name;
-    //         this.assignmentDetails.assignmentID = data.assignment_id;
-    //         this.assignmentDetails.assignmentTitle = data.assignment_title;
-    //         this.assignmentDetails.writtenAnswer = data.written_answer;
-    //         this.assignmentDetails.createdAt = data.created_at;
-    //         this.assignmentDetails.updatedAt = data.updated_at;
-    //         this.assignmentDetails.submittedTime = data.submission_time;
-    //         this.assignmentDetails.submittedDate = data.submission_date;
-    //         this.assignmentDetails.marksID = data.marks_id;
-    //         this.assignmentDetails.marks = data.marks;
-    //
-    //         if (data.snap_answer) {
-    //           this.submission.type = 'snapped';
-    //           this.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
-    //         }
-    //
-    //         if (data.written_answer) {
-    //           this.submission.type = 'written';
-    //         }
-    //
-    //         if (data.marking_picture_url) {
-    //           this.assignmentDetails.markedSnappedAnswerPaths = data.marking_picture_url.split(',');
-    //         }
-    //
-    //         this.$store.state.teacherMarking.states.isLoading = false;
-    //
-    //       });
-    // },
-
-
-    submit() {
-      if (this.submission.marks === null || this.submission.marks === undefined) {
-        this.resetState()
-        this.$store.state.teacherMarking.states.isMain = true;
-        this.$store.state.teacherMarking.states.isShowingModal = true;
-      } else {
-
-        MarksRepository.store(
-            {
-              assignmentID: this.assignmentDetails.assignmentID,
-              studentID: this.assignmentDetails.studentID,
-              answerID: this.assignmentDetails.submissionID,
-              submissionType: this.submission.type,
-              snappedAnswers: this.assignmentDetails.snappedAnswerPaths,
-              marks: this.submission.marks,
-              feedback: this.submission.feedback
-            })
-            .then(response => {
-
-              let content = response.data;
-
-              let type = content.messageType;
-              let message = content.message;
-
-              if (type === 'success') {
-                this.fetchData();
-              }
-
-            })
-      }
-    },
-    resetState() {
-      this.$store.state.teacherMarking.states.isLoading = false;
-      this.$store.state.teacherMarking.states.isMain = false;
-      this.$store.state.teacherMarking.states.isPreviewing = false;
-      this.$store.state.teacherMarking.states.isMarking = false;
-      this.$store.state.teacherMarking.states.isSelectingSticker = false;
-      this.$store.state.teacherMarking.states.isWritingFeedback = false;
-      this.$store.state.teacherMarking.states.isShowingModal = false
-      this.$store.state.teacherMarking.states.isSavingEditedSnappedAnswer = false;
+    toggleModalMode() {
+      this.$store.commit('teacherMarking/toggleModalMode')
     }
   },
   mounted() {
+    this.$store.commit('teacherMarking/setOriginalState')
     this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
-    // this.$store.dispatch('teacherMarking/test')
-
   },
   components: {Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree},
 
