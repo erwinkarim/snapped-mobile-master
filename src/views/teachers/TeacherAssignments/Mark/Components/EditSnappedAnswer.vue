@@ -6,6 +6,13 @@
       <template v-slot:leftAction>
         <nav-back class="w-1/4 pl-0 ml-0" stroke-color="white"/>
       </template>
+      <template v-slot:rightAction>
+        <button @click="undoEdits" class="flex flex-row justify-end mr-5">
+          <icon-base-two class="w-1/4">
+            <undo-icon/>
+          </icon-base-two>
+        </button>
+      </template>
     </page-header-three>
 
     <div class="flex flex-col w-screen ">
@@ -34,120 +41,24 @@ import PenIcon from "@/components/icons/PenIcon";
 import stickers from "@/components/Stickers/Stickers";
 import Login from "@/views/Login";
 import router from "@/router";
+import UndoIcon from "@/components/icons/UndoIcon";
 
 export default {
   name: "EditSnappedAnswer",
-  props: {
-    states: Object,
-    nowMarking: Object,
-    nowLoadingSticker: String,
-    nowLoadingTextBar: Boolean
-  },
-  data() {
-    return {
-      canvasMain: null,
-      canvasContext: null,
-      originalImage: {
-        path: decodeURIComponent(this.nowMarking.dataURL),
-        dimensions: {
-          width: null,
-          height: null
-        }
-      },
-      canvasDimensions: {
-        height: 0.75 * screen.height,
-        width: screen.width
-      },
-      showStickersBar: false,
-    }
-  },
-  watch: {
-    'states.isSelectingSticker': 'loadSticker',
-    'states.isSavingEditedSnappedAnswer': 'saveEditedSnappedAnswer',
-    'nowLoadingTextBar' : 'loadTextBar'
-  },
-  computed: {
-    backgroundImageScaleFactor() {
-      return this.canvasDimensions.width / this.originalImage.dimensions.width;
-    },
+  mounted() {
+    this.$store.dispatch('teacherMarking/checkNowMarkingPathExists').catch(() => {
+      router.push({name: 'teacher.assignments.marking.details'})
+    })
+    this.$store.commit('teacherMarking/loadCanvas')
+    this.$store.commit('teacherMarking/loadImage')
   },
   methods: {
-    loadCanvas() {
-      this.canvasVue = new fabric.Canvas('canvas', {
-        width: this.canvasDimensions.width,
-        height: this.canvasDimensions.height,
-      })
-    },
-    loadImage() {
-
-      fabric.Image.fromURL(this.originalImage.path, (img, error) => {
-        this.originalImage.dimensions.width = img.width;
-        this.originalImage.dimensions.height = img.height;
-
-        this.canvasVue.setBackgroundImage(
-            this.originalImage.path,
-            this.canvasVue.renderAll.bind(this.canvasVue),
-            {
-              top: this.canvasDimensions.height / 2,
-              left: this.canvasDimensions.width / 2,
-              originX: 'center',
-              originY: 'center',
-              scaleX: this.backgroundImageScaleFactor,
-              scaleY: this.backgroundImageScaleFactor
-            },
-            {crossOrigin: 'Anonymous'}
-        );
-      });
-    },
-    loadSticker() {
-
-      if (!this.states.isSelectingSticker && (this.nowLoadingSticker !== null && this.nowLoadingSticker !== undefined)) {
-
-        let stickerName = this.nowLoadingSticker;
-
-        fabric.loadSVGFromString(stickers[stickerName], (objects, options) => {
-
-          let obj = fabric.util.groupSVGElements(objects, options);
-          obj.scaleToHeight(this.canvasVue.height / 12)
-              .set({left: this.canvasVue.width / 2, top: this.canvasVue.height / 2})
-              .setCoords();
-
-          this.canvasVue.add(obj).renderAll();
-        });
-      }
-    },
-    loadTextBar() {
-      let textBox = new fabric.Textbox('test test', {
-        originX: "center",
-        originY: "bottom",
-        textAlign: "center",
-        fontFamily: "Segoe UI",
-        top: this.canvasVue.height / 2,
-        left: this.canvasVue.width / 2,
-        fontSize: 24,
-        fill: "#F53B57"
-      });
-
-      this.canvasVue.add(textBox).setActiveObject(textBox);
-    },
-    saveEditedSnappedAnswer() {
-      this.$emit('editedSnappedAnswer', {
-        index: this.nowMarking.index,
-        dataURL: this.canvasVue.toDataURL()
-      })
-    },
-    checkNowMarkingPathExists() {
-      if (this.nowMarking.dataURL === null || this.nowMarking.dataURL === undefined) {
-        router.push({name: 'teacher.assignments.marking.details'})
-      }
+    undoEdits() {
+      this.$store.dispatch('teacherMarking/undoEditedSnappedAnswer')
     }
   },
-  mounted() {
-    this.checkNowMarkingPathExists();
-    this.loadCanvas()
-    this.loadImage()
-  },
   components: {
+    UndoIcon,
     StickerLoader,
     TickedBoxIcon,
     ArrowBackIcon,

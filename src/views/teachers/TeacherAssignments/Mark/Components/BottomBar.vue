@@ -6,19 +6,20 @@
 
     <div class="w-full">
 
-      <div v-if="isMarkedAssignment" class="w-full flex flex-row">
+      <div v-if="$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
         <div
             class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
           Marked
         </div>
       </div>
 
-      <div v-else-if="states.isMarking" class="z-70">
+      <div v-else-if="$store.state.teacherMarking.states.isMarking" class="z-70">
 
-        <div v-if="states.isSelectingSticker"
+        <div v-if="$store.state.teacherMarking.states.isSelectingSticker"
              class="fixed inset-x-0 z-70 bg-white block bottom-0 h-3/5 rounded-t-2xl shadow-xl">
           <button @click="toggleStickerBar" class="bg-gray-primary h-2 w-1/5 rounded-full mt-3"></button>
-          <sticker-loader v-on:selected-sticker="handleSelectedSticker" class="mt-5"/>
+          <!-- STICKER LOADER -->
+          <sticker-loader class="mt-5"/>
         </div>
         <div v-else class="flex flex-row h-full items-center justify-around">
           <div class="w-full flex flex-row">
@@ -34,15 +35,15 @@
               </button>
             </div>
             <div class="w-1/3 px-1">
-              <button @click="loadTextBar"
-                  class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">
+              <button @click="loadTextBox"
+                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">
                 <div class="w-5/7">
                   Text
                 </div>
               </button>
             </div>
             <div class="w-1/3 px-1">
-              <button @click="saveEditedSnappedAnswer"
+              <button @click="doneEditSnappedAnswer"
                       class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
                 <div class="w-5/7">
                   Done
@@ -60,7 +61,8 @@
           </icon-base-two>
         </router-link>
         <div class="w-3/8 px-2">
-          <router-link :to="{name: 'teacher.assignments.marking.add_mark'}" v-if="states.isPreviewing"
+          <router-link :to="{name: 'teacher.assignments.marking.add_mark'}"
+                       v-if="$store.state.teacherMarking.states.isPreviewing"
                        class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
             Add Mark
           </router-link>
@@ -70,7 +72,8 @@
           </button>
         </div>
         <div class="w-4/8 px-2">
-          <button @click="setAsMarked" class="w-full font-bold bg-yellow-primary rounded-full text-purple-primary text-sm py-3 px-1 flex flex-row justify-center">
+          <button @click="setAsMarked"
+                  class="w-full font-bold bg-yellow-primary rounded-full text-purple-primary text-sm py-3 px-1 flex flex-row justify-center">
             <div class="w-5/7">
               Set as Marked
             </div>
@@ -90,10 +93,6 @@ import router from "@/router";
 
 export default {
   name: "BottomBar",
-  props: {
-    states: Object,
-    isMarkedAssignment: Boolean
-  },
   data() {
     return {
       show: true
@@ -101,7 +100,7 @@ export default {
   },
   computed: {
     bottomBarClass() {
-      if (this.states.isMarking) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         return 'bg-black-primary z-70'
       } else {
         return 'bg-white z-60 '
@@ -110,33 +109,35 @@ export default {
   },
   methods: {
     togglePreviewMode() {
-      this.$emit('togglePreviewMode')
-    },
-    toggleMarkingMode() {
-      this.$emit('toggleMarkingMode')
-      router.push({ name: 'teacher.assignments.marking.details'})
+      this.$store.commit('teacherMarking/togglePreviewMode');
     },
     toggleStickerBar() {
-      this.$emit('toggleStickerBar')
+      this.$store.commit('teacherMarking/toggleStickerBar')
     },
-    loadTextBar(){
-      this.$emit('loadTextBar')
+    loadTextBox() {
+      this.$store.dispatch('teacherMarking/loadTextBox')
     },
-    handleSelectedSticker(stickerName) {
-      this.$emit('loadSticker', stickerName)
+    doneEditSnappedAnswer() {
+      this.$store.dispatch('teacherMarking/doneEditSnappedAnswer')
+          .then(() => {
+            router.push({name: 'teacher.assignments.marking.details'});
+          })
     },
+
+    setAsMarked() {
+      this.$store.dispatch('teacherMarking/submit')
+          .then((submissionID) => {
+              this.$store.dispatch('teacherMarking/fetchData', submissionID)
+          })
+          .catch(err => {
+            console.log('Please add a mark first!')
+          })
+    },
+
     handleRouteChange() {
       let path = this.$route.path;
       this.show = !(path.includes('/add-mark') || path.includes('/feedback'));
     },
-    saveEditedSnappedAnswer(){
-      this.$emit('saveEditedSnappedAnswer')
-
-      // this.toggleMarkingMode();
-    },
-    setAsMarked() {
-      this.$emit('submit')
-    }
   },
   watch: {
     '$route': 'handleRouteChange'

@@ -23,7 +23,7 @@
       </page-header-three>
     </template>
 
-    <template v-slot:content >
+    <template v-slot:content>
       <div class="relative top-42 text-left ">
         <div class="px-7 border-b-1 border-gray-primary border-opacity-15 pb-3 text-purple-primary text-sm">
           Enter the mark for this assignment
@@ -32,7 +32,8 @@
                class="px-7 border-b-1 border-gray-primary border-opacity-15 py-4 text-purple-primary text-sm">
 
         <div class="px-7 pt-5 text-purple-secondary text-sm">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua.
         </div>
       </div>
     </template>
@@ -55,8 +56,10 @@ export default {
   },
   methods: {
     save() {
-      this.$emit('marks', this.marks)
-      router.push({name: 'teacher.assignments.marking.details'})
+      this.$store.dispatch('teacherMarking/addMark', this.marks)
+          .then(() => {
+            router.push({name: 'teacher.assignments.marking.details'})
+          })
     }
   },
   components: {NavBack, PageHeaderThree, DashboardLayout}
