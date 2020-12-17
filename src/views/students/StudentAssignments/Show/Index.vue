@@ -110,27 +110,28 @@
 
         <div v-else class="w-full flex flex-row">
 
-          <div class="flex-grow px-2">
-            <router-link
-                :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"
-                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-              <div class="w-5/7">
-                Write Answer
-              </div>
-              <icon-base-two class="w-1/7 hidden xs:block">
-                <pen-icon/>
-              </icon-base-two>
-            </router-link>
-          </div>
+          <!-- BUTTON: WRITE ANSWER -->
+          <!--          <div class="flex-grow px-2">-->
+          <!--            <router-link-->
+          <!--                :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"-->
+          <!--                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">-->
+          <!--              <div class="w-5/7">-->
+          <!--                Write Answer-->
+          <!--              </div>-->
+          <!--              <icon-base-two class="w-1/7 hidden xs:block">-->
+          <!--                <pen-icon/>-->
+          <!--              </icon-base-two>-->
+          <!--            </router-link>-->
+          <!--          </div>-->
           <div class="flex-grow px-2">
 
             <label
                 class="w-full h-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row items-center justify-center">
-              <div class="w-5/7">
+              <div class="mr-3">
                 Snap Answer
                 <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
               </div>
-              <icon-base-two class="hidden xs:block w-1/7">
+              <icon-base-two class="hidden xs:block w-1/12">
                 <camera-icon/>
               </icon-base-two>
             </label>
