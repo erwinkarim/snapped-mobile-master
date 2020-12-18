@@ -28,6 +28,12 @@ export default {
 
     },
 
+    getMarkings(){
+      let endpoint = `${resource}/marks`;
+
+      return Repository.get(endpoint)
+    },
+
     getSubjectsWithStudentsForTeacherClass({classID: classID, search: studentName}) {
         return Repository.post(`${resource}/classes/${classID}/subjects`, {
             filters: {

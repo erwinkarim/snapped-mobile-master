@@ -97,7 +97,7 @@
             <label
                 class="text-center pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full text-lg font-normal leading-tight focus:outline-none focus:shadow-outline text-red-primary">
               + Add more photo
-              <input class="hidden" type="file" multiple @change="onFileSelected">
+              <input class="hidden" type="file" accept="image/*" multiple @change="onFileSelected">
             </label>
           </div>
         </div>

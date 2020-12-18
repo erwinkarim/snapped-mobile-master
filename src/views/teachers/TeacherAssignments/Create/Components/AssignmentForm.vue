@@ -78,11 +78,12 @@
             <option v-for="subject in subjects" :value="subject.id">{{ subject.name }}</option>
           </select>
 
-          <select v-model="classroom_id"
-                  class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-            <option disabled value="">Class</option>
-            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>
-          </select>
+          <multiselect placeholder="Class" v-model="classroom_id" :show-labels="false" :hide-selected="true"
+                        :options="classrooms" label="name" track-by="id" :multiple="true" :taggable="true" @tag="addTag"
+                  class="text-left mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+<!--            <option disabled value="">Class</option>-->
+<!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
+          </multiselect>
 
           <button @click="updateShow"
                   class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
@@ -378,7 +379,8 @@
 import axios from "axios";
 import Vuex from 'vuex'
 import Vue from 'vue';
-import moment from 'moment'
+import moment from 'moment';
+import Multiselect from 'vue-multiselect';
 import IconBaseTwo from "@/components/IconBaseTwo";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import PageTitle from "@/components/PageTitle";
@@ -400,6 +402,7 @@ import ClockIcon from "../../../../../components/icons/ClockIcon";
 // Register components in your 'main.js'
 Vue.component('v-calendar', Calendar)
 Vue.component('v-date-picker', DatePicker)
+Vue.component('multiselect', Multiselect)
 
 const token = localStorage.getItem('token')
 
@@ -430,9 +433,9 @@ export default {
       teacherID: localStorage.getItem('teacherID'),
       title: '',
       subject_id: '',
-      classroom_id: '',
+      classroom_id: [],
       subjects: '',
-      classrooms: '',
+      classrooms: [],
       //schedule publish
       published_at: new Date,
       masks: {
@@ -494,6 +497,15 @@ export default {
   },
   watch: {},
   methods: {
+    //MULTISELECT
+    addTag (newTag) {
+      const tag = {
+        name: newTag,
+        code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+      }
+      this.options.push(tag)
+      this.value.push(tag)
+    },
     // MODE: MODAL
     closeToggleDuration() {
       if (this.durationDay === '') {
@@ -670,11 +682,11 @@ export default {
         return moment(String(value)).format('HH:mm')
       }
     },
-    checkForm: function (e) {
-      if (this.title && this.subject_id && this.classroom_id && this.titleQuestion
-          && (this.snappedQuestions.length || this.descriptionQuestion) && !this.noDuration) {
-        return true;
-      }
+    checkForm() {
+      // if (this.title && this.subject_id && this.classroom_id && this.titleQuestion
+      //     && (this.snappedQuestions.length || this.descriptionQuestion) && !this.due_datetime) {
+      //   return (true);
+      // }
 
       this.errors = [];
 
@@ -690,65 +702,84 @@ export default {
       if (!this.titleQuestion && !(this.snappedQuestions.length || this.descriptionQuestion)) {
         this.errors.push('Question required.');
       }
-      if (this.noDuration) {
-        this.errors.push('Duration required');
+      if (!this.due_datetime) {
+        this.errors.push('Due date required');
       }
 
       // e.preventDefault();
     },
     sendData(e) {
+
       this.checkForm();
-      let formData = new FormData();
+      if(this.errors.length === 0) {
 
-      // let dayInMinute = this.durationDay * 1440
-      // let hourInMinute = this.durationHour * 60
-      // //in minutes
-      // let totalDuration = dayInMinute + hourInMinute + this.durationMinute
-      //
-      // let due_datetime = moment(this.published_at).add(totalDuration, 'm').toDate();
+        var ctr=0;
 
-      formData.append('teacher_id', this.teacherID);
-      formData.append('subject_id', this.subject_id);
-      formData.append('class_id', this.classroom_id);
-      formData.append('title', this.title);
-      formData.append('written_question_title', this.titleQuestion);
-      formData.append('written_description', this.descriptionQuestion);
-      formData.append('due_datetime', this.format_date(this.due_datetime));
-      formData.append('published_at', this.format_date(this.published_at));
-      formData.append('remarks', this.remarks);
+        this.classroom_id.forEach((value, index) => {
 
-      for (var i = 0; i < this.snappedQuestions.length; i++) {
-        let file = this.snappedQuestions[i];
+          let formData = new FormData();
 
-        formData.append('snap_question[' + i + ']', file);
+          // let dayInMinute = this.durationDay * 1440
+          // let hourInMinute = this.durationHour * 60
+          // //in minutes
+          // let totalDuration = dayInMinute + hourInMinute + this.durationMinute
+          //
+          // let due_datetime = moment(this.published_at).add(totalDuration, 'm').toDate();
+
+          formData.append('teacher_id', this.teacherID);
+          formData.append('subject_id', this.subject_id);
+          formData.append('class_id', value.id);
+          formData.append('title', this.title);
+          formData.append('written_question_title', this.titleQuestion);
+          formData.append('written_description', this.descriptionQuestion);
+          formData.append('due_datetime', this.format_date(this.due_datetime));
+          formData.append('published_at', this.format_date(this.published_at));
+          formData.append('remarks', this.remarks);
+
+          for (var i = 0; i < this.snappedQuestions.length; i++) {
+            let file = this.snappedQuestions[i];
+
+            formData.append('snap_question[' + i + ']', file);
+          }
+
+          if (this.toggleSchedule) {
+            this.toggleSchedule = !this.toggleSchedule
+          }
+
+          Repository.post('/assignments/store',
+                  formData,
+                  {
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  })
+                  .then(
+                          response => {
+                            const messageType = response.data.messageType
+
+                            if (messageType === 'success') {
+                              ctr++;
+                              if (ctr === this.classroom_id.length) {
+                                this.published = !this.published
+                                console.log(ctr)
+                              }
+                            } else {
+                              ctr++;
+                              if (ctr === this.classroom_id.length) {
+                                this.error = !this.error
+                              }
+                            }
+
+                          })
+                  .catch(error => {
+                    // error.push("error");
+                    this.error = !this.error
+                  });
+        });
+      }else{
+        this.error = !this.error
+        console.log('hyyy')
       }
-
-      if (this.toggleSchedule) {
-        this.toggleSchedule = !this.toggleSchedule
-      }
-
-      Repository.post('/assignments/store',
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          .then(
-              response => {
-                const messageType = response.data.messageType
-
-                if (messageType === 'success') {
-                  this.published = !this.published
-                } else {
-                  this.error = !this.error
-                }
-
-              })
-          .catch(error => {
-            this.error = !this.error
-          });
-
     },
     getDetails: function () {
       TeacherRepository.getTeacherDetails()
@@ -783,6 +814,44 @@ export default {
   }
 }
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style>
+  .multiselect__placeholder{
+    color: #7B7F9E;
+  }
+  .multiselect__input{
+    font-weight: 400;
+    background: #F1F3F6;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: #7B7F9E;
+  }
+  .multiselect__select{
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .multiselect__tags {
+    background: #F1F3F6;
+    font-weight: 400;
+    min-height: 0;
+    padding-top: 1.25rem;
+    padding-left: 1.5rem;
+    padding-bottom: 1.25rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
 
-<style scoped>
+  .multiselect__tag {
+    background-color: #7B7F9E;
+  }
+
+  .multiselect__option--disabled{
+    background: purple;
+    color: white;
+    font-style: italic;
+  }
+
+  .multiselect__option--highlight {
+    background: #bfbfbf;
+  }
 </style>

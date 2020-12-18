@@ -68,6 +68,7 @@ export default {
       } else {
         return {name: 'student.assignments.show'}
       }
+
     }
   },
   data() {
