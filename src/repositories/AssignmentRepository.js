@@ -57,7 +57,6 @@ export default {
         });
     },
 
-
     delete(assignmentID) {
         return Repository.delete(`${resource}/${assignmentID}/delete`);
     }

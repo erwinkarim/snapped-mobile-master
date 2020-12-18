@@ -40,7 +40,10 @@ export default {
 
     getClassmates() {
         return Repository.get(`${resource}/classmates`)
-    }
+    },
 
+    getUnsubmittedAssignmentSummary(){
+        return Repository.get(`${resource}/unsubmitted-assignments`)
+    },
 
 }

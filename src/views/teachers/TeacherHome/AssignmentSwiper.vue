@@ -35,6 +35,7 @@ export default {
   },
   data() {
     return {
+      numOfAssignments: 0,
       nowDatetime: '',
       assignments: [],
       swiperOption: {
@@ -59,9 +60,15 @@ export default {
       }
     }
   },
+  watch: {
+    'numOfAssignments' : 'emitNumOfAssignments'
+  },
   methods: {
     getNowDatetime() {
       this.nowDatetime = moment().format()
+    },
+    emitNumOfAssignments () {
+      this.$emit('numOfAssignments', this.numOfAssignments)
     },
     getAssignments: function () {
 
@@ -69,6 +76,8 @@ export default {
           .then(response => {
 
             const data = response.data.data
+
+            this.numOfAssignments = data.length;
 
             for (let i = 0; i < data.length; i++) {
 
