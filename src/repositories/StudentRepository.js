@@ -5,8 +5,8 @@ const token = localStorage.getItem('token')
 
 export default {
 
-    getStudentDetails(){
-        return Repository.post('/details',{
+    getStudentDetails() {
+        return Repository.post('/details', {
             headers: {
                 Accept: "application/json",
                 Authorization: 'Bearer ' + token,
@@ -26,14 +26,23 @@ export default {
         return Repository.get(`${resource}/${studentID}/assignments/marks`)
     },
 
+    getBatchRanking({pageNum: pageNum, perPage: perPage, search: search}) {
+
+        if (!pageNum) pageNum = 1;
+        if (!perPage) perPage = 50;
+        if (!search) search = '';
+
+        return Repository.get(`/rankings?page=${pageNum}&per_page=${perPage}&search=${search}`)
+    },
+
     getClassRanking() {
         return Repository.get(`${resource}/class-ranking`)
     },
 
     getClassTeachers({pageNum: pageNum, perPage: perPage}) {
 
-        if(!pageNum) pageNum = 1;
-        if(!perPage) perPage = 50;
+        if (!pageNum) pageNum = 1;
+        if (!perPage) perPage = 50;
 
         return Repository.get(`${resource}/teachers?page=${pageNum}&per_page=${perPage}`)
     },
@@ -42,7 +51,7 @@ export default {
         return Repository.get(`${resource}/classmates`)
     },
 
-    getUnsubmittedAssignmentSummary(){
+    getUnsubmittedAssignmentSummary() {
         return Repository.get(`${resource}/unsubmitted-assignments`)
     },
 

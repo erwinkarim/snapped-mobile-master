@@ -778,7 +778,6 @@ export default {
         });
       }else{
         this.error = !this.error
-        console.log('hyyy')
       }
     },
     getDetails: function () {
