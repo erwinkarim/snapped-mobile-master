@@ -12,9 +12,9 @@
                 <magnifying-glass-icon stroke-color="red-primary"/>
               </icon-base-two>
             </router-link>
-            <div :to="{name: 'student.class.school_ranking'}" class="ml-2">
+            <router-link :to="{name: 'student.class.school_ranking'}" class="ml-2">
               School Rank
-            </div>
+            </router-link>
           </div>
         </template>
       </page-title>
