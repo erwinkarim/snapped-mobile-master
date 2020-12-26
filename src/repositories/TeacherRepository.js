@@ -55,6 +55,10 @@ export default {
         })
     },
 
+    getStudentPerformance(){
+      return Repository.get(`${resource}/student-performance`)
+    },
+
     getTeacherSubjects(){
         return Repository.get(`/subjects`)
     }
