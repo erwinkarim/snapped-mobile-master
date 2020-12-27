@@ -12,6 +12,34 @@
 
       <div class="px-5">
 
+        <!-- SECTION: SUMMARY -->
+        <div class="mt-2">
+          <div class="text-left mb-3">
+            <section-title class="mb-5" title="Summary"/>
+          </div>
+
+          <div class="w-full mt-3">
+            <div class="max-w-sm h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
+              <div class="flex flex-row grid grid-cols-3 divide-x items-center h-full">
+                <div class="grid grid-cols-1 divide-y pl-2">
+                  <div class="text-left text-purple-primary font-bold">{{numOfNewAssignments}}</div>
+                  <div class="text-left text-purple-primary text-xs-plus mb-1 h-12 py-2">
+                    New Assignments
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 divide-y pl-3">
+                  <div class="text-left text-purple-primary font-bold">{{numOfDueSoonAssignments}}</div>
+                  <div class="text-left text-purple-primary text-xs-plus mb-1 h-12 py-2">Due Soon Assignments</div>
+                </div>
+                <div class="grid grid-cols-1 divide-y pl-4">
+                  <div class="text-left text-purple-primary font-bold">{{numOfOverdueAssignments}}</div>
+                  <div class="text-left text-purple-primary text-xs-plus mb-1 h-12 py-2">Overdue Assignments</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- SECTION: CLASSES -->
         <div class="mt-5">
           <div class="text-left mb-3">
@@ -47,9 +75,22 @@ export default {
   data() {
     return {
       assignments: [],
+      numOfNewAssignments: 0,
+      numOfDueSoonAssignments: 0,
+      numOfOverdueAssignments: 0
+
     }
   },
   methods: {
+    fetchSummary(){
+      StudentRepository.getUnsubmittedAssignmentSummary()
+              .then(response => {
+
+                this.numOfNewAssignments = response.data.num_of_new_assignments
+                this.numOfDueSoonAssignments = response.data.num_of_due_soon_assignments
+                this.numOfOverdueAssignments = response.data.num_of_overdue_assignments
+              })
+    },
     getAssignments: function () {
 
       AssignmentRepository.active()
@@ -78,6 +119,7 @@ export default {
   },
   mounted() {
     this.getAssignments()
+    this.fetchSummary()
   },
   components: {
     IconBaseTwo,

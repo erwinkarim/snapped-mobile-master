@@ -13,10 +13,10 @@
         </template>
 
         <template v-slot:rightAction>
-          <div v-if="newFeedback.length === 0" class="text-gray-primary font-bold">
+          <div v-if="draft.length === 0" class="text-gray-primary font-bold">
             Done
           </div>
-          <div @click="save" v-if="newFeedback.length > 0" class="text-red-primary font-bold">
+          <div @click="save" v-if="draft.length > 0" class="text-red-primary font-bold">
             Done
           </div>
         </template>
@@ -25,7 +25,7 @@
 
     <template v-slot:content>
       <div class="pt-32 px-6 h-full">
-      <textarea v-model="newFeedback"
+      <textarea v-model="draft"
                 class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"></textarea>
       </div>
     </template>
@@ -39,26 +39,23 @@ import NavBack from "@/components/NavBack";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
+
 export default {
   name: "AssignmentFeedback",
   components: {PageHeaderThree, DashboardLayout, NavBack, PageTitleTwo},
-  props: {
-    feedback: String
-  },
   data() {
     return {
-      newFeedback: ''
+      draft: this.$store.state.teacherMarking.submission.feedback
     }
   },
   methods: {
     save() {
-      this.$emit('feedback', this.newFeedback)
-      router.push({name: 'teacher.assignments.marking.details'})
+      this.$store.dispatch('teacherMarking/addFeedback', this.draft)
+          .then(() => {
+            router.push({name: 'teacher.assignments.marking.details'})
+          });
     }
   },
-  mounted() {
-    this.newFeedback = this.feedback
-  }
 }
 </script>
 

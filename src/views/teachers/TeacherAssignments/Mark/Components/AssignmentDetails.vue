@@ -8,27 +8,13 @@
 
         <div :class="imagePreviewClass" class="pt-4 z-10">
 
-          <answer-preview-swiper
-              v-if="(hasSnappedAnswer || hasMarkedSnappedAnswer) && !isMarking.status"
-              :is-previewing="states.isPreviewing"
-              :is-marked-assignment="isMarkedAssignment"
-              :images="images"
-              @nowMarking="enterMarkingMode"
-          />
+          <answer-preview-swiper v-if="$store.getters['teacherMarking/hasSnappedAnswer']" />
 
-          <written-answer-preview
-              v-if="hasWrittenAnswer && !isMarking.status"
-              :is-previewing="states.isPreviewing"
-              :answer="assignmentDetails.writtenAnswer"
-          />
+          <written-answer-preview  v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !$store.state.teacherMarking.states.isMarking" />
         </div>
 
         <!-- ASSIGNMENT DETAILS -->
-        <assignment-info
-            :show="states.isMain"
-            :details="assignmentDetails"
-            :new-marks="newMarks"
-        />
+        <assignment-info v-if="$store.getters['teacherMarking/isMainPage']" :details="$store.state.teacherMarking.assignmentDetails" />
       </div>
 
     </div>
@@ -56,39 +42,13 @@ export default {
   props: {
     submissionID: [String, Number],
     newMarks: [String, Number],
-    states: Object,
-    assignmentDetails: Object,
-    isMarkedAssignment: Boolean
-  },
-  data() {
-    return {
-      // Marking Mode: Canvas
-      canvasDimensions: {
-        height: 0.75 * screen.height,
-        width: screen.width
-      },
-
-      isMarking: {
-        status: false,
-        path: null
-      },
-
-    }
   },
   computed: {
-
-    images () {
-      if(this.hasMarkedSnappedAnswer) {
-        return this.assignmentDetails.markedSnappedAnswerPaths
-      } else if(this.hasSnappedAnswer) {
-        return this.assignmentDetails.snappedAnswerPaths
-      }
-    },
 
     containerClass: function () {
       let value = 'bg-white';
 
-      if (this.isMarking.status) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         value = 'bg-black-primary';
       }
 
@@ -96,7 +56,7 @@ export default {
     },
 
     contentClass: function () {
-      if (this.states.isMarking) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         return 'pb-16/9';
       }
 
@@ -104,28 +64,11 @@ export default {
     },
 
     imagePreviewClass: function () {
-      if (this.states.isPreviewing) {
+      if (this.$store.state.teacherMarking.states.isPreviewing) {
         return 'bg-white px-6 pb-16';
       } else {
         return 'bg-black-primary px-16  pb-10'
       }
-    },
-
-    hasWrittenAnswer: function () {
-      return this.assignmentDetails.writtenAnswer !== null && this.assignmentDetails.writtenAnswer !== undefined;
-    },
-
-    hasSnappedAnswer: function () {
-      return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
-    },
-
-    hasMarkedSnappedAnswer: function () {
-      return this.assignmentDetails.markedSnappedAnswerPaths !== null && this.assignmentDetails.markedSnappedAnswerPaths !== undefined;
-    },
-  },
-  methods: {
-    enterMarkingMode(path) {
-      this.$emit('nowMarking', path)
     },
   },
   components: {
