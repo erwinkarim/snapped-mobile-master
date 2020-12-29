@@ -155,7 +155,7 @@ export default {
     },
     updateFilter() {
       this.filters.pageNum = 1
-      this.filters.perPage = 2
+      this.filters.perPage = 20
 
       this.rankings = [];
       this.filterCount++;
