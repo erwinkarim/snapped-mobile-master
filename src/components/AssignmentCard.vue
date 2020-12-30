@@ -3,7 +3,7 @@
                class="max-w-sm rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3">
 
     <div class="flex flex-col w-full">
-      <div class="flex flex-row justify-between mb-4">
+      <div class="flex flex-row justify-between mb-4 truncate">
         <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">
           {{ assignment.title }}
         </div>
@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <div class="flex flex-row justify-between mb-4">
+      <div class="flex flex-row justify-between mb-4 truncate pr-10">
         <text-multiline-truncate
             :lines="descriptionLines"
             class="text-left text-purple-primary text-px-10 pr-10 mb-2"

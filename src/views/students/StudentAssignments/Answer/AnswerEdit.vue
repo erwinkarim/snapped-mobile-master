@@ -12,7 +12,7 @@
         <template v-slot:leftAction>
           <nav-back v-if="isMainPage" type="cancel"
                     :to="{name: 'student.assignments.show'}"
-                    class="w-2/3" stroke-color="red-primary"/>
+                    class="w-2/3 text-left" stroke-color="red-primary"/>
 
           <div @click="toggleEditingMode" v-if="isEditingWrittenAnswer" class="pl-3">
             <icon-base-two class="w-2/7">
@@ -28,7 +28,9 @@
         </template>
 
         <template v-slot:mini-title>
-          {{ pageTitle }}
+          <div class="truncate">
+            {{ pageTitle }}
+          </div>
         </template>
 
         <template v-if="isEditingWrittenAnswer" v-slot:rightAction>
@@ -81,7 +83,7 @@
           <div>
             Your answer will be submitted to
           </div>
-          <div class="font-bold mt-1">
+          <div class="font-bold mt-1 truncate">
             {{ assignmentDetails ? assignmentDetails.title : '' }}
           </div>
         </div>

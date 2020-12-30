@@ -16,7 +16,7 @@
             </div>
 
             <div class="flex flex-row mt-4 text-left w-full items-end justify-between">
-              <div class="text-md flex-grow pb-2 w-3/5">
+              <div class="text-md flex-grow pb-2 w-3/5 truncate">
                 <span class="truncate">{{ item.className }} </span>
               </div>
               <div class="flex flex-row justify-end w-2/7 pb-2">

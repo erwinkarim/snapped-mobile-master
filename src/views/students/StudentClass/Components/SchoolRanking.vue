@@ -45,8 +45,8 @@
                   {{ student.student_name }}
                 </div>
 
-                <div class="text-left text-purple-secondary text-px-10  truncate mt-2 pr-10">
-                  Class
+                <div class="text-left text-purple-secondary text-px-10 truncate mt-2 pr-10">
+                  {{ student.class_name }}
                 </div>
               </div>
             </div>

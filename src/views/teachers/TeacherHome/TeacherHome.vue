@@ -43,7 +43,7 @@
 
 
         <!-- SECTION: CLASSES -->
-        <div class="mt-2">
+        <div class="mt-6">
           <div class="text-left mb-3">
             <section-title class="mb-5" title="Your Classes"/>
           </div>
