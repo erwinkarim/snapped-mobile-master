@@ -1,61 +1,38 @@
 <template>
-  <dashboard-layout >
+  <dashboard-layout>
 
     <template v-slot:pageHeader>
-        <page-title title="Settings" class="w-3/4" />
+      <page-title title="Settings" class="w-3/4"/>
     </template>
 
     <template v-slot:content>
       <div class="w-full px-7 mt-3">
         <section-title class="text-left mt-4" title="Profile"/>
 
-        <div class="text-left py-2 h-12 flex flex-row w-full border-b-1 items-center bg-white">
-          <div class="w-7 h-full relative">
-            <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">
-              <identification-icon/>
+        <div v-for="detail in details"
+             :key="detail.value"
+             class="w-full text-left py-3 flex flex-row w-full border-b-1 items-center bg-white"
+        >
+          <div class="w-1/12">
+            <icon-base class=" w-full">
+              <component :is="detail.icon"/>
             </icon-base>
           </div>
-          <div class="ml-5 text-purple-primary  truncate pr-4">{{ teacherDetails.fullname }}</div>
-        </div>
-        <div class="text-left py-2 h-12 flex flex-row w-full border-b-1 items-center bg-white">
-          <div class="w-7 h-full relative">
-            <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">
-              <academic-icon/>
-            </icon-base>
+          <div class="w-5/6 ml-5 text-purple-primary  truncate pr-4">
+            {{ detail.value }}
           </div>
-          <div class="ml-5 text-purple-primary  truncate pr-4">{{ teacherDetails.school }}</div>
         </div>
-<!--        <div class="text-left py-2 h-12 flex flex-row w-full border-b-1 items-center bg-white">-->
-<!--          <div class="w-7 h-full relative">-->
-<!--            <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">-->
-<!--              <book-icon/>-->
-<!--            </icon-base>-->
-<!--          </div>-->
-<!--          <div class="ml-5 text-purple-primary  truncate pr-4">{{ teacherDetails.classroom }}</div>-->
-<!--        </div>-->
-        <div class="text-left py-2 h-12 flex flex-row w-full border-b-1 items-center bg-white">
-          <div class="w-7 h-full relative">
-            <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">
-              <email-icon/>
-            </icon-base>
-          </div>
-          <div class="ml-5 text-purple-primary  truncate pr-4">{{ teacherDetails.email }}</div>
-        </div>
-        <div class="text-left py-2 h-12 flex flex-row w-full border-b-1 items-center bg-white">
-          <div class="w-7 h-full relative">
-            <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">
-              <phone-icon/>
-            </icon-base>
-          </div>
-          <div class="ml-5 text-purple-primary  truncate mr-4">{{ teacherDetails.contactNum }}</div>
-        </div>
-        <div @click="logout" class="text-red-primary text-white py-2 mt-5 h-12 flex flex-row w-full border-b-1 items-center bg-white">
-          <div class="w-7 h-full relative">
-            <icon-base class="absolute w-full" icon-color="white" view-box="0 0 60 55">
+        <div @click="logout"
+             class="w-full text-left py-4 flex flex-row w-full border-b-1 items-center bg-white"
+        >
+          <div class="w-1/12">
+            <icon-base class="w-full text-red-primary">
               <logout-icon/>
             </icon-base>
           </div>
-          <div class="ml-5 text-white-primary truncate mr-4">Log out</div>
+          <div class="w-5/6 ml-5 text-red-primary  truncate pr-4">
+            Log out
+          </div>
         </div>
       </div>
     </template>
@@ -92,9 +69,26 @@ export default {
     PageTitle,
     DashboardLayout
   },
-  data(){
-    return{
-      teacherDetails:''
+  data() {
+    return {
+      details: {
+        fullName: {
+          value: null,
+          icon: 'identification-icon'
+        },
+        school: {
+          value: null,
+          icon: 'academic-icon'
+        },
+        email: {
+          value: null,
+          icon: 'email-icon'
+        },
+        contactNum: {
+          value: null,
+          icon: 'phone-icon'
+        }
+      }
     };
   },
   methods: {
@@ -102,21 +96,17 @@ export default {
       this.$store.dispatch('logout')
       this.$router.push({name: 'login'})
     },
-    getDetails: function() {
+    getDetails: function () {
       TeacherRepository.getTeacherDetails()
-              .then(response => {
+          .then(response => {
 
-                const data = response.data.success
+            const data = response.data.success
 
-                this.teacherDetails = {
-                  id: data.id,
-                  fullname: data.fullname,
-                  school: data.school_name,
-                  classroom: data.classroom_name,
-                  email: data.email,
-                  contactNum: data.contact_num
-                }
-              })
+            this.details.fullName.value = data.fullname;
+            this.details.school.value = data.school_name;
+            this.details.email.value = data.email;
+            this.details.contactNum.value = data.contact_num;
+          })
     },
   },
   mounted() {

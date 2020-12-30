@@ -2,12 +2,14 @@
   <div class="px-8 mt-8">
     <div class="bg-gray-secondary rounded-2xl text-left py-8 px-6">
       <!-- TITLE -->
-      <div class="font-semibold text-2xl text-purple-primary">
+      <text-multiline-truncate :lines="2"
+                               class="font-semibold text-2xl text-purple-primary "
+      >
         {{ assignment.title }}
-      </div>
+      </text-multiline-truncate>
 
       <!-- DETAILS -->
-      <div class="flex flex-row  text-xs-plus text-purple-secondary mt-2 justify-between">
+      <div class="flex flex-row  text-xs-plus text-purple-secondary mt-4 justify-between">
         <div class="pr-1 truncate w-1/3">
           {{ meta.subjectName || '' }}
         </div>

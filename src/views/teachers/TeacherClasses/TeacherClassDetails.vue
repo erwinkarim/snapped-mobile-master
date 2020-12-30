@@ -11,10 +11,14 @@
           <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
-          {{ className }}
+          <div class="truncate">
+            {{ className }}
+          </div>
         </template>
         <template v-slot:title>
-          {{ className }}
+          <div class="truncate">
+            {{ className }}
+          </div>
         </template>
       </page-header-three>
     </template>

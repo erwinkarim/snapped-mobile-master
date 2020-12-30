@@ -209,7 +209,7 @@ export default {
     },
 
     isPastDueDate() {
-      return moment().format('YYYY-MM-DD hh:mm:ss') >= this.assignment.dueDatetime;
+      return moment().format('YYYY-MM-DD HH:mm:ss') >= this.assignment.dueDatetime;
     },
 
     hasMarkedSubmission: function () {
