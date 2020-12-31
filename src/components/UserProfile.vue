@@ -3,7 +3,7 @@
     <icon-base width="100" height="100" icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
       <ProfilePhoto/>
     </icon-base>
-    <div class="flex flex-col w-full text-left">
+    <div class="flex flex-col w-full text-left truncate mr-5">
       <h1 class=" text-purple-primary">Welcome, <span class="font-bold truncate">{{ username }}</span></h1>
 
       <div class="flex flex-row text-purple-secondary text-px-13 mt-1">

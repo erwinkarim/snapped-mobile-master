@@ -50,9 +50,9 @@
       </button>
 
       <!-- FORGOT PASSWORD -->
-      <div class="font-display text-purple-primary font-bold mt-12 text-lg">
-        Forgot Password?
-      </div>
+<!--      <div class="font-display text-purple-primary font-bold mt-12 text-lg">-->
+<!--        Forgot Password?-->
+<!--      </div>-->
 
     </div>
 

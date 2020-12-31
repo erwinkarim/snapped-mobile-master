@@ -45,8 +45,8 @@
                   {{ student.student_name }}
                 </div>
 
-                <div class="text-left text-purple-secondary text-px-10  truncate mt-2 pr-10">
-                  Class
+                <div class="text-left text-purple-secondary text-px-10 truncate mt-2 pr-10">
+                  {{ student.class_name }}
                 </div>
               </div>
             </div>
@@ -155,7 +155,7 @@ export default {
     },
     updateFilter() {
       this.filters.pageNum = 1
-      this.filters.perPage = 2
+      this.filters.perPage = 20
 
       this.rankings = [];
       this.filterCount++;

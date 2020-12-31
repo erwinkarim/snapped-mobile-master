@@ -4,8 +4,13 @@
     <div :key="subject.subject_title" v-for="subject in filteredSubjects">
 
       <!-- Subject Title + Period -->
-      <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5">
-        {{ subject.subject_title }}, {{ subject.period }}
+      <div class="text-purple-primary truncate font-bold flex flex-row justify-between text-left text-sm bg-gray-secondary py-2 px-5">
+        <div class="w-3/5 truncate">
+          {{ subject.subject_title }}
+        </div>
+        <div class="w-2/5 text-right">
+          {{ subject.period }}
+        </div>
       </div>
 
       <!-- Student List for Subject -->
@@ -17,7 +22,9 @@
             <profile-photo/>
           </icon-base>
         </div>
-        <div class="ml-5 text-purple-primary truncate pr-4">{{ student.name }}</div>
+        <div class="w-5/6 ml-5 text-purple-primary truncate pr-4">
+          {{ student.name }}
+        </div>
       </div>
     </div>
   </div>
