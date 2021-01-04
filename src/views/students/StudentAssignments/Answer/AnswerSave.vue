@@ -131,6 +131,7 @@
     <template v-slot:bottomBar>
       <div class="w-full px-2">
         <button @click="submit"
+                :disabled="isSubmitting"
                 class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
           Submit Answer
         </button>
@@ -163,6 +164,7 @@ export default {
       // States
       isMainPage: true,
       isPreviewingSnappedAnswer: false,
+      isSubmitting: false,
       isShowingModal: false,
       submissionStatus: null,
 

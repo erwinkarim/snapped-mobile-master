@@ -79,10 +79,10 @@
           </select>
 
           <multiselect placeholder="Class" v-model="classroom_id" :show-labels="false" :hide-selected="true"
-                        :options="classrooms" label="name" track-by="id" :multiple="true" :taggable="true" @tag="addTag"
-                  class="text-left mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-<!--            <option disabled value="">Class</option>-->
-<!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
+                       :options="classrooms" label="name" track-by="id" :multiple="true" :taggable="true" @tag="addTag"
+                       class="text-left mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+            <!--            <option disabled value="">Class</option>-->
+            <!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
           </multiselect>
 
           <button @click="updateShow"
@@ -104,10 +104,10 @@
           <div v-if="due_datetime" @click="toggleDuration = !toggleDuration"
                class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-3 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
             <div class="w-2 text-purple-secondary">
-<!--              <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">-->
-<!--                {{ duration || '' }}-->
-                <p>{{ format_date2(due_datetime) }}</p>
-<!--              </button>-->
+              <!--              <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">-->
+              <!--                {{ duration || '' }}-->
+              <p>{{ format_date2(due_datetime) }}</p>
+              <!--              </button>-->
             </div>
             <div class="w-2 text-purple-secondary">
               <p>{{ format_time(due_datetime) }}</p>
@@ -255,8 +255,12 @@
             <v-date-picker class="place-self-center" v-model="published_at" mode="dateTime"/>
           </div>
           <span slot="button">
-                    <button class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
-                            @click="sendData">Schedule Publish</button>
+                    <button @click="sendData"
+                            :disabled="isPublishing"
+                            class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
+                    >
+                      Schedule Publish
+                    </button>
                 </span>
         </modal>
       </div>
@@ -267,7 +271,7 @@
         <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">
           <h3 slot="title" class="font-bold">Set Due Date & Time</h3>
           <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
-              <v-date-picker class="place-self-center" :min-date="new Date()" v-model="due_datetime" mode="dateTime"/>
+            <v-date-picker class="place-self-center" :min-date="new Date()" v-model="due_datetime" mode="dateTime"/>
           </div>
           <span slot="button">
                     <button class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
@@ -275,37 +279,54 @@
                 </span>
         </modal>
       </div>
-<!--      Commented out Days, Hours, Minute-->
-<!--      <div v-if="toggleDuration" @click.self="closeToggleDuration"-->
-<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-<!--        <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">-->
-<!--          <h3 slot="title" class="font-bold">Set Duration</h3>-->
-<!--          <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">-->
-<!--            <div>-->
-<!--              <label class="text-lg font-bold">Day</label>-->
-<!--              <input v-model="durationDay" type="number" min="0" max="100"-->
-<!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
-<!--                     name="custom-input-number" value="0">-->
-<!--            </div>-->
-<!--            <div>-->
-<!--              <label class="text-lg font-bold">Hour</label>-->
-<!--              <input v-model="durationHour" type="number" min="0" max="100"-->
-<!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
-<!--                     name="custom-input-number" value="0">-->
-<!--            </div>-->
-<!--            <div>-->
-<!--              <label class="text-lg font-bold">Minute</label>-->
-<!--              <input v-model="durationMinute" type="number" min="0" max="100" placeholder="0"-->
-<!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
-<!--                     name="custom-input-number" value="0">-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <span slot="button">-->
-<!--                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
-<!--                            @click="closeToggleDuration">Okay</button>-->
-<!--                </span>-->
-<!--        </modal>-->
-<!--      </div>-->
+      <!--      Commented out Days, Hours, Minute-->
+      <!--      <div v-if="toggleDuration" @click.self="closeToggleDuration"-->
+      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
+      <!--        <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">-->
+      <!--          <h3 slot="title" class="font-bold">Set Duration</h3>-->
+      <!--          <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">-->
+      <!--            <div>-->
+      <!--              <label class="text-lg font-bold">Day</label>-->
+      <!--              <input v-model="durationDay" type="number" min="0" max="100"-->
+      <!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
+      <!--                     name="custom-input-number" value="0">-->
+      <!--            </div>-->
+      <!--            <div>-->
+      <!--              <label class="text-lg font-bold">Hour</label>-->
+      <!--              <input v-model="durationHour" type="number" min="0" max="100"-->
+      <!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
+      <!--                     name="custom-input-number" value="0">-->
+      <!--            </div>-->
+      <!--            <div>-->
+      <!--              <label class="text-lg font-bold">Minute</label>-->
+      <!--              <input v-model="durationMinute" type="number" min="0" max="100" placeholder="0"-->
+      <!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
+      <!--                     name="custom-input-number" value="0">-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <span slot="button">-->
+      <!--                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
+      <!--                            @click="closeToggleDuration">Okay</button>-->
+      <!--                </span>-->
+      <!--        </modal>-->
+      <!--      </div>-->
+
+
+      <!--  MODAL: PUBLISHING   -->
+      <div v-if="isPublishing" @click.self="isPublishing = !isPublishing"
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+        <modal v-if="isPublishing"
+               modal-type="no-icon"
+               :has-button="false"
+               class="w-4/5 "
+        >
+          <p slot="message">
+            Publishing your assignment.
+            <br>
+            Please wait...
+          </p>
+        </modal>
+      </div>
 
       <!--  Modal Published   -->
       <div v-if="published" @click.self="published = !published"
@@ -330,7 +351,7 @@
       <!--   Modal Error   -->
       <div v-if="error" @click.self="error = !error"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
-        <modal class="w-4/5 " v-if="error" modal-type="error" >
+        <modal class="w-4/5 " v-if="error" modal-type="error">
           <div slot="message">
             <p>
               <b>Please ensure that you have entered all the important inputs</b>
@@ -365,6 +386,7 @@
       </div>
       <div class="w-3/7 px-2">
         <button @click="sendData"
+                :disabled="isPublishing"
                 class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
           <div class="w-5/7">
             Publish Now
@@ -413,6 +435,10 @@ export default {
   },
   data() {
     return {
+
+      /***********
+       * STATES *
+       ***********/
       disabled: false,
       //show page
       showAssignment: true,
@@ -423,6 +449,7 @@ export default {
       toggleSchedule: false,
       //toggle preview gambar
       isPreviewing: false,
+      isPublishing: false,
       //toggle modal success assignment
       published: false,
       //toggle modal error assignment
@@ -442,7 +469,7 @@ export default {
         input: 'DD-MM-YYYY h:mm A',
       },
       today: new Date,
-      due_datetime:'',
+      due_datetime: '',
       durationDay: 0,
       durationHour: 0,
       durationMinute: 0,
@@ -498,7 +525,7 @@ export default {
   watch: {},
   methods: {
     //MULTISELECT
-    addTag (newTag) {
+    addTag(newTag) {
       const tag = {
         name: newTag,
         code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
@@ -667,7 +694,7 @@ export default {
       this.images.splice(key, 1);
       this.snappedQuestions.splice(key, 1);
     },
-    format_date2(value){
+    format_date2(value) {
       if (value) {
         return moment(String(value)).format('DD/MM/YYYY')
       }
@@ -711,9 +738,9 @@ export default {
     sendData(e) {
 
       this.checkForm();
-      if(this.errors.length === 0) {
+      if (this.errors.length === 0) {
 
-        var ctr=0;
+        var ctr = 0;
 
         this.classroom_id.forEach((value, index) => {
 
@@ -746,37 +773,42 @@ export default {
             this.toggleSchedule = !this.toggleSchedule
           }
 
+          this.isPublishing = true;
+
           Repository.post('/assignments/store',
-                  formData,
-                  {
-                    headers: {
-                      'Content-Type': 'multipart/form-data'
-                    }
-                  })
-                  .then(
-                          response => {
-                            const messageType = response.data.messageType
+              formData,
+              {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+              .then(response => {
 
-                            if (messageType === 'success') {
-                              ctr++;
-                              if (ctr === this.classroom_id.length) {
-                                this.published = !this.published
-                                console.log(ctr)
-                              }
-                            } else {
-                              ctr++;
-                              if (ctr === this.classroom_id.length) {
-                                this.error = !this.error
-                              }
-                            }
+                this.isPublishing = false;
 
-                          })
-                  .catch(error => {
-                    // error.push("error");
+                const messageType = response.data.messageType
+
+                if (messageType === 'success') {
+                  ctr++;
+                  if (ctr === this.classroom_id.length) {
+                    this.published = !this.published
+                  }
+                } else {
+                  ctr++;
+                  if (ctr === this.classroom_id.length) {
                     this.error = !this.error
-                  });
+                  }
+                }
+
+              })
+              .catch(error => {
+                // error.push("error");
+                this.isPublishing = false;
+
+                this.error = !this.error
+              });
         });
-      }else{
+      } else {
         this.error = !this.error
       }
     },
@@ -815,42 +847,45 @@ export default {
 </script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
-  .multiselect__placeholder{
-    color: #7B7F9E;
-  }
-  .multiselect__input{
-    font-weight: 400;
-    background: #F1F3F6;
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-    color: #7B7F9E;
-  }
-  .multiselect__select{
-    margin-top: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-  .multiselect__tags {
-    background: #F1F3F6;
-    font-weight: 400;
-    min-height: 0;
-    padding-top: 1.25rem;
-    padding-left: 1.5rem;
-    padding-bottom: 1.25rem;
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
+.multiselect__placeholder {
+  color: #7B7F9E;
+}
 
-  .multiselect__tag {
-    background-color: #7B7F9E;
-  }
+.multiselect__input {
+  font-weight: 400;
+  background: #F1F3F6;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: #7B7F9E;
+}
 
-  .multiselect__option--disabled{
-    background: purple;
-    color: white;
-    font-style: italic;
-  }
+.multiselect__select {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
 
-  .multiselect__option--highlight {
-    background: #bfbfbf;
-  }
+.multiselect__tags {
+  background: #F1F3F6;
+  font-weight: 400;
+  min-height: 0;
+  padding-top: 1.25rem;
+  padding-left: 1.5rem;
+  padding-bottom: 1.25rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.multiselect__tag {
+  background-color: #7B7F9E;
+}
+
+.multiselect__option--disabled {
+  background: purple;
+  color: white;
+  font-style: italic;
+}
+
+.multiselect__option--highlight {
+  background: #bfbfbf;
+}
 </style>

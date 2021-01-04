@@ -22,7 +22,8 @@
     </div>
 
     <!-- BUTTON -->
-    <button  @click="closeModal"
+    <button v-if="hasButton"
+            @click="closeModal"
             :class="buttonClass"
             class="w-full rounded-full px-2 py-4 font-bold leading-relaxed tracking-wider mt-7"
     >
@@ -54,6 +55,10 @@ export default {
       default() {
         return {}
       }
+    },
+    hasButton: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -92,7 +97,7 @@ export default {
     closeModal() {
       this.$emit('toggleModal');
 
-      if(Object.keys(this.redirectRoute).length > 0) {
+      if (Object.keys(this.redirectRoute).length > 0) {
         router.push(this.redirectRoute);
       }
     }
