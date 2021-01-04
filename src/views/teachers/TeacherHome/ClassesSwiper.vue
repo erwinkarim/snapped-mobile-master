@@ -10,8 +10,13 @@
                 <ProfilePhotoStacked/>
               </icon-base>
 
-              <div class="text-left text-px-10 ml-1 mt-2 text-purple-secondary">
+              <div class="text-left text-px-10 ml-1 mt-3 text-purple-secondary">
                 <span class="font-bold text-xs">{{ item.numOfStudents }}</span> Students
+              </div>
+
+              <!-- Num of Active Assignments -->
+              <div class="text-left text-px-10 ml-1 mt-1 text-purple-secondary">
+                <span class="font-bold text-xs mr-1">{{ item.numOfActiveAssignments }}</span> Active Assignments
               </div>
             </div>
 
@@ -95,7 +100,8 @@ export default {
                 classID : item.class_id,
                 className: item.class_name,
                 numOfStudents: item.num_of_students,
-                isHomeroom : item.homeroom
+                isHomeroom : item.homeroom,
+                numOfActiveAssignments: item.num_of_active_assignments
               }
 
               this.classes.push(classDetail);
