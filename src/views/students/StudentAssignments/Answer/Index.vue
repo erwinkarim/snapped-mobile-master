@@ -9,8 +9,9 @@
 
     <!-- MODAL -->
     <div v-if="isShowingModal"
-         class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal
+         class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70"
+    >
+      <modal v-if="submissionStatus === 'success'"
              :modal-type="submissionStatus"
              :redirect-route="submissionStatus === 'success' ? {name: 'student.assignments.show'} : {}"
              @toggleModal="toggleModal"
@@ -28,8 +29,18 @@
           Okay
         </template>
       </modal>
+      <modal v-if="isSubmitting"
+             modal-type="no-icon"
+             :has-button="false"
+             class="w-4/5 "
+      >
+        <p slot="message">
+          Submitting your answer.
+          <br>
+          Please wait...
+        </p>
+      </modal>
     </div>
-
 
 
     <router-view
@@ -60,6 +71,7 @@ export default {
 
       // States
       isShowingModal: false,
+      isSubmitting: false,
       submissionStatus: null,
 
       answer: {
@@ -79,6 +91,9 @@ export default {
     },
     handleSubmit(remarks) {
 
+      this.isSubmitting = true;
+      this.toggleModal();
+
       SubmissionRepository.store(
           {
             assignmentID: this.assignmentDetails.id,
@@ -87,6 +102,10 @@ export default {
             remarks: remarks,
           })
           .then(response => {
+
+            this.isSubmitting = false;
+            this.toggleModal();
+
             let content = response.data;
             let type = content.messageType;
 
