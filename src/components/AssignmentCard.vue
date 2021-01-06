@@ -2,7 +2,7 @@
   <router-link :to="route"
                class="max-w-sm rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3">
 
-    <div class="flex flex-col w-full">
+    <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full' " class="flex flex-col">
       <div class="flex flex-row justify-between mb-4 truncate">
         <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">
           {{ assignment.title }}
@@ -24,7 +24,8 @@
 
       <div class="flex flex-row items-baseline">
 
-        <div :class="hasMarks ? 'w-full' : 'w-5/7'" class="flex flex-row text-left text-px-10 text-purple-secondary pr-1">
+        <div :class="hasMarks ? 'w-full' : 'w-5/7'"
+             class="flex flex-row text-left text-px-10 text-purple-secondary pr-1">
           <div class="w-1/4 truncate"> {{ assignment.subjectName }}</div>
           <div class="w-1/4 truncate mx-1"> {{ assignment.classroomName }}</div>
           <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
@@ -41,7 +42,8 @@
     </div>
 
 
-    <div v-if="showMarks && hasMarks" class="w-1/4 text-right flex flex-row justify-end items-center font-bold text-green-primary text-px-12">
+    <div v-if="showMarks && hasMarks"
+         class="w-1/4 text-right flex flex-row justify-end items-center font-bold text-green-primary text-px-12">
       <circle-progress-bar
           :display-value="assignmentMarks" :diameter="65" :completed-steps="assignmentMarks" :total-steps="100"
           start-color="green" stroke-linecap="butt"
@@ -71,7 +73,7 @@ export default {
       default: 2
     },
     assignment: Object,
-    showMarks:{
+    showMarks: {
       type: Boolean,
       default: false
     }
