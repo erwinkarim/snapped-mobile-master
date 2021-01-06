@@ -23,9 +23,21 @@
       <div v-if="isShowingMarkings"
            class="relative pb-16/9 top-24">
         <div class="pt-4 z-10 bg-white px-6 pb-16">
-          <answer-preview-swiper
-              :images="details.markingPicturePaths"
-          />
+          <div class="w-full">
+            <div v-my-swiper="swiperOption">
+              <div class="swiper-wrapper">
+                <div v-for="(path, index) in details.markingPicturePaths"
+                     class="pb-16/9 bg-black-primary swiper-slide rounded-2xl flex flex-col">
+                  <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
+                    <img :src="path">
+                  </div>
+                </div>
+              </div>
+              <div class="swiper-pagination"></div>
+              <!--            <div class="swiper-button-prev" slot="button-prev"></div>-->
+              <!--            <div class="swiper-button-next" slot="button-next"></div>-->
+            </div>
+          </div>
         </div>
       </div>
 
@@ -58,9 +70,13 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Components/AnswerPreviewSwiper";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
+import {directive} from "vue-awesome-swiper";
 
 export default {
   name: "Index",
+  directives: {
+    mySwiper: directive
+  },
   props: {
     assignmentID: [String, Number],
     marksID: [String, Number]
@@ -75,6 +91,26 @@ export default {
       details: {
         markingPicturePaths: [],
         feedback: null
+      },
+
+      swiperOption: {
+        initialSlide: 0,
+        direction: 'horizontal',
+        speed: 200,
+        slidesPerView: 1,
+        spaceBetween: 15,
+        freeMode: false,
+        loop: false,
+        pagination: {
+          el: '.swiper-pagination',
+          type: 'bullets',
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        },
+        autoplay: false
       }
     }
   },
@@ -106,6 +142,7 @@ export default {
 
             this.details.markingPicturePaths = data.marks_details.marking_picture_url.split(',');
             this.details.feedback = data.marks_details.marks_feedback;
+
 
           })
     },
