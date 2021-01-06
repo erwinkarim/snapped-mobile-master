@@ -117,7 +117,7 @@ export default {
                 column.push(classDetail)
               }
 
-              if (column.length === cardsPerColumn || i === data.length) {
+              if (column.length === cardsPerColumn || i + 1 === data.length) {
                 this.classes.push(column)
                 column = []
               }
