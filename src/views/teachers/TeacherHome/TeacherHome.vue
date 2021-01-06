@@ -12,34 +12,34 @@
         <user-profile/>
       </div>
 
-      <div class="pl-5">
-        <!-- SECTION: SUMMARY -->
-        <div class="mt-2">
-          <div class="text-left mb-3">
-            <section-title class="mb-5" title="Summary"/>
-          </div>
 
-          <div class="w-full mt-3">
-            <div class="max-w-sm h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
-              <div class="flex flex-row grid grid-cols-3 divide-x items-center h-full">
-                <div class="grid grid-cols-1 divide-y pl-2">
-                  <div class="text-left text-purple-primary font-bold">{{numOfAssignments}}</div>
-                  <div class="text-left text-purple-primary text-xs-plus mb-1 h-12 py-2">
-                    Published Assignments
-                  </div>
-                </div>
-                <div class="grid grid-cols-1 divide-y pl-3">
-                  <div class="text-left text-purple-primary font-bold">{{numOfSubmissions}}</div>
-                  <div class="text-left text-purple-primary text-xs-plus mb-1 h-12 py-2">Submissions</div>
-                </div>
-                <div class="grid grid-cols-1 divide-y pl-4">
-                  <div class="text-left text-purple-primary font-bold">{{numOfUnmarkedSubmissions}}</div>
-                  <div class="text-left text-purple-primary text-xs-plus mb-1 h-12 py-2">Unmarked Submissions</div>
-                </div>
+      <!-- SECTION: SUMMARY -->
+      <div class="mt-2 px-5">
+        <div class="text-left mb-3">
+          <section-title class="mb-5" title="Summary"/>
+        </div>
+
+        <div class="max-w-sm h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
+          <div class="flex flex-row items-center h-full text-left text-purple-primary">
+            <div class="flex flex-col w-1/3 px-2 ">
+              <div class="border-b-1 font-bold  py-2">{{ numOfAssignments }}</div>
+              <div class="text-xs-plus mb-1 h-12 py-2">
+                Published Assignments
               </div>
+            </div>
+            <div class=" flex flex-col w-1/3  px-2 border-l-1 border-r-1">
+              <div class=" border-b-1 font-bold  py-2">{{ numOfSubmissions }}</div>
+              <div class=" text-xs-plus mb-1 h-12 py-2">Submissions</div>
+            </div>
+            <div class=" flex flex-col w-1/3 px-2">
+              <div class=" border-b-1 font-bold py-2">{{ numOfUnmarkedSubmissions }}</div>
+              <div class=" text-xs-plus mb-1 h-12 py-2">Unmarked Submissions</div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="pl-5">
 
 
         <!-- SECTION: CLASSES -->
