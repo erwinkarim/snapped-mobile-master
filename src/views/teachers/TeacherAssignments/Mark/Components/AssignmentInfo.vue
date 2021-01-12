@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-6 px-5">
+  <div class="mt-6 px-5 mb-24 md:max-w-xl">
     <!--  <div v-if="show" class="mt-6 px-5">-->
 
     <!-- Achievements -->

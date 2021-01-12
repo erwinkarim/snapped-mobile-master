@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div @click="goToStudentShow(student.id)" :key="student.id" v-for="student in students"
+    <div v-for="student in students"
+         :key="student.id"
+         @click="goToStudentShow(student.id)"
          class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white"
     >
       <div class="flex flex-row items-center w-11/12">

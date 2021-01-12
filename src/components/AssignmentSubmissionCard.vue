@@ -1,6 +1,6 @@
 <template>
 
-  <div @click="showSubmission" class="max-w-sm h-18 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
+  <div @click="showSubmission" class="max-w-sm md:max-w-xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3 md:py-5 ">
     <div class="flex flex-row items-center h-full">
 
       <div class="w-2/12">
@@ -9,7 +9,7 @@
         </icon-base-two>
       </div>
 
-      <div class="w-9/12 flex-col pl-2">
+      <div class="w-9/12 flex-col md:justify-between pl-2">
         <div class="text-left text-purple-primary text-xs-plus mb-1  truncate pr-4">
           {{ submission.studentName || '' }}
         </div>

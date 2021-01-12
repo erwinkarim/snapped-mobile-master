@@ -2,9 +2,9 @@
 
   <!-- BOTTOM BAR -->
 
-  <div v-if="show" :class="bottomBarClass" class="md:hidden block fixed inset-x-0 bottom-0 shadow pt-4 pb-6 px-5">
+  <div v-if="show" :class="bottomBarClass" class="md:max-w-xl mx-auto block fixed inset-x-0 bottom-0 shadow pt-4 pb-6 px-5">
 
-    <div class="w-full">
+    <div class="w-full md:max-w-xl mx-auto">
 
       <div v-if="$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
         <div
@@ -16,13 +16,14 @@
       <div v-else-if="$store.state.teacherMarking.states.isMarking" class="z-70">
 
         <div v-if="$store.state.teacherMarking.states.isSelectingSticker"
-             class="fixed inset-x-0 z-70 bg-white block bottom-0 h-3/5 rounded-t-2xl shadow-xl">
+             class="fixed inset-x-0 z-70 bg-white block bottom-0 h-3/5 md:h-2/5 rounded-t-2xl shadow-xl"
+        >
           <button @click="toggleStickerBar" class="bg-gray-primary h-2 w-1/5 rounded-full mt-3"></button>
           <!-- STICKER LOADER -->
           <sticker-loader class="mt-5"/>
         </div>
-        <div v-else class="flex flex-row h-full items-center justify-around">
-          <div class="w-full flex flex-row">
+        <div v-else class="flex flex-row w-full h-full items-center justify-around">
+          <div class="w-full md:max-w-xl md:mx-auto flex flex-row">
             <div class="w-1/3 px-1">
               <button @click="toggleStickerBar"
                       class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">

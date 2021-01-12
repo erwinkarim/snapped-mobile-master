@@ -1,10 +1,13 @@
 <template>
 
   <div class="mb-20" :class="containerClass" v-scroll="handleScroll">
-    <div :key="subject.subject_title" v-for="subject in filteredSubjects">
+    <div v-for="subject in filteredSubjects"
+         :key="subject.subject_title"
+    >
 
       <!-- Subject Title + Period -->
-      <div class="text-purple-primary truncate font-bold flex flex-row justify-between text-left text-sm bg-gray-secondary py-2 px-5">
+      <div
+          class="text-purple-primary truncate font-bold flex flex-row justify-between text-left text-sm bg-gray-secondary py-2 px-5">
         <div class="w-3/5 truncate">
           {{ subject.subject_title }}
         </div>
@@ -14,14 +17,14 @@
       </div>
 
       <!-- Student List for Subject -->
-      <div @click="goToStudentShow(student.id)" :key="student.id" v-for="student in subject.students"
-           class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white"
+      <div v-for="student in subject.students"
+           :key="student.id"
+           @click="goToStudentShow(student.id)"
+           class="text-left px-5 py-4 flex flex-row w-full border-b-1 items-center bg-white"
       >
-        <div class="w-1/6 h-full relative">
-          <icon-base class="absolute w-full" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
-            <profile-photo/>
-          </icon-base>
-        </div>
+        <icon-base class=" w-1/8">
+          <profile-photo/>
+        </icon-base>
         <div class="w-5/6 ml-5 text-purple-primary truncate pr-4">
           {{ student.name }}
         </div>
@@ -112,8 +115,8 @@ export default {
       })
     },
 
-    goToStudentShow (studentID) {
-      router.push({ name: 'student.profile.show', params: { studentID: studentID } })
+    goToStudentShow(studentID) {
+      router.push({name: 'student.profile.show', params: {studentID: studentID}})
     },
     handleScroll: function (evt, el) {
 

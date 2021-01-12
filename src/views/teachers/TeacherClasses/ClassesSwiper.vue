@@ -6,7 +6,11 @@
         <div class="swiper-slide" v-for="(column, index) in classes">
 
           <!-- CARD: CLASS DETAILS -->
-          <div v-for="(item, index) in column" @click="goToClass(item.classID, item.className)" class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3 mb-8">
+          <div v-for="(item, index) in column"
+               :key="item.classID"
+               @click="goToClass(item.classID, item.className)"
+               class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3 mb-8"
+          >
             <div class="flex-grow">
               <icon-base width="100" height="50" icon-name="app-logo" icon-color="white" view-box="0 0 105 50">
                 <ProfilePhotoStacked/>

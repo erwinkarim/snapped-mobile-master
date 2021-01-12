@@ -1,6 +1,6 @@
 <template>
   <router-link :to="route"
-               class="max-w-sm rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3">
+               class="max-w-sm md:max-w-2xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3">
 
     <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full' " class="flex flex-col">
       <div class="flex flex-row justify-between mb-4 truncate">
@@ -22,7 +22,7 @@
       </div>
 
 
-      <div class="flex flex-row items-baseline">
+      <div class="flex flex-row justify-around items-baseline">
 
         <div :class="hasMarks ? 'w-full' : 'w-5/7'"
              class="flex flex-row text-left text-px-10 text-purple-secondary pr-1">
@@ -31,11 +31,11 @@
           <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
         </div>
 
-        <div class="w-2/7" v-if="!hasMarks">
+        <div class="w-2/7 md:w-1/4" v-if="!hasMarks">
           <countdown-timer :due-date-time="assignment.dueDatetime"
 
                            :has-clock-icon="true"
-                           class="text-xs bg-purple-primary"
+                           class="text-2xs md:text-xs bg-purple-primary"
           />
         </div>
       </div>

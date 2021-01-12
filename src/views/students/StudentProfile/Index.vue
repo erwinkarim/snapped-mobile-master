@@ -10,8 +10,7 @@
     </template>
 
     <template v-slot:content>
-      <div
-          class="fixed top-20 px-5 pt-4 z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
+      <div class="fixed  top-20 px-5 pt-4 z-40 bg-white w-full border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft pb-4">
 
         <!-- SECTION: STUDENT DETAILS -->
         <div class="flex flex-row items-center items-center px-2">

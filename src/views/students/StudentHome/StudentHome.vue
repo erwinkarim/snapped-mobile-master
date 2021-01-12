@@ -1,47 +1,47 @@
 <template>
-  <dashboard-layout class=" pt-5">
+  <dashboard-layout class="pt-5">
     <template v-slot:content>
-      <div class="px-5">
+
+
+      <div class="flex flex-col px-5 w-full md:px-10">
         <div class="w-2/7">
           <icon-base-two>
             <AppLogo/>
           </icon-base-two>
         </div>
-        <user-profile/>
+        <user-profile />
       </div>
 
-      <div class="px-5">
+      <div class="px-5 w-full md:px-10">
 
         <!-- SECTION: SUMMARY -->
-        <div class="mt-2">
-          <div class="text-left mb-3">
-            <section-title class="mb-5" title="Summary"/>
-          </div>
+        <div class="mt-2 mb-3">
+            <section-title class="mb-5 text-left" title="Summary"/>
 
-          <div class="max-w-sm h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
+          <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
-              <div class="flex flex-col w-1/3 px-2 ">
-                <div class="border-b-1 font-bold  py-2">{{ numOfNewAssignments }}</div>
-                <div class="text-xs-plus mb-1 h-12 py-2">
+              <div class="flex flex-col px-2 w-1/3">
+                <div class="py-2 font-bold border-b-1">{{ numOfNewAssignments }}</div>
+                <div class="py-2 mb-1 h-12 text-xs-plus">
                   New Assignments
                 </div>
               </div>
-              <div class=" flex flex-col w-1/3  px-2 border-l-1 border-r-1">
-                <div class=" border-b-1 font-bold  py-2">{{ numOfDueSoonAssignments }}</div>
-                <div class=" text-xs-plus mb-1 h-12 py-2">Due Soon Assignments</div>
+              <div class="flex flex-col px-2 w-1/3 border-l-1 border-r-1">
+                <div class="py-2 font-bold border-b-1">{{ numOfDueSoonAssignments }}</div>
+                <div class="py-2 mb-1 h-12 text-xs-plus">Due Soon Assignments</div>
               </div>
-              <div class=" flex flex-col w-1/3 px-2">
-                <div class=" border-b-1 font-bold py-2">{{ numOfOverdueAssignments }}</div>
-                <div class=" text-xs-plus mb-1 h-12 py-2">Overdue Assignments</div>
+              <div class="flex flex-col px-2 w-1/3">
+                <div class="py-2 font-bold border-b-1">{{ numOfOverdueAssignments }}</div>
+                <div class="py-2 mb-1 h-12 text-xs-plus">Overdue Assignments</div>
               </div>
             </div>
           </div>
 
         </div>
 
-        <!-- SECTION: CLASSES -->
+        <!-- SECTION: ASSIGNMENTS -->
         <div class="mt-5">
-          <div class="text-left mb-3">
+          <div class="mb-3 text-left w-full">
             <section-title class="mb-5" title="Active Assignments"/>
           </div>
           <assignment-card

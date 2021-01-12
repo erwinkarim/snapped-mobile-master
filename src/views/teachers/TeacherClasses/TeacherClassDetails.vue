@@ -24,7 +24,7 @@
     </template>
 
     <template v-slot:content>
-      <subjects-list class="" :search="search"/>
+      <subjects-list class="w-full" :search="search"/>
     </template>
   </dashboard-layout>
 </template>

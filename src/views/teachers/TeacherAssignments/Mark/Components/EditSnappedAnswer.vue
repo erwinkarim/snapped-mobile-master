@@ -1,6 +1,6 @@
 <template>
 
-  <div class="h-screen bg-black-primary">
+  <div class="h-screen  w-full bg-black-primary">
 
     <page-header-three background-color="bg-black-primary" :bottom-padding="4">
       <template v-slot:leftAction>
@@ -15,13 +15,11 @@
       </template>
     </page-header-three>
 
-    <div class="flex flex-col w-screen ">
+    <div class="flex flex-col w-screen md:max-w-xl md:w-full ">
       <div class="relative top-24 pb-16/9">
-        <div
-            class="w-full bg-black-primary h-full object-cover top-0 flex flex-row justify-center items-center absolute">
+        <div class="md:max-w-xl w-full bg-black-primary h-full object-cover top-0 flex flex-row justify-center items-center absolute">
           <canvas id="canvas" crossOrigin="Anonymous"/>
         </div>
-
       </div>
     </div>
 
