@@ -1,8 +1,8 @@
 <template>
-  <div class="px-5">
+  <div class="px-5 w-full">
 
     <!-- TOTAL SCORE -->
-    <div class="bg-purple-primary flex flex-row w-full rounded-lg">
+    <div class="bg-purple-primary flex flex-row w-full rounded-lg md:mt-4" >
       <div class="flex flex-col w-2/3 text-white text-left px-5 py-6">
         <div class="font-bold text-3xl mb-1"> {{ assignmentScore.total || '-' }}</div>
         <div class="text-xs">Total assignments score</div>
@@ -63,7 +63,6 @@ export default {
             this.assignmentSubmission = data.assignment_submission;
             this.overallSubjectsScore = data.overall_subjects_score;
             this.guardians = data.guardian;
-
 
             this.personalDetails = data.data
 

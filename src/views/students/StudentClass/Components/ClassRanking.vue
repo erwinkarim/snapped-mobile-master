@@ -3,7 +3,7 @@
   <layout-one>
     <!-- Subject Title + Period -->
     <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5 mb-5">
-      Class Ranking (Jan - Dec 2020)
+      Class Ranking (Jan - Dec 2021)
     </div>
 
     <div class="px-5">
@@ -34,7 +34,7 @@
           </icon-base-two>
         </div>
 
-        <div class="flex w-7/12 py-3">
+        <div class="flex w-7/12 py-3 md:py-6">
 
           <!-- Student Details -->
           <div class="flex flex-col w-full justify-between">
@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <div class="w-2/12 flex flex-col justify-center font-bold text-lg ">
+        <div class="w-2/12 flex flex-col justify-center font-bold text-lg md:text-xl ">
           {{ student.student.total_marks_overall }}
         </div>
       </router-link>

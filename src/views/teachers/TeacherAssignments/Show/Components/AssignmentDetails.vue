@@ -2,11 +2,11 @@
   <dashboard-layout>
 
     <template v-slot:content>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <div class=" relative w-full top-1/12">
 
           <!-- Page Content -->
-          <div class="absolute w-full z-20 mb-32">
+          <div class="absolute w-full z-20 md:z-40 lg:z-50 mb-32">
 
             <!-- HEADER with Nav Back -->
             <page-header-three background-color="bg-transparent" class="relative">

@@ -1,5 +1,7 @@
 <template>
-  <dashboard-layout :has-fixed-header="true">
+  <dashboard-layout
+      :has-fixed-header="true"
+  >
 
     <template v-slot:pageHeader>
       <page-header-three
@@ -18,7 +20,7 @@
 
 
     <template v-slot:content>
-      <div class="relative h-40 top-45 px-5">
+      <div class="relative h-40 top-45 md:mt-10 px-5 w-full">
 
         <div v-for="(student, index) in rankings"
              :key="student.id"
@@ -26,7 +28,7 @@
 
           <div class="flex flex-row w-3/12 items-center">
             <!-- Ranking -->
-            <div :class="student.ranking === 1 ? 'items-start' : 'justify-center px-2'"
+            <div :class="student.ranking === 1 ? 'items-start' : 'dajustify-center px-2'"
                  class=" flex flex-col w-3/7 h-full  text-center mr-1 ">
 
               <icon-base-two v-if="student.ranking === 1" class="w-full">

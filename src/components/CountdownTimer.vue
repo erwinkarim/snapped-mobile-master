@@ -1,7 +1,7 @@
 <template>
   <div v-if="timeLeft" :class="containerClass"
        class="rounded-full text-white tracking-tight flex flex-row items-center justify-center px-1 py-1">
-    <div v-if="hasClockIcon" class="w-1/7">
+    <div v-if="hasClockIcon" class="w-1/7 md:w-1/10">
       <stop-watch-icon/>
     </div>
     <div class="w-5/7 truncate px-1">

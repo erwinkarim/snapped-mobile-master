@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full md:max-w-2xl mx-auto">
     <div v-for="chunk in $store.getters['teacherMarking/markingStickers']" class="flex flex-row items-center justify-center w-full px-5">
       <div @click="selectSticker(sticker)" v-for="sticker in chunk" class="w-1/3 px-4 py-6">
         <icon-base-two  class="w-5/6">

@@ -5,13 +5,13 @@
     </template>
 
     <template v-slot:content>
-      <div class="px-5">
+      <div class="px-5 w-full max-w-xl">
 
 
         <!-- Section Title -->
         <div class="flex flex-row justify-between mt-8 items-center">
           <section-title title="Assignments Date"/>
-          <div class="w-1/12" @click="modal = !modal">
+          <div class="w-1/12 md:w-1/24" @click="modal = !modal">
             <icon-base-two stroke-color="purple-primary">
               <filter-icon/>
             </icon-base-two>
@@ -19,7 +19,7 @@
         </div>
 
         <!-- SECTION: CALENDAR -->
-        <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
+        <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl ">
           <assignment-calendar @selectedDate="handleSelectedDate"/>
         </div>
 
@@ -71,7 +71,7 @@
 
     <!-- BOTTOM BAR: FILTER PANEL-->
     <template v-slot:bottomBar>
-      <div class="w-full divide-y divide-transparent">
+      <div class="w-full md:max-w-xl divide-y divide-transparent">
 
         <!-- FILTER SELECT OPTIONS -->
         <div class="py-2">
@@ -103,11 +103,11 @@
             </div>
             <div class="text-center">
               <button @click="clickedFilterButton"
-                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row  items-center justify-center">
                 <div class="w-5/7">
                   Filter
                 </div>
-                <icon-base-two class="w-1/7">
+                <icon-base-two class="w-1/7 md:w-1/12">
                   <filter-icon/>
                 </icon-base-two>
               </button>

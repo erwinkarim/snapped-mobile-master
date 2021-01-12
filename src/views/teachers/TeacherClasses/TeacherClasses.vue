@@ -6,12 +6,12 @@
     </template>
 
     <template v-slot:content>
-      <div class="px-5">
+      <div class="px-5 w-full">
 
         <!-- SECTION : CLASS Overview -->
         <div class="mt-8">
           <section-title class="text-left mb-3 mb-5" title="Your Classes"/>
-          <div class="max-w-sm h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-6 py-3">
+          <div class="max-w-sm md:max-w-xl h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-6 py-3">
             <div class="flex flex-row items-center h-full justify-between">
               <div class="flex-col text-left text-purple-primary">
                 <div class="font-bold text-3xl" >{{numOfClasses}}</div>
@@ -22,8 +22,8 @@
         </div>
 
         <!-- SECTION : CLASS Overview -->
-        <div class="mt-8" >
-          <section-title class="text-left mb-3 mb-5" title="Class List"/>
+        <div class="mt-8 w-full" >
+          <section-title class="text-left mb-5" title="Class List"/>
           <classes-swiper class="w-full" @numOfClasses="getNumOfClasses"/>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default {
     getNumOfClasses(value){
       this.numOfClasses = value;
     }
-  }
+  },
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-screen ">
+    <div class="flex flex-col w-screen md:max-w-xl mx-auto ">
 
       <!-- CONTENT -->
       <div :class="contentClass" class="relative top-24">

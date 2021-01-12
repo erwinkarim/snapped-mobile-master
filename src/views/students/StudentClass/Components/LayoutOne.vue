@@ -1,14 +1,14 @@
 <template>
   <div class="h-full bottom-0">
 
-    <div id="header" class=" w-full bg-white flex flex-col  z-40 fixed" >
+    <div id="header" class=" w-full bg-white flex flex-col md:max-w-xl z-40 fixed " >
 
       <page-title title="Class">
 
         <template v-slot:rightAction>
           <div class="flex flex-row justify-end items-center ">
-            <router-link :to="{name: 'student.class.classmates'}" class="w-1/7 bg-white ">
-              <icon-base-two>
+            <router-link :to="{name: 'student.class.classmates'}" class="w-1/7 ">
+              <icon-base-two class="md:w-3/4">
                 <magnifying-glass-icon stroke-color="red-primary"/>
               </icon-base-two>
             </router-link>

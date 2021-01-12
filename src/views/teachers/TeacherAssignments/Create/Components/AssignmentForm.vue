@@ -373,26 +373,32 @@
     </template>
 
     <template v-slot:bottomBar v-if="showAssignment">
-      <div class="w-4/7 px-2">
-        <button @click="toggleSchedule = !toggleSchedule"
-                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-          <div class="w-5/7">
-            Schedule Publish
-          </div>
-          <icon-base-two class="w-1/7">
-            <calendar-icon/>
-          </icon-base-two>
-        </button>
+      <div class="flex flex-row w-full max-w-xl">
+        <div class="w-4/7 px-2">
+          <button @click="toggleSchedule = !toggleSchedule"
+                  class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row items-center justify-center"
+          >
+            <div class="w-full md:w-5/7">
+              Schedule Publish
+            </div>
+            <div class="hidden md:block md:w-1/7">
+              <icon-base-two class="w-3/4 md:w-1/2">
+                <calendar-icon/>
+              </icon-base-two>
+            </div>
+          </button>
+        </div>
+        <div class="w-3/7 px-2">
+          <button @click="sendData"
+                  :disabled="isPublishing"
+                  class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+            <div class="w-5/7">
+              Publish Now
+            </div>
+          </button>
+        </div>
       </div>
-      <div class="w-3/7 px-2">
-        <button @click="sendData"
-                :disabled="isPublishing"
-                class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
-          <div class="w-5/7">
-            Publish Now
-          </div>
-        </button>
-      </div>
+
     </template>
   </dashboard-layout>
 </template>

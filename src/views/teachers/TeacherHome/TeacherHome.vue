@@ -2,7 +2,7 @@
   <dashboard-layout class=" pt-5">
 
     <template v-slot:content>
-      <div class="px-5">
+      <div class="px-5 max-w-xl">
         <div class="w-2/7">
           <icon-base-two>
             <AppLogo/>
@@ -12,62 +12,64 @@
         <user-profile/>
       </div>
 
+      <div class="max-w-xl">
 
-      <!-- SECTION: SUMMARY -->
-      <div class="mt-2 px-5">
-        <div class="text-left mb-3">
-          <section-title class="mb-5" title="Summary"/>
-        </div>
+        <!-- SECTION: SUMMARY -->
+        <div class="mt-2 px-5">
+          <div class="text-left mb-3">
+            <section-title class="mb-5" title="Summary"/>
+          </div>
 
-        <div class="max-w-sm h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
-          <div class="flex flex-row items-center h-full text-left text-purple-primary">
-            <div class="flex flex-col w-1/3 px-2 ">
-              <div class="border-b-1 font-bold  py-2">{{ numOfAssignments }}</div>
-              <div class="text-xs-plus mb-1 h-12 py-2">
-                Published Assignments
+          <div class="max-w-sm md:max-w-xl md:w-full h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
+            <div class="flex flex-row items-center h-full text-left text-purple-primary">
+              <div class="flex flex-col w-1/3 px-2 ">
+                <div class="border-b-1 font-bold  py-2">{{ numOfAssignments }}</div>
+                <div class="text-xs-plus mb-1 h-12 py-2">
+                  Published Assignments
+                </div>
+              </div>
+              <div class=" flex flex-col w-1/3  px-2 border-l-1 border-r-1">
+                <div class=" border-b-1 font-bold  py-2">{{ numOfSubmissions }}</div>
+                <div class=" text-xs-plus mb-1 h-12 py-2">Submissions</div>
+              </div>
+              <div class=" flex flex-col w-1/3 px-2">
+                <div class=" border-b-1 font-bold py-2">{{ numOfUnmarkedSubmissions }}</div>
+                <div class=" text-xs-plus mb-1 h-12 py-2">Unmarked Submissions</div>
               </div>
             </div>
-            <div class=" flex flex-col w-1/3  px-2 border-l-1 border-r-1">
-              <div class=" border-b-1 font-bold  py-2">{{ numOfSubmissions }}</div>
-              <div class=" text-xs-plus mb-1 h-12 py-2">Submissions</div>
+          </div>
+        </div>
+
+        <div class="pl-5">
+
+
+          <!-- SECTION: CLASSES -->
+          <div class="mt-6">
+            <div class="text-left mb-3">
+              <section-title class="mb-5" title="Your Classes"/>
             </div>
-            <div class=" flex flex-col w-1/3 px-2">
-              <div class=" border-b-1 font-bold py-2">{{ numOfUnmarkedSubmissions }}</div>
-              <div class=" text-xs-plus mb-1 h-12 py-2">Unmarked Submissions</div>
+
+            <ClassesSwiper class="w-full mt-3"/>
+          </div>
+
+          <!-- SECTION: ASSIGNMENTS -->
+          <div class="mt-6">
+            <div class="text-left mb-3">
+              <section-title class="mb-5" title="Active Assignments"/>
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pl-5">
-
-
-        <!-- SECTION: CLASSES -->
-        <div class="mt-6">
-          <div class="text-left mb-3">
-            <section-title class="mb-5" title="Your Classes"/>
+            <AssignmentSwiper class="mt-3 " @numOfAssignments="getNumOfAssignments"/>
           </div>
 
-          <ClassesSwiper class="w-full mt-3"/>
-        </div>
-
-        <!-- SECTION: ASSIGNMENTS -->
-        <div class="mt-6">
-          <div class="text-left mb-3">
-            <section-title class="mb-5" title="Active Assignments"/>
+          <!-- SECTION: SUBMISSIONS -->
+          <div class="mt-8">
+            <div class="text-left mb-3">
+              <section-title class="mb-5" title="Submissions"/>
+            </div>
+            <assignment-submission-card
+                v-for="submission in submissions"
+                :submission="submission"
+                class="mb-6"/>
           </div>
-          <AssignmentSwiper class="mt-3 " @numOfAssignments="getNumOfAssignments"/>
-        </div>
-
-        <!-- SECTION: SUBMISSIONS -->
-        <div class="mt-8">
-          <div class="text-left mb-3">
-            <section-title class="mb-5" title="Submissions"/>
-          </div>
-          <assignment-submission-card
-              v-for="submission in submissions"
-              :submission="submission"
-              class="mb-6"/>
         </div>
       </div>
 
