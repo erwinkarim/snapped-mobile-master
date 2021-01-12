@@ -21,6 +21,7 @@ module.exports = {
                 '19': '4.75rem',
                 '26': '6.5rem',
                 '28': '7rem',
+                '36': '9rem',
                 '42': '10.5rem',
                 '44': '11rem',
                 '46': '11.5rem',
@@ -166,6 +167,7 @@ module.exports = {
                 '1/12': '8.333333',
                 '1/24': '4.166667',
                 'full': '100%',
+                'half-screen': '50vh',
             },
             colors: {
                 'gray-primary': '#BEBEBE',

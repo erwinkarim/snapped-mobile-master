@@ -54,7 +54,7 @@ export default {
                 main: null,
                 dimensions: {
                     height: 0.75 * screen.height,
-                    width: screen.width
+                    width: screen.width > 700 ? 0.5 * screen.width : screen.width
                 }
             },
         },
@@ -280,7 +280,7 @@ export default {
                     main: null,
                     dimensions: {
                         height: 0.75 * screen.height,
-                        width: screen.width
+                        width: screen.width > 700 ? 0.5 * screen.width : screen.width
                     }
                 },
             };

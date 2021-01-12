@@ -1,30 +1,31 @@
 <template>
-  <dashboard-layout :has-fixed-header="true" :has-custom-bottom-bar="true">
-
+  <dashboard-layout
+      :has-fixed-header="true"
+      :has-custom-bottom-bar="true"
+  >
 
     <template v-slot:content>
 
-      <div class="flex flex-col">
-        <div class="relative w-full justify-center">
-
+      <div class="flex flex-col w-full max-w-xl">
+        <div class="relative justify-center w-full">
 
           <!-- Page Content -->
-          <div class="absolute w-full z-20 mb-32">
+          <div class="absolute z-20 md:z-40 mb-32 w-full">
 
             <!-- HEADER with Nav Back -->
-            <div class="flex flex-row w-full justify-between pt-3/24 px-5">
+            <div class="flex flex-row justify-between px-5 w-full pt-3/24">
               <nav-back class="w-1/12" stroke-color="white" :to="{name: 'student.assignments'}"/>
             </div>
 
             <!-- TIMER -->
-            <div class="w-full flex flex-row justify-center items-center mt-1/24">
+            <div class="flex flex-row justify-center items-center w-full mt-1/24">
               <div class="flex flex-col w-1/2">
-                <div class="text-white font-bold text-sm">
+                <div class="text-sm font-bold text-white">
                   Assignment Time Remaining
                 </div>
-                <div class=" bg-green-primary mt-3 py-1 rounded-full">
+                <div class="py-1 mt-3 rounded-full bg-green-primary">
 
-                  <div class="text-white font-bold text-3xl tracking-wider">
+                  <div class="text-3xl font-bold tracking-wider text-white">
                     <countdown-timer v-if="assignment.dueDatetime"
                                      :due-date-time="assignment.dueDatetime"
                                      :has-twenty-four-hour-limit="false"
@@ -42,14 +43,14 @@
             />
 
             <!-- Submissions -->
-            <div class="mt-8 px-8  mb-32">
-              <div class="flex flex-row justify-between text-purple-primary font-bold">
+            <div class="px-8 mt-8 mb-32">
+              <div class="flex flex-row justify-between font-bold text-purple-primary">
                 <div>
                   Submission
                 </div>
               </div>
 
-              <div v-if="hasSubmissions" class="mt-4 ">
+              <div v-if="hasSubmissions" class="mt-4">
                 <assignment-submission-card
                     v-for="submission in submissions"
                     :key="submission.id"
@@ -59,7 +60,7 @@
                     class="mb-3"
                 />
               </div>
-              <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
+              <div v-else class="mt-4 text-left text-purple-secondary text-xs-plus">
                 No ongoing submissions at the moment.
               </div>
 
@@ -73,10 +74,9 @@
 
         <div class="relative">
           <!-- Background Stack Green -->
-          <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
+          <div class="top-0 z-0 w-full md:max-w-xl sm:z-10 md:z-20 bg-green-primary pb-2/3">
             <!-- Background Stack Overlay -->
-            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">
-            </div>
+            <div class="absolute top-0 z-10 w-full bg-black bg-opacity-10 md:max-w-xl sm:z-20 md:z-30 pb-2/3"></div>
           </div>
         </div>
 
@@ -85,40 +85,40 @@
 
     <template v-slot:bottomBar>
 
-      <div v-if="!isLoading" class="w-full">
+      <div v-if="!isLoading" class="w-full md:max-w-xl">
 
         <div v-if="hasEditableSubmission && !isPastDueDate" class="w-full">
           <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: studentSubmission.id}}"
-                       class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+                       class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
             Edit Answer
           </router-link>
         </div>
 
         <div v-else-if="hasEditableSubmission && isPastDueDate" class="w-full">
           <div
-              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+              class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
             Submitted
           </div>
         </div>
 
         <div v-else-if="hasMarkedSubmission">
           <router-link :to="{name: 'student.marked.show', params: {marksID: studentSubmission.marks_id}}"
-                       class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+                       class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
             View Marking
           </router-link>
         </div>
 
-        <div v-else class="w-full flex flex-row">
+        <div v-else class="flex flex-row w-full">
 
           <!-- BUTTON: WRITE ANSWER -->
           <!--          <div class="flex-grow px-2">-->
           <!--            <router-link-->
           <!--                :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"-->
-          <!--                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">-->
+          <!--                class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">-->
           <!--              <div class="w-5/7">-->
           <!--                Write Answer-->
           <!--              </div>-->
-          <!--              <icon-base-two class="w-1/7 hidden xs:block">-->
+          <!--              <icon-base-two class="hidden w-1/7 xs:block">-->
           <!--                <pen-icon/>-->
           <!--              </icon-base-two>-->
           <!--            </router-link>-->
@@ -126,12 +126,12 @@
           <div class="flex-grow px-2">
 
             <label
-                class="w-full h-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row items-center justify-center">
+                class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
               <div class="mr-3">
                 Snap Answer
                 <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
               </div>
-              <icon-base-two class="hidden xs:block w-1/12">
+              <icon-base-two class="hidden w-1/12 xs:block">
                 <camera-icon/>
               </icon-base-two>
             </label>

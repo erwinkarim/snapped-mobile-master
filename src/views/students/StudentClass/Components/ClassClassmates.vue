@@ -7,7 +7,7 @@
           @search="handleSearch"
       >
         <template v-slot:leftAction>
-          <nav-back class="w-2/7" stroke-color="red-primary"/>
+          <nav-back class="w-2/7 md:w-1/5" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           Classmate List
@@ -16,22 +16,21 @@
     </template>
 
     <template v-slot:content>
-      <div class="relative top-45 mb-24">
-        <div class=" border-t-2 border-opacity-15 border-gray-primary">
-          <router-link v-for="student in filteredStudents"
-               :key="student.id"
-                       :to="{name : 'student.profile.show', params: {studentID: student.student_id} }"
-               class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-2 border-opacity-15 border-gray-primary items-center bg-white"
-          >
-            <div class="w-1/6 h-full relative">
-              <icon-base-two class="absolute w-full" icon-name="profile-photo-icon" icon-color="white"
-                             view-box="0 0 60 55">
-                <profile-photo/>
-              </icon-base-two>
+      <div class="relative top-46 md:w-full mb-24">
+        <router-link v-for="student in filteredStudents"
+                     :key="student.id"
+                     :to="{name : 'student.profile.show', params: {studentID: student.student_id} }"
+             class="text-left px-5 py-2 md:py-4 flex flex-row w-full border-b-1 items-center bg-white">
+
+          <div class="flex flex-row items-center truncate w-11/12">
+            <icon-base-two class=" w-1/6">
+              <profile-photo/>
+            </icon-base-two>
+            <div class="ml-5 text-purple-primary w-5/6 mr-2 truncate pr-4">
+              {{ student.name }}
             </div>
-            <div class="ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
-          </router-link>
-        </div>
+          </div>
+        </router-link>
       </div>
 
     </template>

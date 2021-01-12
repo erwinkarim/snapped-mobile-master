@@ -76,7 +76,7 @@
       </div>
 
 
-      <div class="relative pt-7/24 px-6 h-full text-left text-purple-primary">
+      <div class="relative pt-7/24 px-6 h-full w-full text-left text-purple-primary">
 
         <!-- SUBMISSION DETAIL -->
         <div>
@@ -185,7 +185,7 @@
 
 
     <template v-slot:bottomBar v-if="isMainPage">
-      <div class="w-full px-2">
+      <div class="w-full md:max-w-xl px-2">
         <button @click="submit"
                 class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
           Submit Answer

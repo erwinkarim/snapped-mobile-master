@@ -1,5 +1,7 @@
 <template>
-  <div :class="containerClass" class="h-screen">
+  <div :class="containerClass"
+       class="h-full md:max-w-xl mb-40 mx-auto"
+  >
 
     <!-- OVERLAYS -->
     <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="toggleModalMode()"

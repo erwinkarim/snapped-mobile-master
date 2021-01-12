@@ -15,7 +15,7 @@
     </template>
 
     <template v-slot:content>
-      <div class="px-5">
+      <div class="px-5 w-full">
         <!-- Section Title -->
         <div class="flex flex-row justify-between items-center mt-8">
           <section-title title="Assignments Date"/>
@@ -25,7 +25,6 @@
                 <filter-icon/>
               </icon-base-two>
             </button>
-
           </div>
         </div>
 
@@ -75,7 +74,7 @@
     </template>
 
     <template v-slot:bottomBar>
-      <div class="w-full divide-y divide-transparent">
+      <div class="w-full max-w-xl divide-y divide-transparent">
 
         <!-- FILTER SELECT OPTIONS -->
         <div class="py-2">
@@ -111,9 +110,11 @@
                 <div class="w-5/7">
                   Filter
                 </div>
-                <icon-base-two class="w-1/7">
-                  <filter-icon/>
-                </icon-base-two>
+                <div class="w-1/7">
+                  <icon-base-two class="w-full md:w-1/2">
+                    <filter-icon/>
+                  </icon-base-two>
+                </div>
               </button>
             </div>
           </div>

@@ -15,7 +15,7 @@
       </page-header-three>
     </template>
     <template v-slot:content>
-      <students-list :search="search" class="relative top-46 mb-40"/>
+      <students-list :search="search" class="relative top-46 md:mt-4 mb-40 w-full"/>
     </template>
   </dashboard-layout>
 

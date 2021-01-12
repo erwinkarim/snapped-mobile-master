@@ -24,9 +24,9 @@
     </template>
 
     <template v-slot:content>
-      <div class="pt-32 px-6 h-full">
+      <div class="pt-32 px-6 w-full ">
       <textarea v-model="draft"
-                class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"></textarea>
+                class="resize-y text-purple-primary  w-full min-h-half-screen  rounded focus:outline-none"></textarea>
       </div>
     </template>
   </dashboard-layout>
