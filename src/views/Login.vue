@@ -22,7 +22,7 @@
       </div>
 
       <!-- INPUTS -->
-      <div class="px-3 md:max-w-xl lg:max-w-2xl md:w-full mx-auto">
+      <div class="px-3 w-full md:max-w-xl lg:max-w-2xl mx-auto">
         <div class="bg-red-500 mb-4 py-3 px-4 text-left text-white text-xs rounded-lg" v-if="errors.length">
           <ul>
             <li v-for="error in errors">{{ error }}</li>
