@@ -25,16 +25,51 @@
       <div v-if="hasWrittenQuestion"
            class="mt-8 text-purple-primary text-xs-plus flex flex-col"
       >
+
+        <!-- WRITTEN QUESTION TITLE -->
         <div v-if="assignment.written_question.title"
              class="mb-2 truncate"
         >
           {{ assignment.written_question.title }}
         </div>
-        <text-multiline-truncate v-if="assignment.written_question.description"
-                                 :lines="7"
+
+        <!-- WRITTEN QUESTION DESCRIPTION -->
+        <div v-if="assignment.written_question.description"
+            id="test"
         >
-          {{ assignment.written_question.description }}
-        </text-multiline-truncate>
+          <div v-if="isReadingMore"
+               class="leading-relaxed"
+          >
+            {{ assignment.written_question.description }}
+          </div>
+          <text-multiline-truncate v-else :lines="7" >
+            {{ assignment.written_question.description }}
+          </text-multiline-truncate>
+        </div>
+
+        <!-- WRITTEN QUESTION READ MORE BUTTON -->
+        <button v-if="assignment.written_question.description && hasReadMore"
+                @click="toggleReadMore"
+                class="mt-6 md:max-w-sm w-1/3 md:w-1/5 flex flex-row items-center text-red-primary focus:outline-none text-left"
+        >
+          <span class="w-6/7 font-bold">
+            {{ isReadingMore ? 'Read less' : 'Read more' }}
+          </span>
+          <div v-if="isReadingMore" class="w-1/7">
+            <svg width="100%" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M1.14511 6L4.85516 2.28995L8.56521 6L9.71021 4.85504L4.85516 -4.24441e-07L0.000117402 4.85504L1.14511 6Z"
+                  fill="#F53B57"/>
+            </svg>
+
+          </div>
+          <div v-else class="w-1/7">
+            <svg width="100%" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.56509 0L4.85504 3.71005L1.14499 0L0 1.14496L4.85504 6L9.71009 1.14496L8.56509 0Z"
+                    fill="#F53B57"/>
+            </svg>
+          </div>
+        </button>
       </div>
 
       <!-- Snapped Question -->
@@ -59,7 +94,12 @@ export default {
   props: {
     assignment: Object,
     meta: Object,
-
+  },
+  data() {
+    return {
+      // States
+      isReadingMore: false,
+    }
   },
   computed: {
     hasWrittenQuestion: function () {
@@ -69,8 +109,32 @@ export default {
     hasSnappedQuestion: function () {
       return this.assignment.snap_question_paths !== undefined && this.assignment.snap_question_paths.length > 0;
     },
+
+    hasReadMore() {
+
+      if (this.assignment.written_question.description !== null) {
+
+        let screenWidth = window.innerWidth;
+        let characterCount = this.assignment.written_question.description.length;
+
+        console.log(`Width: ${screenWidth} | Char: ${characterCount}`)
+
+        if (screenWidth > 500) {
+          return characterCount > 450;
+        } else {
+          return characterCount > 250;
+        }
+
+
+      }
+
+      return false;
+    }
   },
   methods: {
+    toggleReadMore() {
+      this.isReadingMore = !this.isReadingMore;
+    },
     getHumanDate(datetime) {
 
       if (datetime) {

@@ -54,7 +54,7 @@
 
       <div class="w-full flex flex-row">
         <button @click="toggleMode"
-                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+                class="w-full md:max-w-xl md:mx-auto font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
           {{ buttonText }}
         </button>
       </div>
