@@ -17,13 +17,13 @@
         <div class="flex flex-row w-4/12 items-center">
           <!-- Ranking -->
           <div :class="student.ranking === 1 ? 'items-start' : 'justify-center px-2'"
-               class=" flex flex-col w-3/7 h-full  text-center mr-1 ">
+               class=" flex flex-col items-center w-3/7 h-full  text-center mr-1 ">
 
-            <icon-base-two v-if="student.ranking === 1" class="w-full">
+            <icon-base-two v-if="student.ranking === 1" class="w-full md:w-6/7">
               <gold-medal-icon/>
             </icon-base-two>
 
-            <div v-else class="font-bold text-3xl">
+            <div v-else class="font-bold text-lg md:text-3xl">
               {{ student.ranking }}
             </div>
           </div>
@@ -34,7 +34,7 @@
           </icon-base-two>
         </div>
 
-        <div class="flex w-7/12 py-3 md:py-6">
+        <div class="flex w-6/12 py-3 md:py-6">
 
           <!-- Student Details -->
           <div class="flex flex-col w-full justify-between">
@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <div class="w-2/12 flex flex-col justify-center font-bold text-lg md:text-xl ">
+        <div class="w-3/12 flex flex-col justify-center font-bold text-sm text-right pr-5 md:text-lg ">
           {{ student.student.total_marks_overall }}
         </div>
       </router-link>

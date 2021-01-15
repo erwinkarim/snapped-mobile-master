@@ -44,7 +44,10 @@
                 :show-marks="true"
             >
               <template v-slot:topRightAction v-if="!assignment.marks">
-                {{ assignment.totalSubmitted }} submitted
+                <div class="pr-1 md:pr-3">
+                  {{ assignment.totalSubmitted }} submitted
+
+                </div>
               </template>
             </assignment-card>
 
