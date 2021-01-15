@@ -43,6 +43,18 @@ export default {
         })
     },
 
+    getPublishedAssignments() {
+        return Repository.post('/assignments', {
+            filters: {
+                is_active: false,
+                date: null,
+                month: null,
+                year: null,
+                subjects: null
+            }
+        })
+    },
+
     find(assignmentID) {
         return Repository.get(`${resource}/${assignmentID}/submissions`)
     },
