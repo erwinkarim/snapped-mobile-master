@@ -2,7 +2,7 @@
 
   <!-- BOTTOM BAR -->
 
-  <div v-if="show" :class="bottomBarClass" class="md:max-w-xl mx-auto block fixed inset-x-0 bottom-0 shadow pt-4 pb-6 px-5">
+  <div v-if="show" :class="bottomBarClass" class="md:max-w-xl mx-auto block fixed inset-x-0 bottom-0 shadow md:shadow-none pt-4 pb-6 px-5">
 
     <div class="w-full md:max-w-xl mx-auto">
 
@@ -16,7 +16,7 @@
       <div v-else-if="$store.state.teacherMarking.states.isMarking" class="z-70">
 
         <div v-if="$store.state.teacherMarking.states.isSelectingSticker"
-             class="fixed inset-x-0 z-70 bg-white block bottom-0 h-3/5 md:h-2/5 rounded-t-2xl shadow-xl"
+             class="fixed inset-x-0 z-70 bg-white block bottom-0 h-3/5 md:h-3/7 rounded-t-2xl shadow-xl"
         >
           <button @click="toggleStickerBar" class="bg-gray-primary h-2 w-1/5 rounded-full mt-3"></button>
           <!-- STICKER LOADER -->
@@ -69,7 +69,7 @@
           </router-link>
           <button v-else @click="togglePreviewMode"
                   class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-            Marking
+            Enter Mark
           </button>
         </div>
         <div class="w-4/8 px-2">

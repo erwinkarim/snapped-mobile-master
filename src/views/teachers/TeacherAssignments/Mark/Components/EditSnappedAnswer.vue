@@ -1,26 +1,9 @@
 <template>
-
-  <div class="h-screen  w-full bg-black-primary">
-
-    <page-header-three background-color="bg-black-primary" :bottom-padding="4">
-      <template v-slot:leftAction>
-        <nav-back class="w-1/4 pl-0 ml-0" stroke-color="white"/>
-      </template>
-      <template v-slot:rightAction>
-        <button @click="undoEdits" class="flex flex-row justify-end mr-5">
-          <icon-base-two class="w-1/4">
-            <undo-icon/>
-          </icon-base-two>
-        </button>
-      </template>
-    </page-header-three>
-
-    <div class="flex flex-col w-screen md:max-w-xl md:w-full ">
-      <div class="relative top-24 pb-16/9">
-        <div class="md:max-w-xl w-full bg-black-primary h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <canvas id="canvas" crossOrigin="Anonymous"/>
-        </div>
-      </div>
+  <div class="relative top-24 md:top-30 min-h-90vh w-full h-full relative md:max-w-xl bg-black-primary">
+    <div :style="canvasContainerStyle"
+         class=" relative h-full object-cover top-0 z-50 left-0 w-9/10 mx-auto bg-black-primary"
+    >
+      <canvas class="absolute" id="canvas" crossOrigin="Anonymous"/>
     </div>
 
   </div>
@@ -47,13 +30,31 @@ export default {
     this.$store.dispatch('teacherMarking/checkNowMarkingPathExists').catch(() => {
       router.push({name: 'teacher.assignments.marking.details'})
     })
-    this.$store.commit('teacherMarking/loadCanvas')
+    this.scrollToTop();
+    // this.$store.commit('teacherMarking/loadCanvas')
     this.$store.commit('teacherMarking/loadImage')
   },
-  methods: {
-    undoEdits() {
-      this.$store.dispatch('teacherMarking/undoEditedSnappedAnswer')
+  computed: {
+    canvasContainerStyle() {
+      return {
+        height: this.$store.state.teacherMarking.nowMarking.canvas.dimensions.height,
+        'padding-bottom': this.$store.state.teacherMarking.nowMarking.canvas.dimensions.height > 0.7 * window.innerHeight ? '90px' : '0px'
+      }
+    },
+    backgroundStyle() {
+      return {
+        height: window.innerHeight
+      }
     }
+  },
+  methods: {
+    scrollToTop() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    },
   },
   components: {
     UndoIcon,
