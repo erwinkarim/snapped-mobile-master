@@ -9,7 +9,7 @@
       <slot name="content"/>
     </div>
 
-    <div v-if="hasCustomBottomBar" :class="bottomBarClass" class=" block fixed inset-x-0  bottom-0 z-30 shadow pt-4 pb-6 px-5">
+    <div v-if="hasCustomBottomBar" :class="bottomBarClass" class=" block fixed inset-x-0  bottom-0 z-30 md:z-40 shadow pt-4 pb-6 px-5">
       <div class="flex flex-row h-full items-center justify-around">
         <slot name="bottomBar"/>
       </div>

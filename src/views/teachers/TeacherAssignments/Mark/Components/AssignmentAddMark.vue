@@ -28,12 +28,19 @@
         <div class="px-7 border-b-1 border-gray-primary border-opacity-15 pb-3 text-purple-primary text-sm">
           Enter the mark for this assignment
         </div>
-        <input v-model="marks" type="number" placeholder="Mark"
-               class="px-7 border-b-1 border-gray-primary border-opacity-15 py-4 text-purple-primary text-sm">
-
-        <div class="px-7 pt-5 text-purple-secondary text-sm">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua.
+        <div class="flex flex-row items-center w-full border-b-1 border-gray-primary border-opacity-15 tracking-wider">
+          <input v-model="marks"
+                 type="number" placeholder="Mark"
+                 min="0"
+                 max="100"
+                 class="px-7 w-1/2 py-4 text-purple-primary text-sm"
+          >
+          <div>
+            / 100
+          </div>
+        </div>
+        <div class="bg-red-500 mb-4 md:max-w-xl mt-5 w-9/10 mx-auto py-3 px-4 text-left text-white text-xs rounded-lg" v-if="errorMessage">
+          {{ errorMessage }}
         </div>
       </div>
     </template>
@@ -51,15 +58,24 @@ export default {
   name: "AssignmentAddMark",
   data() {
     return {
-      marks: null
+      errorMessage: null,
+      marks: this.$store.state.teacherMarking.submission.marks
     }
   },
   methods: {
     save() {
-      this.$store.dispatch('teacherMarking/addMark', this.marks)
-          .then(() => {
-            router.push({name: 'teacher.assignments.marking.details'})
-          })
+
+      if (this.marks <= 100) {
+        this.$store.dispatch('teacherMarking/addMark', this.marks)
+            .then(() => {
+              this.errorMessage = null
+              router.push({name: 'teacher.assignments.marking.details'})
+            })
+      } else {
+        this.errorMessage  = 'Please enter a value between 0 and 100.'
+      }
+
+
     }
   },
   components: {NavBack, PageHeaderThree, DashboardLayout}

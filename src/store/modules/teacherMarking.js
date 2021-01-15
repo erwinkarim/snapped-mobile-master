@@ -53,8 +53,8 @@ export default {
             canvas: {
                 main: null,
                 dimensions: {
-                    height: 0.75 * screen.height,
-                    width: screen.width > 700 ? 0.5 * screen.width : screen.width
+                    height: null,
+                    width:  null
                 }
             },
         },
@@ -114,6 +114,8 @@ export default {
 
 
         loadCanvas(state) {
+
+            // Initialise canvas with placeholder dimensions. To be resized once loaded image
             state.nowMarking.canvas.main = new fabric.Canvas('canvas', {
                 width: state.nowMarking.canvas.dimensions.width,
                 height: state.nowMarking.canvas.dimensions.height,
@@ -122,18 +124,37 @@ export default {
 
         loadImage(state) {
 
+            // First, get image's dimension. Then, resize canvas while setting background image
             fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
+
                 state.nowMarking.image.dimensions.width = img.width;
                 state.nowMarking.image.dimensions.height = img.height;
+
+                let scaleFactor = state.nowMarking.canvas.dimensions.width / state.nowMarking.image.dimensions.width;
+
+                // Determine if image is longer than screen height
+                let imageIsLongerThanScreenHeight = (scaleFactor * state.nowMarking.image.dimensions.height) > 0.7 * window.innerHeight
+
+                // Set canvas size
+                state.nowMarking.canvas.main = new fabric.Canvas('canvas', {
+                    width: scaleFactor * state.nowMarking.image.dimensions.width,
+                    height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
+                })
+
+                // Store canvas dimension values
+                state.nowMarking.canvas.dimensions = {
+                    width: scaleFactor * state.nowMarking.image.dimensions.width,
+                    height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
+                }
 
                 state.nowMarking.canvas.main.setBackgroundImage(
                     state.nowMarking.image.path,
                     state.nowMarking.canvas.main.renderAll.bind(state.nowMarking.canvas.main),
                     {
-                        top: state.nowMarking.canvas.dimensions.height / 2,
-                        left: state.nowMarking.canvas.dimensions.width / 2,
+                        top: imageIsLongerThanScreenHeight ? 0 : state.nowMarking.canvas.dimensions.height/2,
+                        left: state.nowMarking.canvas.dimensions.width/2,
                         originX: 'center',
-                        originY: 'center',
+                        originY: imageIsLongerThanScreenHeight ? 'top' : 'center',
                         scaleX: state.nowMarking.canvas.dimensions.width / state.nowMarking.image.dimensions.width,
                         scaleY: state.nowMarking.canvas.dimensions.width / state.nowMarking.image.dimensions.width
                     },
@@ -157,12 +178,6 @@ export default {
                 isWritingFeedback: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
-            }
-        },
-
-        toggleMarkingMode(state) {
-            if (state.teacherMarking.states.isMarking) {
-                this.resetState('isMain')
             }
         },
 
@@ -218,20 +233,17 @@ export default {
             };
         },
 
-
-        resetState(state, option) {
-            state.isLoading = false;
-            state.isMain = false;
-            state.isPreviewing = false;
-            state.isMarking = false;
-            state.isSelectingSticker = false;
-            state.isWritingFeedback = false;
-            state.isShowingModal = false
-            state.isSavingEditedSnappedAnswer = false;
-
-            if (option) {
-                state.states[option] = true;
-            }
+        setMarkingMode(state){
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: false,
+                isMarking: true,
+                isSelectingSticker: false,
+                isWritingFeedback: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
         },
 
         setOriginalState(state) {
@@ -265,6 +277,17 @@ export default {
                 markedSnappedAnswerPaths: null
             };
 
+
+            // Determine canvas dimensions
+            let canvasWidth = 0.9 * window.innerWidth;
+            if (window.innerWidth > 700) {
+                if (window.innerWidth > 1000) {
+                    canvasWidth = 0.5 * window.innerWidth;
+                } else {
+                    canvasWidth = 0.65 * window.innerWidth;
+                }
+            }
+
             state.nowMarking = {
                 image: {
                     index: null,
@@ -279,8 +302,8 @@ export default {
                 canvas: {
                     main: null,
                     dimensions: {
-                        height: 0.75 * screen.height,
-                        width: screen.width > 700 ? 0.5 * screen.width : screen.width
+                        height: 0.75 * window.innerHeight,
+                        width: canvasWidth
                     }
                 },
             };
@@ -318,7 +341,8 @@ export default {
                     state.nowMarking.image.index = nowMarking.index;
                     state.nowMarking.image.path = decodeURIComponent(nowMarking.dataURL);
 
-                    commit('resetState', 'isMarking')
+                    commit('setMarkingMode')
+
                     resolve()
                 } else {
                     reject()
@@ -345,18 +369,34 @@ export default {
         },
 
         loadTextBox({state}) {
-            let textBox = new fabric.Textbox('test test', {
+
+            let oldTop = state.nowMarking.canvas.dimensions.height / 2;
+            let oldLeft = window.innerWidth / 2;
+
+
+            let textBox = new fabric.Textbox('Enter Your Text Here', {
                 originX: "center",
                 originY: "bottom",
                 textAlign: "center",
                 fontFamily: "Segoe UI",
                 top: state.nowMarking.canvas.dimensions.height / 2,
-                left: state.nowMarking.canvas.dimensions.width / 2,
+                left: window.innerWidth / 2,
                 fontSize: 24,
                 fill: "#F53B57"
-            });
+            })
 
             state.nowMarking.canvas.main.add(textBox).setActiveObject(textBox);
+
+            textBox.on("editing:entered", function () {
+                oldTop = this.top;
+                oldLeft = this.left;
+
+                this.top = state.nowMarking.canvas.dimensions.height / 2;
+                this.left = window.innerWidth / 2;
+            }).on("editing:exited", function () {
+                this.top = oldTop;
+                this.left = oldLeft;
+            });
         },
 
         doneEditSnappedAnswer({state, commit}) {
