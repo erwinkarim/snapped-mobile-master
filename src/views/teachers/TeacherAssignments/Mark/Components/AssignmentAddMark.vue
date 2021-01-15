@@ -24,7 +24,7 @@
     </template>
 
     <template v-slot:content>
-      <div class="relative top-42 text-left ">
+      <div class="relative top-42 text-left w-full ">
         <div class="px-7 border-b-1 border-gray-primary border-opacity-15 pb-3 text-purple-primary text-sm">
           Enter the mark for this assignment
         </div>
