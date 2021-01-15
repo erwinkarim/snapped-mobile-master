@@ -117,8 +117,6 @@ export default {
         let screenWidth = window.innerWidth;
         let characterCount = this.assignment.written_question.description.length;
 
-        console.log(`Width: ${screenWidth} | Char: ${characterCount}`)
-
         if (screenWidth > 500) {
           return characterCount > 450;
         } else {

@@ -63,6 +63,7 @@ export default {
         index: index,
         dataURL: dataURL
       }).then(() => {
+
         router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
       })
 
