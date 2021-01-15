@@ -114,9 +114,9 @@ export default {
     fetchSummaryData() {
       AssignmentRepository.getPublishedAssignments()
               .then(response => {
-                let data = response.data.data;
+                let data = response.data.meta;
 
-                this.numOfPublishedAssignments = data.length;
+                this.numOfPublishedAssignments = data.total;
               })
 
       TeacherRepository.getSubmissions()
