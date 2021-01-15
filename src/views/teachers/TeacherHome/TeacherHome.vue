@@ -23,7 +23,7 @@
           <div class="max-w-sm md:max-w-xl md:w-full h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
               <div class="flex flex-col w-1/3 px-2 ">
-                <div class="border-b-1 font-bold  py-2">{{ numOfAssignments }}</div>
+                <div class="border-b-1 font-bold  py-2">{{ numOfPublishedAssignments }}</div>
                 <div class="text-xs-plus mb-1 h-12 py-2">
                   Published Assignments
                 </div>
@@ -94,11 +94,13 @@ import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
 import SubmissionRepository from "@/repositories/SubmissionRepository";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBaseTwo from "@/components/IconBaseTwo";
+import AssignmentRepository from "../../../repositories/AssignmentRepository";
 
 export default {
   name: "Home",
   data() {
     return {
+      numOfPublishedAssignments: 0,
       numOfAssignments: 0,
       numOfSubmissions: 0,
       numOfUnmarkedSubmissions: 0,
@@ -109,7 +111,14 @@ export default {
     getNumOfAssignments(value){
       this.numOfAssignments = value;
     },
-    fetchMarkings() {
+    fetchSummaryData() {
+      AssignmentRepository.getPublishedAssignments()
+              .then(response => {
+                let data = response.data.data;
+
+                this.numOfPublishedAssignments = data.length;
+              })
+
       TeacherRepository.getSubmissions()
               .then(response => {
                 let data = response.data.data;
@@ -119,11 +128,10 @@ export default {
 
       TeacherRepository.getMarkings()
               .then(response => {
-                        let data = response.data.num_of_unmarked_submissions;
+                let data = response.data.num_of_unmarked_submissions;
 
-                        this.numOfUnmarkedSubmissions = data ;
-
-                      })
+                this.numOfUnmarkedSubmissions = data ;
+              })
     },
     fetchSubmissions(){
       TeacherRepository.getSubmissions(1)
@@ -151,7 +159,7 @@ export default {
   },
   mounted() {
     this.fetchSubmissions()
-    this.fetchMarkings()
+    this.fetchSummaryData()
   },
   components: {
     IconBaseTwo,
