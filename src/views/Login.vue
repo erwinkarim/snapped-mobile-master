@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="z-40 text-purple-secondary mb-16 bg-white">
-          School Task Made Easy
+          To Bring Your A Game
         </div>
       </div>
 
