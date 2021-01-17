@@ -1,56 +1,73 @@
 <template>
-  <dashboard-layout>
+  <dashboard-layout
+    :no-bottom-bar="isPreviewing"
+  >
+
+    <template v-slot:pageHeader v-if="isPreviewing">
+      <page-header-three background-color="bg-transparent" class="relative">
+        <template v-slot:leftAction>
+          <div class="w-2/7" @click="handleTogglePreview">
+            <icon-base-two>
+              <arrow-back-icon/>
+            </icon-base-two>
+          </div>
+        </template>
+      </page-header-three>
+    </template>
 
     <template v-slot:content>
-      <div class="flex flex-col w-full">
+      <div class="flex flex-col bg-red-400 w-full">
         <div class=" relative w-full top-1/12">
 
           <!-- Page Content -->
           <div class="absolute w-full z-20 md:z-40 lg:z-50 mb-32">
 
             <!-- HEADER with Nav Back -->
-            <page-header-three background-color="bg-transparent" class="relative">
-              <template v-slot:leftAction>
-                <nav-back class="w-2/7" :to="{name: 'teacher.assignments'}" stroke-color="white"/>
-              </template>
+            <div v-if="!isPreviewing">
+              <page-header-three background-color="bg-transparent" class="relative">
+                <template v-slot:leftAction>
+                  <nav-back class="w-2/7" :to="{name: 'teacher.assignments'}" stroke-color="white"/>
+                </template>
 
-              <template v-slot:rightAction>
-                <router-link :to="{name : 'teacher.assignments.edit'}"
-                             class="flex flex-row justify-end items-center font-semibold text-white text-right pr-5"
-                >
-                  Edit
-                </router-link>
-              </template>
-            </page-header-three>
-            <!-- TIMER -->
-            <div class="w-full flex flex-row justify-center items-center mt-7">
-              <div class="flex flex-col w-3/5">
-                <div class="text-white font-bold text-sm">
-                  Time Remaining
-                </div>
-                <div class=" bg-green-primary mt-3 py-1 rounded-full">
+                <template v-slot:rightAction>
+                  <router-link :to="{name : 'teacher.assignments.edit'}"
+                               class="flex flex-row justify-end items-center font-semibold text-white text-right pr-5"
+                  >
+                    Edit
+                  </router-link>
+                </template>
+              </page-header-three>
+              <!-- TIMER -->
+              <div class="w-full flex flex-row justify-center items-center mt-7">
+                <div class="flex flex-col w-3/5">
+                  <div class="text-white font-bold text-sm">
+                    Time Remaining
+                  </div>
+                  <div class=" bg-green-primary mt-3 py-1 rounded-full">
 
-                  <div class="text-white font-bold text-3xl tracking-wider">
-                    <countdown-timer v-if="assignment.dueDatetime"
-                                     :due-date-time="assignment.dueDatetime"
-                                     :has-twenty-four-hour-limit="false"
-                                     :has-clock-icon="true"
-                    />
-                    <div v-else> -- : -- : --</div>
+                    <div class="text-white font-bold text-3xl tracking-wider">
+                      <countdown-timer v-if="assignment.dueDatetime"
+                                       :due-date-time="assignment.dueDatetime"
+                                       :has-twenty-four-hour-limit="false"
+                                       :has-clock-icon="true"
+                      />
+                      <div v-else> -- : -- : --</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-
             <!-- Assignment Detail Card -->
             <assignment-question-card
                 :assignment="assignment"
                 :meta="meta"
+                :is-previewing="isPreviewing"
+                v-on:togglePreview="handleTogglePreview"
             />
 
             <!-- Submissions -->
-            <div class="mt-8 px-8 mb-24">
+            <div class="mt-8 px-8 mb-24" v-if="!isPreviewing">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
                   Submissions
@@ -79,7 +96,7 @@
 
         </div>
 
-        <div class="relative">
+        <div class="relative" v-if="!isPreviewing">
           <!-- Background Stack Green -->
           <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
             <!-- Background Stack Overlay -->
@@ -110,10 +127,12 @@ import CountdownTimer from "@/components/CountdownTimer";
 import QuestionPreviewSwiper from "@/views/teachers/TeacherAssignments/Show/Components/QuestionPreviewSwiper";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
 import PageHeaderThree from "@/components/PageHeaderThree";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 export default {
   name: "AssignmentDetails",
   components: {
+    ArrowBackIcon,
     PageHeaderThree,
     AssignmentQuestionCard,
     QuestionPreviewSwiper,
@@ -128,6 +147,10 @@ export default {
   },
   data() {
     return {
+
+      // Status
+      isPreviewing: false,
+
       assignment: {
         id: null,
         title: null,
@@ -209,6 +232,9 @@ export default {
 
           });
     },
+    handleTogglePreview() {
+      this.isPreviewing = !this.isPreviewing;
+    },
     getHumanDate(datetime) {
 
       if (datetime) {
@@ -216,7 +242,6 @@ export default {
       } else {
         return ''
       }
-
     }
   },
   mounted() {

@@ -1,8 +1,21 @@
 <template>
   <dashboard-layout
       :has-fixed-header="true"
-      :has-custom-bottom-bar="true"
+      :has-custom-bottom-bar="!isPreviewing"
+      :no-bottom-bar="isPreviewing"
   >
+
+    <template v-slot:pageHeader v-if="isPreviewing">
+      <page-header-three background-color="bg-transparent" class="relative">
+        <template v-slot:leftAction>
+          <div class="w-2/7" @click="handleTogglePreview">
+            <icon-base-two>
+              <arrow-back-icon/>
+            </icon-base-two>
+          </div>
+        </template>
+      </page-header-three>
+    </template>
 
     <template v-slot:content>
 
@@ -12,38 +25,43 @@
           <!-- Page Content -->
           <div class="absolute z-20 md:z-40 mb-32 w-full">
 
-            <!-- HEADER with Nav Back -->
-            <div class="flex flex-row justify-between px-5 w-full pt-3/24">
-              <nav-back class="w-1/12" stroke-color="white" :to="{name: 'student.assignments'}"/>
-            </div>
+            <div  v-if="!isPreviewing">
+              <!-- HEADER with Nav Back -->
+              <div class="flex flex-row justify-between px-5 w-full pt-3/24">
+                <nav-back class="w-1/12" stroke-color="white" :to="{name: 'student.assignments'}"/>
+              </div>
 
-            <!-- TIMER -->
-            <div class="flex flex-row justify-center items-center w-full mt-1/24">
-              <div class="flex flex-col w-1/2">
-                <div class="text-sm font-bold text-white">
-                  Assignment Time Remaining
-                </div>
-                <div class="py-1 mt-3 rounded-full bg-green-primary">
+              <!-- TIMER -->
+              <div class="flex flex-row justify-center items-center w-full mt-1/24">
+                <div class="flex flex-col w-1/2">
+                  <div class="text-sm font-bold text-white">
+                    Time Remaining
+                  </div>
+                  <div class="py-1 mt-3 rounded-full bg-green-primary">
 
-                  <div class="text-3xl font-bold tracking-wider text-white">
-                    <countdown-timer v-if="assignment.dueDatetime"
-                                     :due-date-time="assignment.dueDatetime"
-                                     :has-twenty-four-hour-limit="false"
-                                     :has-clock-icon="true"
-                    />
+                    <div class="text-3xl font-bold tracking-wider text-white">
+                      <countdown-timer v-if="assignment.dueDatetime"
+                                       :due-date-time="assignment.dueDatetime"
+                                       :has-twenty-four-hour-limit="false"
+                                       :has-clock-icon="true"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
+
             <!-- Assignment Detail Card -->
             <assignment-question-card
                 :assignment="assignment"
                 :meta="meta"
+                :is-previewing="isPreviewing"
+                v-on:togglePreview="handleTogglePreview"
             />
 
             <!-- Submissions -->
-            <div class="px-8 mt-8 mb-32">
+            <div class="px-8 mt-8 mb-32"  v-if="!isPreviewing">
               <div class="flex flex-row justify-between font-bold text-purple-primary">
                 <div>
                   Submission
@@ -72,7 +90,7 @@
         </div>
 
 
-        <div class="relative">
+        <div class="relative" v-if="!isPreviewing">
           <!-- Background Stack Green -->
           <div class="top-0 z-0 w-full md:max-w-xl sm:z-10 md:z-20 bg-green-primary pb-2/3">
             <!-- Background Stack Overlay -->
@@ -161,6 +179,8 @@ import CountdownTimer from "@/components/CountdownTimer";
 import Modal from "@/components/Modal";
 import router from "@/router";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
+import PageHeaderThree from "@/components/PageHeaderThree";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 export default {
   name: "Index",
@@ -172,6 +192,7 @@ export default {
 
       // States
       isLoading: true,
+      isPreviewing: false,
 
       assignment: {
         id: null,
@@ -293,6 +314,10 @@ export default {
         }
       })
     },
+
+    handleTogglePreview() {
+      this.isPreviewing = !this.isPreviewing;
+    },
     getHumanDate(datetime) {
 
       if (datetime) {
@@ -307,6 +332,8 @@ export default {
     this.fetchData();
   },
   components: {
+    ArrowBackIcon,
+    PageHeaderThree,
     AssignmentQuestionCard,
     Modal,
     CountdownTimer,
