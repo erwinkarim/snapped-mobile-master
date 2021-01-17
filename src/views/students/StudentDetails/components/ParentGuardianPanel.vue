@@ -19,7 +19,7 @@
               {{ guardians.name }}
             </div>
             <div class="text-left text-px-10 text-purple-secondary">
-              {{ guardians.relationship }}
+              Parent
             </div>
           </div>
 

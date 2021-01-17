@@ -63,7 +63,7 @@
           </div>
 
           <div class="w-3/12 flex flex-col justify-center font-semibold text-sm text-right pr-5 md:text-lg ">
-            {{ student.marks_sum }}
+            {{ `${student.marks_average}%` }}
           </div>
         </div>
 

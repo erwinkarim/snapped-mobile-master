@@ -26,7 +26,7 @@
             <div class="w-full flex flex-row justify-center items-center mt-7">
               <div class="flex flex-col w-3/5">
                 <div class="text-white font-bold text-sm">
-                  Assignment Time Remaining
+                  Time Remaining
                 </div>
                 <div class=" bg-green-primary mt-3 py-1 rounded-full">
 
@@ -53,7 +53,7 @@
             <div class="mt-8 px-8 mb-24">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
-                  Submission
+                  Submissions
                 </div>
                 <div v-if="meta.totalSubmissions && meta.totalStudents" class="tracking-wide">
                   {{ meta.totalSubmissions }}/{{ meta.totalStudents }}

@@ -7,7 +7,7 @@
           inner-stroke-color="gray" :stroke-width="6" :inner-stroke-width="6"
       />
       <div class="mt-1 text-purple-secondary text-2xs">
-        Today Rank
+        Daily
       </div>
     </div>
     <div class="flex flex-col w-1/3 items-center">
@@ -17,7 +17,7 @@
           inner-stroke-color="#F1F3F6" :stroke-width="6" :inner-stroke-width="6"
       />
       <div class="mt-1 text-purple-secondary text-2xs">
-        Weekly Rank
+        Weekly
       </div>
     </div>
     <div class="flex flex-col w-1/3 items-center">
@@ -27,7 +27,7 @@
           inner-stroke-color="#F1F3F6" :stroke-width="6" :inner-stroke-width="6"
       />
       <div class="mt-1 text-purple-secondary text-2xs">
-        Overall Rank
+        Overall
       </div>
     </div>
   </div>
