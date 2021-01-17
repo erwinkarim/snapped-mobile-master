@@ -46,7 +46,6 @@
               <template v-slot:topRightAction v-if="!assignment.marks">
                 <div class="pr-1 md:pr-3">
                   {{ assignment.totalSubmitted }} submitted
-
                 </div>
               </template>
             </assignment-card>
@@ -90,7 +89,9 @@
           </div>
         </div>
         <div class="text-center py-2">
-          <select-subject @selectedSubject="handleSelectedSubject"/>
+          <select-subject user-role="student"
+              @selectedSubject="handleSelectedSubject"
+          />
         </div>
 
         <!-- FILTER ACTIONS -->
@@ -216,6 +217,7 @@ export default {
               if (response.data.data) {
 
                 const data = response.data.data
+
                 for (let i = 0; i < data.length; i++) {
 
                   let item = data[i];
@@ -247,7 +249,6 @@ export default {
 
                 $state.loaded();
               } else {
-
                 const error = response.data.error;
                 this.hasError = error.message;
               }
@@ -278,7 +279,7 @@ export default {
     },
     clickedFilterButton() {
       this.toggleFilterModal()
-      this.fetchData()
+      this.updateFilter()
     },
     toggleFilterModal() {
       this.modal = !this.modal
