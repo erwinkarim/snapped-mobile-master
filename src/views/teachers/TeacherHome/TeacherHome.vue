@@ -61,7 +61,7 @@
           </div>
 
           <!-- SECTION: SUBMISSIONS -->
-          <div class="mt-8">
+          <div class="mt-8 pr-5">
             <div class="text-left mb-3">
               <section-title class="mb-5" title="Submissions"/>
             </div>
@@ -147,6 +147,7 @@ export default {
               assignmentID: submission.assignment_id,
               studentID : submission.student_id,
               studentName : submission.student_name,
+              studentGender : submission.gender,
               submittedAt : submission.submission_created_at,
               classroomName : submission.classroom_name,
               subjectName : submission.subject_name

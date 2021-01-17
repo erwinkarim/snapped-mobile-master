@@ -222,6 +222,7 @@ export default {
                 id: submission.submission_id,
                 studentID: submission.student_id,
                 studentName: submission.student_name,
+                studentGender: submission.student_gender,
                 submittedAt: submission.submission_created_at,
                 marksID: submission.marks_id,
                 assignmentID: data.assignment_details.assignment_id

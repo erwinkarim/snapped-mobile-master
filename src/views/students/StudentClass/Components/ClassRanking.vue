@@ -30,7 +30,7 @@
 
           <!-- Student photo -->
           <icon-base-two class="w-3/7">
-            <profile-photo/>
+            <profile-photo :gender="student.student.gender"/>
           </icon-base-two>
         </div>
 

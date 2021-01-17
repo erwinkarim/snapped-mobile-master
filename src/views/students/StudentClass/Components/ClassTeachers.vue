@@ -12,7 +12,7 @@
 
         <div class="flex flex-row items-center truncate w-11/12">
           <icon-base-two class=" w-1/6">
-            <profile-photo/>
+            <profile-photo :gender="teacher.gender"/>
           </icon-base-two>
           <div class="ml-5 text-purple-primary w-5/6 mr-2 truncate pr-4">
             {{ teacher.name }}

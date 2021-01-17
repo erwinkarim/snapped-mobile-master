@@ -10,7 +10,7 @@
           <div class="w-1/6 relative h-full p-0">
             <icon-base class="absolute h-full w-5/6" icon-name="profile-photo-icon" icon-color="white"
                        view-box="-5 0 60 55">
-              <profile-photo/>
+              <profile-photo :gender="gender"/>
             </icon-base>
           </div>
 
@@ -40,6 +40,16 @@ export default {
   name: "ParentGuardianPanel",
   props: {
     guardians: Object
+  },
+  computed: {
+    gender() {
+      if(this.guardians.relationship === 'Father') {
+        return 'male'
+      }
+      if(this.guardians.relationship === 'Mother') {
+        return 'female'
+      }
+    }
   },
   components: {ProfilePhoto, IconBase, SectionTitle}
 }

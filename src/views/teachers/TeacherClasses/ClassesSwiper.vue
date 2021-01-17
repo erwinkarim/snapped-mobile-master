@@ -28,14 +28,14 @@
             </div>
 
             <div class="flex flex-row mt-4 text-left w-full items-center">
-              <div class="text-md flex-grow pb-2 truncate">
+              <div class="text-md w-4/5 md:w-6/7 pb-2 truncate">
                 <span class="truncate">{{ item.className }} </span>
               </div>
-              <div v-if="item.isHomeroom === 'true'">
-                <icon-base width="28" height="50" icon-name="app-logo" icon-color="white" view-box="-5 5 27 27">
+                <icon-base-two v-if="item.isHomeroom === true"
+                  class="w-1/5 md:w-1/7"
+                >
                   <BookmarkIcon/>
-                </icon-base>
-              </div>
+                </icon-base-two>
             </div>
           </div>
 
@@ -58,10 +58,11 @@ import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import router from "@/router";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "ClassesSwiper",
-  components: {BookmarkIcon, ProfilePhotoStacked, IconBase},
+  components: {IconBaseTwo, BookmarkIcon, ProfilePhotoStacked, IconBase},
   directives: {
     mySwiper: directive
   },

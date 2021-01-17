@@ -5,7 +5,7 @@
 
       <div class="w-2/12">
         <icon-base-two class=" w-full">
-          <profile-photo/>
+          <profile-photo :gender="submission.studentGender"/>
         </icon-base-two>
       </div>
 

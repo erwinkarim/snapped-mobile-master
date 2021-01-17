@@ -14,12 +14,12 @@
           class="fixed top-20 md:top-24 px-5 pt-4 z-40 bg-white w-full md:max-w-xl border-b-1/4 border-opacity-10 border-gray-100 shadow-md-soft md:shadow-none pb-4">
 
         <!-- SECTION: STUDENT DETAILS -->
-        <div class="flex flex-row items-center items-center px-2">
+        <div v-if="isLoading" class="flex flex-row items-center items-center px-2">
 
-          <div class="w-3/12">
-            <icon-base icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-              <profile-photo/>
-            </icon-base>
+          <div class="w-3/12 mr-2">
+            <icon-base-two>
+              <profile-photo :gender="studentDetails.gender"/>
+            </icon-base-two>
           </div>
 
           <div class="flex flex-col w-full text-left w-3/5  truncate">
@@ -68,6 +68,7 @@ import router from "@/router";
 import PageTitleTwo from "@/components/PageTitleTwo";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import TabBar from "@/views/students/StudentDetails/components/TabBar";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "StudentDetails",
@@ -76,6 +77,10 @@ export default {
   },
   data() {
     return {
+
+      // Status
+      isLoading: false,
+
       authUser: null,
       studentDetails: '',
       studentOverview: '',
@@ -138,10 +143,14 @@ export default {
 
             this.studentDetails = {
               studentName: data.student_details.student_name,
+              gender: data.student_details.gender,
               className: data.student_details.student_class,
               contactNum: data.data.personal_details.contact_number,
               email: data.data.personal_details.email
             }
+
+            this.isLoading = true;
+
           })
     },
 
@@ -185,6 +194,7 @@ export default {
     }
   },
   components: {
+    IconBaseTwo,
     TabBar,
     PageHeaderThree,
     PageTitleTwo, RankingPanel, CircleProgressBar, ProfilePhoto, IconBase, NavBack, DashboardLayout

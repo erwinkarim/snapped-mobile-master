@@ -143,7 +143,6 @@ export default {
             this.details.markingPicturePaths = data.marks_details.marking_picture_url.split(',');
             this.details.feedback = data.marks_details.marks_feedback;
 
-
           })
     },
     toggleMode() {

@@ -20,15 +20,13 @@
               </div>
             </div>
 
-            <div class="flex flex-row mt-4 text-left w-full items-end justify-between">
-              <div class="text-md flex-grow pb-2 w-3/5 truncate">
+            <div class="flex flex-row mt-4 text-left w-full items-start justify-between">
+              <div class="text-sm md:text-md pb-2 w-4/5 md:w-6/7 truncate">
                 <span class="truncate">{{ item.className }} </span>
               </div>
-              <div class="flex flex-row justify-end w-2/7 pb-2">
-                <icon-base-two class="w-full" v-if="item.isHomeroom === 'true'">
+                <icon-base-two class="w-1/5 md:w-1/7" v-if="item.isHomeroom === true">
                   <BookmarkIcon/>
                 </icon-base-two>
-              </div>
             </div>
 
           </div>
@@ -67,7 +65,7 @@ export default {
         initialSlide: 0,
         direction: 'horizontal',
         speed: 200,
-        slidesPerView: 2.3,
+        slidesPerView: 2.2,
         spaceBetween: 15,
         freeMode: false,
         loop: false,
