@@ -1,29 +1,21 @@
 <template>
-  <div :class="isPreviewing ? 'bg-white' : 'bg-black-primary'" class="pt-3 pb-7 rounded-2xl">
-    <div @click="togglePreview"
-         class="z-30 flex flex-row justify-end pr-4 pb-2"
-    >
-      <icon-base-two :class="isPreviewing ? 'w-1/12' : 'w-1/24'">
-        <expand-image-icon :stroke-color="isPreviewing ? 'black' : 'white'"/>
-      </icon-base-two>
-    </div>
-    <div :class="isPreviewing ? 'bg-white' : 'bg-black-primary'" class="w-full  rounded-2xl">
 
-      <div v-my-swiper="swiperOption">
-        <div class="swiper-wrapper">
-          <div
-              :class="swiperClass"
-              class=" swiper-slide rounded-2xl flex flex-col"
-              v-for="path in snappedAnswerPaths">
-            <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
-              <img :src="path">
-            </div>
+  <div>
+    <div v-my-swiper="swiperOption" class="w-full">
+      <div class="swiper-wrapper">
+        <div v-for="path in snappedAnswerPaths"
+             :class="swiperClass"
+             class="swiper-slide rounded-2xl h-full overflow-hidden"
+        >
+          <div class="w-full py-2 px-4 h-full object-cover top-0 items-center absolute">
+            <img class="" :src="path">
           </div>
         </div>
-        <div class="swiper-pagination"></div>
       </div>
+      <div class="swiper-pagination"></div>
     </div>
   </div>
+
 
 </template>
 
@@ -37,14 +29,11 @@ import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 export default {
   name: "QuestionPreviewSwiper",
   props: {
+    isPreviewing: Boolean,
     snappedAnswerPaths: Array
   },
   data() {
     return {
-
-      // States
-      isPreviewing: false,
-
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
@@ -69,15 +58,10 @@ export default {
   computed: {
     swiperClass: function () {
       if (this.isPreviewing) {
-        return 'pb-16/9 ';
+        return 'min-h-screen';
       } else {
         return 'pb-5/4';
       }
-    }
-  },
-  methods: {
-    togglePreview() {
-      this.isPreviewing = !this.isPreviewing;
     }
   },
 

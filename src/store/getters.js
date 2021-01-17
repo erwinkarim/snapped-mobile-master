@@ -6,6 +6,9 @@ export default  {
     getAuthUserRole: (state, getters) => {
         return getters.getAuthUser.role
     },
+    getAuthUserGender: (state, getters) => {
+        return getters.getAuthUser.gender
+    },
     getAuthUsername: (state, getters) => {
         return getters.getAuthUser.name
     },

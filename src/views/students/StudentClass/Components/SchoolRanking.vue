@@ -10,7 +10,7 @@
           @search="handleSearch"
       >
         <template v-slot:leftAction>
-          <nav-back class="w-2/7" stroke-color="red-primary"/>
+          <nav-back :to="{name: 'student.class'}" class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           School Ranking
@@ -22,9 +22,10 @@
     <template v-slot:content>
       <div class="relative h-40 top-45 md:mt-10 px-5 w-full">
 
-        <div v-for="(student, index) in rankings"
-             :key="student.id"
-             class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1">
+        <router-link v-for="(student, index) in rankings"
+                     :key="student.student_id"
+                     :to="{name : 'student.profile.show', params: {studentID: student.student_id} }"
+                     class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1">
 
           <div class="flex flex-row w-3/12 items-center">
             <!-- Ranking -->
@@ -42,7 +43,7 @@
 
             <!-- Student photo -->
             <icon-base-two class="w-3/7">
-              <profile-photo/>
+              <profile-photo :gender="student.student_gender"/>
             </icon-base-two>
           </div>
 
@@ -63,9 +64,9 @@
           </div>
 
           <div class="w-3/12 flex flex-col justify-center font-semibold text-sm text-right pr-5 md:text-lg ">
-            {{ student.marks_sum }}
+            {{ `${student.marks_average}%` }}
           </div>
-        </div>
+        </router-link>
 
         <infinite-loading :identifier="filterCount"
                           @infinite="handleInfiniteScroll"

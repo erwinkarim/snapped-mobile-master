@@ -15,7 +15,7 @@
             <div class="flex flex-row items-center h-full justify-between">
               <div class="flex-col text-left text-purple-primary">
                 <div class="font-bold text-3xl" >{{numOfClasses}}</div>
-                <div class="text-sm">Current teaching class</div>
+                <div class="text-sm">Current classrooms</div>
               </div>
             </div>
           </div>

@@ -7,7 +7,7 @@
           @search="handleSearch"
       >
         <template v-slot:leftAction>
-          <nav-back class="w-2/7 md:w-1/5" stroke-color="red-primary"/>
+          <nav-back :to="{name: 'student.class'}"  class="w-2/7 md:w-1/5" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           Classmate List
@@ -24,7 +24,7 @@
 
           <div class="flex flex-row items-center truncate w-11/12">
             <icon-base-two class=" w-1/6">
-              <profile-photo/>
+              <profile-photo :gender="student.gender"/>
             </icon-base-two>
             <div class="ml-5 text-purple-primary w-5/6 mr-2 truncate pr-4">
               {{ student.name }}

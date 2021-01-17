@@ -1,9 +1,10 @@
 <template>
-  <div class="flex flex-row items-center items-center mt-4">
-    <icon-base width="100" height="100" icon-name="app-logo" icon-color="white" view-box="0 -5 70 70">
-      <ProfilePhoto/>
-    </icon-base>
-    <div class="flex flex-col w-full text-left truncate mr-5">
+  <div class="flex flex-row items-center items-center mb-4">
+
+    <icon-base-two class="w-1/5 mr-2">
+      <profile-photo :gender="gender"/>
+    </icon-base-two>
+    <div class="flex flex-col w-4/5 text-left truncate mr-5">
       <h1 class=" text-purple-primary">Welcome, <span class="font-bold truncate">{{ username }}</span></h1>
 
       <div class="flex flex-row text-purple-secondary text-px-13 mt-1">
@@ -15,10 +16,10 @@
 </template>
 
 <script>
-import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import moment from "moment";
 import PlusIcon from "@/components/icons/PlusIcon";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "UserProfile",
@@ -31,13 +32,16 @@ export default {
     username() {
       return this.$store.getters.getAuthUsername
     },
+    gender() {
+      return this.$store.getters.getAuthUserGender
+    },
     nowDate() {
       const date = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('DD MMMM YYYY')
       return date === 'Invalid date' ? moment().format('DD MMMM YYYY') : date
     },
     nowTime() {
       const time = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('hh:mm A')
-      return time === 'Invalid date' ? moment().format('hh:mm A')  : time
+      return time === 'Invalid date' ? moment().format('hh:mm A') : time
     }
   },
   methods: {
@@ -51,7 +55,7 @@ export default {
   beforeDestroy() {
     clearInterval(this.interval)
   },
-  components: {PlusIcon, ProfilePhoto, IconBase}
+  components: {IconBaseTwo, PlusIcon, ProfilePhoto}
 }
 </script>
 

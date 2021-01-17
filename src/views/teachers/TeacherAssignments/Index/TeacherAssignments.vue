@@ -90,7 +90,7 @@
           </div>
         </div>
         <div class="text-center py-2">
-          <select-subject @selectedSubject="handleSelectedSubject"/>
+          <select-subject user-role="teacher" @selectedSubject="handleSelectedSubject"/>
         </div>
 
         <!-- FILTER ACTIONS -->
@@ -278,7 +278,7 @@ export default {
     },
     clickedFilterButton() {
       this.toggleFilterModal()
-      this.fetchData()
+      this.updateFilter();
     },
     toggleFilterModal() {
       this.modal = !this.modal

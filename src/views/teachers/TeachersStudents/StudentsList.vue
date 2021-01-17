@@ -7,23 +7,29 @@
     >
       <div class="flex flex-row items-center w-11/12">
         <icon-base-two class=" w-1/6" icon-name="profile-photo-icon" icon-color="white" view-box="0 0 60 55">
-          <profile-photo/>
+          <profile-photo :gender="student.gender"/>
         </icon-base-two>
         <div class="w-5/6 ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
       </div>
       <div v-for="performance in performances"
            v-if="performance.student_id === student.id "
-           class="place-self-end w-1/12"
+           class=" w-1/12"
       >
-        <icon-base-two :class="taggingClass(performance.status_color)" class="w-5/6" view-box="-2 -2 25 40">
+        <icon-base-two :class="taggingClass(performance.status_color)" class="w-5/6">
           <tagging-icon/>
         </icon-base-two>
       </div>
     </div>
 
-    <div class="mt-4 font-light text-md text-purple-secondary">
-      {{ responses }}
-    </div>
+    <infinite-loading :identifier="filterCount"
+                      @infinite="handleInfiniteScroll"
+                      spinner="bubbles"
+                      force-use-infinite-wrapper
+    >
+      <div slot="spinner" class="mt-10">Loading...</div>
+      <div slot="no-more"></div>
+      <div slot="no-results">No results message</div>
+    </infinite-loading>
 
   </div>
 </template>
@@ -35,10 +41,12 @@ import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import router from "@/router";
 import TaggingIcon from "../../../components/icons/TaggingIcon";
 import IconBaseTwo from "../../../components/IconBaseTwo";
+import StudentRepository from "@/repositories/StudentRepository";
+import InfiniteLoading from "vue-infinite-loading";
+
 
 export default {
   name: "StudentsList",
-  components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase},
   props: {
     search: String
   },
@@ -50,6 +58,14 @@ export default {
       loading: false,
       awaitingSearch: false,
 
+      filterCount: 0,
+      filters: {
+        pageNum: 1,
+        perPage: 20,
+        search: ''
+      },
+      meta: null,
+
       // data
       students: null,
       performances: null
@@ -60,6 +76,13 @@ export default {
     'search': 'searchName'
   },
   computed: {
+    hasLoadMore() {
+      if (this.meta) {
+        return this.filters.pageNum <= this.meta.last_page
+      } else {
+        return true;
+      }
+    },
     responses() {
       if (this.loading === false && (this.students === null || this.students.length === 0)) {
         return 'Oops! No student available.'
@@ -71,6 +94,32 @@ export default {
     },
   },
   methods: {
+
+    handleInfiniteScroll($state) {
+
+      if (this.hasLoadMore) {
+
+        TeacherRepository.getTeacherStudents(this.filters)
+            .then(response => {
+
+              let data = response.data;
+
+              this.students = data.data
+
+              // Update meta details and pageNum for filters
+              this.meta = data.meta;
+              this.filters.pageNum = this.meta.current_page + 1;
+
+              $state.loaded();
+
+            })
+
+      } else {
+        $state.complete();
+      }
+    },
+
+
     fetchData() {
       this.error = this.students = null
       this.loading = true
@@ -81,7 +130,6 @@ export default {
         search: this.search
       })
           .then(response => {
-
             this.students = response.data.data
             this.loading = false
           })
@@ -128,11 +176,13 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    // this.fetchData()
   },
   mounted() {
     this.getStudentPerformance()
-  }
+  },
+  components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase, InfiniteLoading},
+
 }
 </script>
 

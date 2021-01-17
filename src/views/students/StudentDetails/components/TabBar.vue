@@ -41,7 +41,7 @@ export default {
         },
         {
           name: 'assignments',
-          displayName: 'ASSIGNMENT',
+          displayName: 'ASSIGNMENTS',
           route: 'student.profile.show.assignments'
         },
         {

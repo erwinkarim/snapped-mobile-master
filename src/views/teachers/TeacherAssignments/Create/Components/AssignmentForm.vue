@@ -59,11 +59,7 @@
     <template v-slot:content>
       <!-- ASSIGNMENT -->
       <div v-if="showAssignment">
-        <!-- DESCRIPTION -->
-        <div class="w-full break-words px-7 mt-3 text-left text-purple-secondary text-sm leading-snug">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna.
-        </div>
+
 
         <!-- FORM ASSIGNMENT-->
         <div class="w-full px-7 mt-3 pb-3">
@@ -217,12 +213,6 @@
               + Add more photo
               <input class="hidden" type="file" accept="image/*" multiple @change="onFileSelected">
             </label>
-          </div>
-          <!-- DESCRIPTION -->
-          <div class="w-full break-words mt-20 pt-2 text-left text-purple-secondary text-sm leading-snug">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore
-            magna.
           </div>
         </div>
       </div>

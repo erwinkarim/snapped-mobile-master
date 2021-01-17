@@ -30,7 +30,7 @@
 
           <!-- Student photo -->
           <icon-base-two class="w-3/7">
-            <profile-photo/>
+            <profile-photo :gender="student.student.gender"/>
           </icon-base-two>
         </div>
 
@@ -51,7 +51,7 @@
         </div>
 
         <div class="w-3/12 flex flex-col justify-center font-bold text-sm text-right pr-5 md:text-lg ">
-          {{ student.student.total_marks_overall }}
+          {{ `${student.student.marks_average}%`}}
         </div>
       </router-link>
     </div>

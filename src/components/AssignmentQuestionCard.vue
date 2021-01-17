@@ -1,28 +1,32 @@
 <template>
-  <div class="px-8 mt-8">
-    <div class="bg-gray-secondary rounded-2xl text-left py-8 px-6">
-      <!-- TITLE -->
-      <text-multiline-truncate :lines="2"
-                               class="font-semibold text-2xl text-purple-primary "
-      >
-        {{ assignment.title }}
-      </text-multiline-truncate>
+  <div :class="isPreviewing ? '' : 'px-8'" class=" mt-8">
+    <div :class="isPreviewing ? 'bg-white' : 'bg-gray-secondary rounded-2xl text-left py-8 px-6'" >
 
-      <!-- DETAILS -->
-      <div class="flex flex-row  text-xs-plus text-purple-secondary mt-4 justify-between">
-        <div class="pr-1 truncate w-1/3">
-          {{ meta.subjectName || '' }}
-        </div>
-        <div class="px-1 truncate w-1/3">
-          {{ meta.classroomName || '' }}
-        </div>
-        <div class="px-1 truncate w-2/5">
-          {{ getHumanDate(assignment.createdAt) }}
+      <div v-if="!isPreviewing">
+        <!-- TITLE -->
+        <text-multiline-truncate :lines="2"
+                                 class="font-semibold text-2xl text-purple-primary"
+        >
+          {{ assignment.title }}
+        </text-multiline-truncate>
+
+        <!-- DETAILS -->
+        <div class="flex flex-row text-xs-plus text-purple-secondary mt-4 justify-between">
+          <div class="pr-1 truncate w-1/3">
+            {{ meta.subjectName || '' }}
+          </div>
+          <div class="px-1 truncate w-1/3">
+            {{ meta.classroomName || '' }}
+          </div>
+          <div class="px-1 truncate w-2/5">
+            {{ getHumanDate(assignment.createdAt) }}
+          </div>
         </div>
       </div>
 
+
       <!-- Written Question -->
-      <div v-if="hasWrittenQuestion"
+      <div v-if="hasWrittenQuestion && !isPreviewing"
            class="mt-8 text-purple-primary text-xs-plus flex flex-col"
       >
 
@@ -73,8 +77,20 @@
       </div>
 
       <!-- Snapped Question -->
-      <div v-if="hasSnappedQuestion" class="mt-8 text-purple-primary text-xs-plus flex flex-col">
+      <div v-if="hasSnappedQuestion"
+           :class="isPreviewing ? 'mb-20' : ''"
+           class="mt-8 text-purple-primary text-xs-plus flex flex-col"
+      >
+        <div @click="togglePreview" v-if="!isPreviewing"
+             class="z-30 flex flex-row justify-end pr-4 pb-2 bg-black-primary rounded-t-2xl pt-4"
+        >
+          <icon-base-two class="w-1/12">
+            <expand-image-icon stroke-color="white"/>
+          </icon-base-two>
+        </div>
         <question-preview-swiper
+            :class="isPreviewing ? 'h-full' : 'bg-black-primary  rounded-b-2xl pb-6 pt-3 overflow-hidden '"
+            :is-previewing="isPreviewing"
             :snapped-answer-paths="assignment.snap_question_paths"
         />
       </div>
@@ -88,12 +104,15 @@
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
 import QuestionPreviewSwiper from "@/views/teachers/TeacherAssignments/Show/Components/QuestionPreviewSwiper";
 import moment from "moment";
+import IconBaseTwo from "@/components/IconBaseTwo";
+import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 
 export default {
   name: "AssignmentQuestionCard",
   props: {
     assignment: Object,
     meta: Object,
+    isPreviewing: Boolean,
   },
   data() {
     return {
@@ -123,9 +142,7 @@ export default {
           return characterCount > 250;
         }
 
-
       }
-
       return false;
     }
   },
@@ -140,10 +157,12 @@ export default {
       } else {
         return ''
       }
-
+    },
+    togglePreview() {
+      this.$emit('togglePreview')
     }
   },
-  components: {QuestionPreviewSwiper, TextMultilineTruncate}
+  components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate}
 }
 </script>
 

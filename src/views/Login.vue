@@ -1,12 +1,6 @@
 <template>
   <div class="h-full w-full">
 
-    <div class="fixed z-0 w-full h-full mx-auto flex flex-col justify-center items-center px-0">
-      <div class="w-6/7 h-full">
-        <string-icon/>
-      </div>
-    </div>
-
     <div class="absolute h-full w-full my-auto flex flex-col justify-center px-7">
 
       <!-- LOGO -->
@@ -17,7 +11,7 @@
           </div>
         </div>
         <div class="z-40 text-purple-secondary mb-16 bg-white">
-          To Bring Your A Game
+          Bring Your A Game
         </div>
       </div>
 

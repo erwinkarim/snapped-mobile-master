@@ -51,6 +51,10 @@ export default {
         return Repository.get(`${resource}/classmates`)
     },
 
+    getSubjects(){
+        return Repository.get(`/subjects`)
+    },
+
     getUnsubmittedAssignmentSummary() {
         return Repository.get(`${resource}/unsubmitted-assignments`)
     },

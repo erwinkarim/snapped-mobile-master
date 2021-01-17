@@ -23,7 +23,7 @@
            class="text-left px-5 py-4 flex flex-row w-full border-b-1 items-center bg-white"
       >
         <icon-base class=" w-1/8">
-          <profile-photo/>
+          <profile-photo :gender="student.gender"/>
         </icon-base>
         <div class="w-5/6 ml-5 text-purple-primary truncate pr-4">
           {{ student.name }}
