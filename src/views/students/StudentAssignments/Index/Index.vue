@@ -10,7 +10,7 @@
 
         <!-- Section Title -->
         <div class="flex flex-row justify-between mt-8 items-center">
-          <section-title title="Assignments Date"/>
+          <section-title title="Due Dates"/>
           <div class="w-1/12 md:w-1/24" @click="modal = !modal">
             <icon-base-two stroke-color="purple-primary">
               <filter-icon/>
@@ -28,7 +28,7 @@
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
-            <section-title title="Assignments List"/>
+            <section-title title="To-Do List"/>
             <div class="text-purple-primary">
               {{ selectedDate }}
             </div>

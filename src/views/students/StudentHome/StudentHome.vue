@@ -16,23 +16,23 @@
 
         <!-- SECTION: SUMMARY -->
         <div class="mt-2 mb-3">
-            <section-title class="mb-5 text-left" title="Summary"/>
+            <section-title class="mb-5 text-left" title="Assignments"/>
 
           <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
               <div class="flex flex-col px-2 w-1/3">
                 <div class="py-2 font-bold border-b-1">{{ numOfNewAssignments }}</div>
-                <div class="py-2 mb-1 h-12 text-xs-plus">
-                  New Assignments
+                <div class="py-2 mb-1 text-xs-plus">
+                  New
                 </div>
               </div>
               <div class="flex flex-col px-2 w-1/3 border-l-1 border-r-1">
                 <div class="py-2 font-bold border-b-1">{{ numOfDueSoonAssignments }}</div>
-                <div class="py-2 mb-1 h-12 text-xs-plus">Due Soon Assignments</div>
+                <div class="py-2 mb-1 text-xs-plus">Due Soon</div>
               </div>
               <div class="flex flex-col px-2 w-1/3">
                 <div class="py-2 font-bold border-b-1">{{ numOfOverdueAssignments }}</div>
-                <div class="py-2 mb-1 h-12 text-xs-plus">Overdue Assignments</div>
+                <div class="py-2 mb-1 text-xs-plus">Overdue</div>
               </div>
             </div>
           </div>
