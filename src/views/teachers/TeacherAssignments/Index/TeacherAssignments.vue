@@ -18,7 +18,7 @@
       <div class="px-5 w-full">
         <!-- Section Title -->
         <div class="flex flex-row justify-between items-center mt-8">
-          <section-title title="Assignments Date"/>
+          <section-title title="Due Dates"/>
           <div class="w-1/12">
             <button @click="modal = !modal">
               <icon-base-two stroke-color="purple-primary">
@@ -38,7 +38,7 @@
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
-            <section-title title="Assignments List"/>
+            <section-title title="To-Do List"/>
             <div class="text-purple-primary">
               {{ selectedDate }}
             </div>

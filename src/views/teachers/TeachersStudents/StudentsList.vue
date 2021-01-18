@@ -67,7 +67,7 @@ export default {
       meta: null,
 
       // data
-      students: null,
+      students: [],
       performances: null
     }
   },
@@ -83,15 +83,6 @@ export default {
         return true;
       }
     },
-    responses() {
-      if (this.loading === false && (this.students === null || this.students.length === 0)) {
-        return 'Oops! No student available.'
-      }
-
-      if (this.loading === true) {
-        return ' Fetching data...'
-      }
-    },
   },
   methods: {
 
@@ -102,12 +93,14 @@ export default {
         TeacherRepository.getTeacherStudents(this.filters)
             .then(response => {
 
-              let data = response.data;
+              let data = response.data.data
 
-              this.students = data.data
+              for (let i = 0; i < data.length; i++) {
+                this.students.push(data[i]);
+              }
 
               // Update meta details and pageNum for filters
-              this.meta = data.meta;
+              this.meta = response.data.meta;
               this.filters.pageNum = this.meta.current_page + 1;
 
               $state.loaded();
@@ -117,25 +110,6 @@ export default {
       } else {
         $state.complete();
       }
-    },
-
-
-    fetchData() {
-      this.error = this.students = null
-      this.loading = true
-
-      TeacherRepository.getTeacherStudents({
-        pageNum: 1,
-        perPage: 50,
-        search: this.search
-      })
-          .then(response => {
-            this.students = response.data.data
-            this.loading = false
-          })
-          .catch(err => {
-
-          })
     },
 
     getStudentPerformance() {
