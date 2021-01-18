@@ -2,14 +2,15 @@
 
   <!-- BOTTOM BAR -->
 
-  <div v-if="show" :class="bottomBarClass" class="md:max-w-xl mx-auto block fixed inset-x-0 bottom-0 shadow md:shadow-none pt-4 pb-6 px-5">
+  <div v-if="show" :class="bottomBarClass"
+       class="md:max-w-xl mx-auto block fixed inset-x-0 bottom-0 shadow md:shadow-none pt-4 pb-6 px-5">
 
     <div class="w-full md:max-w-xl mx-auto">
 
       <div v-if="$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
-        <div
+        <div @click="togglePreviewMode" v-if="$store.state.teacherMarking.states.isMain"
             class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-          Marked
+          View Markings
         </div>
       </div>
 
@@ -55,6 +56,13 @@
         </div>
       </div>
 
+      <div v-else-if="$store.state.teacherMarking.states.isMain" class="w-full flex flex-row items-center">
+        <button @click="togglePreviewMode"
+                class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+          Begin Marking
+        </button>
+      </div>
+
       <div v-else class="w-full flex flex-row items-center">
         <router-link :to="{name: 'teacher.assignments.marking.feedback'}" class="w-1/8 mr-2">
           <icon-base-two class="w-7/8">
@@ -63,14 +71,10 @@
         </router-link>
         <div class="w-3/8 px-2">
           <router-link :to="{name: 'teacher.assignments.marking.add_mark'}"
-                       v-if="$store.state.teacherMarking.states.isPreviewing"
-                       class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+                       class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary"
+          >
             Add Mark
           </router-link>
-          <button v-else @click="togglePreviewMode"
-                  class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
-            Enter Mark
-          </button>
         </div>
         <div class="w-4/8 px-2">
           <button @click="setAsMarked"
@@ -126,9 +130,10 @@ export default {
     },
 
     setAsMarked() {
+
       this.$store.dispatch('teacherMarking/submit')
           .then((submissionID) => {
-              this.$store.dispatch('teacherMarking/fetchData', submissionID)
+            this.$store.dispatch('teacherMarking/fetchData', submissionID)
           })
           .catch(err => {
             console.log('Please add a mark first!')

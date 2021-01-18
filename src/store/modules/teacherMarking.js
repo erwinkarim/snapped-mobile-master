@@ -16,6 +16,7 @@ export default {
             isMarking: false,
             isSelectingSticker: false,
             isWritingFeedback: false,
+            isSubmitting: false,
             isShowingModal: false,
             isSavingEditedSnappedAnswer: false
         },
@@ -58,6 +59,9 @@ export default {
                 }
             },
         },
+
+        // Modal being displayed
+        nowShowingModal: null,
 
         // Available stickers
         stickerCollection: [
@@ -220,17 +224,19 @@ export default {
             };
         },
 
-        toggleModalMode(state) {
+        toggleModalMode(state, type) {
             state.states = {
                 isLoading: false,
-                isMain: true,
-                isPreviewing: false,
+                isMain: false,
+                isPreviewing: true,
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
                 isShowingModal: !state.states.isShowingModal,
                 isSavingEditedSnappedAnswer: false
             };
+
+            state.nowShowingModal = type;
         },
 
         setMarkingMode(state){
@@ -244,6 +250,21 @@ export default {
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
+
+        },
+        setPreviewingMode(state){
+
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: true,
+                isMarking: false,
+                isSelectingSticker: false,
+                isWritingFeedback: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+
         },
 
         setOriginalState(state) {
@@ -403,7 +424,7 @@ export default {
 
             return new Promise((resolve, reject) => {
                 state.marking[state.nowMarking.image.index] = state.nowMarking.canvas.main.toDataURL()
-                commit('setMainMode')
+                commit('setPreviewingMode')
                 resolve()
             })
         },
@@ -439,28 +460,40 @@ export default {
 
             return new Promise((resolve, reject) => {
                 if (state.submission.marks === null || state.submission.marks === undefined) {
-                    commit('toggleModalMode')
+                    commit('toggleModalMode', 'no_mark')
                     reject()
                 } else {
-                    MarksRepository.store(
-                        {
-                            assignmentID: state.assignmentDetails.assignmentID,
-                            studentID: state.assignmentDetails.studentID,
-                            answerID: state.assignmentDetails.submissionID,
-                            submissionType: state.submission.type,
-                            snappedAnswers: state.marking,
-                            marks: state.submission.marks,
-                            feedback: state.submission.feedback
-                        })
-                        .then(response => {
 
-                            let type = response.data.messageType;
+                    commit('toggleModalMode', 'is_submitting')
 
-                            if (type === 'success') {
-                                resolve(state.assignmentDetails.submissionID);
-                            }
+                    state.states.isSubmitting = true;
 
-                        })
+                    if(!state.states.isSubmitting) {
+                        MarksRepository.store(
+                            {
+                                assignmentID: state.assignmentDetails.assignmentID,
+                                studentID: state.assignmentDetails.studentID,
+                                answerID: state.assignmentDetails.submissionID,
+                                submissionType: state.submission.type,
+                                snappedAnswers: state.marking,
+                                marks: state.submission.marks,
+                                feedback: state.submission.feedback
+                            })
+                            .then(response => {
+
+                                let type = response.data.messageType;
+
+                                commit('setMainMode')
+
+                                if (type === 'success') {
+                                    resolve(state.assignmentDetails.submissionID);
+                                }
+
+                            })
+                    } else {
+                        console.log('Already submitting a marking.')
+                    }
+
                 }
             })
 

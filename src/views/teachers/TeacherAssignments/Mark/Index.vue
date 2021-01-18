@@ -19,7 +19,7 @@
              @toggleModal="toggleModalMode()"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template slot="message" v-if="$store.state.teacherMarking.nowShowingModal === 'no_mark'">
           You must add mark for this assignment.
         </template>
         <template slot="button">
@@ -28,6 +28,17 @@
       </modal>
     </div>
 
+    <div v-if="$store.state.teacherMarking.states.isShowingModal && $store.state.teacherMarking.nowShowingModal === 'is_submitting'"
+         class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
+      <modal @toggleModal="toggleModalMode()"
+             :has-button="false"
+             class="w-4/5 "
+      >
+        <template slot="message" >
+          Submitting marking...
+        </template>
+      </modal>
+    </div>
 
     <!-- HEADER -->
     <page-header-three v-if="$store.state.teacherMarking.states.isMain"
@@ -40,16 +51,6 @@
                   class="w-1/4"
                   :stroke-color="navBackColor"
         />
-      </template>
-
-      <template v-slot:rightAction>
-        <div class="flex flex-row justify-end items-center mr-5">
-          <div @click="togglePreviewMode" :to="{name: 'student.class.classmates'}" class="w-2/7 ">
-            <icon-base-two>
-              <expand-image-icon/>
-            </icon-base-two>
-          </div>
-        </div>
       </template>
 
     </page-header-three>
@@ -78,8 +79,14 @@
     >
 
       <template v-slot:leftAction>
-        <nav-back class="pl-0 ml-0 w-1/4" stroke-color="white"/>
+        <!--        <nav-back class="pl-0 ml-0 w-1/4" stroke-color="white"/>-->
+        <div @click="exitMarkingMode">
+          <icon-base-two class="w-1/4 ml-6">
+            <arrow-back-icon :stroke-color="navBackColor"/>
+          </icon-base-two>
+        </div>
       </template>
+
       <template v-slot:rightAction>
         <button @click="undoEdits" class="flex flex-row justify-end mr-7">
           <icon-base-two class="w-1/4">
@@ -94,7 +101,7 @@
       <router-view/>
     </div>
 
-    <bottom-bar />
+    <bottom-bar/>
 
   </div>
 </template>
@@ -124,7 +131,6 @@ export default {
     '$route': 'handleRouteChange',
   },
   computed: {
-
     containerClass: function () {
       let value = 'bg-white mb-40 ';
 
@@ -165,7 +171,7 @@ export default {
 
       let path = this.$route.name;
 
-      if (path === 'teacher.assignments.marking.details') {
+      if (path === 'teacher.assignments.marking.details' && !this.$store.state.teacherMarking.states.isPreviewing) {
         this.$store.commit('teacherMarking/setMainMode')
       }
 
@@ -187,7 +193,12 @@ export default {
       this.$store.commit('teacherMarking/toggleModalMode')
     },
 
-    scrollToTop(){
+    exitMarkingMode() {
+      this.$store.commit('teacherMarking/setPreviewingMode')
+      router.push({name: 'teacher.assignments.marking.details'})
+    },
+
+    scrollToTop() {
       window.scroll({
         top: 0,
         left: 0,
