@@ -5,7 +5,7 @@
 
     <!-- OVERLAYS -->
     <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="toggleModalMode()"
-         class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">
+         class="fixed w-full bg-black-primary bg-opacity-25 h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">
     </div>
     <div v-if="$store.state.teacherMarking.states.isSelectingSticker" @click="toggleStickerBar"
          class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">

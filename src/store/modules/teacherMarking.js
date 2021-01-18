@@ -181,6 +181,7 @@ export default {
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             }
@@ -194,6 +195,7 @@ export default {
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             }
@@ -207,6 +209,7 @@ export default {
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: true,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             }
@@ -220,6 +223,7 @@ export default {
                 isMarking: true,
                 isSelectingSticker: !state.states.isSelectingSticker,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
@@ -233,6 +237,7 @@ export default {
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: !state.states.isShowingModal,
                 isSavingEditedSnappedAnswer: false
             };
@@ -248,6 +253,7 @@ export default {
                 isMarking: true,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
@@ -262,6 +268,7 @@ export default {
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
@@ -277,6 +284,7 @@ export default {
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: false,
+                isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
@@ -465,11 +473,12 @@ export default {
                     reject()
                 } else {
 
-                    commit('toggleModalMode', 'is_submitting')
-
-                    state.states.isSubmitting = true;
-
                     if(!state.states.isSubmitting) {
+
+                        commit('toggleModalMode', 'is_submitting')
+
+                        state.states.isSubmitting = true;
+
                         MarksRepository.store(
                             {
                                 assignmentID: state.assignmentDetails.assignmentID,
