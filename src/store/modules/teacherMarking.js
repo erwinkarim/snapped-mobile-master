@@ -100,6 +100,7 @@ export default {
             state.assignmentDetails.submittedDate = data.submission_date;
             state.assignmentDetails.marksID = data.marks_id;
             state.assignmentDetails.marks = data.marks;
+            state.assignmentDetails.isFirstSubmission = data.is_first;
 
             if (data.snap_answer) {
                 state.submission.type = 'snapped';
