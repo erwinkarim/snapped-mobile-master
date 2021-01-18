@@ -21,14 +21,14 @@
 
       <!-- SHOW MARKINGS -->
       <div v-if="isShowingMarkings"
-           class="relative pb-16/9 top-24">
-        <div class="pt-4 z-10 bg-white px-6 pb-16">
+           class="relative max-w-xl top-24">
+        <div class="pt-4 z-10 mb-20 bg-white px-6 ">
           <div class="w-full">
             <div v-my-swiper="swiperOption">
               <div class="swiper-wrapper">
                 <div v-for="(path, index) in details.markingPicturePaths"
-                     class="pb-16/9 bg-black-primary swiper-slide rounded-2xl flex flex-col">
-                  <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
+                     class=" swiper-slide rounded-2xl h-full overflow-hidden">
+                  <div class="w-full flex flex-row justify-center py-2 px-4 h-full object-cover top-0 items-center">
                     <img :src="path">
                   </div>
                 </div>
@@ -43,7 +43,7 @@
 
       <!-- SHOW FEEDBACK -->
       <div v-if="isShowingFeedback"
-           class="relative px-8"
+           class="relative px-8 md:mt-10 mb-28"
            :class="details.feedback ? 'top-26 text-purple-primary text-left' : 'top-30 text-purple-secondary text-center' "
       >
         {{ details.feedback || 'No feedback available.' }}

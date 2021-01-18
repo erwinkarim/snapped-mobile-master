@@ -5,8 +5,8 @@
         <div v-for="(dataURL, index) in $store.getters['teacherMarking/images']"
              @click="enterMarkingMode(dataURL, index)"
              :class="swiperClass"
-             class=" swiper-slide rounded-2xl flex flex-col">
-          <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
+             class=" swiper-slide rounded-2xl h-full overflow-hidden">
+          <div class="w-full py-2 px-4 h-full flex flex-col justify-start items-center object-cover top-0 items-center absolute">
             <img :src="dataURL">
           </div>
         </div>
@@ -27,7 +27,7 @@ export default {
   computed: {
     swiperClass: function () {
       if (this.$store.state.teacherMarking.states.isPreviewing) {
-        return 'pb-16/9 bg-black-primary';
+        return 'min-h-screen';
       } else {
         return 'pb-5/4';
       }

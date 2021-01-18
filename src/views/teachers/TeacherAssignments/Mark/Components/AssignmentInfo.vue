@@ -4,7 +4,9 @@
 
     <!-- Achievements -->
     <div class="flex flex-row ">
-      <div class="bg-gray-secondary rounded-full py-1 px-4 text-xs font-bold text-purple-primary uppercase">
+      <div v-if="details.isFirstSubmission === 'yes'"
+          class="bg-gray-secondary rounded-full py-1 px-4 text-xs font-bold text-purple-primary uppercase"
+      >
         First Submission
       </div>
     </div>

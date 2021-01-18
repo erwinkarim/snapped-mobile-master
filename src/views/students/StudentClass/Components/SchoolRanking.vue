@@ -36,7 +36,7 @@
                 <gold-medal-icon/>
               </icon-base-two>
 
-              <div v-else class="font-bold text-3xl">
+              <div v-else class="font-bold text-lg md:text-3xl">
                 {{ student.ranking }}
               </div>
             </div>

@@ -8,11 +8,12 @@
 
         <div :class="imagePreviewClass" class="pt-4 z-10">
 
-          <answer-preview-swiper v-if="$store.getters['teacherMarking/hasSnappedAnswer']" />
+          <answer-preview-swiper v-if="$store.getters['teacherMarking/hasSnappedAnswer']"
+            class="mt-10"
+          />
 
           <written-answer-preview  v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !$store.state.teacherMarking.states.isMarking" />
         </div>
-
         <!-- ASSIGNMENT DETAILS -->
         <assignment-info v-if="$store.getters['teacherMarking/isMainPage']" :details="$store.state.teacherMarking.assignmentDetails" />
       </div>
@@ -44,7 +45,6 @@ export default {
     newMarks: [String, Number],
   },
   computed: {
-
     containerClass: function () {
       let value = 'bg-white';
 
