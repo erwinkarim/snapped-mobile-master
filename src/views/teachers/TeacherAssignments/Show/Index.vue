@@ -12,6 +12,13 @@
             </icon-base-two>
           </div>
         </template>
+
+        <template v-if="swiperDetails" v-slot:rightAction>
+          <div class="text-sm md:text-xl font-semibold text-purple-primary">
+            {{ `${swiperActiveSlideNumber} / ${swiperSlidesCount}` }}
+          </div>
+        </template>
+
       </page-header-three>
     </template>
 
@@ -64,6 +71,7 @@
                 :meta="meta"
                 :is-previewing="isPreviewing"
                 v-on:togglePreview="handleTogglePreview"
+                v-on:swiperDetails="handleSwiperDetails"
             />
 
             <!-- Submissions -->
@@ -139,6 +147,9 @@ export default {
       // Status
       isPreviewing: false,
 
+      // Swiper details
+      swiperDetails: null,
+
       assignment: {
         id: null,
         title: null,
@@ -172,6 +183,14 @@ export default {
 
     hasSnappedQuestion: function () {
       return this.assignment.snap_question_paths.length > 0;
+    },
+
+    swiperActiveSlideNumber() {
+      return this.swiperDetails ? this.swiperDetails.activeSlideIndex + 1 : '-';
+    },
+
+    swiperSlidesCount() {
+      return this.swiperDetails ? this.swiperDetails.slidesCount : 0;
     },
   },
   methods: {
@@ -223,6 +242,9 @@ export default {
     },
     handleTogglePreview() {
       this.isPreviewing = !this.isPreviewing;
+    },
+    handleSwiperDetails(data) {
+      this.swiperDetails = data
     },
     getHumanDate(datetime) {
 

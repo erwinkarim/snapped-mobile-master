@@ -1,7 +1,11 @@
 <template>
 
   <div>
-    <div v-my-swiper="swiperOption" class="w-full">
+    <div v-my-swiper="swiperOption"
+         @slideChangeTransitionEnd="handleSlideChange"
+         @ready="handleSwiperReadied"
+         class="w-full"
+    >
       <div class="swiper-wrapper">
         <div v-for="path in snappedAnswerPaths"
              :class="swiperClass"
@@ -32,6 +36,12 @@ export default {
   },
   data() {
     return {
+
+      swiperDetails: {
+        slidesCount: 0,
+        activeSlideIndex: 0,
+      },
+
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
@@ -61,6 +71,24 @@ export default {
         return 'pb-5/4';
       }
     }
+  },
+  methods: {
+    handleSwiperReadied(swiper) {
+      this.swiperDetails = {
+          slidesCount: swiper.imagesLoaded,
+          activeSlideIndex: swiper.activeIndex,
+      }
+    },
+    handleSlideChange(swiper) {
+      this.swiperDetails.activeSlideIndex = swiper.activeIndex
+      this.emitSwiperDetails();
+    },
+    emitSwiperDetails() {
+      this.$emit('swiperDetails', this.swiperDetails)
+    }
+  },
+  mounted() {
+    this.emitSwiperDetails()
   },
 
   directives: {
