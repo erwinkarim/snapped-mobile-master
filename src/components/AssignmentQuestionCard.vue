@@ -19,7 +19,7 @@
             {{ meta.classroomName || '' }}
           </div>
           <div class="px-1 truncate w-2/5">
-            {{ getHumanDate(assignment.createdAt) }}
+            {{ getHumanDate(assignment.dueDatetime) }}
           </div>
         </div>
       </div>

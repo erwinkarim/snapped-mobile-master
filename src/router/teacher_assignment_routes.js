@@ -3,7 +3,6 @@ import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
 import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
-import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
@@ -21,16 +20,10 @@ export default {
     children: [
         {
             path: 'assignments/create',
+            name: 'teacher.assignments.create',
             component: AssignmentCreate,
-            children: [
-                {
-                    path: '',
-                    name: 'teacher.assignments.create',
-                    component: AssignmentForm,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                },
-            ]
+            meta: teacherAccessControlMeta,
+            props: true
         },
         {
             path: 'assignments/:assignmentID',
