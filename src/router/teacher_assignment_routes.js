@@ -1,12 +1,11 @@
+import App from "@/App";
+import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
 import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
-import AssignmentDetails from "@/views/teachers/TeacherAssignments/Show/Components/AssignmentDetails";
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
 import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
-import App from "@/App";
-import AssignmentMarked from "@/views/teachers/TeacherAssignments/Marked/Index";
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
 import AssignmentEdit from "@/views/teachers/TeacherAssignments/Edit/Index";
@@ -35,12 +34,12 @@ export default {
         },
         {
             path: 'assignments/:assignmentID',
-            component: AssignmentShow,
+            component: AssignmentDetails,
             children: [
                 {
                     path: 'show',
                     name: 'teacher.assignments.show',
-                    component: AssignmentDetails,
+                    component: AssignmentShow,
                     meta: teacherAccessControlMeta,
                     props: true,
                 },
