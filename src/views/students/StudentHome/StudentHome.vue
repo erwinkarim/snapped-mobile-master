@@ -49,7 +49,13 @@
               :key="assignment.assignmentID"
               :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
               :assignment="assignment"
-          />
+          >
+            <template v-slot:topRightAction v-if="!assignment.marks">
+              <div v-if="assignment.hasSubmitted" class="pr-1 md:pr-3" >
+                DONE
+              </div>
+            </template>
+          </assignment-card>
         </div>
       </div>
     </template>
@@ -108,6 +114,7 @@ export default {
                 title: item.title,
                 description: item.written_description,
                 dueDatetime: item.due_datetime,
+                hasSubmitted: item.has_submitted === "yes"
               }
 
               this.assignments.push(assignmentDetail);

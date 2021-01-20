@@ -34,6 +34,10 @@ export default {
       type: Boolean,
       default: false
     },
+    disableRedAlert: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -111,7 +115,7 @@ export default {
       } else {
         clearInterval(this.timerInterval)
         value = '00:00:00'
-        this.customBackgroundColor = 'bg-red-primary'
+        this.customBackgroundColor = this.disableRedAlert ? 'bg-purple-primary' : 'bg-red-primary'
       }
 
       return value
