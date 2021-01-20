@@ -30,10 +30,10 @@ export default {
       type: Boolean,
       default: false
     },
-    backgroundColor: {
-      type: String,
-      default: 'bg-transparent'
-    }
+    hasDynamicBackgroundColor: {
+      type: Boolean,
+      default: false
+    },
   },
   data() {
     return {
@@ -43,7 +43,8 @@ export default {
         day: 86400,
         hour: 3600,
         minute: 60
-      }
+      },
+      customBackgroundColor: null
     }
   },
   computed: {
@@ -58,12 +59,13 @@ export default {
 
       return Math.floor(duration.asSeconds());
     },
+    secondsLeft() {
+      return this.timeTotal - this.timePassed
+    },
     timeLeft() {
 
-      let secondsLeft = this.timeTotal - this.timePassed;
-
+      let secondsLeft = this.secondsLeft;
       let value = null;
-
 
       if (this.hasTwentyFourHourLimit && secondsLeft > this.inSeconds.day) {
         clearInterval(this.timerInterval)
@@ -79,6 +81,8 @@ export default {
           } else {
             value = `> ${days} ${days === 1 ? 'day' : 'days'}`
           }
+
+          this.customBackgroundColor = 'bg-purple-primary'
 
         }
         // Else, display in format hh:mm:ss
@@ -96,20 +100,28 @@ export default {
           seconds < 10 ? seconds = `0${seconds}` : null;
 
           value = `${hours}:${minutes}:${seconds}`
+
+          if (hours < 1) {
+            this.customBackgroundColor = 'bg-yellow-primary'
+          } else {
+            this.customBackgroundColor = 'bg-purple-primary'
+          }
         }
-
-
 
       } else {
         clearInterval(this.timerInterval)
         value = '00:00:00'
+        this.customBackgroundColor = 'bg-red-primary'
       }
 
       return value
     },
-
     containerClass() {
-      return this.backgroundColor;
+      if (this.hasDynamicBackgroundColor && this.customBackgroundColor) {
+        return this.customBackgroundColor;
+      } else {
+        return 'bg-transparent'
+      }
     }
   },
   methods: {

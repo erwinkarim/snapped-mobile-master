@@ -102,7 +102,7 @@
 
 <script>
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
-import QuestionPreviewSwiper from "@/views/teachers/TeacherAssignments/Show/Components/QuestionPreviewSwiper";
+import QuestionPreviewSwiper from "@/components/QuestionPreviewSwiper";
 import moment from "moment";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";

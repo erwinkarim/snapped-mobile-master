@@ -1,8 +1,9 @@
 <template>
   <router-link :to="route"
-               class="max-w-sm md:max-w-2xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3">
+               class="max-w-sm md:max-w-2xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3"
+  >
 
-    <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full' " class="flex flex-col">
+    <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full' " class="flex flex-col justify-between">
       <div class="flex flex-row justify-between mb-4 truncate">
         <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">
           {{ assignment.title }}
@@ -33,9 +34,9 @@
 
         <div class="w-2/7 md:w-1/4" v-if="!hasMarks">
           <countdown-timer :due-date-time="assignment.dueDatetime"
-
+                           :has-dynamic-background-color="true"
                            :has-clock-icon="true"
-                           class="text-2xs md:text-xs bg-purple-primary"
+                           class="text-2xs md:text-xs "
           />
         </div>
       </div>

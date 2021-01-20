@@ -20,11 +20,9 @@
 </template>
 
 <script>
-import router from "@/router";
 import {directive} from "vue-awesome-swiper";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
-
 
 export default {
   name: "QuestionPreviewSwiper",
