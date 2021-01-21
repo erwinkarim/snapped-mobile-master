@@ -4,6 +4,7 @@ import router from "@/router";
 import {fabric} from "fabric";
 import stickers from "@/components/Stickers/Stickers";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
+import 'fabric-history';
 
 export default {
     namespaced: true,
@@ -165,6 +166,7 @@ export default {
                     },
                     {crossOrigin: 'Anonymous'}
                 );
+
             });
         },
 
@@ -457,12 +459,13 @@ export default {
 
             let index = state.nowMarking.image.index;
 
-            // Get original image and set it to nowMarking
-            state.nowMarking.image.path = state.assignmentDetails.snappedAnswerPaths[index]
-
-            commit('disposeCanvas')
-            commit('loadCanvas')
-            commit('loadImage')
+            if (state.nowMarking.canvas.main.historyUndo.length > 1) {
+                state.nowMarking.canvas.main.undo();
+            } else if (state.nowMarking.canvas.main.historyUndo.length === 1) {
+                state.nowMarking.image.path = state.assignmentDetails.snappedAnswerPaths[index]
+                commit('disposeCanvas')
+                commit('loadImage')
+            }
         },
 
         submit({state, commit}) {
