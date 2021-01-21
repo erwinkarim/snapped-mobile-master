@@ -36,6 +36,7 @@
           <countdown-timer :due-date-time="assignment.dueDatetime"
                            :has-dynamic-background-color="true"
                            :has-clock-icon="true"
+                           :disable-red-alert="redAlertState"
                            class="text-2xs md:text-xs "
           />
         </div>
@@ -77,6 +78,10 @@ export default {
     showMarks: {
       type: Boolean,
       default: false
+    },
+    userRole: {
+      type: String,
+      default: null
     }
   },
   computed: {
@@ -85,6 +90,12 @@ export default {
     },
     assignmentMarks() {
       return parseInt(this.assignment.marks.value);
+    },
+    isStudent() {
+      return this.userRole === 'student';
+    },
+    redAlertState() {
+      return this.isStudent ? this.assignment.hasSubmitted : false;
     }
   },
   methods: {

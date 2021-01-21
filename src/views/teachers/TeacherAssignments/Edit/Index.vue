@@ -152,8 +152,9 @@ export default {
   methods: {
 
     submit() {
+
       if (this.due_datetime) {
-        AssignmentRepository.update(this.assignmentID, this.due_datetime)
+        AssignmentRepository.update(this.assignmentID, this.format_date(this.due_datetime))
             .then(response => {
               if (response.data.messageType === 'success') {
                 this.isShowingSuccessModal = true;
@@ -170,6 +171,12 @@ export default {
               router.push({ name: 'teacher.assignments'})
             }
           })
+    },
+
+    format_date(value) {
+      if (value) {
+        return moment(String(value)).format('YYYY-MM-DD HH:mm:ss')
+      }
     },
 
     getHumanDate(datetime) {

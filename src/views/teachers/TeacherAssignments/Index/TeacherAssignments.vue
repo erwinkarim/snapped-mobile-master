@@ -52,7 +52,14 @@
               class="mt-4"
           >
             <template v-slot:topRightAction>
-              {{ assignment.totalSubmitted }} submitted
+              <div class="flex flex-col">
+                <div class="mb-1">
+                  {{ assignment.totalSubmitted }} submitted
+                </div>
+                <div>
+                  {{ assignment.totalMarked }} marked
+                </div>
+              </div>
             </template>
           </assignment-card>
 
@@ -229,6 +236,7 @@ export default {
                     description: item.written_description,
                     dueDatetime: item.due_datetime,
                     totalSubmitted: item.number_of_submissions,
+                    totalMarked: item.num_of_marked_submissions
                   }
 
                   if (item.marks_id) {
