@@ -42,10 +42,11 @@
                 :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
                 :assignment="assignment"
                 :show-marks="true"
+                user-role="student"
             >
               <template v-slot:topRightAction v-if="!assignment.marks">
-                <div class="pr-1 md:pr-3">
-                  {{ assignment.totalSubmitted }} submitted
+                <div v-if="assignment.hasSubmitted" class="pr-1 md:pr-3" >
+                  DONE
                 </div>
               </template>
             </assignment-card>
@@ -203,7 +204,7 @@ export default {
       } else {
         return true;
       }
-    }
+    },
   },
   methods: {
 
@@ -230,7 +231,9 @@ export default {
                     description: item.written_description,
                     dueDatetime: item.due_datetime,
                     totalSubmitted: item.number_of_submissions,
-                  }
+                    hasSubmitted: item.has_submitted === "yes"
+
+                }
 
                   if (item.marks_id) {
                     assignmentDetail['marks'] = {

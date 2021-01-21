@@ -1,25 +1,25 @@
 <template>
-  <div :class="isPreviewing ? '' : 'px-8'" class=" mt-8">
-    <div :class="isPreviewing ? 'bg-white' : 'bg-gray-secondary rounded-2xl text-left py-8 px-6'" >
+  <div :class="isPreviewing ? '' : 'px-8'" class="mt-8">
+    <div :class="isPreviewing ? 'bg-white' : 'bg-gray-secondary rounded-2xl text-left py-8 px-6'">
 
       <div v-if="!isPreviewing">
         <!-- TITLE -->
         <text-multiline-truncate :lines="2"
-                                 class="font-semibold text-2xl text-purple-primary"
+                                 class="text-2xl font-semibold text-purple-primary"
         >
           {{ assignment.title }}
         </text-multiline-truncate>
 
         <!-- DETAILS -->
-        <div class="flex flex-row text-xs-plus text-purple-secondary mt-4 justify-between">
-          <div class="pr-1 truncate w-1/3">
+        <div class="flex flex-row justify-between mt-4 text-xs-plus text-purple-secondary">
+          <div class="pr-1 w-1/3 truncate">
             {{ meta.subjectName || '' }}
           </div>
-          <div class="px-1 truncate w-1/3">
+          <div class="px-1 w-1/3 truncate">
             {{ meta.classroomName || '' }}
           </div>
-          <div class="px-1 truncate w-2/5">
-            {{ getHumanDate(assignment.createdAt) }}
+          <div class="px-1 w-2/5 truncate">
+            {{ getHumanDate(assignment.dueDatetime) }}
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
 
       <!-- Written Question -->
       <div v-if="hasWrittenQuestion && !isPreviewing"
-           class="mt-8 text-purple-primary text-xs-plus flex flex-col"
+           class="flex flex-col mt-8 text-purple-primary text-xs-plus"
       >
 
         <!-- WRITTEN QUESTION TITLE -->
@@ -39,14 +39,14 @@
 
         <!-- WRITTEN QUESTION DESCRIPTION -->
         <div v-if="assignment.written_question.description"
-            id="test"
+             id="test"
         >
           <div v-if="isReadingMore"
                class="leading-relaxed"
           >
             {{ assignment.written_question.description }}
           </div>
-          <text-multiline-truncate v-else :lines="7" >
+          <text-multiline-truncate v-else :lines="7">
             {{ assignment.written_question.description }}
           </text-multiline-truncate>
         </div>
@@ -54,9 +54,9 @@
         <!-- WRITTEN QUESTION READ MORE BUTTON -->
         <button v-if="assignment.written_question.description && hasReadMore"
                 @click="toggleReadMore"
-                class="mt-6 md:max-w-sm w-1/3 md:w-1/5 flex flex-row items-center text-red-primary focus:outline-none text-left"
+                class="flex flex-row items-center mt-6 w-1/3 text-left md:max-w-sm md:w-1/5 text-red-primary focus:outline-none"
         >
-          <span class="w-6/7 font-bold">
+          <span class="font-bold w-6/7">
             {{ isReadingMore ? 'Read less' : 'Read more' }}
           </span>
           <div v-if="isReadingMore" class="w-1/7">
@@ -79,19 +79,26 @@
       <!-- Snapped Question -->
       <div v-if="hasSnappedQuestion"
            :class="isPreviewing ? 'mb-20' : ''"
-           class="mt-8 text-purple-primary text-xs-plus flex flex-col"
+           class="flex flex-col mt-8 text-purple-primary text-xs-plus"
       >
-        <div @click="togglePreview" v-if="!isPreviewing"
-             class="z-30 flex flex-row justify-end pr-4 pb-2 bg-black-primary rounded-t-2xl pt-4"
+        <div v-if="!isPreviewing"
+             class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
         >
-          <icon-base-two class="w-1/12">
-            <expand-image-icon stroke-color="white"/>
-          </icon-base-two>
+          <div class="pl-4 md:pl-5 w-3/4 text-xs md:text-lg text-white">
+            {{ `Question ${swiperActiveSlideNumber} / ${swiperSlidesCount}` }}
+          </div>
+          <div class="flex flex-row justify-end" @click="togglePreview">
+            <icon-base-two class="w-1/8 md:w-1/8" >
+              <expand-image-icon stroke-color="white"/>
+            </icon-base-two>
+          </div>
+
         </div>
         <question-preview-swiper
             :class="isPreviewing ? 'h-full' : 'bg-black-primary  rounded-b-2xl pb-6 pt-3 overflow-hidden '"
             :is-previewing="isPreviewing"
             :snapped-answer-paths="assignment.snap_question_paths"
+            v-on:swiperDetails="handleSwiperDetails"
         />
       </div>
 
@@ -118,6 +125,10 @@ export default {
     return {
       // States
       isReadingMore: false,
+
+      // Swiper slides
+      swiperDetails: null
+
     }
   },
   computed: {
@@ -144,9 +155,22 @@ export default {
 
       }
       return false;
-    }
+    },
+
+    swiperActiveSlideNumber() {
+      return this.swiperDetails ? this.swiperDetails.activeSlideIndex + 1 : '-';
+    },
+
+    swiperSlidesCount() {
+      return this.swiperDetails ? this.swiperDetails.slidesCount : 0;
+    },
+
   },
   methods: {
+    handleSwiperDetails(data) {
+      this.swiperDetails = data
+      this.emitSwiperDetails()
+    },
     toggleReadMore() {
       this.isReadingMore = !this.isReadingMore;
     },
@@ -160,6 +184,9 @@ export default {
     },
     togglePreview() {
       this.$emit('togglePreview')
+    },
+    emitSwiperDetails() {
+      this.$emit('swiperDetails', this.swiperDetails)
     }
   },
   components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate}
