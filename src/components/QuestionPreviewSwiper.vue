@@ -3,7 +3,7 @@
   <div>
     <div v-my-swiper="swiperOption"
          @slideChangeTransitionEnd="handleSlideChange"
-         @ready="handleSwiperReadied"
+         v-on:imagesReady ="handleSwiperImagesReady"
          class="w-full"
     >
       <div class="swiper-wrapper">
@@ -33,6 +33,10 @@ export default {
   props: {
     isPreviewing: Boolean,
     snappedAnswerPaths: Array
+  },
+  watch: {
+    'swiperDetails.slidesCount' : 'emitSwiperDetails',
+    'swiperDetails.activeSlideIndex' : 'emitSwiperDetails'
   },
   data() {
     return {
@@ -73,22 +77,27 @@ export default {
     }
   },
   methods: {
-    handleSwiperReadied(swiper) {
+    handleSwiperImagesReady(swiper) {
       this.swiperDetails = {
-          slidesCount: swiper.imagesLoaded,
-          activeSlideIndex: swiper.activeIndex,
+        slidesCount: swiper.imagesLoaded,
+        activeSlideIndex: swiper.activeIndex,
       }
     },
     handleSlideChange(swiper) {
       this.swiperDetails.activeSlideIndex = swiper.activeIndex
-      this.emitSwiperDetails();
+    },
+    getSwiperDetails() {
+      this.swiperDetails = {
+        slidesCount: this.$swiper.imagesLoaded,
+        activeSlideIndex: this.$swiper.activeIndex,
+      }
     },
     emitSwiperDetails() {
       this.$emit('swiperDetails', this.swiperDetails)
     }
   },
   mounted() {
-    this.emitSwiperDetails()
+    this.getSwiperDetails()
   },
 
   directives: {
