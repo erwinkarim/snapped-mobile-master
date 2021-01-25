@@ -138,10 +138,14 @@ export default {
     fetchData() {
       MarksRepository.find(this.marksID)
           .then(response => {
-            let data = response.data;
 
-            this.details.markingPicturePaths = data.marks_details.marking_picture_url.split(',');
-            this.details.feedback = data.marks_details.marks_feedback;
+            if (response.data.success) {
+
+              let data = response.data.data;
+
+              this.details.markingPicturePaths = data.marking_picture_url.split(',');
+              this.details.feedback = data.marks_feedback;
+            }
 
           })
     },

@@ -197,45 +197,49 @@ export default {
     fetchData() {
       AssignmentRepository.find(this.assignmentID)
           .then(response => {
-            let data = response.data;
 
-            // Assignment Details
-            this.assignment.id = data.assignment_details.assignment_id;
-            this.assignment.title = data.assignment_details.title;
-            this.assignment.createdAt = data.assignment_details.assignment_created_at;
-            this.assignment.dueDatetime = data.assignment_details.due_datetime;
-            this.assignment.written_question.title = data.assignment_details.written_question_title;
-            this.assignment.written_question.description = data.assignment_details.written_question_description;
+            if (response.data.success) {
 
-            if (data.assignment_details.snap_question_url) {
-              this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
-            }
+              let data = response.data.data;
 
-            // Assignment meta
-            this.meta.classroomID = data.assignment_details.classroom_id;
-            this.meta.classroomName = data.assignment_details.classroom_name;
-            this.meta.subjectID = data.assignment_details.subject_id;
-            this.meta.subjectName = data.assignment_details.subject_name;
-            this.meta.totalSubmissions = data.total_of_submissions;
-            this.meta.totalStudents = data.total_of_students;
+              // Assignment Details
+              this.assignment.id = data.assignment_details.assignment_id;
+              this.assignment.title = data.assignment_details.title;
+              this.assignment.createdAt = data.assignment_details.assignment_created_at;
+              this.assignment.dueDatetime = data.assignment_details.due_datetime;
+              this.assignment.written_question.title = data.assignment_details.written_question_title;
+              this.assignment.written_question.description = data.assignment_details.written_question_description;
 
-            // Submission
-
-            for (let i = 0; i < data.submissions_by.length; i++) {
-
-              let submission = data.submissions_by[i];
-
-              let details = {
-                id: submission.submission_id,
-                studentID: submission.student_id,
-                studentName: submission.student_name,
-                studentGender: submission.student_gender,
-                submittedAt: submission.submission_created_at,
-                marksID: submission.marks_id,
-                assignmentID: data.assignment_details.assignment_id
+              if (data.assignment_details.snap_question_url) {
+                this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
               }
 
-              this.submissions.push(details)
+              // Assignment meta
+              this.meta.classroomID = data.assignment_details.classroom_id;
+              this.meta.classroomName = data.assignment_details.classroom_name;
+              this.meta.subjectID = data.assignment_details.subject_id;
+              this.meta.subjectName = data.assignment_details.subject_name;
+              this.meta.totalSubmissions = data.total_of_submissions;
+              this.meta.totalStudents = data.total_of_students;
+
+              // Submission
+
+              for (let i = 0; i < data.submissions_by.length; i++) {
+
+                let submission = data.submissions_by[i];
+
+                let details = {
+                  id: submission.submission_id,
+                  studentID: submission.student_id,
+                  studentName: submission.student_name,
+                  studentGender: submission.student_gender,
+                  submittedAt: submission.submission_created_at,
+                  marksID: submission.marks_id,
+                  assignmentID: data.assignment_details.assignment_id
+                }
+
+                this.submissions.push(details)
+              }
             }
 
           });

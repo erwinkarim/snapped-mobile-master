@@ -56,7 +56,7 @@ export default {
                 main: null,
                 dimensions: {
                     height: null,
-                    width:  null
+                    width: null
                 }
             },
         },
@@ -157,8 +157,8 @@ export default {
                     state.nowMarking.image.path,
                     state.nowMarking.canvas.main.renderAll.bind(state.nowMarking.canvas.main),
                     {
-                        top: imageIsLongerThanScreenHeight ? 0 : state.nowMarking.canvas.dimensions.height/2,
-                        left: state.nowMarking.canvas.dimensions.width/2,
+                        top: imageIsLongerThanScreenHeight ? 0 : state.nowMarking.canvas.dimensions.height / 2,
+                        left: state.nowMarking.canvas.dimensions.width / 2,
                         originX: 'center',
                         originY: imageIsLongerThanScreenHeight ? 'top' : 'center',
                         scaleX: state.nowMarking.canvas.dimensions.width / state.nowMarking.image.dimensions.width,
@@ -207,7 +207,7 @@ export default {
             state.states = {
                 isLoading: false,
                 isMain: false,
-                isPreviewing: false,
+                isPreviewing: true,
                 isMarking: false,
                 isSelectingSticker: false,
                 isWritingFeedback: true,
@@ -247,7 +247,7 @@ export default {
             state.nowShowingModal = type;
         },
 
-        setMarkingMode(state){
+        setMarkingMode(state) {
             state.states = {
                 isLoading: false,
                 isMain: false,
@@ -261,7 +261,7 @@ export default {
             };
 
         },
-        setPreviewingMode(state){
+        setPreviewingMode(state) {
 
             state.states = {
                 isLoading: false,
@@ -359,8 +359,11 @@ export default {
 
             SubmissionRepository.find(submissionID)
                 .then(response => {
-                    commit('setAssignmentDetails', response.data.submission_details)
-                    state.states.isLoading = false;
+
+                    if (response.data.success) {
+                        commit('setAssignmentDetails', response.data.data)
+                        state.states.isLoading = false;
+                    }
                 });
         },
 
@@ -476,7 +479,7 @@ export default {
                     reject()
                 } else {
 
-                    if(!state.states.isSubmitting) {
+                    if (!state.states.isSubmitting) {
 
                         commit('toggleModalMode', 'is_submitting')
 
@@ -493,15 +496,10 @@ export default {
                                 feedback: state.submission.feedback
                             })
                             .then(response => {
-
-                                let type = response.data.messageType;
-
-                                commit('setMainMode')
-
-                                if (type === 'success') {
+                                if (response.data.success) {
+                                    commit('setMainMode')
                                     resolve(state.assignmentDetails.submissionID);
                                 }
-
                             })
                     } else {
                         console.log('Already submitting a marking.')

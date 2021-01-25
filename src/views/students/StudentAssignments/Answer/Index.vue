@@ -106,11 +106,8 @@ export default {
             this.isSubmitting = false;
             this.toggleModal();
 
-            let content = response.data;
-            let type = content.messageType;
-
-            if (type === 'success') {
-              this.submissionStatus = type;
+            if (response.data.success) {
+              this.submissionStatus = 'success';
               this.toggleModal();
             }
           })
