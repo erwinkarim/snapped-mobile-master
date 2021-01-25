@@ -785,9 +785,7 @@ export default {
 
                 this.isPublishing = false;
 
-                const messageType = response.data.messageType
-
-                if (messageType === 'success') {
+                if (response.data.success) {
                   ctr++;
                   if (ctr === this.classroom_id.length) {
                     this.published = !this.published
@@ -798,7 +796,6 @@ export default {
                     this.error = !this.error
                   }
                 }
-
               })
               .catch(error => {
                 // error.push("error");
@@ -815,15 +812,16 @@ export default {
       TeacherRepository.getTeacherDetails()
           .then(response => {
 
-            const data = response.data.success
+            if (response.data.success) {
 
-            let teacherDetail = {
-              id: data.id,
+              const data = response.data.data[0]
+
+              let teacherDetail = {
+                id: data.id,
+              }
+
+              localStorage.setItem('teacherID', teacherDetail.id)
             }
-
-            localStorage.setItem('teacherID', teacherDetail.id)
-            // }
-
           })
     },
   },
