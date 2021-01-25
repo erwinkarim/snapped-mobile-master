@@ -13,8 +13,9 @@
           New Assignment
         </template>
       </page-header-three>
+
       <!-- HEADER CREATE QUESTION -->
-      <page-header-three v-else-if="showQuestion">
+      <page-header-three v-else-if="isCreatingQuestion">
         <template v-slot:leftAction>
           <button @click="cancelQuestion" class="text-red-primary w-5/7">Cancel</button>
         </template>
@@ -28,6 +29,8 @@
           </router-link>
         </template>
       </page-header-three>
+
+
       <!-- HEADER MANUAL DESCRIPTION -->
       <page-header-three v-if="showDescription">
         <template v-slot:leftAction>
@@ -81,10 +84,10 @@
             <!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
           </multiselect>
 
-          <button @click="updateShow"
+          <button @click="toggleCreatingQuestionMode"
                   class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-                  type="text" tag="button">
-                    <span v-if="titleQuestion && showQuestionOptions" class="grid grid-cols-2">
+          >
+                    <span v-if="hasSavedQuestion" class="grid grid-cols-2">
                         <div>
                             Question
                         </div>
@@ -137,100 +140,105 @@
                     class="pl-6 pr-2 py-5 h-36 mb-26 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"/>
         </div>
       </div>
-      <!-- FORM QUESTION -->
-      <div v-if="showQuestion" class="flex-wrap relative top-12">
-        <!-- DESCRIPTION -->
-        <div class="w-full break-words px-7 mt-26 text-left text-purple-secondary text-sm leading-snug">
-          Fill the question title and select description method
-        </div>
-        <div class="relative w-full px-7 mt-3 max-h-full">
-          <input v-model="titleQuestion"
-                 class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-                 type="text" placeholder="Title" autocomplete="off">
-          <div v-if="descriptionQuestion"
-               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-            <div class="text-left text-blue-secondary place-self-start">
-              <button @click="updateShowManualDescription" type="text" autocomplete="off">
-                Edit Description
-              </button>
-            </div>
-            <div class="place-self-end">
-              <button @click="removeDescription()">
-                <icon-base-two class="float-right w-1/7 mr-3">
-                  <trash-icon/>
-                </icon-base-two>
-              </button>
-            </div>
-          </div>
-          <div v-if="!showQuestionOptions" class="flex mb-4 -mx-1">
-            <div class="w-1/2 h-12 px-1">
-              <button @click="updateShowManualDescription"
-                      class="mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline">
-                <div class="py-4 row-span-1 col-span-1 flex justify-center">
-                  <icon-base-two class="w-12">
-                    <pen-icon class="w-12" :stroke-color="strokeColor"></pen-icon>
-                  </icon-base-two>
-                </div>
-                <div class="py-2 row-span-2 col-span-1 flex justify-center">
-                  Manual
-                </div>
-              </button>
-            </div>
-            <label class="w-1/2 h-12 px-1">
-              <div
-                  class="mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline">
-                <div class="py-4 row-span-1 col-span-1 flex justify-center">
-                  <icon-base-two class="w-12">
-                    <camera-icon></camera-icon>
-                  </icon-base-two>
-                </div>
-                <div class="py-2 row-span-2 col-span-1 flex justify-center">
-                  Upload
-                </div>
-                <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected">
-              </div>
-            </label>
-          </div>
-          <!--  If IMAGE HAS BEEN SELECTED  -->
-          <div v-for="(image, key) in images"
-               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-            <div class="text-left text-blue-secondary place-self-start">
-              <button @click="previewAssignment(key)">
-                View Image
-              </button>
-            </div>
-            <div class="place-self-end">
-              <button @click="removeImage(key)">
-                <icon-base-two class="float-right w-1/7 mr-3">
-                  <trash-icon/>
-                </icon-base-two>
-              </button>
-            </div>
-          </div>
-          <div v-if="images.length" class="flex mb-4 -mx-1">
-            <label
-                class="text-center pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full text-lg font-normal leading-tight focus:outline-none focus:shadow-outline text-red-primary">
-              + Add more photo
-              <input class="hidden" type="file" accept="image/*" multiple @change="onFileSelected">
-            </label>
-          </div>
-        </div>
-      </div>
+
+      <create-question-form v-if="isCreatingQuestion"
+                            v-on:questionDetails="handleQuestionDetails"
+                            :saved-question-details="questionDetails"
+      />
+      <!-- TODO: REFACTOR AND IMPLEMENT CROP PHOTO      -->
+      <!--      &lt;!&ndash; FORM QUESTION &ndash;&gt;-->
+      <!--      <div v-if="isCreatingQuestion" class="flex-wrap relative top-12">-->
+      <!--        &lt;!&ndash; DESCRIPTION &ndash;&gt;-->
+      <!--        <div class="w-full break-words px-7 mt-26 text-left text-purple-secondary text-sm leading-snug">-->
+      <!--          Fill the question title and select description method-->
+      <!--        </div>-->
+      <!--        <div class="relative w-full px-7 mt-3 max-h-full">-->
+      <!--          <input v-model="titleQuestion"-->
+      <!--                 class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"-->
+      <!--                 type="text" placeholder="Title" autocomplete="off">-->
+      <!--          <div v-if="descriptionQuestion"-->
+      <!--               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">-->
+      <!--            <div class="text-left text-blue-secondary place-self-start">-->
+      <!--              <button @click="updateShowManualDescription" type="text" autocomplete="off">-->
+      <!--                Edit Description-->
+      <!--              </button>-->
+      <!--            </div>-->
+      <!--            <div class="place-self-end">-->
+      <!--              <button @click="removeDescription()">-->
+      <!--                <icon-base-two class="float-right w-1/7 mr-3">-->
+      <!--                  <trash-icon/>-->
+      <!--                </icon-base-two>-->
+      <!--              </button>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div v-if="!showQuestionOptions" class="flex mb-4 -mx-1">-->
+      <!--            <div class="w-1/2 h-12 px-1">-->
+      <!--              <button @click="updateShowManualDescription"-->
+      <!--                      class="mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline">-->
+      <!--                <div class="py-4 row-span-1 col-span-1 flex justify-center">-->
+      <!--                  <icon-base-two class="w-12">-->
+      <!--                    <pen-icon class="w-12" :stroke-color="strokeColor"></pen-icon>-->
+      <!--                  </icon-base-two>-->
+      <!--                </div>-->
+      <!--                <div class="py-2 row-span-2 col-span-1 flex justify-center">-->
+      <!--                  Manual-->
+      <!--                </div>-->
+      <!--              </button>-->
+      <!--            </div>-->
+      <!--            <label class="w-1/2 h-12 px-1">-->
+      <!--              <div-->
+      <!--                  class="mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline">-->
+      <!--                <div class="py-4 row-span-1 col-span-1 flex justify-center">-->
+      <!--                  <icon-base-two class="w-12">-->
+      <!--                    <camera-icon></camera-icon>-->
+      <!--                  </icon-base-two>-->
+      <!--                </div>-->
+      <!--                <div class="py-2 row-span-2 col-span-1 flex justify-center">-->
+      <!--                  Upload-->
+      <!--                </div>-->
+      <!--                <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected">-->
+      <!--              </div>-->
+      <!--            </label>-->
+      <!--          </div>-->
+      <!--          &lt;!&ndash;  If IMAGE HAS BEEN SELECTED  &ndash;&gt;-->
+      <!--          <div v-for="(image, key) in images"-->
+      <!--               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">-->
+
+      <!--&lt;!&ndash;            <vue-cropper ref="cropper"&ndash;&gt;-->
+      <!--&lt;!&ndash;                         :src="selectedFile"&ndash;&gt;-->
+      <!--&lt;!&ndash;                         alt="Source Image"&ndash;&gt;-->
+      <!--&lt;!&ndash;            >&ndash;&gt;-->
+      <!--&lt;!&ndash;            </vue-cropper>&ndash;&gt;-->
+
+
+      <!--            <div class="text-left text-blue-secondary place-self-start">-->
+      <!--              <button @click="previewAssignment(key)">-->
+      <!--                View Image-->
+      <!--              </button>-->
+      <!--            </div>-->
+      <!--            <div class="place-self-end">-->
+      <!--              <button @click="removeImage(key)">-->
+      <!--                <icon-base-two class="float-right w-1/7 mr-3">-->
+      <!--                  <trash-icon/>-->
+      <!--                </icon-base-two>-->
+      <!--              </button>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--          <div v-if="images.length" class="flex mb-4 -mx-1">-->
+      <!--            <label-->
+      <!--                class="text-center pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full text-lg font-normal leading-tight focus:outline-none focus:shadow-outline text-red-primary">-->
+      <!--              + Add more photo-->
+      <!--              <input class="hidden" type="file" accept="image/*" multiple @change="onFileSelected">-->
+      <!--            </label>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
 
       <div class="pb-16/9 mt-6 bg-white" v-if="isPreviewing">
         <div
             class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
           <img :src="previewImage"/>
         </div>
-      </div>
-
-      <!-- FORM MANUAL DESCRIPTION -->
-      <div v-if="showDescription === true" class="flex-wrap relative top-12">
-        <!-- DESCRIPTION -->
-        <textarea v-model="descriptionQuestion"
-                  class="w-full h-screen form-textarea block break-words px-7 mt-20 text-left text-purple-primary text-m leading-snug"
-                  placeholder="Enter description"
-        />
       </div>
 
       <!--  Modal Schedule    -->
@@ -417,6 +425,9 @@ import NavBack from "@/components/NavBack";
 import PageTitle from "@/components/PageTitle";
 import CalendarIcon from "@/components/icons/CalendarIcon";
 import IconBaseTwo from "@/components/IconBaseTwo";
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
+import CreateQuestionForm from "@/views/teachers/TeacherAssignments/Create/CreateQuestionForm";
 
 Vue.component('v-calendar', Calendar)
 Vue.component('v-date-picker', DatePicker)
@@ -437,7 +448,7 @@ export default {
       disabled: false,
       //show page
       showAssignment: true,
-      showQuestion: false,
+      isCreatingQuestion: false,
       showDescription: false,
       //toggle modal duration or schedule
       toggleDuration: false,
@@ -469,6 +480,14 @@ export default {
       durationHour: 0,
       durationMinute: 0,
       remarks: '',
+
+
+      // Question Details
+      questionDetails: {
+        type: null,
+        title: null,
+        writtenQuestion: null,
+      },
 
       //question page data
       //title question
@@ -515,7 +534,11 @@ export default {
       let duration = hours + ':' + minutes + ':00'
 
       return duration;
-    }
+    },
+
+    hasSavedQuestion() {
+      return this.questionDetails.type && this.questionDetails.writtenQuestion;
+    },
   },
   watch: {},
   methods: {
@@ -587,30 +610,51 @@ export default {
             }
           })
     },
-    updateShow() {
-      this.showQuestion = !this.showQuestion;
+    toggleCreatingQuestionMode() {
+      this.isCreatingQuestion = !this.isCreatingQuestion;
       this.showAssignment = !this.showAssignment;
     },
-    updateShowManualDescription() {
-      this.showDescription = !this.showDescription
-      this.showQuestion = !this.showQuestion;
+    // updateShowManualDescription() {
+    //   this.showDescription = !this.showDescription
+    //   this.isCreatingQuestion = !this.isCreatingQuestion;
+    // },
+
+    handleQuestionDetails(details) {
+      console.log(`Updated question details`)
+      this.questionDetails = details;
     },
     saveQuestion() {
-      if (this.titleQuestion && (this.descriptionQuestion || this.images.length)) {
-        this.titleQuestionConfirmed = this.titleQuestion
-        this.descriptionConfirmed = this.descriptionQuestion
+      if (this.questionDetails.type) {
 
-        for (var i = 0; i < this.images.length; i++) {
-          this.imagesConfirmed.push(this.images[i])
+        if (this.questionDetails.title) {
+          if (this.questionDetails.type === 'written' && this.questionDetails.writtenQuestion) {
+            console.log(this.questionDetails)
+            this.toggleCreatingQuestionMode()
+          } else {
+            console.log('please write something')
+          }
+        } else {
+          console.log('please fill in title')
         }
 
-        for (var i = 0; i < this.snappedQuestions.length; i++) {
-          this.snappedQuestionsConfirmed.push(this.snappedQuestions[i])
-        }
-        this.updateShow()
       } else {
-        this.error = !this.error
+        console.log('please fill in details!')
       }
+      // if (this.titleQuestion && (this.descriptionQuestion || this.images.length)) {
+      //   this.titleQuestionConfirmed = this.titleQuestion
+      //   this.descriptionConfirmed = this.descriptionQuestion
+      //
+      //   for (var i = 0; i < this.images.length; i++) {
+      //     this.imagesConfirmed.push(this.images[i])
+      //   }
+      //
+      //   for (var i = 0; i < this.snappedQuestions.length; i++) {
+      //     this.snappedQuestionsConfirmed.push(this.snappedQuestions[i])
+      //   }
+      //   this.toggleCreatingQuestionMode()
+      // } else {
+      //   this.error = !this.error
+      // }
     },
     cancelQuestion() {
       if (this.titleQuestionConfirmed && (this.descriptionConfirmed || this.imagesConfirmed)) {
@@ -632,7 +676,7 @@ export default {
         this.snappedQuestions = []
       }
 
-      this.updateShow()
+      this.toggleCreatingQuestionMode()
     },
     updateManualDescription() {
       if (this.descriptionQuestion) {
@@ -653,36 +697,38 @@ export default {
     removeDescription() {
       this.descriptionQuestion = ''
     },
-    onFileSelected(e) {
-      var files = e.target.files || e.dataTransfer.files
-
-      if (!files.length) {
-        return
-      }
-
-      for (var i = 0; i < files.length; i++) {
-        this.snappedQuestions.push(files[i])
-      }
-
-      let fileList = Array.prototype.slice.call(e.target.files);
-      fileList.forEach(f => {
-
-        if (!f.type.match("image.*")) {
-          return;
-        }
-
-        let reader = new FileReader();
-        let that = this;
-
-        reader.onload = function (e) {
-          that.images.push(e.target.result);
-        }
-        reader.readAsDataURL(f);
-      });
-    },
+    // onFileSelected(e) {
+    //   var files = e.target.files || e.dataTransfer.files
+    //
+    //   if (!files.length) {
+    //     return
+    //   }
+    //
+    //   for (var i = 0; i < files.length; i++) {
+    //     this.snappedQuestions.push(files[i])
+    //   }
+    //
+    //   let fileList = Array.prototype.slice.call(e.target.files);
+    //   fileList.forEach(f => {
+    //
+    //     if (!f.type.match("image.*")) {
+    //       return;
+    //     }
+    //
+    //     let reader = new FileReader();
+    //     let that = this;
+    //
+    //     reader.onload = function (e) {
+    //       that.images.push(e.target.result);
+    //       that.selectedFile = event.target.result
+    //       that.$refs.cropper.replace(this.selectedFile)
+    //     }
+    //     reader.readAsDataURL(f);
+    //   });
+    // },
     previewAssignment(key) {
       this.previewImage = this.images[key]
-      this.showQuestion = !this.showQuestion
+      this.isCreatingQuestion = !this.isCreatingQuestion
       this.isPreviewing = !this.isPreviewing
     },
     removeImage(key) {
@@ -829,6 +875,8 @@ export default {
     this.getClasses()
   },
   components: {
+    CreateQuestionForm,
+    VueCropper,
     ClockIcon,
     TrashIcon,
     Modal,
