@@ -139,18 +139,20 @@ export default {
       StudentRepository.getOverview(this.studentID)
           .then(response => {
 
-            let data = response.data;
+            if (response.data.success) {
 
-            this.studentDetails = {
-              studentName: data.student_details.student_name,
-              gender: data.student_details.gender,
-              className: data.student_details.student_class,
-              contactNum: data.data.personal_details.contact_number,
-              email: data.data.personal_details.email
+              let data = response.data.data;
+
+              this.studentDetails = {
+                studentName: data.student_details.student_name,
+                gender: data.student_details.gender,
+                className: data.student_details.student_class,
+                contactNum: data.personal_details.contact_number,
+                email: data.personal_details.email
+              }
+
+              this.isLoading = true;
             }
-
-            this.isLoading = true;
-
           })
     },
 

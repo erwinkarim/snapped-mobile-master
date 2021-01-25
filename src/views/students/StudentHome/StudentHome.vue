@@ -91,9 +91,15 @@ export default {
       StudentRepository.getUnsubmittedAssignmentSummary()
           .then(response => {
 
-            this.numOfNewAssignments = response.data.num_of_new_assignments
-            this.numOfDueSoonAssignments = response.data.num_of_due_soon_assignments
-            this.numOfOverdueAssignments = response.data.num_of_overdue_assignments
+            if (response.data.success) {
+
+              let data = response.data.data;
+
+              this.numOfNewAssignments = data.num_of_new_assignments
+              this.numOfDueSoonAssignments = data.num_of_due_soon_assignments
+              this.numOfOverdueAssignments = data.num_of_overdue_assignments
+            }
+
           })
     },
     getAssignments: function () {

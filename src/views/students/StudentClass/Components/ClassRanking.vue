@@ -78,10 +78,12 @@ export default {
     getRankings() {
       StudentRepository.getClassRanking()
           .then(response => {
-            let data = response.data;
+            if (response.data.success) {
+              let data = response.data.data;
 
-            this.totalNumOfStudents = data.total_students;
-            this.rankings = data.data
+              this.totalNumOfStudents = data.total_students;
+              this.rankings = data.rankings
+            }
           })
     }
   },

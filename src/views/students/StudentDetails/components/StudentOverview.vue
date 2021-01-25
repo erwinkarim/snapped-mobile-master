@@ -57,14 +57,17 @@ export default {
       StudentRepository.getOverview(this.studentID)
           .then(response => {
 
-            let data = response.data;
+            if (response.data.success) {
 
-            this.assignmentScore = data.assignment_score;
-            this.assignmentSubmission = data.assignment_submission;
-            this.overallSubjectsScore = data.overall_subjects_score;
-            this.guardians = data.guardian;
+              let data = response.data.data;
 
-            this.personalDetails = data.data
+              this.assignmentScore = data.assignment_score;
+              this.assignmentSubmission = data.assignment_submission;
+              this.overallSubjectsScore = data.overall_subjects_score;
+              this.guardians = data.guardian;
+
+              this.personalDetails = data.data
+            }
 
           })
           .catch(err => {

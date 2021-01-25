@@ -31,7 +31,7 @@
           <!-- Page Content -->
           <div class="absolute z-20 md:z-40 mb-32 w-full">
 
-            <div  v-if="!isPreviewing">
+            <div v-if="!isPreviewing">
               <!-- HEADER with Nav Back -->
               <div class="flex flex-row justify-between px-5 w-full pt-3/24">
                 <nav-back class="w-1/12" stroke-color="white" :to="{name: 'student.assignments'}"/>
@@ -69,17 +69,15 @@
             />
 
             <!-- Submissions -->
-            <div class="px-8 mt-8 mb-32"  v-if="!isPreviewing">
+            <div class="px-8 mt-8 mb-32" v-if="!isPreviewing">
               <div class="flex flex-row justify-between font-bold text-purple-primary">
                 <div>
                   Submission
                 </div>
               </div>
 
-              <div v-if="hasSubmissions" class="mt-4">
+              <div v-if="hasSubmission" class="mt-4">
                 <assignment-submission-card
-                    v-for="submission in submissions"
-                    :key="submission.id"
                     :submission="submission"
                     :meta="meta"
                     :allow-show-submission="false"
@@ -114,7 +112,7 @@
       <div v-if="!isLoading" class="w-full md:max-w-xl">
 
         <div v-if="hasEditableSubmission && !isPastDueDate" class="w-full">
-          <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: studentSubmission.id}}"
+          <router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: submission.id}}"
                        class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
             Edit Answer
           </router-link>
@@ -128,7 +126,7 @@
         </div>
 
         <div v-else-if="hasMarkedSubmission">
-          <router-link :to="{name: 'student.marked.show', params: {marksID: studentSubmission.marks_id}}"
+          <router-link :to="{name: 'student.marked.show', params: {marksID: marks_id}}"
                        class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
             View Marking
           </router-link>
@@ -216,11 +214,11 @@ export default {
         },
         snap_question_paths: []
       },
-      studentSubmission: {
-        id: null,
-        marks_id: null
-      },
-      submissions: [],
+
+      // Student's Submission and Marks details
+      submission: null,
+      marks_id: null,
+
       meta: {
         classroomID: null,
         classroomName: null,
@@ -232,12 +230,12 @@ export default {
     }
   },
   computed: {
-    hasSubmissions: function () {
-      return Array.isArray(this.submissions) && this.submissions.length > 0;
+    hasSubmission: function () {
+      return this.submission !== null;
     },
 
     hasEditableSubmission: function () {
-      return this.studentSubmission.id !== null && this.studentSubmission.marks_id === null;
+      return this.hasSubmission ? this.submission.id !== null && this.marks_id === null : null;
     },
 
     isPastDueDate() {
@@ -245,7 +243,7 @@ export default {
     },
 
     hasMarkedSubmission: function () {
-      return this.studentSubmission.id !== null && this.studentSubmission.marks_id !== null;
+      return this.hasSubmission ? this.submission.id !== null && this.marks_id !== null : null;
     },
 
     assignmentDetails() {
@@ -269,52 +267,50 @@ export default {
 
       AssignmentRepository.find(this.assignmentID)
           .then(response => {
-            let data = response.data;
 
-            // Student's Submission
-            this.studentSubmission.id = data.student_submission_id;
+            if (response.data.success) {
 
-            // Assignment Details
-            this.assignment.id = data.assignment_details.assignment_id;
-            this.assignment.title = data.assignment_details.title;
-            this.assignment.createdAt = data.assignment_details.assignment_created_at;
-            this.assignment.dueDatetime = data.assignment_details.due_datetime;
-            this.assignment.written_question.title = data.assignment_details.written_question_title;
-            this.assignment.written_question.description = data.assignment_details.written_question_description;
+              let data = response.data.data;
 
-            if (data.assignment_details.snap_question) {
-              this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
-            }
+              // Assignment Details
+              this.assignment.id = data.assignment_details.assignment_id;
+              this.assignment.title = data.assignment_details.title;
+              this.assignment.createdAt = data.assignment_details.assignment_created_at;
+              this.assignment.dueDatetime = data.assignment_details.due_datetime;
+              this.assignment.written_question.title = data.assignment_details.written_question_title;
+              this.assignment.written_question.description = data.assignment_details.written_question_description;
 
-            // Assignment meta
-            this.meta.classroomID = data.assignment_details.classroom_id;
-            this.meta.classroomName = data.assignment_details.classroom_name;
-            this.meta.subjectID = data.assignment_details.subject_id;
-            this.meta.subjectName = data.assignment_details.subject_name;
-            this.meta.totalSubmissions = data.total_of_submissions;
-            this.meta.totalStudents = data.total_of_students;
-
-            // Submission
-
-            for (let i = 0; i < data.submissions_by.length; i++) {
-
-              let submission = data.submissions_by[i];
-
-              let details = {
-                id: submission.submission_id,
-                studentID: submission.student_id,
-                studentName: submission.student_name,
-                studentGender: submission.student_gender,
-                submittedAt: submission.submission_created_at
+              if (data.assignment_details.snap_question) {
+                this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
               }
 
-              // Set student's submission as marked if Mark exists
-              if (submission.submission_id === this.studentSubmission.id) {
-                submission.marks_id ? this.studentSubmission.marks_id = submission.marks_id : null;
+              // Assignment meta
+              this.meta.classroomID = data.assignment_details.classroom_id;
+              this.meta.classroomName = data.assignment_details.classroom_name;
+              this.meta.subjectID = data.assignment_details.subject_id;
+              this.meta.subjectName = data.assignment_details.subject_name;
+              this.meta.totalSubmissions = data.total_of_submissions;
+              this.meta.totalStudents = data.total_of_students;
+
+              // Student's Submission
+              let submission = data.submissions_by[0];
+
+              if (submission) {
+                this.submission = {
+                  id: submission.submission_id,
+                  studentID: submission.student_id,
+                  studentName: submission.student_name,
+                  studentGender: submission.student_gender,
+                  submittedAt: submission.submission_created_at
+                }
+                this.marks_id = submission.marks_id
               }
-              this.submissions.push(details)
+
+
+              this.isLoading = false;
             }
-            this.isLoading = false;
+
+
           });
     },
     onFileSelected(e) {

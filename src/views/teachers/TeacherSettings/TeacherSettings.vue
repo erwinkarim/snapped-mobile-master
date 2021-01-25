@@ -100,12 +100,16 @@ export default {
       TeacherRepository.getTeacherDetails()
           .then(response => {
 
-            const data = response.data.success
+            if (response.data.success) {
 
-            this.details.fullName.value = data.fullname;
-            this.details.school.value = data.school_name;
-            this.details.email.value = data.email;
-            this.details.contactNum.value = data.contact_num;
+              let data = response.data.data[0];
+
+              this.details.fullName.value = data.fullname;
+              this.details.school.value = data.school_name;
+              this.details.email.value = data.email;
+              this.details.contactNum.value = data.contact_num;
+            }
+
           })
     },
   },
