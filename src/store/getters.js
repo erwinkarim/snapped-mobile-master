@@ -10,7 +10,7 @@ export default  {
         return getters.getAuthUser.gender
     },
     getAuthUsername: (state, getters) => {
-        return getters.getAuthUser.name
+        return getters.getAuthUser.fullname
     },
     getToken : state => state.token
 }

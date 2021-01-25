@@ -122,13 +122,24 @@ export default {
     },
 
     searchName() {
+
+      this.filters.search = this.search;
+
       if (!this.awaitingSearch) {
         setTimeout(() => {
-          this.fetchData();
           this.awaitingSearch = false;
+          this.updateFilter();
         }, 1000); // 1 sec delay
       }
       this.awaitingSearch = true;
+    },
+
+    updateFilter() {
+      this.filters.pageNum = 1
+      this.filters.perPage = 20
+
+      this.students = [];
+      this.filterCount++;
     },
 
     goToStudentShow(studentID) {

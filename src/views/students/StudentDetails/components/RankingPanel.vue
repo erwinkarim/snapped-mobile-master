@@ -59,15 +59,18 @@ export default {
       StudentRepository.getRanking(this.studentID)
           .then(response => {
 
-            let data = response.data;
+            if(response.data.success) {
 
-            this.rankings = {
-              today: data.ranking.today,
-              weekly: data.ranking.weekly,
-              overall: data.ranking.overall,
+              let data = response.data.data;
+
+              this.rankings = {
+                today: data.ranking.today,
+                weekly: data.ranking.weekly,
+                overall: data.ranking.overall,
+              }
+
+              this.totalNumOfStudents = data.total_students;
             }
-
-            this.totalNumOfStudents = data.total_students;
 
           })
           .catch(err => {

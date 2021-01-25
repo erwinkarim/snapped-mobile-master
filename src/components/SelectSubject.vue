@@ -25,35 +25,16 @@ export default {
     }
   },
   watch: {
-    'selectedSubject' : 'emitSelectedSubject'
+    'selectedSubject': 'emitSelectedSubject'
   },
   methods: {
     getSubjects() {
       if (this.userRole === 'teacher') {
         TeacherRepository.getTeacherSubjects()
             .then(response => {
-              const data = response.data.subjects
 
-              const numOfSubjects = data.length
-
-              for (let i = 0; i < numOfSubjects; i++) {
-
-                let item = data[i];
-
-                let subjectDetail = {
-                  id: item.subject_id,
-                  name: item.subject_name
-                }
-
-                this.subjects.push(subjectDetail)
-              }
-            })
-      }
-
-      if (this.userRole === 'student') {
-          StudentRepository.getSubjects()
-              .then(response => {
-                const data = response.data.subjects
+              if (response.data.success) {
+                const data = response.data.data
 
                 const numOfSubjects = data.length
 
@@ -68,11 +49,36 @@ export default {
 
                   this.subjects.push(subjectDetail)
                 }
-              })
+              }
+            })
+      }
+
+      if (this.userRole === 'student') {
+        StudentRepository.getSubjects()
+            .then(response => {
+
+              if (response.data.success) {
+                const data = response.data.data
+
+                const numOfSubjects = data.length
+
+                for (let i = 0; i < numOfSubjects; i++) {
+
+                  let item = data[i];
+
+                  let subjectDetail = {
+                    id: item.subject_id,
+                    name: item.subject_name
+                  }
+
+                  this.subjects.push(subjectDetail)
+                }
+              }
+            })
       }
     },
 
-    emitSelectedSubject () {
+    emitSelectedSubject() {
       this.$emit('selectedSubject', this.selectedSubject)
     }
   },

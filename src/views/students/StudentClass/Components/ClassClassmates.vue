@@ -65,12 +65,17 @@ export default {
     getClassmates() {
       StudentRepository.getClassmates()
           .then(response => {
-            let data = response.data;
 
-            this.students = data.students;
-            this.filteredStudents = data.students;
+            if (response.data.success) {
 
-            this.className = data.class_name;
+              let data = response.data.data;
+
+              this.students = data.students;
+              this.filteredStudents = data.students;
+
+              this.className = data.class_name;
+            }
+
           })
     },
     handleSearch(value) {
