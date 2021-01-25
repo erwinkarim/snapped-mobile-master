@@ -70,12 +70,10 @@
           >
             <div slot="spinner" class="mt-10">Loading...</div>
             <div slot="no-more"></div>
-            <div slot="no-results">No available data.</div>
+            <div slot="no-results" class="text-purple-secondary mt-12">
+              No available data.
+            </div>
           </infinite-loading>
-
-          <div v-if="hasError" class="text-purple-secondary mt-12">
-            {{ hasError }}
-          </div>
         </div>
       </div>
     </template>
@@ -221,9 +219,10 @@ export default {
         AssignmentRepository.all(this.requestFilter)
             .then(response => {
 
-              if (response.data.data) {
+              if (response.data.success) {
 
                 const data = response.data.data
+
                 for (let i = 0; i < data.length; i++) {
 
                   let item = data[i];
@@ -256,9 +255,8 @@ export default {
 
                 $state.loaded();
               } else {
-
-                const error = response.data.error;
-                this.hasError = error.message;
+                this.hasError = response.data.message;
+                $state.complete()
               }
             })
 

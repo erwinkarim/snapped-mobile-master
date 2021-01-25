@@ -271,36 +271,40 @@ export default {
       SubmissionRepository.find(this.submissionID)
           .then(response => {
 
-            const data = response.data.submission_details;
+            if (response.data.success) {
 
-            // Assignment details
-            this.assignmentDetails.id = data.assignment_id;
-            this.assignmentDetails.title = data.assignment_title;
+              const data = response.data.data;
 
-            // Processing existing Snapped Answer
-            if (data.snap_answer) {
-              this.answer.type = 'snapped';
+              // Assignment details
+              this.assignmentDetails.id = data.assignment_id;
+              this.assignmentDetails.title = data.assignment_title;
 
-              let originalNames = data.snap_answer.split(',');
-              let originalPaths = data.snap_answer_url.split(',');
+              // Processing existing Snapped Answer
+              if (data.snap_answer) {
+                this.answer.type = 'snapped';
 
-              for (let i = 0; i < originalNames.length; i++) {
-                this.existingSnappedAnswers.push({
-                  name: originalNames[i],
-                  path: originalPaths[i]
-                })
+                let originalNames = data.snap_answer.split(',');
+                let originalPaths = data.snap_answer_url.split(',');
+
+                for (let i = 0; i < originalNames.length; i++) {
+                  this.existingSnappedAnswers.push({
+                    name: originalNames[i],
+                    path: originalPaths[i]
+                  })
+                }
+
+                // Add existing Snapped Answer previews
+                this.snappedAnswerPreviews.existing = originalPaths;
               }
 
-              // Add existing Snapped Answer previews
-              this.snappedAnswerPreviews.existing = originalPaths;
+              if (data.written_answer) {
+                this.answer.type = 'written';
+                this.answer.content = data.written_answer;
+              }
+
+              this.remarks = data.remarks;
             }
 
-            if (data.written_answer) {
-              this.answer.type = 'written';
-              this.answer.content = data.written_answer;
-            }
-
-            this.remarks = data.remarks;
           })
     },
 
@@ -322,6 +326,7 @@ export default {
       }
 
       if ((this.snappedAnswerPreviews.existing.length + this.snappedAnswerPreviews.new.length) > 0) {
+
         SubmissionRepository.update(
             {
               submissionID: this.submissionID,
@@ -331,20 +336,18 @@ export default {
               remarks: this.remarks,
             })
             .then(response => {
-              let content = response.data;
-
-              let type = content.messageType;
-
-              if (type === 'success') {
-                this.submissionStatus = type;
+              if (response.data.success) {
+                this.submissionStatus = 'success';
                 this.toggleModal();
+              } else {
+                this.submissionStatus = 'error';
+                this.toggleModal()
               }
             })
       } else {
         this.submissionStatus = 'error';
         this.toggleModal()
       }
-
     },
 
     editWrittenAnswer() {

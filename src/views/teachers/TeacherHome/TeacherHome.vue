@@ -119,7 +119,7 @@ export default {
                 this.numOfPublishedAssignments = data.total;
               })
 
-      TeacherRepository.getSubmissions()
+      TeacherRepository.getSubmissions(1)
               .then(response => {
                 let data = response.data.data;
 

@@ -1,7 +1,7 @@
 import AuthenticationRepository from "@/repositories/AuthenticationRepository";
 import axios from "axios";
 
-export default  {
+export default {
     login({commit}, userCredentials) {
 
         return new Promise((resolve, reject) => {
@@ -9,16 +9,20 @@ export default  {
             AuthenticationRepository.login(userCredentials)
                 .then(response => {
 
-                    const data = response.data.success
+                    if (response.data.success) {
 
-                    const token = data.token
+                        const token = response.data.token
 
-                    if (token) {
-                        localStorage.setItem('token', token)
-                        axios.defaults.headers.common['Authorization'] = token
-
-                        commit('auth_success', token)
-                        resolve()
+                        if (token) {
+                            localStorage.setItem('token', token)
+                            axios.defaults.headers.common['Authorization'] = token
+                            commit('auth_success', token)
+                            resolve()
+                        }
+                    } else {
+                        commit('auth_error')
+                        localStorage.removeItem('token')
+                        reject(response.data.data.error)
                     }
 
                 })
@@ -39,17 +43,24 @@ export default  {
         })
     },
 
-    setAuthUser({commit}){
+    setAuthUser({commit}) {
 
         return new Promise((resolve, reject) => {
 
             AuthenticationRepository.getUserDetails()
                 .then(response => {
 
-                    let userDetails = response.data.success
+                    if (response.data.success) {
+                        let userDetails = response.data.data[0]
 
-                    commit('set_auth_user_details', response.data.success)
-                    resolve(userDetails.role)
+                        commit('set_auth_user_details', userDetails)
+                        resolve(userDetails.role)
+                    } else {
+                        commit('auth_error')
+                        localStorage.removeItem('token')
+                        delete axios.defaults.headers.common['Authorization']
+                        reject(response.data.data.error)
+                    }
 
                 })
                 .catch(err => {

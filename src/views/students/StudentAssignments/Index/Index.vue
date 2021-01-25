@@ -45,7 +45,7 @@
                 user-role="student"
             >
               <template v-slot:topRightAction v-if="!assignment.marks">
-                <div v-if="assignment.hasSubmitted" class="pr-1 md:pr-3" >
+                <div v-if="assignment.hasSubmitted" class="pr-1 md:pr-3">
                   DONE
                 </div>
               </template>
@@ -58,13 +58,12 @@
             >
               <div slot="spinner" class="mt-10">Loading...</div>
               <div slot="no-more"></div>
-              <div slot="no-results">No available data.</div>
+              <div slot="no-results" class="text-purple-secondary mt-12">
+                No available data.
+              </div>
             </infinite-loading>
           </div>
 
-          <div v-if="hasError" class="text-purple-secondary mt-12">
-            {{ hasError }}
-          </div>
 
         </div>
 
@@ -91,7 +90,7 @@
         </div>
         <div class="text-center py-2">
           <select-subject user-role="student"
-              @selectedSubject="handleSelectedSubject"
+                          @selectedSubject="handleSelectedSubject"
           />
         </div>
 
@@ -215,8 +214,7 @@ export default {
         AssignmentRepository.all(this.requestFilter)
             .then(response => {
 
-              if (response.data.data) {
-
+              if (response.data.success) {
                 const data = response.data.data
 
                 for (let i = 0; i < data.length; i++) {
@@ -233,7 +231,7 @@ export default {
                     totalSubmitted: item.number_of_submissions,
                     hasSubmitted: item.has_submitted === "yes"
 
-                }
+                  }
 
                   if (item.marks_id) {
                     assignmentDetail['marks'] = {
@@ -251,14 +249,15 @@ export default {
                 this.filters.pageNum = this.meta.current_page + 1;
 
                 $state.loaded();
+
               } else {
-                const error = response.data.error;
-                this.hasError = error.message;
+                this.hasError = response.data.message;
+                $state.complete();
               }
             })
 
         this.resetFilterModalOptions()
-      }else {
+      } else {
         $state.complete();
       }
 

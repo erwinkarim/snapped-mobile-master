@@ -568,22 +568,26 @@ export default {
     getSubjects() {
       TeacherRepository.getTeacherSubjects()
           .then(response => {
-            const data = response.data.subjects
 
-            const numOfSubjects = data.length
+            if (response.data.success) {
+              const data = response.data.data
 
-            this.subjects = []
-            for (let i = 0; i < numOfSubjects; i++) {
+              const numOfSubjects = data.length
 
-              let item = data[i];
+              this.subjects = []
+              for (let i = 0; i < numOfSubjects; i++) {
 
-              let subjectDetail = {
-                id: item.subject_id,
-                name: item.subject_name
+                let item = data[i];
+
+                let subjectDetail = {
+                  id: item.subject_id,
+                  name: item.subject_name
+                }
+
+                this.subjects.push(subjectDetail)
               }
-
-              this.subjects.push(subjectDetail)
             }
+
           })
     },
     getClasses() {

@@ -104,13 +104,17 @@ export default {
       StudentRepository.getStudentDetails()
           .then(response => {
 
-            const data = response.data.success
+            if (response.data.success) {
 
-            this.studentDetails.fullName.value = data.fullname;
-            this.studentDetails.school.value = data.school_name;
-            this.studentDetails.classroom.value = data.classroom_name;
-            this.studentDetails.email.value = data.email;
-            this.studentDetails.contactNum.value = data.contact_num;
+              let data = response.data.data[0];
+
+              this.studentDetails.fullName.value = data.fullname;
+              this.studentDetails.school.value = data.school_name;
+              this.studentDetails.classroom.value = data.classroom_name;
+              this.studentDetails.email.value = data.email;
+              this.studentDetails.contactNum.value = data.contact_num;
+            }
+
           })
     },
   },
