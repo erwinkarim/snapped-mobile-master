@@ -537,7 +537,7 @@ export default {
     },
 
     hasSavedQuestion() {
-      return this.questionDetails.type && this.questionDetails.writtenQuestion;
+      return this.questionDetails.type && (this.questionDetails.writtenQuestion || this.questionDetails.snappedQuestions.length);
     },
   },
   watch: {},
@@ -628,38 +628,58 @@ export default {
       this.questionDetails = details;
     },
     saveQuestion() {
+
+      // Check if user selected a type of question
       if (this.questionDetails.type) {
 
+        // Check if user has inserted a question title
         if (this.questionDetails.title) {
-          if (this.questionDetails.type === 'written' && this.questionDetails.writtenQuestion) {
-            console.log(this.questionDetails)
-            this.toggleCreatingQuestionMode()
-          } else {
-            console.log('please write something')
+
+          // If user opt to Write Question
+          if (this.questionDetails.type === 'written') {
+
+            if (this.questionDetails.writtenQuestion) {
+              this.toggleCreatingQuestionMode()
+            } else {
+              console.log('please write something')
+            }
           }
+
+          // If user opt to Snap Question
+          if (this.questionDetails.type === 'snapped') {
+
+            console.log('is saving snapped question');
+
+            if (this.questionDetails.snappedQuestions) {
+              this.toggleCreatingQuestionMode()
+            } else {
+              console.log('please snap something')
+            }
+          }
+
         } else {
           console.log('please fill in title')
         }
-
+        // if (this.titleQuestion && (this.descriptionQuestion || this.images.length)) {
+        //   this.titleQuestionConfirmed = this.titleQuestion
+        //   this.descriptionConfirmed = this.descriptionQuestion
+        //
+        //   for (var i = 0; i < this.images.length; i++) {
+        //     this.imagesConfirmed.push(this.images[i])
+        //   }
+        //
+        //   for (var i = 0; i < this.snappedQuestions.length; i++) {
+        //     this.snappedQuestionsConfirmed.push(this.snappedQuestions[i])
+        //   }
+        //   this.toggleCreatingQuestionMode()
+        // } else {
+        //   this.error = !this.error
+        // }
       } else {
-        console.log('please fill in details!')
+        console.log('Please select a type of question.')
       }
-      // if (this.titleQuestion && (this.descriptionQuestion || this.images.length)) {
-      //   this.titleQuestionConfirmed = this.titleQuestion
-      //   this.descriptionConfirmed = this.descriptionQuestion
-      //
-      //   for (var i = 0; i < this.images.length; i++) {
-      //     this.imagesConfirmed.push(this.images[i])
-      //   }
-      //
-      //   for (var i = 0; i < this.snappedQuestions.length; i++) {
-      //     this.snappedQuestionsConfirmed.push(this.snappedQuestions[i])
-      //   }
-      //   this.toggleCreatingQuestionMode()
-      // } else {
-      //   this.error = !this.error
-      // }
-    },
+    }
+    ,
     cancelQuestion() {
       if (this.titleQuestionConfirmed && (this.descriptionConfirmed || this.imagesConfirmed)) {
         this.titleQuestion = this.titleQuestionConfirmed
@@ -681,7 +701,8 @@ export default {
       }
 
       this.toggleCreatingQuestionMode()
-    },
+    }
+    ,
     updateManualDescription() {
       if (this.descriptionQuestion) {
         this.descriptionConfirmed = this.descriptionQuestion
@@ -689,7 +710,8 @@ export default {
       } else {
         this.error = !this.error
       }
-    },
+    }
+    ,
     cancelManual() {
       if (this.descriptionConfirmed) {
         this.descriptionQuestion = this.descriptionConfirmed
@@ -697,10 +719,12 @@ export default {
         this.descriptionQuestion = ''
       }
       this.updateShowManualDescription()
-    },
+    }
+    ,
     removeDescription() {
       this.descriptionQuestion = ''
-    },
+    }
+    ,
     // onFileSelected(e) {
     //   var files = e.target.files || e.dataTransfer.files
     //
@@ -734,26 +758,31 @@ export default {
       this.previewImage = this.images[key]
       this.isCreatingQuestion = !this.isCreatingQuestion
       this.isPreviewing = !this.isPreviewing
-    },
+    }
+    ,
     removeImage(key) {
       this.images.splice(key, 1);
       this.snappedQuestions.splice(key, 1);
-    },
+    }
+    ,
     format_date2(value) {
       if (value) {
         return moment(String(value)).format('DD/MM/YYYY')
       }
-    },
+    }
+    ,
     format_date(value) {
       if (value) {
         return moment(String(value)).format('YYYY-MM-DD HH:mm:ss')
       }
-    },
+    }
+    ,
     format_time(value) {
       if (value) {
         return moment(String(value)).format('HH:mm')
       }
-    },
+    }
+    ,
     checkForm() {
       // if (this.title && this.subject_id && this.classroom_id && this.titleQuestion
       //     && (this.snappedQuestions.length || this.descriptionQuestion) && !this.due_datetime) {
@@ -779,7 +808,8 @@ export default {
       }
 
       // e.preventDefault();
-    },
+    }
+    ,
     sendData(e) {
 
       this.checkForm();
@@ -853,7 +883,8 @@ export default {
       } else {
         this.error = !this.error
       }
-    },
+    }
+    ,
     getDetails: function () {
       TeacherRepository.getTeacherDetails()
           .then(response => {
@@ -869,7 +900,8 @@ export default {
               localStorage.setItem('teacherID', teacherDetail.id)
             }
           })
-    },
+    }
+    ,
   },
   mounted() {
     this.getDetails()

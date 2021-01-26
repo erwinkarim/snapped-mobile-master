@@ -105,7 +105,7 @@
                   </icon-base-two>
                 </div>
               </button>
-              <button @click="cropSnappedQuestion(key)"
+              <button @click="beginCropSnappedQuestion(key)"
                       class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-purple-primary focus:outline-none">
                 <div class="text-white text-sm md:text-lg w-3/4">
                   Crop
@@ -122,7 +122,7 @@
           <div v-if="image.cropping"
                class="mt-5"
           >
-            <vue-cropper ref="cropper"
+            <vue-cropper :ref="`cropper_${key}`"
                          :src="image.source"
                          alt="Source Image"
             >
@@ -130,11 +130,11 @@
             <div class="flex flex-row items-center mt-4 md:mt-4 ">
               <button @click="togglePreviewSnappedQuestionMode(key)"
                       class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
-                <div  class="text-white text-sm md:text-lg w-full">
+                <div class="text-white text-sm md:text-lg w-full">
                   Cancel
                 </div>
               </button>
-              <button @click="cropSnappedQuestion(key)"
+              <button @click="saveCroppedSnappedQuestion(key)"
                       class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-purple-primary focus:outline-none">
                 <div class="text-white text-sm md:text-lg w-3/4">
                   Done
@@ -159,7 +159,8 @@
     </div>
 
 
-    <div v-if="hasSavedQuestion && !isWritingQuestion">
+    <!--  IF EDITING QUESTIONS   -->
+    <div v-if="hasSavedQuestion && !isWritingQuestion && !isSnappingQuestion">
       <!-- WRITTEN QUESTION     -->
       <div v-if="hasSavedWrittenQuestion"
            class="flex grid grid-cols-2 py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
@@ -175,6 +176,67 @@
               <trash-icon/>
             </icon-base-two>
           </button>
+        </div>
+      </div>
+      <!-- WRITTEN QUESTION     -->
+      <div v-if="hasSavedSnappedQuestion" class="flex flex-col">
+        <div v-for="(image, key) in snappedPreviews"
+             class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+        >
+
+          <div class="flex flex-row items-center">
+            <div class="w-6/7 text-left text-blue-secondary">
+              <button @click="togglePreviewSnappedQuestionMode(key)"
+                      class="focus:outline-none"
+              >
+                {{ image.preview ? 'Hide image' : image.cropping ? 'Return to Preview' : 'Preview Image' }}
+              </button>
+            </div>
+            <div v-if="!image.preview && !image.cropping" class="w-1/7 flex flex-row justify-end">
+              <button @click="removeSnappedQuestion(key)" class="w-2/3 focus:outline-none">
+                <icon-base-two stroke-color="purple-secondary">
+                  <trash-icon/>
+                </icon-base-two>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="image.preview" class="mt-5">
+            <div class="w-full py-2 flex flex-row justify-center h-full object-cover">
+              <img :src="image.source"/>
+            </div>
+            <div class="flex flex-row items-center mt-2 md:mt-4 ">
+              <button @click="removeSnappedQuestion(key)"
+                      class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                <div class="text-white text-sm md:text-lg w-3/4">
+                  Remove
+                </div>
+                <div class="w-1/4">
+                  <icon-base-two class="w-1/2">
+                    <trash-icon/>
+                  </icon-base-two>
+                </div>
+              </button>
+              <button @click="beginCropSnappedQuestion(key)"
+                      class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-purple-primary focus:outline-none">
+                <div class="text-white text-sm md:text-lg w-3/4">
+                  Crop
+                </div>
+                <div class="w-1/4">
+                  <icon-base-two class="w-1/2">
+                    <crop-icon/>
+                  </icon-base-two>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-if="questionDetails.snappedQuestions.length" class="flex -mx-1 mb-4">
+          <label
+              class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight text-center rounded-md border border-none appearance-none focus:outline-none focus:shadow-outline text-red-primary">
+            + Add more photo
+            <input class="hidden" type="file" accept="image/*" multiple @change="onSnapQuestion">
+          </label>
         </div>
       </div>
     </div>
@@ -219,14 +281,21 @@ export default {
   },
   watch: {
     'questionDetails.title': 'emitQuestionDetails',
-    'questionDetails.writtenQuestion': 'emitQuestionDetails'
+    'questionDetails.writtenQuestion': 'emitQuestionDetails',
+    'questionDetails.snappedQuestions.length': 'emitQuestionDetails',
   },
   computed: {
     hasSavedQuestion() {
-      return this.savedQuestionDetails.type && this.savedQuestionDetails.writtenQuestion;
+      return this.savedQuestionDetails.type && (this.savedQuestionDetails.writtenQuestion || this.savedQuestionDetails.snappedQuestions.length);
     },
     hasSavedWrittenQuestion() {
       return this.savedQuestionDetails.type ? this.savedQuestionDetails.type === 'written' && this.savedQuestionDetails.writtenQuestion : false;
+    },
+    hasSavedSnappedQuestion() {
+
+      console.log(`hasSavedSnapped: ${this.savedQuestionDetails.type ? this.savedQuestionDetails.type === 'snapped' && this.savedQuestionDetails.snappedQuestions.length : false}`)
+      console.log(`previews: ${this.snappedPreviews.length}`)
+      return this.savedQuestionDetails.type ? this.savedQuestionDetails.type === 'snapped' && this.savedQuestionDetails.snappedQuestions.length : false;
     }
   },
   methods: {
@@ -236,7 +305,8 @@ export default {
         this.$emit('questionDetails', {
           type: this.questionDetails.type,
           title: this.questionDetails.title,
-          writtenQuestion: this.questionDetails.writtenQuestion
+          writtenQuestion: this.questionDetails.writtenQuestion,
+          snappedQuestions: this.questionDetails.snappedQuestions
         })
       }
     },
@@ -266,9 +336,19 @@ export default {
       }
     },
 
-    onSnapQuestion(e) {
+    enterSnapQuestionMode() {
 
       this.selectQuestionType('snapped');
+
+      // if (this.hasSavedWrittenQuestion) {
+      //   this.questionDetails.title = this.savedQuestionDetails.title;
+      //   this.questionDetails.writtenQuestion = this.savedQuestionDetails.writtenQuestion;
+      // }
+    },
+
+    onSnapQuestion(e) {
+
+      this.enterSnapQuestionMode();
 
       let files = e.target.files || e.dataTransfer.files
 
@@ -296,8 +376,6 @@ export default {
             preview: false,
             cropping: false
           });
-          // that.activeCroppingSnappedQuestion = e.target.result
-          // that.$refs.cropper.replace(this.activeCroppingSnappedQuestion)
         }
 
         reader.readAsDataURL(f);
@@ -310,22 +388,19 @@ export default {
       this.snappedPreviews[key].cropping = false;
     },
 
-    cropSnappedQuestion(key) {
-
-      // TODO: Disable cropping for other photos when cropping other photo
-
+    beginCropSnappedQuestion(key) {
       this.snappedPreviews[key].preview = false;
       this.snappedPreviews[key].cropping = true;
+    },
+    saveCroppedSnappedQuestion(key) {
 
-      // this.isCroppingSnappedQuestion = true;
-      //
-      // this.isSelectingQuestionType = false;
-      // this.isWritingQuestion = false;
-      // this.isSnappingQuestion = false;
-      // this.isResettingQuestion = false;
 
-      // this.$refs.cropper.replace(this.questionDetails.snappedQuestions[key])
+      let cropper = `cropper_${key}`
+      this.snappedPreviews[key].source = this.$refs[cropper][0].getCroppedCanvas().toDataURL()
+      this.questionDetails.snappedQuestions[key] = this.$refs[cropper][0].getCroppedCanvas().toDataURL()
 
+      this.snappedPreviews[key].preview = true;
+      this.snappedPreviews[key].cropping = false;
     },
 
     removeSnappedQuestion(key) {
