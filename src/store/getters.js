@@ -1,3 +1,4 @@
+import moment from "moment";
 
 export default  {
     isLoggedIn: state => !!state.token,
@@ -12,5 +13,10 @@ export default  {
     getAuthUsername: (state, getters) => {
         return getters.getAuthUser.fullname
     },
-    getToken : state => state.token
+    getToken : state => state.token,
+
+    currentYear: () => {
+        return moment().year()
+    }
+
 }
