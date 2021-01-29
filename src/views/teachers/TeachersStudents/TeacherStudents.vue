@@ -6,10 +6,7 @@
       <page-header-three :has-search-bar="true"
                          @search="handleSearch"
       >
-        <template v-slot:leftAction>
-          <nav-back class="w-2/7" stroke-color="red-primary"/>
-        </template>
-        <template v-slot:mini-title>
+        <template v-slot:title>
           Student List
         </template>
       </page-header-three>
