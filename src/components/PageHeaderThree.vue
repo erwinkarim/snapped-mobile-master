@@ -30,14 +30,33 @@
     </div>
 
     <!-- MAIN TITLE  -->
-    <div v-if="hasScrollAnimation" :class="pageTitleClass" class="w-full px-5 mt-24 md:mt-36 break-all overflow-hidden ">
+    <div v-if="hasScrollAnimation" :class="pageTitleClass"
+         class="w-full px-5 mt-24 md:mt-36 break-all overflow-hidden "
+    >
+      <div class="text-left text-4xl font-bold text-purple-primary">
+        <slot name="title"/>
+      </div>
+    </div>
+    <div v-else class="w-full px-5 break-all overflow-hidden ">
       <div class="text-left text-4xl font-bold text-purple-primary">
         <slot name="title"/>
       </div>
     </div>
 
     <!-- SEARCH BAR -->
-    <div v-if="hasSearchBar" :class="searchBarClass"
+    <div v-if="hasSearchBar && hasScrollAnimation" :class="searchBarClass"
+         class="px-5 pb-4 w-full max-w-xl z-50 bg-white flex flex-row items-center"
+    >
+      <div class="absolute w-1/12 mt-2 flex flex-row items-center justify-center ml-2">
+        <icon-base-two class="w-5/7 md:w-3/7 lg:w-2/7">
+          <magnifying-glass-icon stroke-color="purple-primary"/>
+        </icon-base-two>
+      </div>
+      <input v-model="search" @keyup="emitSearch"
+             class="pl-12 md:pl-16 lg:pl-20 pr-2 py-3 mt-4 w-full appearance-none border rounded rounded-xl border-none w-full bg-gray-tertiary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+             type="text" placeholder="Search" autocomplete="off">
+    </div>
+    <div v-if="hasSearchBar && !hasScrollAnimation"
          class="px-5 pb-4 w-full max-w-xl z-50 bg-white flex flex-row items-center"
     >
       <div class="absolute w-1/12 mt-2 flex flex-row items-center justify-center ml-2">
