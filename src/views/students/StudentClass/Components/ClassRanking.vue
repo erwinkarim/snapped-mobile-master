@@ -3,7 +3,7 @@
   <layout-one>
     <!-- Subject Title + Period -->
     <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5 mb-5">
-      Class Ranking (Jan - Dec 2021)
+      Class Ranking (Jan - Dec {{ $store.getters.currentYear }})
     </div>
 
     <div class="px-5">

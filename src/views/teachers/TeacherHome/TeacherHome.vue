@@ -20,7 +20,8 @@
             <section-title class="mb-5" title="Summary"/>
           </div>
 
-          <div class="max-w-sm md:max-w-xl md:w-full h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
+          <div
+              class="max-w-sm md:max-w-xl md:w-full h-full rounded rounded-xl justify-between overflow-hidden bg-gray-secondary px-3 py-3">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
               <div class="flex flex-col w-1/3 px-2 ">
                 <div class="border-b-1 font-bold  py-2">{{ numOfPublishedAssignments }}</div>
@@ -108,54 +109,53 @@ export default {
     }
   },
   methods: {
-    getNumOfAssignments(value){
+    getNumOfAssignments(value) {
       this.numOfAssignments = value;
     },
     fetchSummaryData() {
       AssignmentRepository.getPublishedAssignments()
-              .then(response => {
-                let data = response.data.meta;
+          .then(response => {
 
-                this.numOfPublishedAssignments = data.total;
-              })
+            if (response.data.success) {
+              this.numOfPublishedAssignments = response.data.data.length;
+            }
+          })
 
       TeacherRepository.getSubmissions(1)
-              .then(response => {
-                let data = response.data.data;
-
-                this.numOfSubmissions = data.length;
-              })
+          .then(response => {
+            if (response.data.success) {
+              this.numOfSubmissions = response.data.data.length;
+            }
+          })
 
       TeacherRepository.getMarkings()
-              .then(response => {
-                let data = response.data.num_of_unmarked_submissions;
-
-                this.numOfUnmarkedSubmissions = data ;
-              })
+          .then(response => {
+            this.numOfUnmarkedSubmissions = response.data.num_of_unmarked_submissions;
+          })
     },
-    fetchSubmissions(){
+    fetchSubmissions() {
       TeacherRepository.getSubmissions(1)
-        .then(response => {
-          let data = response.data.data;
+          .then(response => {
+            let data = response.data.data;
 
-          for (let i = 0; i <  data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
 
-            let submission = data[i];
+              let submission = data[i];
 
-            let details = {
-              id: submission.submission_id,
-              assignmentID: submission.assignment_id,
-              studentID : submission.student_id,
-              studentName : submission.student_name,
-              studentGender : submission.gender,
-              submittedAt : submission.submission_created_at,
-              classroomName : submission.classroom_name,
-              subjectName : submission.subject_name
+              let details = {
+                id: submission.submission_id,
+                assignmentID: submission.assignment_id,
+                studentID: submission.student_id,
+                studentName: submission.student_name,
+                studentGender: submission.gender,
+                submittedAt: submission.submission_created_at,
+                classroomName: submission.classroom_name,
+                subjectName: submission.subject_name
+              }
+
+              this.submissions.push(details)
             }
-
-            this.submissions.push(details)
-          }
-        })
+          })
     }
   },
   mounted() {
