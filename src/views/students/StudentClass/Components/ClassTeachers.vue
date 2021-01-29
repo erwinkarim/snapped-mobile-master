@@ -2,7 +2,7 @@
   <layout-one>
     <!-- Subject Title + Period -->
     <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5 mb-5">
-      Jan - Dec 2020
+      Jan - Dec {{ $store.getters.currentYear }}
     </div>
 
     <div class="">

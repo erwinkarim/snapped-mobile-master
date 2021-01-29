@@ -8,7 +8,7 @@
           @search="handleSearch"
       >
         <template v-slot:leftAction>
-          <nav-back class="w-2/7" stroke-color="red-primary"/>
+          <nav-back class="w-2/7" :to="{name : 'teacher.classes'}" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           <div class="truncate">
@@ -38,6 +38,7 @@ import SubjectsList from "@/views/teachers/TeacherClasses/SubjectsList";
 export default {
   name: "TeacherClassDetails",
   props: {
+    classID: [Number, String],
     className: {
       type: String,
       default: 'Class'
