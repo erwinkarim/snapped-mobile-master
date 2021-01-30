@@ -4,6 +4,16 @@ import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
 import {get} from "v-calendar/src/utils/_";
 
+/*
+* TODO:
+*   - Implement due date
+*   - Implement publish now for written. Ensure all data is sent.
+*   - Implement schedule publish
+*   - Implement crop photo, and save.
+*   - Implement publish for snapped.
+* */
+
+
 export default {
     namespaced: true,
     state: () => ({
@@ -18,6 +28,7 @@ export default {
             isSnappingQuestion: false,
             isCroppingSnappedQuestion: false,
             isResettingQuestion: false,
+            isShowingScheduler: false,
             isPublishing: false,
             isShowingError: false
         },
@@ -57,11 +68,12 @@ export default {
             snappedPreviews: [],
         },
 
-
         selectables: {
             subjects: [],
             classrooms: []
         },
+
+        errors: []
 
         // /***********
         //  * STATES *
@@ -139,7 +151,14 @@ export default {
 
         toggleShowingErrorMode(state) {
             state.states.isShowingError = !state.states.isShowingError;
-            console.log(`ERROR: ${state.states.isShowingError}`)
+        },
+
+        toggleShowingSchedulerMode(state) {
+            state.states.isShowingScheduler = !state.states.isShowingScheduler
+        },
+
+        toggleIsPublishingMode(state) {
+            state.states.isPublishing = !state.states.isPublishing
         },
 
         saveQuestionToDraft(state) {
@@ -352,16 +371,16 @@ export default {
 
             this.toggleDuration = !this.toggleDuration
         },
-        getSubjects() {
+        getSubjects({state}) {
+
             TeacherRepository.getTeacherSubjects()
                 .then(response => {
 
                     if (response.data.success) {
                         const data = response.data.data
-
                         const numOfSubjects = data.length
 
-                        this.subjects = []
+                        // console.log(state.selectables)
                         for (let i = 0; i < numOfSubjects; i++) {
 
                             let item = data[i];
@@ -371,7 +390,7 @@ export default {
                                 name: item.subject_name
                             }
 
-                            this.subjects.push(subjectDetail)
+                            state.selectables.subjects.push(subjectDetail);
                         }
                     }
 
@@ -395,13 +414,13 @@ export default {
                                 numOfStudents: item.num_of_students,
                                 isHomeroom: item.homeroom
                             }
-
                             state.selectables.classrooms.push(classDetail)
                         }
                     }
 
                 })
         },
+
         // updateShowManualDescription() {
         //   this.showDescription = !this.showDescription
         //   this.isCreatingQuestion = !this.isCreatingQuestion;
@@ -551,72 +570,64 @@ export default {
             }
         }
         ,
-        checkForm() {
-            // if (this.title && this.subject_id && this.classroom_id && this.titleQuestion
-            //     && (this.snappedQuestions.length || this.descriptionQuestion) && !this.due_datetime) {
-            //   return (true);
-            // }
+        checkForm({state, commit, getters}) {
 
-            this.errors = [];
+            // Reset error
+            state.errors = [];
 
-            if (!this.title) {
-                this.errors.push('Title required.');
+            if (!state.assignmentDetails.title) {
+                state.errors.push('Title required.');
             }
-            if (!this.subject_id) {
-                this.errors.push('Subject required.');
+            if (!state.assignmentDetails.subject_id) {
+                state.errors.push('Subject required.');
             }
-            if (!this.classroom_id) {
-                this.errors.push('Classroom required.');
+            if (!state.assignmentDetails.classroom_id) {
+                state.errors.push('Classroom required.');
             }
-            if (!this.titleQuestion && !(this.snappedQuestions.length || this.descriptionQuestion)) {
-                this.errors.push('Question required.');
+            if (!getters.hasSavedQuestion) {
+                state.errors.push('Question required.');
             }
-            if (!this.due_datetime) {
-                this.errors.push('Due date required');
+            if (state.assignmentDetails.due_datetime) {
+                state.errors.push('Due date required');
             }
 
-            // e.preventDefault();
+            if (state.errors.length) {
+                commit('toggleShowingErrorMode')
+            }
         }
         ,
-        sendData(e) {
+        sendData({state, commit, getters, dispatch}) {
 
-            this.checkForm();
-            if (this.errors.length === 0) {
+            dispatch('checkForm');
 
-                var ctr = 0;
+            if (!getters.hasErrors) {
 
-                this.classroom_id.forEach((value, index) => {
+                let counter = 0;
+
+                if (state.states.isShowingScheduler) {
+                    commit('toggleShowingSchedulerMode')
+                }
+
+                commit('toggleIsPublishingMode')
+
+                console.log('start')
+                state.assignmentDetails.classroom_id.forEach((classroom, index) => {
 
                     let formData = new FormData();
 
-                    // let dayInMinute = this.durationDay * 1440
-                    // let hourInMinute = this.durationHour * 60
-                    // //in minutes
-                    // let totalDuration = dayInMinute + hourInMinute + this.durationMinute
-                    //
-                    // let due_datetime = moment(this.published_at).add(totalDuration, 'm').toDate();
+                    formData.append('subject_id', state.assignmentDetails.subject_id);
+                    formData.append('class_id', classroom.id);
+                    formData.append('title', state.assignmentDetails.title);
+                    formData.append('written_question_title', state.assignmentDetails.question.title);
+                    formData.append('written_description', state.assignmentDetails.question.writtenQuestion);
+                    formData.append('due_datetime', this.format_date(state.assignmentDetails.due_datetime));
+                    // formData.append('published_at', this.format_date(state.assignmentDetails.published_at)); // TODO: Implement
+                    formData.append('remarks', state.assignmentDetails.remarks);
 
-                    formData.append('teacher_id', this.teacherID);
-                    formData.append('subject_id', this.subject_id);
-                    formData.append('class_id', value.id);
-                    formData.append('title', this.title);
-                    formData.append('written_question_title', this.titleQuestion);
-                    formData.append('written_description', this.descriptionQuestion);
-                    formData.append('due_datetime', this.format_date(this.due_datetime));
-                    formData.append('published_at', this.format_date(this.published_at));
-                    formData.append('remarks', this.remarks);
-
-                    for (var i = 0; i < this.snappedQuestions.length; i++) {
-                        let file = this.snappedQuestions[i];
-
+                    for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
+                        let file = state.assignmentDetails.question.snappedQuestions[i];
                         formData.append('snap_question[' + i + ']', file);
                     }
-
-                    if (this.toggleSchedule) {
-                        this.toggleSchedule = !this.toggleSchedule
-                    }
-
-                    this.isPublishing = true;
 
                     Repository.post('/assignments/store',
                         formData,
@@ -630,15 +641,15 @@ export default {
                             this.isPublishing = false;
 
                             if (response.data.success) {
-                                ctr++;
-                                if (ctr === this.classroom_id.length) {
-                                    this.published = !this.published
-                                }
+                                counter++;
+                                // if (counter === this.classroom_id.length) {
+                                //     this.published = !this.published
+                                // }
                             } else {
-                                ctr++;
-                                if (ctr === this.classroom_id.length) {
-                                    this.error = !this.error
-                                }
+                                counter++;
+                                // if (counter === this.classroom_id.length) {
+                                //     this.error = !this.error
+                                // }
                             }
                         })
                         .catch(error => {
@@ -648,8 +659,10 @@ export default {
                             this.error = !this.error
                         });
                 });
-            } else {
-                this.error = !this.error
+
+                console.log('end')
+                commit('toggleIsPublishingMode')
+
             }
         }
         ,
@@ -726,6 +739,10 @@ export default {
             // console.log(`hasSavedSnapped: ${this.savedQuestionDetails.type ? this.savedQuestionDetails.type === 'snapped' && this.savedQuestionDetails.snappedQuestions.length : false}`)
             // console.log(`previews: ${this.snappedPreviews.length}`)
             return state.assignmentDetails.question.type ? state.assignmentDetails.question.type === 'snapped' && state.assignmentDetails.question.snappedQuestions.length : false;
+        },
+
+        hasErrors(state) {
+            return state.errors.length || state.states.isShowingError
         }
 
     }

@@ -92,8 +92,12 @@ export default {
 
       TeacherRepository.getSubjectsWithStudentsForTeacherClass({classID: classID, search: null})
           .then(response => {
+
             this.subjects = response.data.data;
             this.filteredSubjects = response.data.data;
+
+            console.log(this.subjects)
+
           })
           .catch(err => {
 

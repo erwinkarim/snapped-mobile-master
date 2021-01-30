@@ -368,78 +368,57 @@
       <!--        </modal>-->
       <!--      </div>-->
 
-      <!--      &lt;!&ndash;  Modal Published   &ndash;&gt;-->
-      <!--      <div v-if="published" @click.self="published = !published"-->
-      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-      <!--        <modal v-if="published"-->
-      <!--               modal-type="success"-->
-      <!--               :redirect-route="{name: 'teacher.assignments'}"-->
-      <!--               class="w-4/5 "-->
-      <!--        >-->
-      <!--          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>-->
-      <!--          <p slot="message">-->
-      <!--            Got something to change? Don't worry! You can always edit your published homework-->
-      <!--          </p>-->
-      <!--          <template slot="button">-->
-      <!--            <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">-->
-      <!--              Okay-->
-      <!--            </button>-->
-      <!--          </template>-->
-      <!--        </modal>-->
-      <!--      </div>-->
+<!--      &lt;!&ndash;  Modal Published   &ndash;&gt;-->
+<!--      <div v-if="published" @click.self="published = !published"-->
+<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
+<!--        <modal v-if="published"-->
+<!--               modal-type="success"-->
+<!--               :redirect-route="{name: 'teacher.assignments'}"-->
+<!--               class="w-4/5 "-->
+<!--        >-->
+<!--          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>-->
+<!--          <p slot="message">-->
+<!--            Got something to change? Don't worry! You can always edit your published homework-->
+<!--          </p>-->
+<!--          <template slot="button">-->
+<!--            <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">-->
+<!--              Okay-->
+<!--            </button>-->
+<!--          </template>-->
+<!--        </modal>-->
+<!--      </div>-->
 
-      <!--      &lt;!&ndash;   Modal Error   &ndash;&gt;-->
-      <!--      <div v-if="error" @click.self="error = !error"-->
-      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-      <!--        <modal class="w-4/5 " v-if="error" modal-type="error">-->
-      <!--          <div slot="message">-->
-      <!--            <p>-->
-      <!--              <b>Please ensure that you have entered all the important inputs</b>-->
-      <!--            </p>-->
-      <!--            <ul>-->
-      <!--              <li v-for="error in errors">{{ error }}</li>-->
-      <!--            </ul>-->
-      <!--          </div>-->
-      <!--          <template slot="button">-->
-      <!--            <button @click="error = !error"-->
-      <!--                    class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
-      <!--            >-->
-      <!--              Okay-->
-      <!--            </button>-->
-      <!--          </template>-->
-      <!--        </modal>-->
-      <!--      </div>-->
-      <!--  End Modal     -->
+      <error-modal v-if="$store.state.teacherCreateAssignment.states.isShowingError"/>
     </template>
 
-    <!--    <template v-slot:bottomBar v-if="$store.state.teacherCreateAssignment.states.isMain">-->
-    <!--      <div class="flex flex-row w-full max-w-xl">-->
-    <!--        <div class="w-4/7 px-2">-->
-    <!--          <button @click="toggleSchedule = !toggleSchedule"-->
-    <!--                  class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row items-center justify-center"-->
-    <!--          >-->
-    <!--            <div class="w-full md:w-5/7">-->
-    <!--              Schedule Publish-->
-    <!--            </div>-->
-    <!--            <div class="hidden md:block md:w-1/7">-->
-    <!--              <icon-base-two class="w-3/4 md:w-1/2">-->
-    <!--                <calendar-icon/>-->
-    <!--              </icon-base-two>-->
-    <!--            </div>-->
-    <!--          </button>-->
-    <!--        </div>-->
-    <!--        <div class="w-3/7 px-2">-->
-    <!--          <button @click="sendData"-->
-    <!--                  :disabled="isPublishing"-->
-    <!--                  class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">-->
-    <!--            <div class="w-5/7">-->
-    <!--              Publish Now-->
-    <!--            </div>-->
-    <!--          </button>-->
-    <!--        </div>-->
-    <!--      </div>-->
+    <template v-slot:bottomBar v-if="$store.state.teacherCreateAssignment.states.isMain">
+      <div class="flex flex-row w-full max-w-xl">
+        <div class="w-4/7 px-2">
+          <button @click="toggleSchedule = !toggleSchedule"
+                  class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row items-center justify-center"
+          >
+            <div class="w-full md:w-5/7">
+              Schedule Publish
+            </div>
+            <div class="hidden md:block md:w-1/7">
+              <icon-base-two class="w-3/4 md:w-1/2">
+                <calendar-icon/>
+              </icon-base-two>
+            </div>
+          </button>
+        </div>
+        <div class="w-3/7 px-2">
+          <button @click="$store.dispatch('teacherCreateAssignment/sendData')"
+                  :disabled="$store.state.teacherCreateAssignment.states.isPublishing"
+                  class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+            <div class="w-5/7">
+              Publish Now
+            </div>
+          </button>
+        </div>
+      </div>
+    </template>
 
-    <!--    </template>-->
   </dashboard-layout>
 </template>
 
@@ -470,6 +449,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import CreateQuestionForm from "@/views/teachers/TeacherAssignments/Create/CreateQuestionForm";
+import ErrorModal from "@/views/teachers/TeacherAssignments/Create/Modals/ErrorModal";
 
 Vue.component('v-calendar', Calendar)
 Vue.component('v-date-picker', DatePicker)
@@ -488,12 +468,11 @@ export default {
   watch: {},
   methods: {},
   mounted() {
-    // this.getDetails()
-    // this.getSubjects()
-    console.log(this.$store.state.teacherCreateAssignment.states)
     this.$store.dispatch('teacherCreateAssignment/getClasses')
+    this.$store.dispatch('teacherCreateAssignment/getSubjects')
   },
   components: {
+    ErrorModal,
     CreateQuestionForm,
     VueCropper,
     ClockIcon,
