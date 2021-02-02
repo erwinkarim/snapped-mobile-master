@@ -156,7 +156,7 @@ export default {
       if (this.due_datetime) {
         AssignmentRepository.update(this.assignmentID, this.format_date(this.due_datetime))
             .then(response => {
-              if (response.data.messageType === 'success') {
+              if (response.data.success) {
                 this.isShowingSuccessModal = true;
               }
             })
@@ -166,7 +166,7 @@ export default {
     deleteAssignment () {
       AssignmentRepository.delete(this.assignmentID)
           .then(response => {
-            if (response.data.messageType === 'success') {
+            if (response.data.success) {
               this.toggleDeleteModal();
               router.push({ name: 'teacher.assignments'})
             }
