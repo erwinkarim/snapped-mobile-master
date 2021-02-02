@@ -32,7 +32,7 @@
 
         <!-- WRITTEN QUESTION TITLE -->
         <div v-if="assignment.written_question.title"
-             class="mb-2 truncate"
+             class="mb-2"
         >
           {{ assignment.written_question.title }}
         </div>
