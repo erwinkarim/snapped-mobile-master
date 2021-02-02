@@ -4,16 +4,6 @@ import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
 import {get} from "v-calendar/src/utils/_";
 
-/*
-* TODO:
-*   - Implement due date
-*   - Implement publish now for written. Ensure all data is sent.
-*   - Implement schedule publish
-*   - Implement crop photo, and save.
-*   - Implement publish for snapped.
-* */
-
-
 export default {
     namespaced: true,
     state: () => ({
@@ -30,6 +20,7 @@ export default {
             isResettingQuestion: false,
             isShowingScheduler: false,
             isPublishing: false,
+            isPublished: false,
             isShowingError: false
         },
 
@@ -43,9 +34,10 @@ export default {
                 type: null,
                 title: null,
                 writtenQuestion: null,
-                snappedQuestions: []
+                snappedQuestions: [],
+                snappedPreviews: []
             },
-            remarks: ''
+            published_at: moment(),
         },
 
         // Questions' draft, serve as temporary save point while creating question.
@@ -74,65 +66,35 @@ export default {
         },
 
         errors: []
-
-        // /***********
-        //  * STATES *
-        //  ***********/
-        // disabled: false,
-        // //show page
-        // showAssignment: true,
-        // showDescription: false,
-        // //toggle modal duration or schedule
-        // toggleDuration: false,
-        // toggleSchedule: false,
-        // //toggle preview gambar
-        //
-        // //toggle modal success assignment
-        // published: false,
-        // //toggle modal error assignment
-        // error: false,
-        // errors: [],
-        //
-        // //assignment page data
-        // teacherID: localStorage.getItem('teacherID'),
-        // title: '',
-        // subject_id: '',
-        // classroom_id: [],
-        // subjects: '',
-        // classrooms: [],
-        // //schedule publish
-        // published_at: new Date,
-        // masks: {
-        //     input: 'DD-MM-YYYY h:mm A',
-        // },
-        // today: new Date,
-        // due_datetime: '',
-        // durationDay: 0,
-        // durationHour: 0,
-        // durationMinute: 0,
-        // remarks: '',
-        //
-        // //question page data
-        // //title question
-        // titleQuestion: '',
-        // titleQuestionConfirmed: '',
-        // //description question
-        // descriptionQuestion: '',
-        // descriptionConfirmed: '',
-        // // images data (untuk display gambar)
-        // images: [],
-        // imagesConfirmed: [],
-        // // images details to be uploaded to backed
-        // snappedQuestions: [],
-        // snappedQuestionsConfirmed: [],
-        // //untuk view image one by one (preview page)
-        // previewImage: [],
     }),
     mutations: {
         toggleCreatingQuestionMode(state) {
+
             state.states.isMain = !state.states.isMain;
             state.states.isCreatingQuestion = !state.states.isCreatingQuestion;
             state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
+        },
+
+        cancelCreatingQuestionMode(state) {
+            state.states.isMain = true;
+            state.states.isCreatingQuestion = false;
+            state.states.isSelectingQuestionType = false;
+            state.states.isWritingQuestion = false;
+            state.states.isSnappingQuestion = false;
+        },
+
+        beginEditingQuestionMode(state, savedQuestionType) {
+            state.states.isMain = false;
+            state.states.isCreatingQuestion = true;
+            state.states.isSelectingQuestionType = false;
+            state.states.isEditingQuestion = true;
+
+            state.states.isSnappingQuestion = savedQuestionType === 'snapped';
+        },
+
+        beginEditingWrittenQuestionMode(state){
+            state.states.isSelectingQuestionType = false;
+            state.states.isWritingQuestion = true;
         },
 
         toggleSelectingDurationMode(state) {
@@ -157,61 +119,16 @@ export default {
             state.states.isShowingScheduler = !state.states.isShowingScheduler
         },
 
-        toggleIsPublishingMode(state) {
+        togglePublishingMode(state) {
             state.states.isPublishing = !state.states.isPublishing
         },
 
-        saveQuestionToDraft(state) {
-            state.questionDraft = {
-                type: state.creatingQuestionDetails.type,
-                title: state.creatingQuestionDetails.title,
-                writtenQuestion: state.creatingQuestionDetails.writtenQuestion,
-                snappedQuestions: state.creatingQuestionDetails.snappedQuestions,
-                snappedPreviews: state.creatingQuestionDetails.snappedPreviews,
-            }
+        togglePublishedMode(state) {
+            state.states.isPublished = !state.states.isPublished
         },
 
-        saveQuestionToAssignmentDetails(state) {
-            state.assignmentDetails.question = {
-                type: state.questionDraft.type,
-                title: state.questionDraft.title,
-                writtenQuestion: state.questionDraft.writtenQuestion,
-                snappedQuestions: state.questionDraft.snappedQuestions,
-            }
-        },
-
-        resetCreatingQuestion(state) {
-            state.questionDraft = {
-                type: null,
-                title: null,
-                writtenQuestion: null,
-                snappedQuestions: [],
-                snappedPreviews: []
-            }
-
-            state.creatingQuestionDetails = {
-                type: null,
-                title: null,
-                writtenQuestion: null,
-                snappedQuestions: [],
-                snappedPreviews: []
-            }
-        },
-
-        loadSavedQuestionForEdit(state) {
-            state.questionDraft = {
-                type: state.assignmentDetails.question.type,
-                title: state.assignmentDetails.question.title,
-                writtenQuestion: state.assignmentDetails.question.writtenQuestion,
-                snappedQuestions: state.assignmentDetails.question.snappedQuestions
-            }
-
-            state.creatingQuestionDetails = {
-                type: state.assignmentDetails.question.type,
-                title: state.assignmentDetails.question.title,
-                writtenQuestion: state.assignmentDetails.question.writtenQuestion,
-                snappedQuestions: state.assignmentDetails.question.snappedQuestions
-            }
+        toggleIsSelectingDuration(state) {
+            state.states.isSelectingDuration = !state.states.isSelectingDuration;
         },
 
         toggleSnappedQuestionPreviewStatus(state, key) {
@@ -219,17 +136,129 @@ export default {
             state.creatingQuestionDetails.snappedPreviews[key].cropping = false;
         },
 
-        //MULTISELECT
-        // addClassroom(state, classroom) {
-        //
-        //     console.log(classroom)
-        //     const tag = {
-        //         name: classroom,
-        //         code: classroom.substring(0, 2) + Math.floor((Math.random() * 10000000))
-        //     }
-        //     this.options.push(tag)
-        //     this.value.push(tag)
-        // },
+        toggleCroppingSnappedQuestionMode(state, key) {
+            state.creatingQuestionDetails.snappedPreviews[key].preview = !state.creatingQuestionDetails.snappedPreviews[key].preview;
+            state.creatingQuestionDetails.snappedPreviews[key].cropping = !state.creatingQuestionDetails.snappedPreviews[key].cropping;
+        },
+
+        saveQuestionToDraft(state) {
+            state.questionDraft = {
+                type: JSON.parse(JSON.stringify(state.creatingQuestionDetails.type)),
+                title: JSON.parse(JSON.stringify(state.creatingQuestionDetails.title)),
+                writtenQuestion: JSON.parse(JSON.stringify(state.creatingQuestionDetails.writtenQuestion)),
+                snappedQuestions: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedQuestions)),
+                snappedPreviews: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedPreviews)),
+            }
+        },
+
+        saveQuestionToAssignmentDetails(state) {
+            state.assignmentDetails.question = {
+                type: JSON.parse(JSON.stringify(state.questionDraft.type)),
+                title: JSON.parse(JSON.stringify(state.questionDraft.title)),
+                writtenQuestion: JSON.parse(JSON.stringify(state.questionDraft.writtenQuestion)),
+                snappedQuestions: JSON.parse(JSON.stringify(state.questionDraft.snappedQuestions)),
+                snappedPreviews: JSON.parse(JSON.stringify(state.questionDraft.snappedPreviews)),
+            }
+        },
+
+        resetCreatingQuestion(state) {
+
+            state.questionDraft = {
+                type: null,
+                title: null,
+                writtenQuestion: null,
+                snappedQuestions: [],
+                snappedPreviews: []
+            }
+
+            state.creatingQuestionDetails = {
+                type: null,
+                title: null,
+                writtenQuestion: null,
+                snappedQuestions: [],
+                snappedPreviews: []
+            }
+        },
+
+        loadSavedQuestionForEdit(state, type) {
+
+            state.questionDraft = {
+                type: type,
+                title: JSON.parse(JSON.stringify(state.assignmentDetails.question.title)),
+                writtenQuestion: JSON.parse(JSON.stringify(state.assignmentDetails.question.writtenQuestion)),
+                snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
+                snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews))
+            }
+
+            state.creatingQuestionDetails = {
+                type: type,
+                title: JSON.parse(JSON.stringify(state.assignmentDetails.question.title)),
+                writtenQuestion: JSON.parse(JSON.stringify(state.assignmentDetails.question.writtenQuestion)),
+                snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
+                snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews))
+            }
+        },
+
+
+        initialise(state) {
+
+            // STATES
+            state.states = {
+                isMain: true,
+                isCreatingQuestion: false,
+                isSelectingDuration: false,
+                isSelectingQuestionType: false,
+                isWritingQuestion: false,
+                isSnappingQuestion: false,
+                isCroppingSnappedQuestion: false,
+                isResettingQuestion: false,
+                isShowingScheduler: false,
+                isPublishing: false,
+                isPublished: false,
+                isShowingError: false
+            };
+
+            // Main details to be submitted
+            state.assignmentDetails = {
+                title: null,
+                subject_id: "",
+                classroom_id: null,
+                due_datetime: null,
+                question: {
+                    type: null,
+                    title: null,
+                    writtenQuestion: null,
+                    snappedQuestions: []
+                },
+                published_at: moment(),
+            }
+
+            // Questions' draft, serve as temporary save point while creating question.
+            // When draft is saved, load into assignment details
+            state.questionDraft = {
+                type: null,
+                title: null,
+                writtenQuestion: null,
+                snappedQuestions: [],
+                snappedPreviews: [],
+            }
+
+            // Currently creating question details. To be used instantaneous.
+            // When saved, load into question draft
+            state.creatingQuestionDetails = {
+                type: null,
+                title: null,
+                writtenQuestion: null,
+                snappedQuestions: [],
+                snappedPreviews: [],
+            }
+
+            state.selectables = {
+                subjects: [],
+                classrooms: []
+            }
+        }
+
     },
     actions: {
 
@@ -265,7 +294,8 @@ export default {
 
             if (state.states.isSelectingQuestionType && getters.hasWrittenQuestionDraft) {
                 state.creatingQuestionDetails.type = 'written';
-                state.creatingQuestionDetails.writtenQuestion = state.questionDraft.writtenQuestion
+                state.creatingQuestionDetails.writtenQuestion = JSON.parse(JSON.stringify(state.questionDraft.writtenQuestion))
+
             } else {
                 state.creatingQuestionDetails.writtenQuestion = '';
                 state.creatingQuestionDetails.type = null;
@@ -291,10 +321,6 @@ export default {
                 return
             }
 
-            for (let i = 0; i < files.length; i++) {
-                state.creatingQuestionDetails.snappedQuestions.push(files[i])
-            }
-
             let fileList = Array.prototype.slice.call(e.target.files);
 
             fileList.forEach(f => {
@@ -306,6 +332,9 @@ export default {
                 let reader = new FileReader();
 
                 reader.onload = (e) => {
+
+                    state.creatingQuestionDetails.snappedQuestions.push(e.target.result)
+
                     state.creatingQuestionDetails.snappedPreviews.push({
                         source: e.target.result,
                         preview: false,
@@ -315,22 +344,15 @@ export default {
 
                 reader.readAsDataURL(f);
             });
-
-            console.log(state.creatingQuestionDetails.snappedPreviews)
         },
 
 
-        beginCropSnappedQuestion(key) {
-            this.snappedPreviews[key].preview = false;
-            this.snappedPreviews[key].cropping = true;
-        },
-        saveCroppedSnappedQuestion(key) {
-            let cropper = `cropper_${key}`
-            this.snappedPreviews[key].source = this.$refs[cropper][0].getCroppedCanvas().toDataURL()
-            this.questionDetails.snappedQuestions[key] = this.$refs[cropper][0].getCroppedCanvas().toDataURL()
+        saveCroppedSnappedQuestion({state, commit}, payload) {
 
-            this.snappedPreviews[key].preview = true;
-            this.snappedPreviews[key].cropping = false;
+            state.creatingQuestionDetails.snappedPreviews[payload.key].source = payload.dataURL
+            state.creatingQuestionDetails.snappedQuestions[payload.key] = payload.dataURL
+            commit('toggleCroppingSnappedQuestionMode', payload.key);
+
         },
 
         removeSnappedQuestion({state, commit}, key) {
@@ -343,19 +365,6 @@ export default {
                 commit('toggleSnappingQuestionMode')
             }
         },
-        //
-        // resetQuestion(state) {
-        //
-        //     this.isResettingQuestion = true;
-        //
-        //     this.questionDetails.title = null;
-        //     this.questionDetails.type = null;
-        //     this.questionDetails.writtenQuestion = null;
-        //     this.questionDetails.snappedQuestions = [];
-        //
-        //     this.isSelectingQuestionType = true;
-        // },
-
 
         // MODE: MODAL
         closeToggleDuration() {
@@ -380,7 +389,6 @@ export default {
                         const data = response.data.data
                         const numOfSubjects = data.length
 
-                        // console.log(state.selectables)
                         for (let i = 0; i < numOfSubjects; i++) {
 
                             let item = data[i];
@@ -427,7 +435,6 @@ export default {
         // },
 
         handleQuestionDetails(details) {
-            console.log(`Updated question details`)
             this.questionDetails = details;
         },
 
@@ -454,9 +461,9 @@ export default {
                     // If user opt to Snap Question
                     if (getters.creatingQuestionType === 'snapped') {
 
-                        console.log('is saving snapped question');
+                        commit('saveQuestionToDraft')
 
-                        if (getters.hasSavedSnappedQuestion) {
+                        if (getters.hasSnappedQuestionDraft) {
                             commit('saveQuestionToAssignmentDetails');
                             commit('resetCreatingQuestion')
                             commit('toggleCreatingQuestionMode')
@@ -474,100 +481,21 @@ export default {
         },
 
         editSavedQuestion({state, commit, getters}) {
-            commit('toggleCreatingQuestionMode')
-            commit('loadSavedQuestionForEdit')
+
+            let type = getters.savedQuestionType
+
+            commit('beginEditingQuestionMode', type)
+            commit('loadSavedQuestionForEdit', type)
         },
 
-        cancelCreatingQuestion({state, commit, getters}) {
+        cancelCreatingQuestion({state, commit, type}) {
 
             if (!getters.hasSavedQuestion) {
                 commit('resetCreatingQuestion')
             }
 
-            commit('toggleCreatingQuestionMode')
+            commit('cancelCreatingQuestionMode')
 
-
-            // if (this.titleQuestionConfirmed && (this.descriptionConfirmed || this.imagesConfirmed)) {
-            //     this.titleQuestion = this.titleQuestionConfirmed
-            //     this.descriptionQuestion = this.descriptionConfirmed
-            //     this.images = []
-            //     for (var i = 0; i < this.imagesConfirmed.length; i++) {
-            //         this.images.push(this.imagesConfirmed[i])
-            //     }
-            //
-            //     this.snappedQuestions = []
-            //     for (var i = 0; i < this.snappedQuestionsConfirmed.length; i++) {
-            //         this.snappedQuestions.push(this.snappedQuestionsConfirmed[i])
-            //     }
-            // } else {
-            //     this.titleQuestion = ''
-            //     this.descriptionQuestion = ''
-            //     this.images = []
-            //     this.snappedQuestions = []
-            // }
-
-            // this.toggleCreatingQuestionMode()
-        },
-        removeDescription() {
-            this.descriptionQuestion = ''
-        }
-        ,
-        // onFileSelected(e) {
-        //   var files = e.target.files || e.dataTransfer.files
-        //
-        //   if (!files.length) {
-        //     return
-        //   }
-        //
-        //   for (var i = 0; i < files.length; i++) {
-        //     this.snappedQuestions.push(files[i])
-        //   }
-        //
-        //   let fileList = Array.prototype.slice.call(e.target.files);
-        //   fileList.forEach(f => {
-        //
-        //     if (!f.type.match("image.*")) {
-        //       return;
-        //     }
-        //
-        //     let reader = new FileReader();
-        //     let that = this;
-        //
-        //     reader.onload = function (e) {
-        //       that.images.push(e.target.result);
-        //       that.selectedFile = event.target.result
-        //       that.$refs.cropper.replace(this.selectedFile)
-        //     }
-        //     reader.readAsDataURL(f);
-        //   });
-        // },
-        previewAssignment(key) {
-            this.previewImage = this.images[key]
-            this.isCreatingQuestion = !this.isCreatingQuestion
-            this.isPreviewing = !this.isPreviewing
-        }
-        ,
-        removeImage(key) {
-            this.images.splice(key, 1);
-            this.snappedQuestions.splice(key, 1);
-        }
-        ,
-        format_date2(value) {
-            if (value) {
-                return moment(String(value)).format('DD/MM/YYYY')
-            }
-        }
-        ,
-        format_date(value) {
-            if (value) {
-                return moment(String(value)).format('YYYY-MM-DD HH:mm:ss')
-            }
-        }
-        ,
-        format_time(value) {
-            if (value) {
-                return moment(String(value)).format('HH:mm')
-            }
         }
         ,
         checkForm({state, commit, getters}) {
@@ -587,7 +515,7 @@ export default {
             if (!getters.hasSavedQuestion) {
                 state.errors.push('Question required.');
             }
-            if (state.assignmentDetails.due_datetime) {
+            if (!state.assignmentDetails.due_datetime) {
                 state.errors.push('Due date required');
             }
 
@@ -608,9 +536,8 @@ export default {
                     commit('toggleShowingSchedulerMode')
                 }
 
-                commit('toggleIsPublishingMode')
+                commit('togglePublishingMode')
 
-                console.log('start')
                 state.assignmentDetails.classroom_id.forEach((classroom, index) => {
 
                     let formData = new FormData();
@@ -619,10 +546,10 @@ export default {
                     formData.append('class_id', classroom.id);
                     formData.append('title', state.assignmentDetails.title);
                     formData.append('written_question_title', state.assignmentDetails.question.title);
-                    formData.append('written_description', state.assignmentDetails.question.writtenQuestion);
-                    formData.append('due_datetime', this.format_date(state.assignmentDetails.due_datetime));
-                    // formData.append('published_at', this.format_date(state.assignmentDetails.published_at)); // TODO: Implement
-                    formData.append('remarks', state.assignmentDetails.remarks);
+                    formData.append('written_description', state.assignmentDetails.question.writtenQuestion ?? '');
+                    formData.append('due_datetime', moment(state.assignmentDetails.due_datetime).format('YYYY-MM-DD HH:mm:ss'));
+                    formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
+                    formData.append('remarks', state.assignmentDetails.remarks ?? '');
 
                     for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
                         let file = state.assignmentDetails.question.snappedQuestions[i];
@@ -638,31 +565,26 @@ export default {
                         })
                         .then(response => {
 
-                            this.isPublishing = false;
-
                             if (response.data.success) {
                                 counter++;
-                                // if (counter === this.classroom_id.length) {
-                                //     this.published = !this.published
-                                // }
+
+                                if (counter === state.assignmentDetails.classroom_id.length) {
+                                    commit('togglePublishingMode')
+                                    commit('togglePublishedMode')
+                                }
                             } else {
                                 counter++;
-                                // if (counter === this.classroom_id.length) {
-                                //     this.error = !this.error
-                                // }
+                                if (counter === state.assignmentDetails.classroom_id.length) {
+                                    commit('toggleShowingErrorMode')
+                                }
                             }
+
                         })
                         .catch(error => {
-                            // error.push("error");
-                            this.isPublishing = false;
-
-                            this.error = !this.error
+                            commit('togglePublishingMode')
+                            commit('toggleShowingErrorMode')
                         });
                 });
-
-                console.log('end')
-                commit('toggleIsPublishingMode')
-
             }
         }
         ,
@@ -689,33 +611,16 @@ export default {
             return state.creatingQuestionDetails.type;
         },
 
-        showQuestionOptions: function () {
-            this.images.length;
-            this.descriptionQuestion;
-            return this.images.length || this.descriptionQuestion;
+        savedQuestionType: (state) => {
+            return state.assignmentDetails.question.type;
         },
-        noDuration: function () {
-            this.durationDay;
-            this.durationHour;
-            this.durationMinute;
-            return this.durationDay <= 0 && this.durationHour <= 0 && this.durationMinute <= 0;
+
+        dueDateTime(state) {
+            return moment(state.assignmentDetails.due_datetime).format('DD/MM/YYYY')
         },
-        duration: function () {
-            const dayInHour = this.durationDay * 24
-            let hours = parseInt(this.durationHour) + parseInt(dayInHour)
-            let minutes = parseInt(this.durationMinute)
 
-            if (hours < 10) {
-                hours = '0' + hours
-            }
-
-            if (minutes < 10) {
-                minutes = '0' + minutes
-            }
-
-            let duration = hours + ':' + minutes + ':00'
-
-            return duration;
+        snappedPreviews(state) {
+            return state.assignmentDetails.question.snappedQuestions;
         },
 
         hasSavedQuestion: (state) => {
@@ -727,18 +632,15 @@ export default {
         },
 
         hasEditableQuestion(state, getters) {
-            return state.states.isCreatingQuestion && !state.states.isWritingQuestion && !state.states.isSnappingQuestion && (getters.hasWrittenQuestionDraft || getters.hasSavedSnappedQuestion)
+            return state.states.isCreatingQuestion && !state.states.isWritingQuestion && (getters.hasWrittenQuestionDraft || getters.hasSnappedQuestionDraft)
         },
 
         hasWrittenQuestionDraft: (state) => {
-            console.log(`has written draft ${(state.questionDraft.type === 'written' && state.questionDraft.writtenQuestion)}`)
             return state.questionDraft.type ? (state.questionDraft.type === 'written' && state.questionDraft.writtenQuestion) : false;
         },
 
-        hasSavedSnappedQuestion(state) {
-            // console.log(`hasSavedSnapped: ${this.savedQuestionDetails.type ? this.savedQuestionDetails.type === 'snapped' && this.savedQuestionDetails.snappedQuestions.length : false}`)
-            // console.log(`previews: ${this.snappedPreviews.length}`)
-            return state.assignmentDetails.question.type ? state.assignmentDetails.question.type === 'snapped' && state.assignmentDetails.question.snappedQuestions.length : false;
+        hasSnappedQuestionDraft(state) {
+            return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
         },
 
         hasErrors(state) {

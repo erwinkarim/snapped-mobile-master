@@ -96,8 +96,6 @@ export default {
             this.subjects = response.data.data;
             this.filteredSubjects = response.data.data;
 
-            console.log(this.subjects)
-
           })
           .catch(err => {
 

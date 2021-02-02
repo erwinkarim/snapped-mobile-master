@@ -67,7 +67,7 @@
       <!--      <page-header-three v-if="isPreviewing" class="px-2">-->
       <!--        <template v-slot:leftAction>-->
       <!--          <div @click="previewAssignment">-->
-      <!--            <icon-base-two class="w-2/7 ml-2">-->
+      <!--            <icon-base-two class="ml-2 w-2/7">-->
       <!--              <arrow-back-icon stroke-color="purple-primary"/>-->
       <!--            </icon-base-two>-->
       <!--          </div>-->
@@ -89,14 +89,14 @@
 
 
         <!-- FORM ASSIGNMENT-->
-        <div class="w-full px-7 mt-3 pb-3">
+        <div class="px-7 pb-3 mt-3 w-full">
           <!--       <input v-model="teacherID" class="invisible">-->
           <input v-model="$store.state.teacherCreateAssignment.assignmentDetails.title"
-                 class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+                 class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
                  type="text" placeholder="Title" autocomplete="off">
 
           <select v-model="$store.state.teacherCreateAssignment.assignmentDetails.subject_id"
-                  class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+                  class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
             <option disabled value="">Subject</option>
             <option v-for="subject in $store.state.teacherCreateAssignment.selectables.subjects"
@@ -114,7 +114,7 @@
                        track-by="id"
                        label="name"
                        placeholder="Class"
-                       class="text-left mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+                       class="mt-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
             <!--            <option disabled value="">Class</option>-->
             <!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
@@ -123,15 +123,15 @@
 
           <!-- CREATE/EDIT QUESTION -->
           <div
-              class="pl-6 pr-2 py-5 mt-2 text-left appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+              class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
             <button v-if="$store.getters['teacherCreateAssignment/hasSavedQuestion']"
                     @click="$store.dispatch('teacherCreateAssignment/editSavedQuestion')"
-                    class="flex flex-row w-full justify-between"
+                    class="flex flex-row justify-between w-full"
             >
-              <div class=" text-left w-4/5">
+              <div class="w-4/5 text-left">
                 Question
               </div>
-              <div class="w-1/5 text-blue-secondary text-right mr-5">
+              <div class="mr-5 w-1/5 text-right text-blue-secondary">
                 Edit
               </div>
             </button>
@@ -142,260 +142,101 @@
 
 
           <div @click="$store.commit('teacherCreateAssignment/toggleSelectingDurationMode')"
-               class="flex mb-2 pl-6 pr-2  py-5 mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+               class="flex flex-row items-center justify-between py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
-
-            <div v-if="$store.getters['teacherMarking/hasSavedDueDatetime']">
-              <div class="w-2 text-purple-secondary">
-                <!--              <button @click="toggleDuration = !toggleDuration" type="text" autocomplete="off">-->
-                <!--                {{ duration || '' }}-->
-                <p>{{ format_date2(due_datetime) }}</p>
-                <!--              </button>-->
-              </div>
-              <div class="w-2 text-purple-secondary">
-                <p>{{ format_time(due_datetime) }}</p>
-              </div>
-              <div>
-                <button>
-                  <icon-base-two class="align-center float-right w-1/5 mr-3">
-                    <clock-icon/>
-                  </icon-base-two>
-                </button>
-              </div>
+            <div class=" w-7/8 text-left text-purple-secondary md:w-9/10">
+              {{ $store.getters['teacherCreateAssignment/hasSavedDueDatetime'] ? $store.getters['teacherCreateAssignment/dueDateTime'] : 'Set Due Date'  }}
             </div>
-
-            <div v-else class="flex flex-row w-full items-center justify-between">
-              <div class="text-left w-4/5">
-                <button>
-                  Set Due Date
-                </button>
-              </div>
-              <div class="w-1/5">
-                <icon-base-two class=" w-1/2 mr-3">
-                  <clock-icon/>
-                </icon-base-two>
-              </div>
+            <div class=" w-1/8 pr-2 md:w-1/10">
+              <icon-base-two>
+                <clock-icon/>
+              </icon-base-two>
             </div>
-
           </div>
 
-          <textarea v-model="$store.state.teacherCreateAssignment.assignmentDetails.remarks" placeholder="Remarks"
-                    class="pl-6 pr-2 py-5 h-36 mb-26 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"/>
+          <textarea v-model="$store.state.teacherCreateAssignment.assignmentDetails.remarks"
+                    class="py-5 pr-2 pl-6 w-full h-36 text-lg font-normal leading-tight rounded-md border border-none appearance-none mb-26 bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+                    placeholder="Remarks"
+          />
         </div>
       </div>
 
       <create-question-form v-if="$store.state.teacherCreateAssignment.states.isCreatingQuestion"/>
 
+      <!--  Modal Duration    -->
+      <div v-if="$store.state.teacherCreateAssignment.states.isSelectingDuration"
+           @click.self="$store.commit('teacherCreateAssignment/toggleIsSelectingDuration')"
+           class="flex fixed top-0 flex-col justify-center items-center w-full h-screen bg-opacity-75 z-70 bg-gray-primary">
+        <modal class="fixed mx-1/24" modal-type="no-icon">
+          <template v-slot:title>
+            <h3 class="font-bold">
+              Set Due Date & Time
+            </h3>
+          </template>
 
-      <!-- TODO: REFACTOR AND IMPLEMENT CROP PHOTO      -->
-      <!--      &lt;!&ndash; FORM QUESTION &ndash;&gt;-->
-      <!--      <div v-if="isCreatingQuestion" class="flex-wrap relative top-12">-->
-      <!--        &lt;!&ndash; DESCRIPTION &ndash;&gt;-->
-      <!--        <div class="w-full break-words px-7 mt-26 text-left text-purple-secondary text-sm leading-snug">-->
-      <!--          Fill the question title and select description method-->
-      <!--        </div>-->
-      <!--        <div class="relative w-full px-7 mt-3 max-h-full">-->
-      <!--          <input v-model="titleQuestion"-->
-      <!--                 class="pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary"-->
-      <!--                 type="text" placeholder="Title" autocomplete="off">-->
-      <!--          <div v-if="descriptionQuestion"-->
-      <!--               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">-->
-      <!--            <div class="text-left text-blue-secondary place-self-start">-->
-      <!--              <button @click="updateShowManualDescription" type="text" autocomplete="off">-->
-      <!--                Edit Description-->
-      <!--              </button>-->
-      <!--            </div>-->
-      <!--            <div class="place-self-end">-->
-      <!--              <button @click="removeDescription()">-->
-      <!--                <icon-base-two class="float-right w-1/7 mr-3">-->
-      <!--                  <trash-icon/>-->
-      <!--                </icon-base-two>-->
-      <!--              </button>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--          <div v-if="!showQuestionOptions" class="flex mb-4 -mx-1">-->
-      <!--            <div class="w-1/2 h-12 px-1">-->
-      <!--              <button @click="updateShowManualDescription"-->
-      <!--                      class="mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline">-->
-      <!--                <div class="py-4 row-span-1 col-span-1 flex justify-center">-->
-      <!--                  <icon-base-two class="w-12">-->
-      <!--                    <pen-icon class="w-12" :stroke-color="strokeColor"></pen-icon>-->
-      <!--                  </icon-base-two>-->
-      <!--                </div>-->
-      <!--                <div class="py-2 row-span-2 col-span-1 flex justify-center">-->
-      <!--                  Manual-->
-      <!--                </div>-->
-      <!--              </button>-->
-      <!--            </div>-->
-      <!--            <label class="w-1/2 h-12 px-1">-->
-      <!--              <div-->
-      <!--                  class="mt-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline">-->
-      <!--                <div class="py-4 row-span-1 col-span-1 flex justify-center">-->
-      <!--                  <icon-base-two class="w-12">-->
-      <!--                    <camera-icon></camera-icon>-->
-      <!--                  </icon-base-two>-->
-      <!--                </div>-->
-      <!--                <div class="py-2 row-span-2 col-span-1 flex justify-center">-->
-      <!--                  Upload-->
-      <!--                </div>-->
-      <!--                <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected">-->
-      <!--              </div>-->
-      <!--            </label>-->
-      <!--          </div>-->
-      <!--          &lt;!&ndash;  If IMAGE HAS BEEN SELECTED  &ndash;&gt;-->
-      <!--          <div v-for="(image, key) in images"-->
-      <!--               class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">-->
-
-      <!--&lt;!&ndash;            <vue-cropper ref="cropper"&ndash;&gt;-->
-      <!--&lt;!&ndash;                         :src="selectedFile"&ndash;&gt;-->
-      <!--&lt;!&ndash;                         alt="Source Image"&ndash;&gt;-->
-      <!--&lt;!&ndash;            >&ndash;&gt;-->
-      <!--&lt;!&ndash;            </vue-cropper>&ndash;&gt;-->
-
-
-      <!--            <div class="text-left text-blue-secondary place-self-start">-->
-      <!--              <button @click="previewAssignment(key)">-->
-      <!--                View Image-->
-      <!--              </button>-->
-      <!--            </div>-->
-      <!--            <div class="place-self-end">-->
-      <!--              <button @click="removeImage(key)">-->
-      <!--                <icon-base-two class="float-right w-1/7 mr-3">-->
-      <!--                  <trash-icon/>-->
-      <!--                </icon-base-two>-->
-      <!--              </button>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--          <div v-if="images.length" class="flex mb-4 -mx-1">-->
-      <!--            <label-->
-      <!--                class="text-center pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full text-lg font-normal leading-tight focus:outline-none focus:shadow-outline text-red-primary">-->
-      <!--              + Add more photo-->
-      <!--              <input class="hidden" type="file" accept="image/*" multiple @change="onFileSelected">-->
-      <!--            </label>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
-
-      <!--      <div class="pb-16/9 mt-6 bg-white" v-if="isPreviewing">-->
-      <!--        <div-->
-      <!--            class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">-->
-      <!--          <img :src="previewImage"/>-->
-      <!--        </div>-->
-      <!--      </div>-->
-
-      <!--  Modal Schedule    -->
-      <!--      <div v-if="toggleSchedule" @click.self="toggleSchedule = !toggleSchedule"-->
-      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-      <!--        <modal class="fixed mx-1/24" v-if="toggleSchedule" modal-type="no-icon">-->
-      <!--          <h3 slot="title" class="font-bold">Schedule Publish</h3>-->
-      <!--          <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">-->
-      <!--            <div>-->
-      <!--              <p class="mb-3">Pick date and time to publish the assignment.</p>-->
-      <!--            </div>-->
-      <!--            <v-date-picker class="place-self-center" v-model="published_at" mode="dateTime"/>-->
-      <!--          </div>-->
-      <!--          <span slot="button">-->
-      <!--                    <button @click="sendData"-->
-      <!--                            :disabled="isPublishing"-->
-      <!--                            class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
-      <!--                    >-->
-      <!--                      Schedule Publish-->
-      <!--                    </button>-->
-      <!--                </span>-->
-      <!--        </modal>-->
-      <!--      </div>-->
-
-      <!--      &lt;!&ndash;  Modal Duration    &ndash;&gt;-->
-      <!--      <div v-if="toggleDuration" @click.self="closeToggleDuration"-->
-      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-      <!--        <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">-->
-      <!--          <h3 slot="title" class="font-bold">Set Due Date & Time</h3>-->
-      <!--          <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">-->
-      <!--            <v-date-picker class="place-self-center" :min-date="new Date()" v-model="due_datetime" mode="dateTime"/>-->
-      <!--          </div>-->
-      <!--          <span slot="button">-->
-      <!--                    <button class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
-      <!--                            @click="closeToggleDuration">Okay</button>-->
-      <!--                </span>-->
-      <!--        </modal>-->
-      <!--      </div>-->
-      <!--      Commented out Days, Hours, Minute-->
-      <!--      <div v-if="toggleDuration" @click.self="closeToggleDuration"-->
-      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-      <!--        <modal class="fixed mx-1/24" v-if="toggleDuration" modal-type="no-icon">-->
-      <!--          <h3 slot="title" class="font-bold">Set Duration</h3>-->
-      <!--          <div slot="message" class="grid grid-cols-3 divide-x divide-transparent gap-1">-->
-      <!--            <div>-->
-      <!--              <label class="text-lg font-bold">Day</label>-->
-      <!--              <input v-model="durationDay" type="number" min="0" max="100"-->
-      <!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
-      <!--                     name="custom-input-number" value="0">-->
-      <!--            </div>-->
-      <!--            <div>-->
-      <!--              <label class="text-lg font-bold">Hour</label>-->
-      <!--              <input v-model="durationHour" type="number" min="0" max="100"-->
-      <!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
-      <!--                     name="custom-input-number" value="0">-->
-      <!--            </div>-->
-      <!--            <div>-->
-      <!--              <label class="text-lg font-bold">Minute</label>-->
-      <!--              <input v-model="durationMinute" type="number" min="0" max="100" placeholder="0"-->
-      <!--                     class="text-lg text-center border rounded-md border-none w-full bg-gray-secondary"-->
-      <!--                     name="custom-input-number" value="0">-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--          <span slot="button">-->
-      <!--                    <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
-      <!--                            @click="closeToggleDuration">Okay</button>-->
-      <!--                </span>-->
-      <!--        </modal>-->
-      <!--      </div>-->
-
+          <template v-slot:message>
+            <div class="grid grid-cols-1 w-full divide-y divide-transparent">
+              <v-date-picker v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime"
+                             mode="dateTime"
+                             :min-date="new Date()"
+                             class="place-self-center"
+              />
+            </div>
+          </template>
+          <template v-slot:button>
+            <button @click="$store.commit('teacherCreateAssignment/toggleIsSelectingDuration')"
+                    class="px-2 w-full font-bold tracking-wider leading-relaxed rounded-full"
+            >
+              Okay
+            </button>
+          </template>
+        </modal>
+      </div>
 
       <!--  MODAL: PUBLISHING   -->
-      <!--      <div v-if="isPublishing" @click.self="isPublishing = !isPublishing"-->
-      <!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-      <!--        <modal v-if="isPublishing"-->
-      <!--               modal-type="no-icon"-->
-      <!--               :has-button="false"-->
-      <!--               class="w-4/5 "-->
-      <!--        >-->
-      <!--          <p slot="message">-->
-      <!--            Publishing your assignment.-->
-      <!--            <br>-->
-      <!--            Please wait...-->
-      <!--          </p>-->
-      <!--        </modal>-->
-      <!--      </div>-->
+      <div v-if="$store.state.teacherCreateAssignment.states.isPublishing"
+           @click.self="$store.commit('teacherCreateAssignment/togglePublishingMode')"
+           class="flex fixed top-0 flex-col justify-center items-center w-full h-screen bg-opacity-75 z-70 bg-gray-primary">
+        <modal modal-type="no-icon"
+               :has-button="false"
+               class="w-4/5"
+        >
+          <p slot="message">
+            Publishing your assignment.
+            <br>
+            Please wait...
+          </p>
+        </modal>
+      </div>
 
-<!--      &lt;!&ndash;  Modal Published   &ndash;&gt;-->
-<!--      <div v-if="published" @click.self="published = !published"-->
-<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-<!--        <modal v-if="published"-->
-<!--               modal-type="success"-->
-<!--               :redirect-route="{name: 'teacher.assignments'}"-->
-<!--               class="w-4/5 "-->
-<!--        >-->
-<!--          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>-->
-<!--          <p slot="message">-->
-<!--            Got something to change? Don't worry! You can always edit your published homework-->
-<!--          </p>-->
-<!--          <template slot="button">-->
-<!--            <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">-->
-<!--              Okay-->
-<!--            </button>-->
-<!--          </template>-->
-<!--        </modal>-->
-<!--      </div>-->
+      <!--      &lt;!&ndash;  Modal Published   &ndash;&gt;-->
+      <div v-if="$store.state.teacherCreateAssignment.states.isPublished"
+           @click.self="$store.commit('teacherCreateAssignment/togglePublishedMode')"
+           class="flex fixed top-0 flex-col justify-center items-center w-full h-screen bg-opacity-75 z-70 bg-gray-primary">
+        <modal modal-type="success"
+               :redirect-route="{name: 'teacher.assignments'}"
+               class="w-4/5"
+        >
+          <h3 slot="title" class="text-4xl font-bold text-purple-primary">Published!</h3>
+          <p slot="message">
+            Got something to change? Don't worry! You can always edit your published homework
+          </p>
+          <template slot="button">
+            <button class="px-2 w-4/5 font-bold tracking-wider leading-relaxed rounded-full">
+              Okay
+            </button>
+          </template>
+        </modal>
+      </div>
 
       <error-modal v-if="$store.state.teacherCreateAssignment.states.isShowingError"/>
     </template>
 
     <template v-slot:bottomBar v-if="$store.state.teacherCreateAssignment.states.isMain">
       <div class="flex flex-row w-full max-w-xl">
-        <div class="w-4/7 px-2">
+        <div class="px-2 w-4/7">
           <button @click="toggleSchedule = !toggleSchedule"
-                  class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row items-center justify-center"
+                  class="flex flex-row justify-center items-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary"
           >
             <div class="w-full md:w-5/7">
               Schedule Publish
@@ -407,10 +248,10 @@
             </div>
           </button>
         </div>
-        <div class="w-3/7 px-2">
+        <div class="px-2 w-3/7">
           <button @click="$store.dispatch('teacherCreateAssignment/sendData')"
                   :disabled="$store.state.teacherCreateAssignment.states.isPublishing"
-                  class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+                  class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
             <div class="w-5/7">
               Publish Now
             </div>
@@ -468,6 +309,7 @@ export default {
   watch: {},
   methods: {},
   mounted() {
+    this.$store.commit('teacherCreateAssignment/initialise')
     this.$store.dispatch('teacherCreateAssignment/getClasses')
     this.$store.dispatch('teacherCreateAssignment/getSubjects')
   },
