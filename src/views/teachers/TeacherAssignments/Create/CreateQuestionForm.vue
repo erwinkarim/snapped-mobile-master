@@ -87,7 +87,7 @@
               <button @click="$store.commit('teacherCreateAssignment/toggleSnappedQuestionPreviewStatus', key)"
                       class="focus:outline-none"
               >
-                {{ image.preview ? 'Hide image' : image.cropping ? `Return to Preview ${key}` : 'Preview Image' }}
+                {{ image.preview ? 'Hide image' : image.cropping ? `Return to Preview ` : 'Preview Image' }}
               </button>
             </div>
             <div v-if="!image.preview && !image.cropping" class="w-1/7 flex flex-row justify-end">
