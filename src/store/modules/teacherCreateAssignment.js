@@ -537,6 +537,7 @@ export default {
                 }
 
                 commit('togglePublishingMode')
+                commit('toggleShowingSchedulerMode')
 
                 state.assignmentDetails.classroom_id.forEach((classroom, index) => {
 
@@ -603,6 +604,11 @@ export default {
                         localStorage.setItem('teacherID', teacherDetail.id)
                     }
                 })
+        },
+
+
+        setAssignmentTitle({state}, maxedTitle) {
+            state.assignmentDetails.title = maxedTitle;
         }
     },
     getters: {
