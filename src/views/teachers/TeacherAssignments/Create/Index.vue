@@ -145,7 +145,9 @@
                class="flex flex-row items-center justify-between py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
             <div class=" w-7/8 text-left text-purple-secondary md:w-9/10">
-              {{ $store.getters['teacherCreateAssignment/hasSavedDueDatetime'] ? $store.getters['teacherCreateAssignment/dueDateTime'] : 'Set Due Date'  }}
+              {{
+                $store.getters['teacherCreateAssignment/hasSavedDueDatetime'] ? $store.getters['teacherCreateAssignment/dueDateTime'] : 'Set Due Date'
+              }}
             </div>
             <div class=" w-1/8 pr-2 md:w-1/10">
               <icon-base-two>
@@ -193,6 +195,32 @@
         </modal>
       </div>
 
+      <div v-if="$store.state.teacherCreateAssignment.states.isShowingScheduler"
+           @click.self="$store.commit('teacherCreateAssignment/toggleShowingSchedulerMode')"
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+        <modal class="fixed mx-1/24" modal-type="no-icon">
+          <h3 slot="title" class="font-bold">Schedule Publish</h3>
+          <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
+            <div>
+              <p class="mb-3">Pick date and time to publish the assignment.</p>
+            </div>
+            <v-date-picker class="place-self-center"
+                           v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
+                           mode="dateTime"
+            />
+          </div>
+          <span slot="button">
+                          <button @click="$store.dispatch('teacherCreateAssignment/sendData')"
+                                  :disabled="$store.state.teacherCreateAssignment.states.isPublishing"
+                                  class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
+                          >
+                            Schedule Publish
+                          </button>
+                      </span>
+        </modal>
+      </div>
+
+
       <!--  MODAL: PUBLISHING   -->
       <div v-if="$store.state.teacherCreateAssignment.states.isPublishing"
            @click.self="$store.commit('teacherCreateAssignment/togglePublishingMode')"
@@ -209,7 +237,7 @@
         </modal>
       </div>
 
-      <!--      &lt;!&ndash;  Modal Published   &ndash;&gt;-->
+      <!--  Modal Published   -->
       <div v-if="$store.state.teacherCreateAssignment.states.isPublished"
            @click.self="$store.commit('teacherCreateAssignment/togglePublishedMode')"
            class="flex fixed top-0 flex-col justify-center items-center w-full h-screen bg-opacity-75 z-70 bg-gray-primary">
@@ -235,7 +263,7 @@
     <template v-slot:bottomBar v-if="$store.state.teacherCreateAssignment.states.isMain">
       <div class="flex flex-row w-full max-w-xl">
         <div class="px-2 w-4/7">
-          <button @click="toggleSchedule = !toggleSchedule"
+          <button @click="$store.commit('teacherCreateAssignment/toggleShowingSchedulerMode')"
                   class="flex flex-row justify-center items-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary"
           >
             <div class="w-full md:w-5/7">

@@ -537,6 +537,7 @@ export default {
                 }
 
                 commit('togglePublishingMode')
+                commit('toggleShowingSchedulerMode')
 
                 state.assignmentDetails.classroom_id.forEach((classroom, index) => {
 
