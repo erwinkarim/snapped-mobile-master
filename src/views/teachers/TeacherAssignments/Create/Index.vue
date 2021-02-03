@@ -312,6 +312,20 @@ export default {
     this.$store.commit('teacherCreateAssignment/initialise')
     this.$store.dispatch('teacherCreateAssignment/getClasses')
     this.$store.dispatch('teacherCreateAssignment/getSubjects')
+
+    this.$store.watch(
+        (state) => {
+          return this.$store.state.teacherCreateAssignment.assignmentDetails.title
+        },
+        (newValue, oldValue) => {
+          let maxCharCount = 255;
+          let overLimit = newValue ? newValue.length > maxCharCount : false;
+
+          if (overLimit) {
+            this.$store.dispatch('teacherCreateAssignment/setAssignmentTitle', oldValue)
+          }
+        },
+    )
   },
   components: {
     ErrorModal,

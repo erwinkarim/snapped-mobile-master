@@ -603,6 +603,11 @@ export default {
                         localStorage.setItem('teacherID', teacherDetail.id)
                     }
                 })
+        },
+
+
+        setAssignmentTitle({state}, maxedTitle) {
+            state.assignmentDetails.title = maxedTitle;
         }
     },
     getters: {

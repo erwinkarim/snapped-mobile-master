@@ -27,7 +27,9 @@
       <input v-model="$store.state.teacherCreateAssignment.creatingQuestionDetails.title"
              v-if="!$store.state.teacherCreateAssignment.states.isCroppingSnappedQuestion"
              class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-             type="text" placeholder="Title" autocomplete="off"
+             type="text"
+             placeholder="Title"
+             autocomplete="off"
       >
 
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
