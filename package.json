@@ -8,6 +8,11 @@
     "build:styles": "npx tailwind build src/assets/styles/tailwind.css -o src/assets/styles/styles.css"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-regular-svg-icons": "^5.15.2",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "axios": "^0.20.0",
     "core-js": "^3.7.0",
     "fabric": "^4.2.0",

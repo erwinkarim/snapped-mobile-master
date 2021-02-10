@@ -9,7 +9,7 @@
 
       <div v-if="$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
         <div @click="togglePreviewMode" v-if="$store.state.teacherMarking.states.isMain"
-            class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+             class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
           View Markings
         </div>
       </div>
@@ -23,27 +23,23 @@
           <!-- STICKER LOADER -->
           <sticker-loader class="mt-5"/>
         </div>
-        <div v-else class="flex flex-row w-full h-full items-center justify-around">
-          <div class="w-full md:max-w-xl md:mx-auto flex flex-row">
-            <div class="w-1/3 px-1">
-              <button @click="toggleStickerBar"
-                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">
-                <div class="w-5/7">
-                  Markers
-                </div>
-                <icon-base-two class="w-1/7">
-                  <ticked-box-icon/>
-                </icon-base-two>
-              </button>
+        <div v-else-if="hideMarkingOptions">
+        </div>
+        <div v-else class="flex flex-row w-full h-full items-center justify-between">
+
+            <!-- MARKING ACTIONS -->
+            <div class="flex flex-row w-2/3">
+              <div @click="toggleStickerBar" class="px-3">
+                <font-awesome-icon  class="w-full fa-2x text-white" :icon="icons.checkCircle" />
+              </div>
+              <div @click="loadTextBox" class="px-3">
+                <font-awesome-icon  class="w-full fa-2x text-white" :icon="icons.font" />
+              </div>
+              <div @click="beginDrawingMode" class="px-3" >
+                <font-awesome-icon  class="w-full fa-2x text-white" :icon="icons.marker" />
+              </div>
             </div>
-            <div class="w-1/3 px-1">
-              <button @click="loadTextBox"
-                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">
-                <div class="w-5/7">
-                  Text
-                </div>
-              </button>
-            </div>
+
             <div class="w-1/3 px-1">
               <button @click="doneEditSnappedAnswer"
                       class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
@@ -52,7 +48,31 @@
                 </div>
               </button>
             </div>
-          </div>
+
+<!--            <div class="w-1/3 px-1"  >-->
+
+<!--              <button @click="toggleStickerBar"-->
+<!--                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">-->
+<!--               -->
+
+
+<!--                                <div class="w-5/7">-->
+<!--                                  Markers-->
+<!--                                </div>-->
+<!--                                <icon-base-two class="w-1/7">-->
+<!--                                  <ticked-box-icon/>-->
+<!--                                </icon-base-two>-->
+<!--              </button>-->
+<!--            </div>-->
+<!--            <div class="w-1/3 px-1">-->
+<!--              <button @click="loadTextBox"-->
+<!--                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">-->
+<!--                <div class="w-5/7">-->
+<!--                  Text-->
+<!--                </div>-->
+<!--              </button>-->
+<!--            </div>-->
+
         </div>
       </div>
 
@@ -96,14 +116,31 @@ import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
 import DialogBubbleIcon from "@/components/icons/DialogBubbleIcon";
 import router from "@/router";
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {faCheckCircle} from '@fortawesome/free-regular-svg-icons'
+import {faFont} from '@fortawesome/free-solid-svg-icons'
+import {faMarker} from '@fortawesome/free-solid-svg-icons'
+import {faTrash} from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 export default {
   name: "BottomBar",
   data() {
     return {
-      show: true
+      show: true,
+
+      icons: {
+        checkCircle: faCheckCircle,
+        font: faFont,
+        marker: faMarker,
+        trash: faTrash
+      }
     }
   },
   computed: {
+    hideMarkingOptions() {
+      return this.$store.state.teacherMarking.states.isDrawing || this.$store.state.teacherMarking.states.isMovingObject
+    },
     bottomBarClass() {
       if (this.$store.state.teacherMarking.states.isMarking) {
         return 'bg-black-primary z-70'
@@ -118,6 +155,9 @@ export default {
     },
     toggleStickerBar() {
       this.$store.commit('teacherMarking/toggleStickerBar')
+    },
+    beginDrawingMode() {
+      this.$store.dispatch('teacherMarking/beginDrawingMode')
     },
     loadTextBox() {
       this.$store.dispatch('teacherMarking/loadTextBox')
@@ -148,7 +188,14 @@ export default {
   watch: {
     '$route': 'handleRouteChange'
   },
-  components: {DialogBubbleIcon, TickedBoxIcon, IconBaseTwo, StickerLoader}
+  components: {
+    DialogBubbleIcon,
+    TickedBoxIcon,
+    IconBaseTwo,
+    StickerLoader,
+    faCheckCircle,
+    FontAwesomeIcon
+  }
 }
 </script>
 
