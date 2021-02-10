@@ -1,9 +1,9 @@
 <template>
   <div class="relative top-24 md:top-30 min-h-90vh w-full h-full relative md:max-w-xl bg-black-primary">
     <div :style="canvasContainerStyle"
-         class=" relative h-full object-cover top-0 z-50 left-0 w-9/10 mx-auto bg-black-primary"
+         class=" absolute h-full object-cover top-0 z-50 left-5 w-9/10 mx-auto bg-black-primary"
     >
-      <canvas class="absolute" id="canvas" crossOrigin="Anonymous"/>
+      <canvas class="absolute" id="canvas_snapped_answer" crossOrigin="Anonymous"/>
     </div>
 
   </div>
@@ -32,13 +32,14 @@ export default {
     })
     this.scrollToTop();
     // this.$store.commit('teacherMarking/loadCanvas')
-    this.$store.commit('teacherMarking/loadImage')
+    // this.$store.commit('teacherMarking/loadCanvas')
+    this.$store.dispatch('teacherMarking/initialiseMarkingCanvas')
   },
   computed: {
     canvasContainerStyle() {
       return {
-        height: this.$store.state.teacherMarking.nowMarking.canvas.dimensions.height,
-        'padding-bottom': this.$store.state.teacherMarking.nowMarking.canvas.dimensions.height > 0.7 * window.innerHeight ? '90px' : '0px'
+        height: this.$store.state.teacherMarking.nowMarking.canvas.main.dimensions.height,
+        'padding-bottom': this.$store.state.teacherMarking.nowMarking.canvas.main.dimensions.height > 0.7 * window.innerHeight ? '90px' : '0px'
       }
     },
     backgroundStyle() {

@@ -3,7 +3,9 @@
        class="h-full md:max-w-xl mx-auto"
   >
 
-    <!-- OVERLAYS -->
+    <!---------------------
+            OVERLAYS
+     --------------------->
     <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="toggleModalMode()"
          class="fixed w-full bg-black-primary bg-opacity-25 h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">
     </div>
@@ -12,7 +14,9 @@
     </div>
 
 
-    <!-- MODAL -->
+    <!---------------------
+            MODAL
+     --------------------->
     <div v-if="$store.state.teacherMarking.states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
       <modal modal-type="error"
@@ -41,66 +45,14 @@
     </div>
 
     <!-- HEADER -->
-    <page-header-three v-if="$store.state.teacherMarking.states.isMain"
-                       :background-color="headerBackgroundColor"
-                       :bottom-padding="8"
-    >
-
-      <template v-slot:leftAction>
-        <nav-back :to="{name: 'teacher.assignments.show'}"
-                  class="w-1/4"
-                  :stroke-color="navBackColor"
-        />
-      </template>
-
-    </page-header-three>
-
-    <page-header-three v-if="$store.state.teacherMarking.states.isPreviewing"
-                       :background-color="headerBackgroundColor"
-                       :bottom-padding="8"
-    >
-
-      <template v-slot:leftAction>
-        <div @click="togglePreviewMode">
-          <icon-base-two class="w-1/4 ml-6">
-            <arrow-back-icon :stroke-color="navBackColor"/>
-          </icon-base-two>
-        </div>
-      </template>
-
-      <template v-slot:title>
-        Answer Preview
-      </template>
-    </page-header-three>
-
-    <page-header-three v-if="$store.state.teacherMarking.states.isMarking"
-                       :background-color="headerBackgroundColor"
-                       :bottom-padding="8"
-    >
-
-      <template v-slot:leftAction>
-        <!--        <nav-back class="pl-0 ml-0 w-1/4" stroke-color="white"/>-->
-        <div @click="exitMarkingMode">
-          <icon-base-two class="w-1/4 ml-6">
-            <arrow-back-icon :stroke-color="navBackColor"/>
-          </icon-base-two>
-        </div>
-      </template>
-
-      <template v-slot:rightAction>
-        <button @click="undoEdits" class="flex flex-row justify-end mr-7">
-          <icon-base-two class="w-1/4">
-            <undo-icon/>
-          </icon-base-two>
-        </button>
-      </template>
-    </page-header-three>
+    <page-header/>
 
     <!-- CONTENT -->
     <div class="relative">
       <router-view/>
     </div>
 
+    <!-- BOTTOM -->
     <bottom-bar/>
 
   </div>
@@ -119,6 +71,7 @@ import MarksRepository from "@/repositories/teachers/MarksRepository";
 import router from "@/router";
 import moment from "moment";
 import UndoIcon from "@/components/icons/UndoIcon";
+import PageHeader from "@/views/teachers/TeacherAssignments/Mark/Components/PageHeader";
 
 export default {
   name: "Index",
@@ -131,6 +84,7 @@ export default {
     '$route': 'handleRouteChange',
   },
   computed: {
+
     containerClass: function () {
       let value = 'bg-white mb-40 ';
 
@@ -141,27 +95,7 @@ export default {
       return value;
     },
 
-    headerBackgroundColor: function () {
 
-      let value = 'bg-black-primary';
-
-      if (this.$store.state.teacherMarking.states.isPreviewing || this.$store.state.teacherMarking.states.isWritingFeedback) {
-        value = 'bg-white'
-      }
-      if (this.$store.state.teacherMarking.states.isMarking) {
-        value = 'bg-transparent'
-      }
-
-      return value;
-    },
-
-    navBackColor: function () {
-      if (this.$store.state.teacherMarking.states.isPreviewing) {
-        return 'purple-primary'
-      } else {
-        return 'white'
-      }
-    },
   },
   methods: {
     handleRouteChange() {
@@ -180,22 +114,12 @@ export default {
       }
     },
 
-    // MODE: PREVIEW
-    togglePreviewMode() {
-      this.$store.commit('teacherMarking/togglePreviewMode')
-    },
-
     toggleStickerBar() {
       this.$store.commit("teacherMarking/toggleStickerBar")
     },
 
     toggleModalMode() {
       this.$store.commit('teacherMarking/toggleModalMode')
-    },
-
-    exitMarkingMode() {
-      this.$store.commit('teacherMarking/setPreviewingMode')
-      router.push({name: 'teacher.assignments.marking.details'})
     },
 
     scrollToTop() {
@@ -205,15 +129,14 @@ export default {
         behavior: 'smooth'
       });
     },
-    undoEdits() {
-      this.$store.dispatch('teacherMarking/undoEditedSnappedAnswer')
-    }
   },
   mounted() {
     this.$store.commit('teacherMarking/setOriginalState')
     this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
   },
-  components: {UndoIcon, Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree},
+  components: {
+    PageHeader,
+    UndoIcon, Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree},
 
 }
 </script>

@@ -5,7 +5,11 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back class="w-2/7" stroke-color="red-primary"/>
+          <div @click="exitWritingFeedbackMode">
+            <icon-base-two class="w-1/4 ml-6">
+              <arrow-back-icon stroke-color="red-primary"/>
+            </icon-base-two>
+          </div>
         </template>
 
         <template v-slot:mini-title>
@@ -39,19 +43,26 @@ import NavBack from "@/components/NavBack";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
+import IconBaseTwo from "@/components/IconBaseTwo";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 export default {
   name: "AssignmentFeedback",
-  components: {PageHeaderThree, DashboardLayout, NavBack, PageTitleTwo},
+  components: {ArrowBackIcon, IconBaseTwo, PageHeaderThree, DashboardLayout, NavBack, PageTitleTwo},
   data() {
     return {
       draft: this.$store.state.teacherMarking.submission.feedback
     }
   },
   methods: {
+    exitWritingFeedbackMode() {
+      this.$store.commit('teacherMarking/exitWritingFeedbackMode')
+      router.push({name: 'teacher.assignments.marking.details'})
+    },
     save() {
       this.$store.dispatch('teacherMarking/addFeedback', this.draft)
           .then(() => {
+            this.$store.commit('teacherMarking/exitWritingFeedbackMode')
             router.push({name: 'teacher.assignments.marking.details'})
           });
     }
