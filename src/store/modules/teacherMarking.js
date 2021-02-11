@@ -103,7 +103,9 @@ export default {
             snappedAnswers: [],
             feedback: '',
             marks: null
-        }
+        },
+
+        test: [],
     }),
     mutations: {
 
@@ -619,38 +621,121 @@ export default {
                     }, 'touch:gesture': function (opt) {
                         console.log(`TOUCH: ${fabric.isTouchSupported}`)
 
-                        /*****************
-                         *  HANDLE ZOOM
-                         ****************/
-                        let delta = opt.e.deltaY;
-                        let zoom = canvas.getZoom();
-                        zoom *= 0.999 ** delta;
-                        if (zoom > 6) zoom = 6;
-                        if (zoom < 1) zoom = 1;
-                        canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
+                        let canvas = state.nowMarking.canvas.main.index;
+                        // let textBox = new fabric.Textbox(`${opt.e.touches} | ${opt.e.touches.length}`, {
+                        //     originX: "center",
+                        //     originY: "bottom",
+                        //     textAlign: "center",
+                        //     fontFamily: "Segoe UI",
+                        //     top:  window.innerHeight /2,
+                        //     left: window.innerWidth /2,
+                        //     fontSize: 24,
+                        //     fill: "#F53B57",
+                        //     lockUniScaling: true
+                        // })
+                        //
+                        // canvas.add(textBox).renderAll()
+                        //
+                        // setTimeout(function(){
+                        //     state.nowMarking.canvas.main.index.remove(textBox);
+                        // }, 1000);
 
-                        opt.e.preventDefault();
-                        opt.e.stopPropagation();
+                        // state.test = {
+                        //     state: opt.self.state,
+                        //     X: opt.self.x,
+                        //     Y: opt.self.y,
+                        //     touches: opt.e.touches,
+                        //     length: opt.e.touches.length,
+                        //     scale: opt.self.scale,
+                        //     zoom: canvas.getZoom()
+                        // }
 
-
-                        let vpt = this.viewportTransform;
-
-                        if (zoom < 400 / 1000) {
-                            vpt[4] = 200 - 1000 * zoom / 2;
-                            vpt[5] = 200 - 1000 * zoom / 2;
-                        } else {
-                            if (vpt[4] >= 0) {
-                                vpt[4] = 0;
-                            } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-                                vpt[4] = canvas.getWidth() - 1000 * zoom;
-                            }
-                            if (vpt[5] >= 0) {
-                                vpt[5] = 0;
-                            } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-                                vpt[5] = canvas.getHeight() - 1000 * zoom;
-                            }
+                        if (state.test.length > 0) {
+                            state.test = [
+                                "State: ''",
+                                "X: ''",
+                                "Y: ''",
+                                "touches: ''",
+                                "length: ''",
+                                "scale: ''",
+                                "Zoom: ''",
+                            ]
                         }
-                    },
+
+                        state.test = [
+                            `State: ${opt.self.state}`,
+                            `X: ${opt.self.x}`,
+                            `Y: ${opt.self.y}`,
+                            `touches: ${opt.e.touches}`,
+                            `length: ${opt.e.touches.length}`,
+                            `scale: ${opt.self.scale}`,
+                            `Zoom: ${canvas.getZoom()}`,
+                        ]
+
+                        // setTimeout(function(){
+                        //     state.test = ''
+                        // }, 3000);
+
+
+                        if (opt.e.touches && opt.e.touches.length === 2) {
+                            // Get event point
+                            // let point = new fabric.Point(opt.self.x, opt.self.y);
+                            // // Remember canvas scale at gesture start
+                            // if (opt.self.state === "start") {
+                            //     let zoomStartScale = self.canvas.getZoom();
+                            // }
+                            // // Calculate delta from start scale
+                            // let delta = zoomStartScale * opt.self.scale;
+                            // // Zoom to pinch point
+                            // self.canvas.zoomToPoint(point, delta);
+
+                            state.test.push(`State: ${opt.self.state}`)
+                            state.test.push(`X: ${opt.self.x}`)
+                            state.test.push(`Y: ${opt.self.y}`)
+                            state.test.push(`Zoom: ${canvas.getZoom()}`)
+
+                            // state.test = {
+                            //     state: opt.self.state,
+                            //     X: opt.self.x,
+                            //     Y: opt.self.y,
+                            //     zoom: canvas.getZoom()
+                            // }
+
+                            // /*****************
+                            //  *  HANDLE ZOOM
+                            //  ****************/
+                            // let delta = opt.e.deltaY;
+                            // let zoom = canvas.getZoom();
+                            // zoom *= 0.999 ** delta;
+                            // if (zoom > 6) zoom = 6;
+                            // if (zoom < 1) zoom = 1;
+                            // canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
+                            //
+                            // opt.e.preventDefault();
+                            // opt.e.stopPropagation();
+                            //
+                            //
+                            // let vpt = this.viewportTransform;
+                            //
+                            // if (zoom < 400 / 1000) {
+                            //     vpt[4] = 200 - 1000 * zoom / 2;
+                            //     vpt[5] = 200 - 1000 * zoom / 2;
+                            // } else {
+                            //     if (vpt[4] >= 0) {
+                            //         vpt[4] = 0;
+                            //     } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
+                            //         vpt[4] = canvas.getWidth() - 1000 * zoom;
+                            //     }
+                            //     if (vpt[5] >= 0) {
+                            //         vpt[5] = 0;
+                            //     } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
+                            //         vpt[5] = canvas.getHeight() - 1000 * zoom;
+                            //     }
+                            // }
+
+
+                        }
+                    }
 
                 })
 

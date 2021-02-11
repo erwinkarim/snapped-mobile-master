@@ -49,6 +49,14 @@
 
     <!-- CONTENT -->
     <div class="relative">
+
+    <!-- TODO: DEBUG ZOOM     -->
+      <div class="bg-blue-600 text-white py-6">
+        DEBUG<br>
+        <ul>
+          <li v-for="test in $store.state.teacherMarking.test">{{test}}</li>
+        </ul>
+      </div>
       <router-view/>
     </div>
 
