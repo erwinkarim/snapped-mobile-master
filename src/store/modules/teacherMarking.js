@@ -1034,13 +1034,18 @@ export default {
 
         markingStickers: (state, getters) => {
 
-            let result = [];
-            let size = 3;
-
-            for (let i = 0; i < state.stickerCollection.length; i += 3) {
-                let chunk = state.stickerCollection.slice(i, i + size)
-                result.push(chunk)
-            }
+            let result = [
+                [
+                    'tick-sticker',
+                    'false-sticker',
+                    'question-mark-sticker'
+                ],
+                [
+                    'confused-person-sticker',
+                    'lets-go-sticker',
+                    'top-sticker'
+                ]
+            ];
 
             return result
         },
