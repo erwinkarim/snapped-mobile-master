@@ -552,14 +552,14 @@ export default {
                 // Set canvas size
                 state.nowMarking.canvas.main.index = new fabric.Canvas('canvas_snapped_answer', {
                     width: scaleFactor * state.nowMarking.image.dimensions.width,
-                    height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height :  scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
+                    height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
                     // height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
                 })
 
                 // Store canvas dimension values
                 state.nowMarking.canvas.main.dimensions = {
                     width: scaleFactor * state.nowMarking.image.dimensions.width,
-                    height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height  :  scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
+                    height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
                     // height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
                 }
 
@@ -839,13 +839,18 @@ export default {
 
         markingStickers: (state, getters) => {
 
-            let result = [];
-            let size = 3;
-
-            for (let i = 0; i < state.stickerCollection.length; i += 3) {
-                let chunk = state.stickerCollection.slice(i, i + size)
-                result.push(chunk)
-            }
+            let result = [
+                [
+                    'tick-sticker',
+                    'false-sticker',
+                    'question-mark-sticker'
+                ],
+                [
+                    'confused-person-sticker',
+                    'lets-go-sticker',
+                    'top-sticker'
+                ]
+            ];
 
             return result
         },
