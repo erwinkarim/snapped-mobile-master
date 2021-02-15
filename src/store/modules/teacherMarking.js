@@ -585,7 +585,6 @@ export default {
                 // Track canvas events
                 canvas.on({
                     'mouse:wheel': function (opt) {
-                        console.log(`TOUCH: ${fabric.isTouchSupported}`)
 
                         /*****************
                          *  HANDLE ZOOM
@@ -619,162 +618,38 @@ export default {
                             }
                         }
                     }, 'touch:gesture': function (opt) {
-                        console.log(`TOUCH: ${fabric.isTouchSupported}`)
 
                         let canvas = state.nowMarking.canvas.main.index;
-                        // let textBox = new fabric.Textbox(`${opt.e.touches} | ${opt.e.touches.length}`, {
-                        //     originX: "center",
-                        //     originY: "bottom",
-                        //     textAlign: "center",
-                        //     fontFamily: "Segoe UI",
-                        //     top:  window.innerHeight /2,
-                        //     left: window.innerWidth /2,
-                        //     fontSize: 24,
-                        //     fill: "#F53B57",
-                        //     lockUniScaling: true
-                        // })
-                        //
-                        // canvas.add(textBox).renderAll()
-                        //
-                        // setTimeout(function(){
-                        //     state.nowMarking.canvas.main.index.remove(textBox);
-                        // }, 1000);
 
-                        // state.test = {
-                        //     state: opt.self.state,
-                        //     X: opt.self.x,
-                        //     Y: opt.self.y,
-                        //     touches: opt.e.touches,
-                        //     length: opt.e.touches.length,
-                        //     scale: opt.self.scale,
-                        //     zoom: canvas.getZoom()
-                        // }
-
-                        if (state.test.length > 0) {
-                            state.test = [
-                                "State: ''",
-                                "X: ''",
-                                "Y: ''",
-                                "touches: ''",
-                                "length: ''",
-                                "scale: ''",
-                                "Zoom: ''",
-                            ]
-                        }
-
-                        state.test = [
-                            `State: ${opt.self.state}`,
-                            `X: ${opt.self.x}`,
-                            `Y: ${opt.self.y}`,
-                            `touches: ${opt.e.touches}`,
-                            `length: ${opt.e.touches.length}`,
-                            `scale: ${opt.self.scale}`,
-                            `Zoom: ${canvas.getZoom()}`,
-                        ]
-
-                        // setTimeout(function(){
-                        //     state.test = ''
-                        // }, 3000);
-
-
+                        // If user pinch to zoom
                         if (opt.e.touches && opt.e.touches.length === 2) {
-                            // Get event point
-                            // let point = new fabric.Point(opt.self.x, opt.self.y);
-                            // // Remember canvas scale at gesture start
-                            // if (opt.self.state === "start") {
-                            //     let zoomStartScale = self.canvas.getZoom();
-                            // }
-                            // // Calculate delta from start scale
-                            // let delta = zoomStartScale * opt.self.scale;
+
+                            // Get initial canvas zoom value and initial gesture scale value
+                            let zoom = canvas.getZoom();
+                            let delta = opt.self.scale;
+
+                            zoom *= delta;
+
+                            // If zooming in, slow the zoom rate. Seems to not function though? Is the math right? haha!
+                            if (opt.self.state === "start") {
+                                zoom = delta > 1 ? zoom / 10 + 1 : zoom;
+                            }
+
+                            // Set max zoom in and max zoom out
+                            if (zoom > 4) zoom = 4;
+                            if (zoom < 1) zoom = 1;
+
+                            // Determine point of scaling
+                            let point = new fabric.Point(opt.self.x, opt.self.y);
+                            if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
+
                             // // Zoom to pinch point
-                            // self.canvas.zoomToPoint(point, delta);
-
-                            state.test.push(`State: ${opt.self.state}`)
-                            state.test.push(`X: ${opt.self.x}`)
-                            state.test.push(`Y: ${opt.self.y}`)
-                            state.test.push(`Zoom: ${canvas.getZoom()}`)
-
-                            // state.test = {
-                            //     state: opt.self.state,
-                            //     X: opt.self.x,
-                            //     Y: opt.self.y,
-                            //     zoom: canvas.getZoom()
-                            // }
-
-                            // /*****************
-                            //  *  HANDLE ZOOM
-                            //  ****************/
-                            // let delta = opt.e.deltaY;
-                            // let zoom = canvas.getZoom();
-                            // zoom *= 0.999 ** delta;
-                            // if (zoom > 6) zoom = 6;
-                            // if (zoom < 1) zoom = 1;
-                            // canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
-                            //
-                            // opt.e.preventDefault();
-                            // opt.e.stopPropagation();
-                            //
-                            //
-                            // let vpt = this.viewportTransform;
-                            //
-                            // if (zoom < 400 / 1000) {
-                            //     vpt[4] = 200 - 1000 * zoom / 2;
-                            //     vpt[5] = 200 - 1000 * zoom / 2;
-                            // } else {
-                            //     if (vpt[4] >= 0) {
-                            //         vpt[4] = 0;
-                            //     } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-                            //         vpt[4] = canvas.getWidth() - 1000 * zoom;
-                            //     }
-                            //     if (vpt[5] >= 0) {
-                            //         vpt[5] = 0;
-                            //     } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-                            //         vpt[5] = canvas.getHeight() - 1000 * zoom;
-                            //     }
-                            // }
-
+                            canvas.zoomToPoint(point, zoom);
 
                         }
                     }
 
                 })
-
-                    //     .on('mouse:wheel', function (opt) {
-                    //
-                    //         console.log(`TOUCH: ${fabric.isTouchSupported}`)
-                    //
-                    //         /*****************
-                    //          *  HANDLE ZOOM
-                    //          ****************/
-                    //         let delta = opt.e.deltaY;
-                    //         let zoom = canvas.getZoom();
-                    //         zoom *= 0.999 ** delta;
-                    //         if (zoom > 6) zoom = 6;
-                    //         if (zoom < 1) zoom = 1;
-                    //         canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
-                    //
-                    //         opt.e.preventDefault();
-                    //         opt.e.stopPropagation();
-                    //
-                    //
-                    //         let vpt = this.viewportTransform;
-                    //
-                    //         if (zoom < 400 / 1000) {
-                    //             vpt[4] = 200 - 1000 * zoom / 2;
-                    //             vpt[5] = 200 - 1000 * zoom / 2;
-                    //         } else {
-                    //             if (vpt[4] >= 0) {
-                    //                 vpt[4] = 0;
-                    //             } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-                    //                 vpt[4] = canvas.getWidth() - 1000 * zoom;
-                    //             }
-                    //             if (vpt[5] >= 0) {
-                    //                 vpt[5] = 0;
-                    //             } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-                    //                 vpt[5] = canvas.getHeight() - 1000 * zoom;
-                    //             }
-                    //         }
-                    // })
                     .on('object:moving', function (event) {
 
                         // If state isMovingObject not already set, set to true
@@ -906,26 +781,7 @@ export default {
                         state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(245, 59, 87, 1)';
                         state.nowMarking.canvas.main.index.freeDrawingBrush.width = 2;
                     }
-
-                    // console.log(`Drawing: ${state.nowDrawing.drawing} | Erasing: ${state.nowDrawing.erasing}`)
-                    // if (state.nowDrawing.erasing) {
-                    //     state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(220, 222, 224, 0.16)';
-                    //     state.nowMarking.canvas.main.index.freeDrawingBrush.width = 5;
-                    // }
                 })
-            // .on('path:created', function (opt) {
-            //
-            //     console.log('path created')
-            //     if (state.nowDrawing.drawing) {
-            //         opt.path.globalCompositeOperation = 'source-over';
-            //         opt.path.lineWidth = 2;
-            //         opt.path.stroke = 'rgba(245, 59, 87, 1)';
-            //         state.nowMarking.canvas.markings.index.requestRenderAll();
-            //     }
-            //
-            //     // Make all drawings unselectable
-            //     // opt.path.selectable = false;
-            // })
         },
 
         exitDrawingMode({state, commit}) {
