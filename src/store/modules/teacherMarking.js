@@ -103,7 +103,9 @@ export default {
             snappedAnswers: [],
             feedback: '',
             marks: null
-        }
+        },
+
+        test: [],
     }),
     mutations: {
 
@@ -578,8 +580,76 @@ export default {
                     {crossOrigin: 'Anonymous'}
                 );
 
+                let canvas = state.nowMarking.canvas.main.index;
+
                 // Track canvas events
-                state.nowMarking.canvas.main.index
+                canvas.on({
+                    'mouse:wheel': function (opt) {
+
+                        /*****************
+                         *  HANDLE ZOOM
+                         ****************/
+                        let delta = opt.e.deltaY;
+                        let zoom = canvas.getZoom();
+                        zoom *= 0.999 ** delta;
+                        if (zoom > 6) zoom = 6;
+                        if (zoom < 1) zoom = 1;
+                        canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
+
+                        opt.e.preventDefault();
+                        opt.e.stopPropagation();
+
+
+                        let vpt = this.viewportTransform;
+
+                        if (zoom < 400 / 1000) {
+                            vpt[4] = 200 - 1000 * zoom / 2;
+                            vpt[5] = 200 - 1000 * zoom / 2;
+                        } else {
+                            if (vpt[4] >= 0) {
+                                vpt[4] = 0;
+                            } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
+                                vpt[4] = canvas.getWidth() - 1000 * zoom;
+                            }
+                            if (vpt[5] >= 0) {
+                                vpt[5] = 0;
+                            } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
+                                vpt[5] = canvas.getHeight() - 1000 * zoom;
+                            }
+                        }
+                    }, 'touch:gesture': function (opt) {
+
+                        let canvas = state.nowMarking.canvas.main.index;
+
+                        // If user pinch to zoom
+                        if (opt.e.touches && opt.e.touches.length === 2) {
+
+                            // Get initial canvas zoom value and initial gesture scale value
+                            let zoom = canvas.getZoom();
+                            let delta = opt.self.scale;
+
+                            zoom *= delta;
+
+                            // If zooming in, slow the zoom rate. Seems to not function though? Is the math right? haha!
+                            if (opt.self.state === "start") {
+                                zoom = delta > 1 ? zoom / 10 + 1 : zoom;
+                            }
+
+                            // Set max zoom in and max zoom out
+                            if (zoom > 4) zoom = 4;
+                            if (zoom < 1) zoom = 1;
+
+                            // Determine point of scaling
+                            let point = new fabric.Point(opt.self.x, opt.self.y);
+                            if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
+
+                            // // Zoom to pinch point
+                            canvas.zoomToPoint(point, zoom);
+
+                        }
+                    }
+
+                })
                     .on('object:moving', function (event) {
 
                         // If state isMovingObject not already set, set to true
@@ -711,26 +781,7 @@ export default {
                         state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(245, 59, 87, 1)';
                         state.nowMarking.canvas.main.index.freeDrawingBrush.width = 2;
                     }
-
-                    // console.log(`Drawing: ${state.nowDrawing.drawing} | Erasing: ${state.nowDrawing.erasing}`)
-                    // if (state.nowDrawing.erasing) {
-                    //     state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(220, 222, 224, 0.16)';
-                    //     state.nowMarking.canvas.main.index.freeDrawingBrush.width = 5;
-                    // }
                 })
-            // .on('path:created', function (opt) {
-            //
-            //     console.log('path created')
-            //     if (state.nowDrawing.drawing) {
-            //         opt.path.globalCompositeOperation = 'source-over';
-            //         opt.path.lineWidth = 2;
-            //         opt.path.stroke = 'rgba(245, 59, 87, 1)';
-            //         state.nowMarking.canvas.markings.index.requestRenderAll();
-            //     }
-            //
-            //     // Make all drawings unselectable
-            //     // opt.path.selectable = false;
-            // })
         },
 
         exitDrawingMode({state, commit}) {
