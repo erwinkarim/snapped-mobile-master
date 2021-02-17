@@ -246,7 +246,10 @@ export default {
           this.$emit('snappedAnswer', this.snappedAnswers)
           this.$emit('submit', this.remarks)
         } else {
-          this.$emit('error')
+          this.$emit('error', {
+            status: true,
+            message: 'Please snap an answer!'
+          })
         }
       }
 

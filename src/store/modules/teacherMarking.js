@@ -617,37 +617,40 @@ export default {
                                 vpt[5] = canvas.getHeight() - 1000 * zoom;
                             }
                         }
-                    }, 'touch:gesture': function (opt) {
+                    },
 
-                        let canvas = state.nowMarking.canvas.main.index;
-
-                        // If user pinch to zoom
-                        if (opt.e.touches && opt.e.touches.length === 2) {
-
-                            // Get initial canvas zoom value and initial gesture scale value
-                            let zoom = canvas.getZoom();
-                            let delta = opt.self.scale;
-
-                            zoom *= delta;
-
-                            // If zooming in, slow the zoom rate. Seems to not function though? Is the math right? haha!
-                            if (opt.self.state === "start") {
-                                zoom = delta > 1 ? zoom / 10 + 1 : zoom;
-                            }
-
-                            // Set max zoom in and max zoom out
-                            if (zoom > 4) zoom = 4;
-                            if (zoom < 1) zoom = 1;
-
-                            // Determine point of scaling
-                            let point = new fabric.Point(opt.self.x, opt.self.y);
-                            if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
-
-                            // // Zoom to pinch point
-                            canvas.zoomToPoint(point, zoom);
-
-                        }
-                    }
+                    // // TOUCH GESTURE. TEMPORARILY DISABLE TILL FEATURE RELEASE
+                    // 'touch:gesture': function (opt) {
+                    //
+                    //     let canvas = state.nowMarking.canvas.main.index;
+                    //
+                    //     // If user pinch to zoom
+                    //     if (opt.e.touches && opt.e.touches.length === 2) {
+                    //
+                    //         // Get initial canvas zoom value and initial gesture scale value
+                    //         let zoom = canvas.getZoom();
+                    //         let delta = opt.self.scale;
+                    //
+                    //         zoom *= delta;
+                    //
+                    //         // If zooming in, slow the zoom rate. Seems to not function though? Is the math right? haha!
+                    //         if (opt.self.state === "start") {
+                    //             zoom = delta > 1 ? zoom / 10 + 1 : zoom;
+                    //         }
+                    //
+                    //         // Set max zoom in and max zoom out
+                    //         if (zoom > 4) zoom = 4;
+                    //         if (zoom < 1) zoom = 1;
+                    //
+                    //         // Determine point of scaling
+                    //         let point = new fabric.Point(opt.self.x, opt.self.y);
+                    //         if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
+                    //
+                    //         // // Zoom to pinch point
+                    //         canvas.zoomToPoint(point, zoom);
+                    //
+                    //     }
+                    // }
 
                 })
                     .on('object:moving', function (event) {

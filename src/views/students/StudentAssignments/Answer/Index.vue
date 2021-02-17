@@ -13,16 +13,27 @@
     >
       <modal v-if="submissionStatus === 'success'"
              :modal-type="submissionStatus"
-             :redirect-route="submissionStatus === 'success' ? {name: 'student.assignments.show'} : {}"
+             :redirect-route="{name: 'student.assignments.show'}"
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
         <template slot="message">
-          <div v-if="submissionStatus === 'success'" class="w-full">
+          <div class="w-full">
             Got something to change? Don't worry! You can always edit your published homework
           </div>
-          <div v-if="submissionStatus === 'error'" class="w-full">
-            Please submit a valid answer!
+        </template>
+        <template slot="button">
+          Okay
+        </template>
+      </modal>
+      <modal v-if="submissionStatus === 'error'"
+             :modal-type="submissionStatus"
+             @toggleModal="toggleModal"
+             class="w-4/5 "
+      >
+        <template slot="message">
+          <div class="w-full">
+            {{ error }}
           </div>
         </template>
         <template slot="button">
@@ -74,6 +85,8 @@ export default {
       isSubmitting: false,
       submissionStatus: null,
 
+      error: null,
+
       answer: {
         type: null,
         content: ''
@@ -90,6 +103,8 @@ export default {
       this.answer.content = value;
     },
     handleSubmit(remarks) {
+
+      this.resetError();
 
       this.isSubmitting = true;
       this.toggleModal();
@@ -111,12 +126,27 @@ export default {
               this.toggleModal();
             }
           })
+          .catch(error => {
+            this.isSubmitting = false;
+            this.toggleModal();
+
+            this.handleError({
+              status: true,
+              message: 'Please snap an answer!'
+            })
+          })
 
 
     },
-    handleError() {
+    handleError(error) {
       this.submissionStatus = 'error';
+      this.error = error.message;
       this.toggleModal();
+    },
+
+    resetError() {
+      this.submissionStatus = null;
+      this.error = null;
     },
 
     toggleModal() {
