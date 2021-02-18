@@ -3,7 +3,6 @@ import StudentClass from "@/views/students/StudentClass/StudentClass";
 import ClassRanking from "@/views/students/StudentClass/Components/ClassRanking";
 import ClassTeachers from "@/views/students/StudentClass/Components/ClassTeachers";
 import ClassClassmates from "@/views/students/StudentClass/Components/ClassClassmates";
-import SchoolRanking from "@/views/students/StudentClass/Components/SchoolRanking";
 import Settings from "@/views/Settings";
 import AssignmentIndex from "@/views/students/StudentAssignments/Index/Index";
 import App from "@/App";
@@ -11,6 +10,9 @@ import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
 import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
 import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
 import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
+import StudentRanking from "@/views/students/StudentRanking/Index";
+import NationalRanking from "@/views/students/StudentRanking/NationalRanking";
+import SchoolRanking from "@/views/students/StudentRanking/SchoolRanking";
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -83,6 +85,26 @@ export default {
                     path: 'classmates',
                     name: 'student.class.classmates',
                     component: ClassClassmates,
+                    meta: studentAccessControlMeta,
+                },
+            ]
+        },
+
+        /*  RANKINGS */
+        {
+            path: 'ranking',
+            component: StudentRanking,
+            children: [
+                {
+                    path: 'school',
+                    name: 'student.rankings.school',
+                    component: SchoolRanking,
+                    meta: studentAccessControlMeta,
+                },
+                {
+                    path: 'national',
+                    name: 'student.rankings.national',
+                    component: NationalRanking,
                     meta: studentAccessControlMeta,
                 },
             ]

@@ -7,13 +7,8 @@
 
         <template v-slot:rightAction>
           <div class="flex flex-row justify-end items-center ">
-            <router-link :to="{name: 'student.class.classmates'}" class="w-1/7 ">
-              <icon-base-two class="md:w-3/4">
-                <magnifying-glass-icon stroke-color="red-primary"/>
-              </icon-base-two>
-            </router-link>
-            <router-link :to="{name: 'student.class.school_ranking'}" class="ml-2">
-              School Rank
+            <router-link :to="{name: 'student.rankings.school'}" class="ml-2">
+              Rankings
             </router-link>
           </div>
         </template>
