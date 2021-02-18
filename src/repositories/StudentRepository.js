@@ -35,6 +35,15 @@ export default {
         return Repository.get(`/rankings?page=${pageNum}&per_page=${perPage}&search=${search}`)
     },
 
+    getNationalRanking({pageNum: pageNum, perPage: perPage, search: search}) {
+
+        if (!pageNum) pageNum = 1;
+        if (!perPage) perPage = 50;
+        if (!search) search = '';
+
+        return Repository.get(`/national-rankings?page=${pageNum}&per_page=${perPage}&search=${search}`)
+    },
+
     getClassRanking() {
         return Repository.get(`${resource}/class-ranking`)
     },
