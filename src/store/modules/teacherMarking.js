@@ -5,6 +5,7 @@ import {fabric} from "fabric";
 import stickers from "@/components/Stickers/Stickers";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
 import 'fabric-history';
+import getters from "@/store/getters";
 
 export default {
     namespaced: true,
@@ -568,7 +569,7 @@ export default {
             })
         },
 
-        loadImage({state, commit, dispatch}) {
+        loadImage({state, commit, dispatch, rootGetters}) {
 
 
             // First, get image's dimension. Then, resize canvas while setting background image
@@ -614,8 +615,13 @@ export default {
 
 
                 dispatch('enableDragAndDropToTrash')
-                dispatch('enableCanvasZoom')
-                dispatch('enableCanvasPanning')
+
+                // Currently enable only for test account
+                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com') {
+                    dispatch('enableCanvasZoom')
+                    dispatch('enableCanvasPanning')
+                }
+
                 dispatch('handleObjectScaling')
 
             });
