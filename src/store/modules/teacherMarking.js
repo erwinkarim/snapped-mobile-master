@@ -666,13 +666,6 @@ export default {
                 // ON TOUCH GESTURE. TEMPORARILY DISABLE TILL FEATURE RELEASE
                 'touch:gesture': function (opt) {
 
-
-                    state.debugs = [
-                        `state: gesture`,
-                    ]
-
-                    let canvas = state.nowMarking.canvas.main.index;
-
                     // If user pinch to zoom
                     if (opt.e.touches && opt.e.touches.length === 2) {
 
@@ -680,16 +673,21 @@ export default {
                         let zoom = canvas.getZoom();
                         let delta = opt.self.scale;
 
-                        zoom *= delta;
-
-                        // If zooming in, slow the zoom rate. Seems to not function though? Is the math right? haha!
                         if (opt.self.state === "start") {
-                            zoom = delta > 1 ? zoom / 10 + 1 : zoom;
+                            zoom = delta > 1 ? zoom + 1 : zoom;
+                        }
+
+                        // Slow zoom in, quicker zoom out
+                        if (delta > 1) {
+                            zoom = zoom * (1.01 ** delta);
+                        } else {
+                            zoom = zoom ** (delta);
                         }
 
                         // Set max zoom in and max zoom out
                         if (zoom > 4) zoom = 4;
                         if (zoom < 1) zoom = 1;
+
 
                         // Determine point of scaling
                         let point = new fabric.Point(opt.self.x, opt.self.y);
@@ -759,7 +757,7 @@ export default {
         },
 
         /********************************
-         * CANVAS: DRAG & DROP TO TRASH
+         * CANVAS: PANNING
          *******************************/
         enableCanvasPanning({state, commit, dispatch}) {
 
@@ -770,26 +768,13 @@ export default {
                 'mouse:down': function (opt) {
                     let event = opt.e;
 
-                    console.log('mouse down')
 
                     if (event.altKey === true) {
-                        console.log('is alt key + click')
 
                         this.isDragging = true;
                         this.selection = false;
                         this.lastPosX = event.touches[0].clientX;
                         this.lastPosY = event.touches[0].clientY;
-
-                        // console.log(this)
-                        console.log(event)
-                        // console.log(opt)
-
-                        console.log({
-                            isDragging: this.isDragging,
-                            selection: this.selection,
-                            lastPosX: this.lastPosX,
-                            lastPosY: this.lastPosY,
-                        })
                     }
                 },
 
@@ -818,8 +803,7 @@ export default {
 
                 'touch:drag': function (opt) {
 
-                    state.debugs = [];
-
+                    state.debugs = [`state: touch drag`];
 
                     // Ensure not moving object
                     if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isScalingObject && !state.states.isDrawing) {
@@ -833,35 +817,13 @@ export default {
                         let lastX = opt.self.x;
                         let lastY = opt.self.y;
 
-                        if (opt.self.mode === 'move') {
-
-                        }
-
-                        // let deltaX = initialX - lastX ;
-                        // let deltaY = initialY - lastY;
                         let deltaX = lastX - initialX;
                         let deltaY = lastY - initialY;
 
-                        // state.debugs.push(`Count: ${state.dragCount}`)
-                        // state.debugs.push(`[X] ${initialX} - ${lastX} = ${deltaX}`)
-                        // state.debugs.push(`[Y] ${initialY} - ${lastY} = ${deltaY}`)
-
-                        let delta = new fabric.Point(deltaX / 50, deltaY / 50);
+                        let delta = new fabric.Point(deltaX / 35, deltaY / 35);
                         canvas.relativePan(delta);
 
                         state.dragCount++;
-                    }
-
-                    let late;
-
-                    if (late < 3) {
-                        return 'late_3h'
-                    } else if (late < 24) {
-                        return 'late_24h'
-                    } else if (late < 72) {
-                        return 'late_3d'
-                    } else {
-                        return 'unanswered'
                     }
 
                 },
