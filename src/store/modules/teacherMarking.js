@@ -40,7 +40,8 @@ export default {
             submittedDate: null,
             marksID: null,
             marks: null,
-            markedSnappedAnswerPaths: null
+            markedSnappedAnswerPaths: null,
+            answer_tag: null
         },
 
         // Image being marked (temporary)
@@ -106,7 +107,6 @@ export default {
             marks: null
         },
 
-        debugs: [],
         dragCount: 0
     }),
     mutations: {
@@ -126,6 +126,7 @@ export default {
             state.assignmentDetails.marksID = data.marks_id;
             state.assignmentDetails.marks = data.marks;
             state.assignmentDetails.isFirstSubmission = data.is_first;
+            state.assignmentDetails.answer_tag = data.answer_tag;
 
             if (data.snap_answer) {
                 state.submission.type = 'snapped';
@@ -471,7 +472,8 @@ export default {
                 submittedDate: null,
                 marksID: null,
                 marks: null,
-                markedSnappedAnswerPaths: null
+                markedSnappedAnswerPaths: null,
+                answer_tag: null
             };
 
 
@@ -803,8 +805,6 @@ export default {
 
                 'touch:drag': function (opt) {
 
-                    state.debugs = [`state: touch drag`];
-
                     // Ensure not moving object
                     if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isScalingObject && !state.states.isDrawing) {
 
@@ -1055,6 +1055,20 @@ export default {
             ];
 
             return result
+        },
+
+        isAnswered: (state) => {
+            return state.assignmentDetails.answer_tag !== 'unanswered';
+        },
+
+        answerTags: (state) => {
+
+            let tag = state.assignmentDetails.answer_tag;
+
+            if (tag === 'unanswered') {
+                return tag;
+            }
+
         },
 
         hasWrittenAnswer: (state, getters) => {

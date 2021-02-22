@@ -54,7 +54,7 @@
     </div>
 
     <!-- BOTTOM -->
-    <bottom-bar/>
+    <bottom-bar v-if="!$store.state.teacherMarking.states.isLoading"/>
 
   </div>
 </template>

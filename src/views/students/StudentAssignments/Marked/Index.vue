@@ -71,6 +71,9 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Components/AnswerPreviewSwiper";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
 import {directive} from "vue-awesome-swiper";
+import router from "@/router";
+import AuthenticationRepository from "@/repositories/AuthenticationRepository";
+import axios from "axios";
 
 export default {
   name: "Index",
@@ -132,7 +135,7 @@ export default {
       } else {
         return ''
       }
-    }
+    },
   },
   methods: {
     fetchData() {
@@ -143,18 +146,29 @@ export default {
 
               let data = response.data.data;
 
-              this.details.markingPicturePaths = data.marking_picture_url.split(',');
-              this.details.feedback = data.marks_feedback;
+              let isUnanswered = data.marks_tag ? data.marks_tag === 'unanswered' : false;
+
+              if (isUnanswered) {
+                router.push({
+                  name: 'student.assignments.show', params: {
+                    assignmentID: data.assignment_id,
+                  }
+                })
+              } else {
+                this.details.markingPicturePaths = data.marking_picture_url.split(',');
+                this.details.feedback = data.marks_feedback;
+              }
             }
 
           })
     },
+
     toggleMode() {
       this.isShowingFeedback = !this.isShowingFeedback;
       this.isShowingMarkings = !this.isShowingMarkings;
     }
   },
-  mounted() {
+  created() {
     this.fetchData()
   },
   components: {AnswerPreviewSwiper, IconBaseTwo, PageHeaderThree, NavBack, DashboardLayout}

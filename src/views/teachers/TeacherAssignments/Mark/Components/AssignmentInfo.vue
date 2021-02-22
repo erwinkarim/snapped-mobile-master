@@ -5,9 +5,14 @@
     <!-- Achievements -->
     <div class="flex flex-row ">
       <div v-if="details.isFirstSubmission === 'yes'"
-          class="bg-gray-secondary rounded-full py-1 px-4 text-xs font-bold text-purple-primary uppercase"
+           class="bg-gray-secondary rounded-full py-1 px-4 text-xs font-bold text-purple-primary uppercase"
       >
         First Submission
+      </div>
+      <div v-if="unanswered"
+           class="bg-red-primary rounded-full py-1 px-4 text-xs font-bold text-white uppercase"
+      >
+        Unanswered
       </div>
     </div>
 
@@ -19,7 +24,9 @@
       {{ details.studentName || '' }}
     </div>
 
-    <div class="flex flex-row justify-between mt-4 text-sm ">
+    <div class="flex flex-row justify-between mt-4 text-sm"
+      v-if="!unanswered"
+    >
       <div class="text-purple-secondary text-left">
         Time submitted
       </div>
@@ -54,8 +61,13 @@
 
 <script>
 export default {
-  props:{
+  props: {
     details: Object
+  },
+  computed: {
+    unanswered() {
+      return this.$store.state.teacherMarking.assignmentDetails.answer_tag === 'unanswered';
+    }
   },
   name: "AssignmentInfo"
 }
