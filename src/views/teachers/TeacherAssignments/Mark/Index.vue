@@ -49,6 +49,12 @@
 
     <!-- CONTENT -->
     <div class="relative">
+      <div class="bg-blue-600 text-center">
+        DEBUG
+        <ul>
+          <li v-for="debug in $store.state.teacherMarking.debugs" class="border-b-1 border-t-1 py-2 border-black"> {{debug}}</li>
+        </ul>
+      </div>
       <router-view/>
     </div>
 
