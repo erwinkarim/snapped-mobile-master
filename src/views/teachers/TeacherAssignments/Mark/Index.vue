@@ -32,13 +32,14 @@
       </modal>
     </div>
 
-    <div v-if="$store.state.teacherMarking.states.isShowingModal && $store.state.teacherMarking.nowShowingModal === 'is_submitting'"
-         class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
+    <div
+        v-if="$store.state.teacherMarking.states.isShowingModal && $store.state.teacherMarking.nowShowingModal === 'is_submitting'"
+        class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
       <modal @toggleModal="toggleModalMode()"
              :has-button="false"
              class="w-4/5 "
       >
-        <template slot="message" >
+        <template slot="message">
           Submitting marking...
         </template>
       </modal>
@@ -53,7 +54,7 @@
     </div>
 
     <!-- BOTTOM -->
-    <bottom-bar/>
+    <bottom-bar v-if="!$store.state.teacherMarking.states.isLoading"/>
 
   </div>
 </template>
@@ -136,7 +137,8 @@ export default {
   },
   components: {
     PageHeader,
-    UndoIcon, Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree},
+    UndoIcon, Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree
+  },
 
 }
 </script>

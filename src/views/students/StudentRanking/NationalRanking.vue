@@ -43,7 +43,7 @@
             </div>
 
             <div class="text-left text-purple-secondary text-px-10 truncate mt-2 pr-5">
-              {{ student.class_name }}
+              {{ student.school_name }}
             </div>
           </div>
         </div>

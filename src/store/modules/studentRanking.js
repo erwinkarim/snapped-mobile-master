@@ -81,8 +81,8 @@ export default {
                             if (data.success) {
 
                                 // Append ranking to array
-                                data.data.forEach((test) => {
-                                    state.nationalRankings.data.push(test)
+                                data.data.forEach((student) => {
+                                    state.nationalRankings.data.push(student)
                                 })
 
                                 // Update meta details and pageNum for filters

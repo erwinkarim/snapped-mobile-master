@@ -32,13 +32,16 @@
           <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
         </div>
 
-        <div class="w-2/7 md:w-1/4" v-if="!hasMarks">
+        <div class="w-2/7 md:w-1/4" v-if="!hasMarks && displayCountdownTimer">
           <countdown-timer :due-date-time="assignment.dueDatetime"
                            :has-dynamic-background-color="true"
                            :has-clock-icon="true"
                            :disable-red-alert="redAlertState"
                            class="text-2xs md:text-xs "
           />
+        </div>
+        <div v-else class="w-2/7 md:w-1/4">
+
         </div>
       </div>
     </div>
@@ -82,6 +85,10 @@ export default {
     userRole: {
       type: String,
       default: null
+    },
+    displayCountdownTimer: {
+      type: Boolean,
+      default: true,
     }
   },
   computed: {

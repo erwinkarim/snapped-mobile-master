@@ -13,6 +13,9 @@ export default  {
     getAuthUsername: (state, getters) => {
         return getters.getAuthUser.fullname
     },
+    getAuthEmail: (state, getters) => {
+        return getters.getAuthUser.email
+    },
     getToken : state => state.token,
 
     currentYear: () => {

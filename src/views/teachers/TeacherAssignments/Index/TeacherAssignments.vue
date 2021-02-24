@@ -49,6 +49,7 @@
               :key="assignment.assignmentID"
               :assignment="assignment"
               :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+              :display-countdown-timer="assignment.totalMarked !== assignment.totalSubmitted"
               class="mt-4"
           >
             <template v-slot:topRightAction>
@@ -208,7 +209,7 @@ export default {
       } else {
         return true;
       }
-    }
+    },
   },
   methods: {
 

@@ -125,11 +125,22 @@
           </div>
         </div>
 
-        <div v-else-if="hasMarkedSubmission">
-          <router-link :to="{name: 'student.marked.show', params: {marksID: marks_id}}"
-                       class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
+        <div v-else-if="hasMarkedSubmission ">
+
+          <div v-if="isUnanswered"
+               class="flex flex-row justify-center tracking-wider py-3 px-1 w-full text-sm font-bold bg-red-primary rounded-full border-2 text-white border-red-primary"
+          >
+            UNANSWERED
+          </div>
+
+          <router-link v-else
+                       :to="{name: 'student.marked.show', params: {marksID: marks_id}}"
+                       class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary"
+          >
             View Marking
           </router-link>
+
+
         </div>
 
         <div v-else class="flex flex-row w-full">
@@ -242,6 +253,14 @@ export default {
       return moment().format('YYYY-MM-DD HH:mm:ss') >= this.assignment.dueDatetime;
     },
 
+    isUnanswered() {
+      if (this.submission.answerTag) {
+        return this.submission.answerTag === 'unanswered';
+      }
+
+      return false;
+    },
+
     hasMarkedSubmission: function () {
       return this.hasSubmission ? this.submission.id !== null && this.marks_id !== null : null;
     },
@@ -301,7 +320,8 @@ export default {
                   studentID: submission.student_id,
                   studentName: submission.student_name,
                   studentGender: submission.student_gender,
-                  submittedAt: submission.submission_created_at
+                  submittedAt: submission.submission_created_at,
+                  answerTag: submission.answer_tag
                 }
                 this.marks_id = submission.marks_id
               }

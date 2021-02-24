@@ -2,12 +2,12 @@
 
   <!-- BOTTOM BAR -->
 
-  <div v-if="show" :class="bottomBarClass"
+  <div v-if="showBottomBar" :class="bottomBarClass"
        class="md:max-w-xl mx-auto block fixed inset-x-0 bottom-0 shadow md:shadow-none pt-4 pb-6 px-5">
 
     <div class="w-full md:max-w-xl mx-auto">
 
-      <div v-if="$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
+      <div v-if="this.$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
         <div @click="togglePreviewMode" v-if="$store.state.teacherMarking.states.isMain"
              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
           View Markings
@@ -27,51 +27,51 @@
         </div>
         <div v-else class="flex flex-row w-full h-full items-center justify-between">
 
-            <!-- MARKING ACTIONS -->
-            <div class="flex flex-row w-2/3">
-              <div @click="toggleStickerBar" class="px-3">
-                <font-awesome-icon  class="w-full fa-2x text-white" :icon="icons.checkCircle" />
-              </div>
-              <div @click="loadTextBox" class="px-3">
-                <font-awesome-icon  class="w-full fa-2x text-white" :icon="icons.font" />
-              </div>
-              <div @click="beginDrawingMode" class="px-3" >
-                <font-awesome-icon  class="w-full fa-2x text-white" :icon="icons.marker" />
-              </div>
+          <!-- MARKING ACTIONS -->
+          <div class="flex flex-row w-2/3">
+            <div @click="toggleStickerBar" class="px-3">
+              <font-awesome-icon class="w-full fa-2x text-white" :icon="icons.checkCircle"/>
             </div>
-
-            <div class="w-1/3 px-1">
-              <button @click="doneEditSnappedAnswer"
-                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
-                <div class="w-5/7">
-                  Done
-                </div>
-              </button>
+            <div @click="loadTextBox" class="px-3">
+              <font-awesome-icon class="w-full fa-2x text-white" :icon="icons.font"/>
             </div>
+            <div @click="beginDrawingMode" class="px-3">
+              <font-awesome-icon class="w-full fa-2x text-white" :icon="icons.marker"/>
+            </div>
+          </div>
 
-<!--            <div class="w-1/3 px-1"  >-->
+          <div class="w-1/3 px-1">
+            <button @click="doneEditSnappedAnswer"
+                    class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+              <div class="w-5/7">
+                Done
+              </div>
+            </button>
+          </div>
 
-<!--              <button @click="toggleStickerBar"-->
-<!--                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">-->
-<!--               -->
+          <!--            <div class="w-1/3 px-1"  >-->
+
+          <!--              <button @click="toggleStickerBar"-->
+          <!--                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">-->
+          <!--               -->
 
 
-<!--                                <div class="w-5/7">-->
-<!--                                  Markers-->
-<!--                                </div>-->
-<!--                                <icon-base-two class="w-1/7">-->
-<!--                                  <ticked-box-icon/>-->
-<!--                                </icon-base-two>-->
-<!--              </button>-->
-<!--            </div>-->
-<!--            <div class="w-1/3 px-1">-->
-<!--              <button @click="loadTextBox"-->
-<!--                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">-->
-<!--                <div class="w-5/7">-->
-<!--                  Text-->
-<!--                </div>-->
-<!--              </button>-->
-<!--            </div>-->
+          <!--                                <div class="w-5/7">-->
+          <!--                                  Markers-->
+          <!--                                </div>-->
+          <!--                                <icon-base-two class="w-1/7">-->
+          <!--                                  <ticked-box-icon/>-->
+          <!--                                </icon-base-two>-->
+          <!--              </button>-->
+          <!--            </div>-->
+          <!--            <div class="w-1/3 px-1">-->
+          <!--              <button @click="loadTextBox"-->
+          <!--                      class="w-full font-bold rounded-full text-white text-sm bg-transparent border-1 border-white py-3 px-1 flex flex-row justify-center">-->
+          <!--                <div class="w-5/7">-->
+          <!--                  Text-->
+          <!--                </div>-->
+          <!--              </button>-->
+          <!--            </div>-->
 
         </div>
       </div>
@@ -116,12 +116,12 @@ import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
 import DialogBubbleIcon from "@/components/icons/DialogBubbleIcon";
 import router from "@/router";
 
-import { library } from '@fortawesome/fontawesome-svg-core'
+import {library} from '@fortawesome/fontawesome-svg-core'
 import {faCheckCircle} from '@fortawesome/free-regular-svg-icons'
 import {faFont} from '@fortawesome/free-solid-svg-icons'
 import {faMarker} from '@fortawesome/free-solid-svg-icons'
 import {faTrash} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 export default {
   name: "BottomBar",
@@ -146,6 +146,14 @@ export default {
         return 'bg-black-primary z-70'
       } else {
         return 'bg-white z-60 '
+      }
+    },
+    showBottomBar() {
+      let tag = this.$store.state.teacherMarking.assignmentDetails.answer_tag;
+      if (tag) {
+        return tag !== 'unanswered';
+      } else {
+        return true
       }
     }
   },
@@ -184,9 +192,6 @@ export default {
       let path = this.$route.path;
       this.show = !(path.includes('/add-mark') || path.includes('/feedback'));
     },
-  },
-  watch: {
-    '$route': 'handleRouteChange'
   },
   components: {
     DialogBubbleIcon,
