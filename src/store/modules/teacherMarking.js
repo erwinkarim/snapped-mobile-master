@@ -617,7 +617,7 @@ export default {
                 dispatch('enableDragAndDropToTrash')
 
                 // Currently enable only for test account
-                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com') {
+                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com' ) {
                     dispatch('enableCanvasZoom')
                     dispatch('enableCanvasPanning')
                 }
