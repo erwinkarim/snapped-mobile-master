@@ -11,6 +11,13 @@ export default [
         props: true,
         component: Login,
     },
+    {
+        path: '/auth/:provider/callback',
+        component: {
+            template: '<div class="auth-component"></div>'
+
+        },
+    },
     teacher_routes,
     student_routes,
     student_assignment_routes,

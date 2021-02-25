@@ -569,6 +569,7 @@ export default {
             })
         },
 
+        // TODO: Refactor. Pecahkan kepada fungsi-fungsi berasingan.
         loadImage({state, commit, dispatch, rootGetters}) {
 
 
