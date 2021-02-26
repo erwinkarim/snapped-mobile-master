@@ -24,20 +24,7 @@
           </div>
         </div>
       </div>
-      <div class="w-full px-7 mt-3">
-        <section-title class="text-left my-4" title="Integrations"/>
 
-        <div @click="$store.dispatch('integrations/googleClassroom')"
-             class="w-full  py-3 flex flex-row w-full border-b-1 items-center bg-white">
-          <div class="w-1/12 text-center">
-            <font-awesome-icon class="w-full fa-1x text-purple-primary" :icon="faIcons.google"/>
-          </div>
-          <div class="w-5/6 ml-5 text-purple-primary text-left  truncate pr-4">
-            Google Classroom
-          </div>
-        </div>
-
-      </div>
       <div class="w-full px-7 mt-3">
         <section-title class="text-left my-4" title="Log out"/>
 
@@ -72,26 +59,12 @@ import IconBase from "../components/IconBase";
 import IdentificationIcon from "../components/icons/IdentificationIcon";
 import IconBaseTwo from "../components/IconBaseTwo";
 import SectionTitle from "../components/SectionTitle";
-import TeacherRepository from "../repositories/TeacherRepository";
 import StudentRepository from "../repositories/StudentRepository";
-import axios from "axios";
-
-import Repository from "@/repositories/Repository";
-const token = localStorage.getItem('token')
-
-
-import {faGoogle} from '@fortawesome/free-brands-svg-icons'
-import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 export default {
   name: "Settings",
   data() {
     return {
-
-      faIcons: {
-        google: faGoogle
-      },
-
       studentDetails: {
         fullName: {
           value: null,
@@ -135,7 +108,6 @@ export default {
               this.studentDetails.email.value = data.email;
               this.studentDetails.contactNum.value = data.contact_num;
             }
-
           })
     },
   },
@@ -153,8 +125,7 @@ export default {
     IconBaseTwo,
     SectionTitle,
     PageTitle,
-    DashboardLayout,
-    FontAwesomeIcon
+    DashboardLayout
   },
 }
 </script>
