@@ -27,7 +27,7 @@
       <div class="w-full px-7 mt-3">
         <section-title class="text-left my-4" title="Integrations"/>
 
-        <div @click="initiateGoogleClassroomIntegration"
+        <div @click="$store.dispatch('integrations/googleClassroom')"
              class="w-full  py-3 flex flex-row w-full border-b-1 items-center bg-white">
           <div class="w-1/12 text-center">
             <font-awesome-icon class="w-full fa-1x text-purple-primary" :icon="faIcons.google"/>
@@ -138,44 +138,6 @@ export default {
 
           })
     },
-
-    initiateGoogleClassroomIntegration() {
-      let self = this
-      let provider = 'google';
-
-      console.log('initiating')
-
-      // let socialLogin = {
-      //   name: 'google'
-      // };
-
-      // window.open(`http://admin.snapped.test/google`)
-      // window.open(`http://admin.snapped.test/api/google`)
-
-      const newWindow = openWindow('', 'message')
-
-      console.log('posting')
-
-      // TODO: Resolving cacert.pem issue. Curl
-      Repository.post('http://admin.snapped.test/api/google')
-          .then(response => {
-            console.log(response.data)
-            newWindow.location.href = response.data;
-          })
-          .catch(function (error) {
-            console.error(error);
-          });
-    },
-    // This method save the new token and username
-    // onMessage (e) {
-    //   if (e.origin !== window.origin || !e.data.token) {
-    //     return
-    //   }
-    //   localStorage.setItem('user',e.data.name)
-    //   localStorage.setItem('jwt',e.data.token)
-    //
-    //   this.$router.go('/board')
-    // }
   },
   mounted() {
     this.getDetails()
@@ -194,36 +156,6 @@ export default {
     DashboardLayout,
     FontAwesomeIcon
   },
-}
-
-function openWindow (url, title, options = {}) {
-  if (typeof url === 'object') {
-    options = url
-    url = ''
-  }
-
-  options = { url, title, width: 600, height: 720, ...options }
-
-  const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screen.left
-  const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screen.top
-  const width = window.innerWidth || document.documentElement.clientWidth || window.screen.width
-  const height = window.innerHeight || document.documentElement.clientHeight || window.screen.height
-
-  options.left = ((width / 2) - (options.width / 2)) + dualScreenLeft
-  options.top = ((height / 2) - (options.height / 2)) + dualScreenTop
-
-  const optionsStr = Object.keys(options).reduce((acc, key) => {
-    acc.push(`${key}=${options[key]}`)
-    return acc
-  }, []).join(',')
-
-  const newWindow = window.open(url, title, optionsStr)
-
-  if (window.focus) {
-    newWindow.focus()
-  }
-
-  return newWindow
 }
 </script>
 
