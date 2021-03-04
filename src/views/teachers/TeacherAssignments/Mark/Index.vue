@@ -48,6 +48,17 @@
     <!-- HEADER -->
     <page-header/>
 
+    <!-- DEBUGGING PANEL
+     --- Mainly for mobile devices without console panel
+     -->
+    <div v-if="$store.state.teacherMarking.debug.status">
+      <ul >
+        <li v-for="message in $store.state.teacherMarking.debug.message">
+           {{ message }}
+        </li>
+      </ul>
+    </div>
+
     <!-- CONTENT -->
     <div class="relative">
       <router-view/>
