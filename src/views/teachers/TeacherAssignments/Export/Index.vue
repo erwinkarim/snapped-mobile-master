@@ -18,70 +18,54 @@
 
     <template v-slot:content>
 
+      <!--  MODAL: EXPORTING   -->
+      <div v-if="isExporting" @click.self=""
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+        <modal class="w-4/5 ">
+          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Exporting...</h3>
+          <p slot="message">
+            Exporting assignment details
+          </p>
+        </modal>
+      </div>
+
       <!--  MODAL: SUCCESS   -->
-<!--      <div v-if="isShowingSuccessModal" @click.self=""-->
-<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-<!--        <modal :redirect-route="{name: 'teacher.assignments.show'}"-->
-<!--               modal-type="success"-->
-<!--               class="w-4/5 "-->
-<!--        >-->
-<!--          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>-->
-<!--          <p slot="message">-->
-<!--            Assignment exported!-->
-<!--          </p>-->
-<!--          <template slot="button">-->
-<!--            <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">-->
-<!--              Okay-->
-<!--            </button>-->
-<!--          </template>-->
-<!--        </modal>-->
-<!--      </div>-->
+      <div v-if="isSuccessful" @click.self=""
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+        <modal :redirect-route="{name: 'teacher.assignments.show'}"
+               modal-type="success"
+               class="w-4/5 "
+        >
+          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>
+          <p slot="message">
+            Assignment exported!
+          </p>
+          <template slot="button">
+            <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">
+              Okay
+            </button>
+          </template>
+        </modal>
+      </div>
 
-<!--      &lt;!&ndash;  MODAL: DELETE   &ndash;&gt;-->
-<!--      <div v-if="isShowingDeleteModal" @click.self="toggleDeleteModal"-->
-<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-<!--        <modal-->
-<!--            modal-type="no-icon"-->
-<!--            class="w-4/5 "-->
-<!--        >-->
-<!--          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Delete this assignment</h3>-->
-<!--          <p slot="message">-->
-<!--            Are you sure?-->
-<!--          </p>-->
-<!--          <template slot="button">-->
-<!--            <div @click="deleteAssignment">-->
-<!--              DELETE THIS-->
-<!--            </div>-->
-<!--          </template>-->
-<!--        </modal>-->
-<!--      </div>-->
+      <!--  MODAL: SUCCESS   -->
+      <div v-if="hasError" @click.self=""
+           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
+        <modal modal-type="error"
+               class="w-4/5 "
+        >
+          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Oops!</h3>
+          <p slot="message">
+            Seems like something went wrong.
+          </p>
+          <template slot="button">
+            <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">
+              Try again?
+            </button>
+          </template>
+        </modal>
+      </div>
 
-<!--      &lt;!&ndash;  MODAL: SELECT DUE DATE &ndash;&gt;-->
-<!--      <div v-if="isSelectingDueDate" @click.self="closeSetDueDateModal"-->
-<!--           class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">-->
-<!--        <modal class="fixed mx-1/24" v-if="isSelectingDueDate" modal-type="no-icon">-->
-
-<!--          <template v-slot:title>-->
-<!--            <div class="font-bold">-->
-<!--              Set Due Date & Time-->
-<!--            </div>-->
-<!--          </template>-->
-
-<!--          <template v-slot:message>-->
-<!--            <div class="w-full grid grid-cols-1 divide-y divide-transparent">-->
-<!--              <v-date-picker class="place-self-center" :min-date="new Date()" v-model="due_datetime" mode="dateTime"/>-->
-<!--            </div>-->
-<!--          </template>-->
-
-<!--          <template v-slot:button>-->
-<!--            <button @click="closeSetDueDateModal"-->
-<!--                    class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"-->
-<!--            >-->
-<!--              Okay-->
-<!--            </button>-->
-<!--          </template>-->
-<!--        </modal>-->
-<!--      </div>-->
 
       <!-- INPUTS     -->
       <div class="w-full px-7 mt-3 pb-3">
@@ -103,10 +87,10 @@
     </template>
 
     <template v-slot:bottomBar>
-<!--      <button @click="toggleDeleteModal"-->
-<!--              class="w-full font-bold rounded-full text-white text-sm bg-red-primary border-2 border-red-primary py-3 px-1 flex flex-row justify-center mr-2">-->
-<!--        Delete-->
-<!--      </button>-->
+      <!--      <button @click="toggleDeleteModal"-->
+      <!--              class="w-full font-bold rounded-full text-white text-sm bg-red-primary border-2 border-red-primary py-3 px-1 flex flex-row justify-center mr-2">-->
+      <!--        Delete-->
+      <!--      </button>-->
       <button @click="submit"
               class="w-full font-bold focus:outline-none rounded-full text-purple-primary text-sm bg-white border-2 border-purple-primary py-3 px-1 flex flex-row justify-center">
         Export
@@ -119,6 +103,7 @@
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
+import Modal from "@/components/Modal";
 
 export default {
   name: "Index",
@@ -127,9 +112,13 @@ export default {
 
       // states
       isLoading: true,
+      isExporting: false,
+      isSuccessful: false,
+
+      hasError: false,
 
       selectedFolder: null,
-        folders: []
+      folders: []
     }
   },
   methods: {
@@ -150,9 +139,18 @@ export default {
           assignmentID: this.$attrs.assignmentID
         }
 
+        // Set state to isExporting
+        this.isExporting = true;
+
         this.$store.dispatch('googleClassroom/export', payload).then(response => {
           console.log('done export')
           console.log(response.data)
+          if (response.data.success) {
+            this.isExporting = false;
+            this.isSuccessful = true;
+          } else {
+            this.hasError = true;
+          }
         })
       } else {
         console.log('no folder selected!')
@@ -163,7 +161,7 @@ export default {
   created() {
     this.fetchFolders()
   },
-  components: {NavBack, PageHeaderThree, DashboardLayout}
+  components: {NavBack, PageHeaderThree, DashboardLayout, Modal}
 }
 </script>
 
