@@ -1,18 +1,18 @@
 import Repository from "@/repositories/Repository";
 
-
 export default {
     namespaced: true,
     state: () => ({}),
     mutations: {},
     actions: {
 
-        googleClassroom({state, commit, getters, dispatch}) {
+        integration({state, commit, getters, dispatch}) {
 
             const newWindow = openWindow('', 'message')
 
-            Repository.post(process.env.VUE_APP_GOOGLE_CLASSROOM)
+            Repository.post('/google')
                 .then(response => {
+                    console.log('loading window with google login page')
                     newWindow.location.href = response.data;
                 })
                 .catch(function (error) {
@@ -20,13 +20,15 @@ export default {
                 });
         },
 
-        googleClassroomCallback({state, commit, getters, dispatch}, code) {
+        integrationCallback({state, commit, getters, dispatch}, code) {
 
             let payload = {
                 code: code
             }
+            console.log('sending to callback')
+            console.log(code)
 
-            Repository.post(process.env.VUE_APP_GOOGLE_CLASSROOM_CALLBACK, payload)
+            Repository.post('/google-callback', payload)
                 .then(response => {
                     console.log('received from backend callback')
                     console.log(response.data)
@@ -34,7 +36,23 @@ export default {
                 .catch(function (error) {
                     console.error(error);
                 });
+        },
+
+        fetchFolders() {
+            return Repository.get('/drive/list-of-folders');
+        },
+
+        export({}, payload) {
+
+            console.log('exporting')
+            console.log(payload)
+            return Repository.post('/drive/upload-file', {
+                folder_id: payload.folderID,
+                assignment_id: payload.assignmentID
+            })
         }
+
+
 
     },
     getters: {}

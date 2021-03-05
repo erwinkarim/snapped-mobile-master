@@ -10,7 +10,7 @@ export default {
   methods: {
     googleClassroomCallback() {
       let code = this.$route.query.code;
-      this.$store.dispatch('integrations/googleClassroomCallback', code)
+      this.$store.dispatch('googleClassroom/integrationCallback', code)
     }
   },
   created() {

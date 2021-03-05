@@ -26,7 +26,7 @@
       <div class="w-full px-7 mt-3">
         <section-title class="text-left my-4" title="Integrations"/>
 
-        <div @click="$store.dispatch('integrations/googleClassroom')"
+        <div @click="$store.dispatch('googleClassroom/integration')"
              class="w-full  py-3 flex flex-row w-full border-b-1 items-center bg-white">
           <div class="w-1/12 text-center">
             <font-awesome-icon class="w-full fa-1x text-purple-primary" :icon="faIcons.google"/>
