@@ -6,7 +6,6 @@ import mutations from "@/store/mutations";
 import teacherMarking from "@/store/modules/teacherMarking";
 import teacherCreateAssignment from "@/store/modules/teacherCreateAssignment";
 import studentRanking from "@/store/modules/studentRanking";
-import googleClassroom from "@/store/modules/googleClassroom";
 
 Vue.use(Vuex)
 
@@ -23,6 +22,5 @@ export default new Vuex.Store({
         teacherMarking: teacherMarking,
         teacherCreateAssignment: teacherCreateAssignment,
         studentRanking: studentRanking,
-        googleClassroom: googleClassroom
     }
 })

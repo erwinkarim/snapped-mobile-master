@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout :has-custom-bottom-bar="true">
+  <dashboard-layout :has-custom-bottom-bar="isGoogleClassroomIntegrated" :no-bottom-bar="!isGoogleClassroomIntegrated">
 
     <!--  HEADER -->
     <template v-slot:pageHeader>
@@ -16,7 +16,7 @@
       </page-header-three>
     </template>
 
-    <template v-slot:content>
+    <template v-slot:content v-if="isGoogleClassroomIntegrated">
 
       <!--  MODAL: EXPORTING   -->
       <div v-if="isExporting" @click.self=""
@@ -86,7 +86,23 @@
 
     </template>
 
-    <template v-slot:bottomBar>
+    <template v-slot:content v-else>
+
+      <!-- INPUTS     -->
+      <div class="w-full px-7 mt-3 flex flex-col items-center pb-3 pt-20">
+        <div class="text-xs">
+          It seems that you are not connected to your Google account.
+        </div>
+        <router-link :to="{name: 'teacher.settings'}"
+          class="bg-purple-primary mt-4 py-2 text-xs rounded-lg px-5 text-white"
+        >
+          CONNECT NOW
+        </router-link>
+      </div>
+
+    </template>
+
+    <template v-slot:bottomBar v-if="isGoogleClassroomIntegrated">
       <!--      <button @click="toggleDeleteModal"-->
       <!--              class="w-full font-bold rounded-full text-white text-sm bg-red-primary border-2 border-red-primary py-3 px-1 flex flex-row justify-center mr-2">-->
       <!--        Delete-->
@@ -104,6 +120,7 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
 import Modal from "@/components/Modal";
+import GoogleClassroomRepository from "@/repositories/GoogleClassroomRepository";
 
 export default {
   name: "Index",
@@ -121,15 +138,23 @@ export default {
       folders: []
     }
   },
+  computed: {
+    isGoogleClassroomIntegrated() {
+      return this.$store.getters.getGoogleIntegrated;
+    }
+  },
   methods: {
     fetchFolders() {
-      this.$store.dispatch('googleClassroom/fetchFolders').then(response => {
-        if (response.data.success) {
-          // console.log(response.data.data.folders)
-          this.isLoading = false;
-          this.folders = response.data.data.folders;
-        }
-      })
+
+      GoogleClassroomRepository.fetchFolders()
+          .then(response => {
+            console.log(response)
+            if (response.data.success) {
+              // console.log(response.data.data.folders)
+              this.isLoading = false;
+              this.folders = response.data.data.folders;
+            }
+          })
     },
     submit() {
       if (this.selectedFolder) {

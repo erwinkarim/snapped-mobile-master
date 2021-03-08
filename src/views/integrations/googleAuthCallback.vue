@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import GoogleClassroomRepository from "@/repositories/GoogleClassroomRepository";
+
 export default {
   name: "googleAuthCallback",
   data() {
@@ -20,31 +22,38 @@ export default {
       isAuthenticated: false,
 
       title: 'Authenticating...',
-      message: "Please wait. Thank you."
+      message: "Please wait. Thank you.",
     }
   },
   methods: {
     googleClassroomCallback() {
-      let code = this.$route.query.code;
 
-      this.$store.dispatch('googleClassroom/integrationCallback', code)
+      let payload = {
+        code: this.$route.query.code,
+        // token: this.$store.getters.getToken
+      }
+
+      GoogleClassroomRepository.integrationCallback(payload)
           .then(response => {
 
-            this.isAuthenticating = false;
-
-            console.log('received from backend callback')
-            console.log(response.data)
             if (response.data.success) {
 
-              this.title = 'Success!'
-              this.message = response.data.message
-
-              console.log(`Callback page:${localStorage.getItem('token')}`)
-
+              // Give time to update user details at backend
               setTimeout(() => {
-                this.$store.dispatch('googleClassroom/handleIntegrationSuccess')
-                // window.close();
+                this.isAuthenticating = false;
+
+                this.title = 'Success!'
+                this.message = response.data.message
+
+                // Send post message to parent. To get updated user details
+                window.opener.postMessage({success: true})
+
+                // Close the window
+                setTimeout(() => {
+                  window.close();
+                }, 1500)
               }, 1500)
+
 
             } else {
 
@@ -56,20 +65,21 @@ export default {
               }, 1500)
             }
           })
-          .catch( (error) => {
+          .catch((error) => {
+
+            console.log('Oops! It seems that there is an error with the Google Callback function')
 
             this.isAuthenticating = false;
 
             this.title = 'Oops!'
             this.message = error;
           });
-
-
-    }
+    },
+  },
+  mounted() {
+    window.addEventListener('message', this.handleMessage)
   },
   created() {
-    console.log('created callback page')
-    console.log(this.$store.getters.getAuthUser)
     this.googleClassroomCallback();
   }
 }
