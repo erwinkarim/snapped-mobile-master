@@ -94,7 +94,7 @@
           It seems that you are not connected to your Google account.
         </div>
         <router-link :to="{name: 'teacher.settings'}"
-          class="bg-purple-primary mt-4 py-2 text-xs rounded-lg px-5 text-white"
+                     class="bg-purple-primary mt-4 py-2 text-xs rounded-lg px-5 text-white"
         >
           CONNECT NOW
         </router-link>
@@ -167,16 +167,18 @@ export default {
         // Set state to isExporting
         this.isExporting = true;
 
-        this.$store.dispatch('googleClassroom/export', payload).then(response => {
-          console.log('done export')
-          console.log(response.data)
-          if (response.data.success) {
-            this.isExporting = false;
-            this.isSuccessful = true;
-          } else {
-            this.hasError = true;
-          }
-        })
+        GoogleClassroomRepository.export(payload)
+            .then(response => {
+              if (response.data.success) {
+                this.isExporting = false;
+                this.isSuccessful = true;
+              } else {
+                this.hasError = true;
+              }
+            })
+            .catch(error => {
+              console.log('Oops! It seems that there is something wrong with this export module.')
+            })
       } else {
         console.log('no folder selected!')
       }
