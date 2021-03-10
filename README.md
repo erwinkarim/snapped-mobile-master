@@ -10,6 +10,14 @@ Deployment: [Vercel](https://vercel.com/bbv)
 npm install
 ```
 
+### Environment variables (.env)
+```
+NODE_ENV=
+VUE_APP_URL=
+VUE_APP_TITLE=
+VUE_APP_BACKEND_ENDPOINT=
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
