@@ -8,6 +8,7 @@ import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Com
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
 import AssignmentEdit from "@/views/teachers/TeacherAssignments/Edit/Index";
+import AssignmentExport from "@/views/teachers/TeacherAssignments/Export/Index";
 
 const teacherAccessControlMeta = {
     checkAuth: 'true',
@@ -40,6 +41,13 @@ export default {
                     path: 'edit',
                     name: 'teacher.assignments.edit',
                     component: AssignmentEdit,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
+                {
+                    path: 'export',
+                    name: 'teacher.assignments.export',
+                    component: AssignmentExport,
                     meta: teacherAccessControlMeta,
                     props: true,
                 },

@@ -16,6 +16,10 @@ export default  {
     getAuthEmail: (state, getters) => {
         return getters.getAuthUser.email
     },
+
+    getGoogleIntegrated: (state, getters) => {
+        return getters.getAuthUser.google_integrated
+    },
     getToken : state => state.token,
 
     currentYear: () => {

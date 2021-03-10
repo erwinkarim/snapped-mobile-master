@@ -21,6 +21,6 @@ export default new Vuex.Store({
     modules: {
         teacherMarking: teacherMarking,
         teacherCreateAssignment: teacherCreateAssignment,
-        studentRanking: studentRanking
+        studentRanking: studentRanking,
     }
 })
