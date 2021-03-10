@@ -37,11 +37,18 @@
                 </template>
 
                 <template v-slot:rightAction>
-                  <router-link :to="{name : 'teacher.assignments.edit'}"
-                               class="flex flex-row justify-end items-center font-semibold text-white text-right pr-5"
-                  >
-                    Edit
-                  </router-link>
+                  <div class="flex flex-row justify-end">
+                    <router-link :to="{name : 'teacher.assignments.export'}"
+                                 class="flex flex-row justify-end items-center font-semibold text-white text-right pr-5"
+                    >
+                      <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.export"/>
+                    </router-link>
+                    <router-link :to="{name : 'teacher.assignments.edit'}"
+                                 class="flex flex-row justify-end items-center font-semibold text-white text-right pr-5"
+                    >
+                      <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.edit"/>
+                    </router-link>
+                  </div>
                 </template>
               </page-header-three>
               <!-- TIMER -->
@@ -136,6 +143,9 @@ import NavBack from "@/components/NavBack";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import moment from "moment";
 
+import {faFileExport, faEdit} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+
 export default {
   name: "Index",
   props: {
@@ -143,6 +153,11 @@ export default {
   },
   data() {
     return {
+
+      icons: {
+        export: faFileExport,
+        edit: faEdit
+      },
 
       // Status
       isPreviewing: false,
@@ -263,6 +278,7 @@ export default {
     this.fetchData();
   },
   components: {
+    FontAwesomeIcon,
     ArrowBackIcon,
     PageHeaderThree,
     AssignmentQuestionCard,
