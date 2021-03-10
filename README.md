@@ -18,6 +18,10 @@ VUE_APP_TITLE=
 VUE_APP_BACKEND_ENDPOINT=
 ```
 
+### Install FabricJS with Touch Gestures
+Replace default [fabric.js file]((../node_modules/fabric/dist/fabric.js)) with custom build file.
+Get custom build with gesture from [here](http://fabricjs.com/build/).
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -30,9 +34,6 @@ npm run build:styles
 ```
 
 ### Implementing integration with Google Classroom.
-
-#### Implementing integration with Google Classroom.
-
 
 1) Get an OAuth client ID from Google Developers Console
 
