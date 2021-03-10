@@ -1,15 +1,15 @@
 <template>
-  <div class="h-screen">
+  <div class="h-full mx-auto">
 
-    <div class="flex flex-row">
+    <div class="flex flex-row w-full max-w-xl md:mx-auto">
       <slot name="pageHeader"/>
     </div>
 
-    <div :class="contentClass" class="flex flex-col w-screen ">
+    <div :class="contentClass" class="flex flex-col w-screen md:mx-auto md:items-center max-w-xl">
       <slot name="content"/>
     </div>
 
-    <div v-if="hasCustomBottomBar" :class="bottomBarClass" class="md:hidden block fixed inset-x-0  bottom-0 z-10 shadow pt-4 pb-6 px-5">
+    <div v-if="hasCustomBottomBar" :class="bottomBarClass" class=" block fixed inset-x-0  bottom-0 z-30 md:z-40 shadow pt-4 pb-6 px-5">
       <div class="flex flex-row h-full items-center justify-around">
         <slot name="bottomBar"/>
       </div>
@@ -18,7 +18,7 @@
 
     </div>
     <div v-else>
-      <bottom-navbar/>
+      <bottom-navbar class="block fixed inset-x-0 border-t-1/4 bottom-0 z-40 shadow bg-white h-14 md:h-20"/>
     </div>
 
   </div>

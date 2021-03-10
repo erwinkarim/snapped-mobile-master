@@ -2,9 +2,12 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div @click="enterMarkingMode(path)" :class="swiperClass" class=" swiper-slide rounded-2xl flex flex-col" v-for="path in images">
-          <div class="w-full h-full object-cover top-0 flex flex-row items-center absolute">
-            <img :src="path">
+        <div v-for="(dataURL, index) in $store.getters['teacherMarking/images']"
+             @click="enterMarkingMode(dataURL, index)"
+             :class="swiperClass"
+             class=" swiper-slide rounded-2xl h-full overflow-hidden">
+          <div class="w-full py-2 px-4 h-full flex flex-col justify-start items-center object-cover top-0 items-center absolute">
+            <img :src="dataURL">
           </div>
         </div>
       </div>
@@ -21,14 +24,10 @@ import router from "@/router";
 
 export default {
   name: "AnswerPreviewSwiper",
-  props: {
-    isPreviewing: Boolean,
-    images: Array
-  },
   computed: {
     swiperClass: function () {
-      if (this.isPreviewing) {
-        return 'pb-16/9 bg-black-primary';
+      if (this.$store.state.teacherMarking.states.isPreviewing) {
+        return 'min-h-screen';
       } else {
         return 'pb-5/4';
       }
@@ -36,9 +35,6 @@ export default {
   },
   data() {
     return {
-
-      // STATES
-      isMarking: false,
 
       swiperOption: {
         initialSlide: 0,
@@ -62,11 +58,15 @@ export default {
     }
   },
   methods: {
-    enterMarkingMode (path) {
-      if (this.isPreviewing) {
-        this.$emit('nowMarking', path)
-        router.push({ name: 'teacher.assignments.marking.snapped_answer.edit'})
-      }
+    enterMarkingMode(dataURL, index) {
+      this.$store.dispatch('teacherMarking/enterMarkingMode', {
+        index: index,
+        dataURL: dataURL
+      }).then(() => {
+
+        router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
+      })
+
     }
   },
   directives: {

@@ -5,7 +5,11 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back class="w-2/3" stroke-color="red-primary"/>
+          <div @click="exitWritingFeedbackMode">
+            <icon-base-two class="w-1/4 ml-6">
+              <arrow-back-icon stroke-color="red-primary"/>
+            </icon-base-two>
+          </div>
         </template>
 
         <template v-slot:mini-title>
@@ -13,10 +17,10 @@
         </template>
 
         <template v-slot:rightAction>
-          <div v-if="newFeedback.length === 0" class="text-gray-primary font-bold">
+          <div v-if="draft.length === 0" class="text-gray-primary font-bold">
             Done
           </div>
-          <div @click="save" v-if="newFeedback.length > 0" class="text-red-primary font-bold">
+          <div @click="save" v-if="draft.length > 0" class="text-red-primary font-bold">
             Done
           </div>
         </template>
@@ -24,9 +28,9 @@
     </template>
 
     <template v-slot:content>
-      <div class="pt-32 px-6 h-full">
-      <textarea v-model="newFeedback"
-                class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"></textarea>
+      <div class="pt-32 px-6 w-full ">
+      <textarea v-model="draft"
+                class="resize-y text-purple-primary  w-full min-h-half-screen  rounded focus:outline-none"></textarea>
       </div>
     </template>
   </dashboard-layout>
@@ -39,26 +43,30 @@ import NavBack from "@/components/NavBack";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
+import IconBaseTwo from "@/components/IconBaseTwo";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+
 export default {
   name: "AssignmentFeedback",
-  components: {PageHeaderThree, DashboardLayout, NavBack, PageTitleTwo},
-  props: {
-    feedback: String
-  },
+  components: {ArrowBackIcon, IconBaseTwo, PageHeaderThree, DashboardLayout, NavBack, PageTitleTwo},
   data() {
     return {
-      newFeedback: ''
+      draft: this.$store.state.teacherMarking.submission.feedback
     }
   },
   methods: {
-    save() {
-      this.$emit('feedback', this.newFeedback)
+    exitWritingFeedbackMode() {
+      this.$store.commit('teacherMarking/exitWritingFeedbackMode')
       router.push({name: 'teacher.assignments.marking.details'})
+    },
+    save() {
+      this.$store.dispatch('teacherMarking/addFeedback', this.draft)
+          .then(() => {
+            this.$store.commit('teacherMarking/exitWritingFeedbackMode')
+            router.push({name: 'teacher.assignments.marking.details'})
+          });
     }
   },
-  mounted() {
-    this.newFeedback = this.feedback
-  }
 }
 </script>
 

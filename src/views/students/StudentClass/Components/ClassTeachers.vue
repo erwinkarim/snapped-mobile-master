@@ -2,23 +2,24 @@
   <layout-one>
     <!-- Subject Title + Period -->
     <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5 mb-5">
-      Jan - Dec 2020
+      Jan - Dec {{ $store.getters.currentYear }}
     </div>
 
     <div class="">
-      <div :key="teacher.teacher_id" v-for="teacher in teachers"
-           class="text-left px-5 py-2 h-20 flex flex-row w-full border-b-1 items-center bg-white">
+      <div v-for="teacher in teachers"
+           :key="teacher.teacher_id"
+           class="text-left px-5 py-2 md:py-3 flex flex-row w-full border-b-1 items-center bg-white">
 
-        <div class="flex flex-row items-center">
+        <div class="flex flex-row items-center truncate w-11/12">
           <icon-base-two class=" w-1/6">
-            <profile-photo/>
+            <profile-photo :gender="teacher.gender"/>
           </icon-base-two>
-          <div class="ml-5 text-purple-primary w-5/6 mr-2  truncate pr-4">
-            {{teacher.name}}
+          <div class="ml-5 text-purple-primary w-5/6 mr-2 truncate pr-4">
+            {{ teacher.name }}
           </div>
         </div>
         <div class=" w-1/12">
-          <icon-base-two v-if="teacher.is_homeroom" class="w-5/6" view-box="-2 -2 25 40">
+          <icon-base-two v-if="teacher.is_homeroom" class="w-full">
             <bookmark-icon/>
           </icon-base-two>
         </div>
@@ -45,12 +46,15 @@ export default {
   },
   methods: {
     getTeachers() {
-      StudentRepository.getClassTeachers()
+      StudentRepository.getClassTeachers({
+        pageNum: 1,
+        perPage: 50
+      })
           .then(response => {
             let data = response.data;
 
-            this.teachers = data.teachers;
-            this.className = data.class_name;
+            this.teachers = data.data;
+            this.className = data.meta.class_name;
           })
     }
   },

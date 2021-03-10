@@ -4,31 +4,33 @@
     <template v-slot:pageHeader>
       <page-title title="Assignments">
         <template v-slot:rightAction>
-          <router-link :to="{name : 'teacher.assignments.create'}" class="font-bold text-red-primary text-right">
+          <router-link :to="{name : 'teacher.assignments.create'}"
+                       class="flex flex-row justify-end items-center font-bold text-red-primary text-right"
+          >
             Add New
           </router-link>
         </template>
+
       </page-title>
     </template>
 
     <template v-slot:content>
-      <div class="px-5">
+      <div class="px-5 w-full">
         <!-- Section Title -->
         <div class="flex flex-row justify-between items-center mt-8">
-          <section-title title="Assignments Date"/>
+          <section-title title="Due Dates"/>
           <div class="w-1/12">
             <button @click="modal = !modal">
               <icon-base-two stroke-color="purple-primary">
                 <filter-icon/>
               </icon-base-two>
             </button>
-
           </div>
         </div>
 
         <!-- SECTION: CALENDAR -->
         <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
-          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full" />
+          <assignment-calendar @selectedDate="handleSelectedDate"/>
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
@@ -36,7 +38,7 @@
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
-            <section-title title="Assignments List"/>
+            <section-title title="To-Do List"/>
             <div class="text-purple-primary">
               {{ selectedDate }}
             </div>
@@ -47,22 +49,38 @@
               :key="assignment.assignmentID"
               :assignment="assignment"
               :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+              :display-countdown-timer="assignment.totalMarked !== assignment.totalSubmitted"
               class="mt-4"
           >
-            <template v-slot:topRightAction >
-              {{ assignment.totalSubmitted }} submitted
+            <template v-slot:topRightAction>
+              <div class="flex flex-col">
+                <div class="mb-1">
+                  {{ assignment.totalSubmitted }} submitted
+                </div>
+                <div>
+                  {{ assignment.totalMarked }} marked
+                </div>
+              </div>
             </template>
           </assignment-card>
 
-          <div v-if="hasError" class="text-purple-secondary mt-12">
-            {{ hasError }}
-          </div>
+          <infinite-loading :identifier="filterCount"
+                            @infinite="handleInfiniteScroll"
+                            spinner="bubbles"
+                            force-use-infinite-wrapper
+          >
+            <div slot="spinner" class="mt-10">Loading...</div>
+            <div slot="no-more"></div>
+            <div slot="no-results" class="text-purple-secondary mt-12">
+              No available data.
+            </div>
+          </infinite-loading>
         </div>
       </div>
     </template>
 
     <template v-slot:bottomBar>
-      <div class="w-full divide-y divide-transparent">
+      <div class="w-full max-w-xl divide-y divide-transparent">
 
         <!-- FILTER SELECT OPTIONS -->
         <div class="py-2">
@@ -78,7 +96,7 @@
           </div>
         </div>
         <div class="text-center py-2">
-          <select-subject @selectedSubject="handleSelectedSubject"/>
+          <select-subject user-role="teacher" @selectedSubject="handleSelectedSubject"/>
         </div>
 
         <!-- FILTER ACTIONS -->
@@ -98,9 +116,11 @@
                 <div class="w-5/7">
                   Filter
                 </div>
-                <icon-base-two class="w-1/7">
-                  <filter-icon/>
-                </icon-base-two>
+                <div class="w-1/7">
+                  <icon-base-two class="w-full md:w-1/2">
+                    <filter-icon/>
+                  </icon-base-two>
+                </div>
               </button>
             </div>
           </div>
@@ -125,6 +145,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
 import SectionTitle from "@/components/SectionTitle";
 import AssignmentCalendar from "@/components/AssignmentCalendar";
+import InfiniteLoading from "vue-infinite-loading";
 
 import moment from "moment";
 import SelectMonth from "@/components/SelectMonth";
@@ -135,32 +156,35 @@ import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
   name: "TeacherAssignments",
-  components: {
-    AssignmentCard,
-    SelectSubject,
-    SelectYear,
-    SelectMonth,
-    AssignmentCalendar,
-    SectionTitle,
-    FilterIcon,
-    IconBaseTwo,
-    PageTitle,
-    DashboardLayout
-  },
   data() {
     return {
       // States
       hasError: false,
       modal: false,
-      assignments: [],
 
+      filterCount: 0,
       filters: {
+        pageNum: 1,
+        perPage: 50,
+        search: '',
         date: null,
         month: null,
         year: null,
         subjects: null
-      }
+      },
+
+      assignments: [],
+      meta: null
+
     };
+  },
+
+  watch: {
+    'filters.date': function (newSelect) {
+      if (newSelect != null) {
+        this.updateFilter()
+      }
+    }
   },
   computed: {
     selectedDate() {
@@ -170,6 +194,8 @@ export default {
     },
     requestFilter() {
       return {
+        pageNum: this.filters.pageNum,
+        perPage: this.filters.perPage,
         is_active: false,
         date: this.filters.date,
         month: this.filters.month,
@@ -177,54 +203,68 @@ export default {
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
       }
     },
-  },
-  watch: {
-    'filters.date': function (newSelect) {
-      if (newSelect != null){
-        this.fetchData()
+    hasLoadMore() {
+      if (this.meta) {
+        return this.filters.pageNum <= this.meta.last_page
+      } else {
+        return true;
       }
-    }
+    },
   },
   methods: {
 
-    fetchData() {
+    handleInfiniteScroll($state) {
 
-      this.assignments = [];
+      if (this.hasLoadMore) {
 
-      AssignmentRepository.all(this.requestFilter)
-          .then(response => {
+        AssignmentRepository.all(this.requestFilter)
+            .then(response => {
 
-            let data = response.data.data;
+              if (response.data.success) {
 
-            if (data) {
+                const data = response.data.data
 
-              const data = response.data.data
+                for (let i = 0; i < data.length; i++) {
 
-              for (let i = 0; i < data.length; i++) {
+                  let item = data[i];
 
-                let item = data[i];
+                  let assignmentDetail = {
+                    assignmentID: item.assignment_id,
+                    subjectName: item.subject_name,
+                    classroomName: item.classroom_name,
+                    title: item.title,
+                    description: item.written_description,
+                    dueDatetime: item.due_datetime,
+                    totalSubmitted: item.number_of_submissions,
+                    totalMarked: item.num_of_marked_submissions
+                  }
 
-                let assignmentDetail = {
-                  assignmentID: item.assignment_id,
-                  subjectName: item.subject_name,
-                  classroomName: item.classroom_name,
-                  title: item.title,
-                  description: item.written_description,
-                  dueDatetime: item.due_datetime,
-                  totalSubmitted: item.number_of_submissions,
+                  if (item.marks_id) {
+                    assignmentDetail['marks'] = {
+                      id: item.marks_id,
+                      value: item.marks
+                    }
+                  }
+
+                  this.assignments.push(assignmentDetail);
+                  this.hasError = false;
                 }
 
-                this.assignments.push(assignmentDetail);
-                this.hasError = false;
+                // Update meta details and pageNum for filters
+                this.meta = response.data.meta;
+                this.filters.pageNum = this.meta.current_page + 1;
+
+                $state.loaded();
+              } else {
+                this.hasError = response.data.message;
+                $state.complete()
               }
-            } else {
+            })
 
-              const error = response.data.error;
-              this.hasError = error.message;
-            }
-          })
-
-      this.resetFilterModalOptions()
+        this.resetFilterModalOptions()
+      } else {
+        $state.complete();
+      }
 
     },
 
@@ -245,7 +285,7 @@ export default {
     },
     clickedFilterButton() {
       this.toggleFilterModal()
-      this.fetchData()
+      this.updateFilter();
     },
     toggleFilterModal() {
       this.modal = !this.modal
@@ -254,7 +294,27 @@ export default {
       this.filters.month = null;
       this.filters.year = null;
       this.filters.subjects = null;
+    },
+    updateFilter() {
+      this.filters.pageNum = 1
+      this.filters.perPage = 50
+
+      this.assignments = [];
+      this.filterCount++;
     }
+  },
+  components: {
+    AssignmentCard,
+    SelectSubject,
+    SelectYear,
+    SelectMonth,
+    AssignmentCalendar,
+    SectionTitle,
+    FilterIcon,
+    IconBaseTwo,
+    PageTitle,
+    DashboardLayout,
+    InfiniteLoading
   }
 }
 </script>

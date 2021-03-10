@@ -3,48 +3,57 @@
   <layout-one>
     <!-- Subject Title + Period -->
     <div class="text-purple-primary font-bold text-left text-sm bg-gray-secondary py-2 px-5 mb-5">
-      Class Ranking (Jan - Dec 2020)
+      Class Ranking (Jan - Dec {{ $store.getters.currentYear }})
     </div>
 
     <div class="px-5">
-      <div v-for="(student, index) in rankings"
 
-           class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1">
+      <router-link v-for="(student, index) in rankings"
+                   :key="student.student.student_id"
+                   :to="{name : 'student.profile.show', params: {studentID: student.student.student_id} }"
+                   class="mb-3 w-full rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-row pl-1"
+      >
 
         <div class="flex flex-row w-4/12 items-center">
           <!-- Ranking -->
-          <div class="font-bold text-3xl w-3/7 px-2 text-center mr-1">
-            {{ student.ranking }}
+          <div :class="student.ranking === 1 ? 'items-start' : 'justify-center px-2'"
+               class=" flex flex-col items-center w-3/7 h-full  text-center mr-1 ">
+
+            <icon-base-two v-if="student.ranking === 1" class="w-full md:w-6/7">
+              <gold-medal-icon/>
+            </icon-base-two>
+
+            <div v-else class="font-bold text-lg md:text-3xl">
+              {{ student.ranking }}
+            </div>
           </div>
 
           <!-- Student photo -->
           <icon-base-two class="w-3/7">
-            <profile-photo/>
+            <profile-photo :gender="student.student.gender"/>
           </icon-base-two>
         </div>
 
-        <div class="flex w-7/12 py-3">
+        <div class="flex w-6/12 py-3 md:py-6">
 
           <!-- Student Details -->
           <div class="flex flex-col w-full justify-between">
             <div>
-              <div class="text-left text-purple-primary text-xs-plus font-bold  truncate  pr-10">
+              <div class="text-left text-purple-primary text-xs-plus font-bold  truncate  pr-5">
                 {{ student.student.student_name || '' }}
               </div>
 
-              <div class="text-left text-purple-secondary text-px-10  truncate mt-2 pr-10">
-                {{ student.student.class_name || ''}}
+              <div class="text-left text-purple-secondary text-px-10  truncate mt-2 pr-5">
+                {{ student.student.class_name || '' }}
               </div>
             </div>
           </div>
         </div>
 
-        <div class="w-1/6">
-          <icon-base-two v-if="student.ranking === 1" class="w-5/6">
-            <gold-medal-icon/>
-          </icon-base-two>
+        <div class="w-3/12 flex flex-col justify-center font-bold text-sm text-right pr-5 md:text-lg ">
+          {{ `${student.student.marks_average}%`}}
         </div>
-      </div>
+      </router-link>
     </div>
   </layout-one>
 </template>
@@ -69,10 +78,12 @@ export default {
     getRankings() {
       StudentRepository.getClassRanking()
           .then(response => {
-            let data = response.data;
+            if (response.data.success) {
+              let data = response.data.data;
 
-            this.totalNumOfStudents = data.total_students;
-            this.rankings = data.data
+              this.totalNumOfStudents = data.total_students;
+              this.rankings = data.rankings
+            }
           })
     }
   },

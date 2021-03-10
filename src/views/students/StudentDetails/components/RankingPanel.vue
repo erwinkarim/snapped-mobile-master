@@ -7,7 +7,7 @@
           inner-stroke-color="gray" :stroke-width="6" :inner-stroke-width="6"
       />
       <div class="mt-1 text-purple-secondary text-2xs">
-        Today Rank
+        Daily
       </div>
     </div>
     <div class="flex flex-col w-1/3 items-center">
@@ -17,7 +17,7 @@
           inner-stroke-color="#F1F3F6" :stroke-width="6" :inner-stroke-width="6"
       />
       <div class="mt-1 text-purple-secondary text-2xs">
-        Weekly Rank
+        Weekly
       </div>
     </div>
     <div class="flex flex-col w-1/3 items-center">
@@ -27,7 +27,7 @@
           inner-stroke-color="#F1F3F6" :stroke-width="6" :inner-stroke-width="6"
       />
       <div class="mt-1 text-purple-secondary text-2xs">
-        Overall Rank
+        Overall
       </div>
     </div>
   </div>
@@ -59,15 +59,18 @@ export default {
       StudentRepository.getRanking(this.studentID)
           .then(response => {
 
-            let data = response.data;
+            if(response.data.success) {
 
-            this.rankings = {
-              today: data.ranking.today,
-              weekly: data.ranking.weekly,
-              overall: data.ranking.overall,
+              let data = response.data.data;
+
+              this.rankings = {
+                today: data.ranking.today,
+                weekly: data.ranking.weekly,
+                overall: data.ranking.overall,
+              }
+
+              this.totalNumOfStudents = data.total_students;
             }
-
-            this.totalNumOfStudents = data.total_students;
 
           })
           .catch(err => {

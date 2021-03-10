@@ -8,9 +8,15 @@
     "build:styles": "npx tailwind build src/assets/styles/tailwind.css -o src/assets/styles/styles.css"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-regular-svg-icons": "^5.15.2",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "axios": "^0.20.0",
     "core-js": "^3.7.0",
     "fabric": "^4.2.0",
+    "fabric-history": "^1.6.0",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "swiper": "^6.3.5",
@@ -18,7 +24,10 @@
     "v-calendar": "^2.1.1",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-cropperjs": "^4.2.0",
+    "vue-infinite-loading": "^2.4.5",
     "vue-moment": "^4.1.0",
+    "vue-multiselect": "^2.1.6",
     "vue-radial-progress": "^0.3.2",
     "vue-router": "^3.4.9",
     "vuex": "^3.4.0"

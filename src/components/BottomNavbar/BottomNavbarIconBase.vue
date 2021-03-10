@@ -70,7 +70,9 @@ export default {
       /* STUDENTS */
       if ((this.$route.path).includes('teacher/students') ||
           (this.$route.path).includes('teacher/student') ||
-          (this.$route.path).includes('teacher/student'))
+          (this.$route.path).includes('teacher/student') ||
+          (this.$route.path).includes('students/profile')
+      )
       {
         this.activeTab = 'students'
       }

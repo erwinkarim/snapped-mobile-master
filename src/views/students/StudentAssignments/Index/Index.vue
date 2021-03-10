@@ -5,13 +5,13 @@
     </template>
 
     <template v-slot:content>
-      <div class="px-5">
+      <div class="px-5 w-full max-w-xl">
 
 
         <!-- Section Title -->
         <div class="flex flex-row justify-between mt-8 items-center">
-          <section-title title="Assignments Date"/>
-          <div class="w-1/12" @click="modal = !modal">
+          <section-title title="Due Dates"/>
+          <div class="w-1/12 md:w-1/24" @click="modal = !modal">
             <icon-base-two stroke-color="purple-primary">
               <filter-icon/>
             </icon-base-two>
@@ -19,8 +19,8 @@
         </div>
 
         <!-- SECTION: CALENDAR -->
-        <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl">
-          <assignment-calendar @selectedDate="handleSelectedDate" class="w-full" />
+        <div class="bg-white border-2 border-purple-primary border-opacity-10 mt-6 rounded-xl ">
+          <assignment-calendar @selectedDate="handleSelectedDate"/>
         </div>
 
         <!-- SECTION: ASSIGNMENT -->
@@ -28,9 +28,9 @@
 
           <!-- Section Title -->
           <div class="flex flex-row justify-between items-center">
-            <section-title title="Assignments List"/>
+            <section-title title="To-Do List"/>
             <div class="text-purple-primary">
-              {{selectedDate}}
+              {{ selectedDate }}
             </div>
           </div>
 
@@ -42,16 +42,28 @@
                 :route="{name: 'student.assignments.show', params: { assignmentID: assignment.assignmentID }}"
                 :assignment="assignment"
                 :show-marks="true"
+                user-role="student"
             >
               <template v-slot:topRightAction v-if="!assignment.marks">
-                {{ assignment.totalSubmitted }} submitted
+                <div v-if="assignment.hasSubmitted" class="pr-1 md:pr-3">
+                  DONE
+                </div>
               </template>
             </assignment-card>
+
+            <infinite-loading :identifier="filterCount"
+                              @infinite="handleInfiniteScroll"
+                              spinner="bubbles"
+                              force-use-infinite-wrapper
+            >
+              <div slot="spinner" class="mt-10">Loading...</div>
+              <div slot="no-more"></div>
+              <div slot="no-results" class="text-purple-secondary mt-12">
+                No available data.
+              </div>
+            </infinite-loading>
           </div>
 
-          <div v-if="hasError" class="text-purple-secondary mt-12">
-            {{ hasError }}
-          </div>
 
         </div>
 
@@ -61,7 +73,7 @@
 
     <!-- BOTTOM BAR: FILTER PANEL-->
     <template v-slot:bottomBar>
-      <div class="w-full divide-y divide-transparent">
+      <div class="w-full md:max-w-xl divide-y divide-transparent">
 
         <!-- FILTER SELECT OPTIONS -->
         <div class="py-2">
@@ -77,7 +89,9 @@
           </div>
         </div>
         <div class="text-center py-2">
-          <select-subject @selectedSubject="handleSelectedSubject"/>
+          <select-subject user-role="student"
+                          @selectedSubject="handleSelectedSubject"
+          />
         </div>
 
         <!-- FILTER ACTIONS -->
@@ -93,11 +107,11 @@
             </div>
             <div class="text-center">
               <button @click="clickedFilterButton"
-                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row justify-center">
+                      class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-3 px-1 flex flex-row  items-center justify-center">
                 <div class="w-5/7">
                   Filter
                 </div>
-                <icon-base-two class="w-1/7">
+                <icon-base-two class="w-1/7 md:w-1/12">
                   <filter-icon/>
                 </icon-base-two>
               </button>
@@ -131,6 +145,9 @@ import SelectMonth from "@/components/SelectMonth";
 import SelectYear from "@/components/SelectYear";
 import SelectSubject from "@/components/SelectSubject";
 import moment from "moment";
+import StudentRepository from "@/repositories/StudentRepository";
+import InfiniteLoading from "vue-infinite-loading";
+
 
 export default {
   name: "Index",
@@ -141,13 +158,25 @@ export default {
       hasError: false,
       modal: false,
 
-      assignments: [],
-
+      filterCount: 0,
       filters: {
+        pageNum: 1,
+        perPage: 20,
+        search: '',
         date: null,
         month: null,
         year: null,
         subjects: null
+      },
+
+      assignments: [],
+      meta: null
+    }
+  },
+  watch: {
+    'filters.date': function (newSelect) {
+      if (newSelect != null) {
+        this.updateFilter()
       }
     }
   },
@@ -159,69 +188,82 @@ export default {
     },
     requestFilter() {
       return {
+        pageNum: this.filters.pageNum,
+        perPage: this.filters.perPage,
         is_active: false,
         date: this.filters.date,
         month: this.filters.month,
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
       }
-    }
-  },
-  watch:{
-    'filters.date': function (newSelect) {
-      if (newSelect != null){
-        this.fetchData()
+    },
+    hasLoadMore() {
+      if (this.meta) {
+        return this.filters.pageNum <= this.meta.last_page
+      } else {
+        return true;
       }
-    }
+    },
   },
   methods: {
-    fetchData() {
 
-      this.assignments = [];
+    handleInfiniteScroll($state) {
 
-      AssignmentRepository.all(this.requestFilter)
-          .then(response => {
+      if (this.hasLoadMore) {
 
-            let data = response.data.data;
+        AssignmentRepository.all(this.requestFilter)
+            .then(response => {
 
-            if (data) {
+              if (response.data.success) {
+                const data = response.data.data
 
-              const data = response.data.data
+                for (let i = 0; i < data.length; i++) {
 
-              for (let i = 0; i < data.length; i++) {
+                  let item = data[i];
 
-                let item = data[i];
+                  let assignmentDetail = {
+                    assignmentID: item.assignment_id,
+                    subjectName: item.subject_name,
+                    classroomName: item.classroom_name,
+                    title: item.title,
+                    description: item.written_description,
+                    dueDatetime: item.due_datetime,
+                    totalSubmitted: item.number_of_submissions,
+                    hasSubmitted: item.has_submitted === "yes"
 
-                let assignmentDetail = {
-                  assignmentID: item.assignment_id,
-                  subjectName: item.subject_name,
-                  classroomName: item.classroom_name,
-                  title: item.title,
-                  description: item.written_description,
-                  dueDatetime: item.due_datetime,
-                  totalSubmitted: item.number_of_submissions,
-                }
-
-                if (item.marks_id) {
-                  assignmentDetail['marks'] = {
-                    id: item.marks_id,
-                    value: item.marks
                   }
+
+                  if (item.marks_id) {
+                    assignmentDetail['marks'] = {
+                      id: item.marks_id,
+                      value: item.marks
+                    }
+                  }
+
+                  this.assignments.push(assignmentDetail);
+                  this.hasError = false;
                 }
 
-                this.assignments.push(assignmentDetail);
-                this.hasError = false;
+                // Update meta details and pageNum for filters
+                this.meta = response.data.meta;
+                this.filters.pageNum = this.meta.current_page + 1;
+
+                $state.loaded();
+
+              } else {
+                this.hasError = response.data.message;
+                $state.complete();
               }
-            } else {
+            })
 
-              const error = response.data.error;
-              this.hasError = error.message;
-            }
-          })
-
-      this.resetFilterModalOptions()
+        this.resetFilterModalOptions()
+      } else {
+        $state.complete();
+      }
 
     },
+
+
     handleSelectedDate(date) {
       this.filters.date = date;
     },
@@ -239,7 +281,7 @@ export default {
     },
     clickedFilterButton() {
       this.toggleFilterModal()
-      this.fetchData()
+      this.updateFilter()
     },
     toggleFilterModal() {
       this.modal = !this.modal
@@ -248,6 +290,14 @@ export default {
       this.filters.month = null;
       this.filters.year = null;
       this.filters.subjects = null;
+    },
+
+    updateFilter() {
+      this.filters.pageNum = 1
+      this.filters.perPage = 20
+
+      this.assignments = [];
+      this.filterCount++;
     }
   },
   components: {
@@ -260,7 +310,8 @@ export default {
     FilterIcon,
     IconBaseTwo,
     SectionTitle,
-    PageTitle
+    PageTitle,
+    InfiniteLoading
   },
 }
 </script>

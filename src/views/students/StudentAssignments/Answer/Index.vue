@@ -9,14 +9,16 @@
 
     <!-- MODAL -->
     <div v-if="isShowingModal"
-         class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal class="w-4/5 "
+         class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70"
+    >
+      <modal v-if="submissionStatus === 'success'"
              :modal-type="submissionStatus"
              :redirect-route="{name: 'student.assignments.show'}"
              @toggleModal="toggleModal"
+             class="w-4/5 "
       >
         <template slot="message">
-          <div v-if="submissionStatus === 'success'" class="w-full">
+          <div class="w-full">
             Got something to change? Don't worry! You can always edit your published homework
           </div>
         </template>
@@ -24,11 +26,38 @@
           Okay
         </template>
       </modal>
+      <modal v-if="submissionStatus === 'error'"
+             :modal-type="submissionStatus"
+             @toggleModal="toggleModal"
+             class="w-4/5 "
+      >
+        <template slot="message">
+          <div class="w-full">
+            {{ error }}
+          </div>
+        </template>
+        <template slot="button">
+          Okay
+        </template>
+      </modal>
+      <modal v-if="isSubmitting"
+             modal-type="no-icon"
+             :has-button="false"
+             class="w-4/5 "
+      >
+        <p slot="message">
+          Submitting your answer.
+          <br>
+          Please wait...
+        </p>
+      </modal>
     </div>
+
 
     <router-view
         @writtenAnswer="handleWrittenAnswer"
         @snappedAnswer="handleSnappedAnswer"
+        @error="handleError"
         @submit="handleSubmit"
         :assignment-details="assignmentDetails"
         :answer="answer"
@@ -53,7 +82,10 @@ export default {
 
       // States
       isShowingModal: false,
+      isSubmitting: false,
       submissionStatus: null,
+
+      error: null,
 
       answer: {
         type: null,
@@ -72,6 +104,11 @@ export default {
     },
     handleSubmit(remarks) {
 
+      this.resetError();
+
+      this.isSubmitting = true;
+      this.toggleModal();
+
       SubmissionRepository.store(
           {
             assignmentID: this.assignmentDetails.id,
@@ -80,16 +117,36 @@ export default {
             remarks: remarks,
           })
           .then(response => {
-            let content = response.data;
-            let type = content.messageType;
 
-            if (type === 'success') {
-              this.submissionStatus = type;
+            this.isSubmitting = false;
+            this.toggleModal();
+
+            if (response.data.success) {
+              this.submissionStatus = 'success';
               this.toggleModal();
             }
           })
+          .catch(error => {
+            this.isSubmitting = false;
+            this.toggleModal();
+
+            this.handleError({
+              status: true,
+              message: 'Please snap an answer!'
+            })
+          })
 
 
+    },
+    handleError(error) {
+      this.submissionStatus = 'error';
+      this.error = error.message;
+      this.toggleModal();
+    },
+
+    resetError() {
+      this.submissionStatus = null;
+      this.error = null;
     },
 
     toggleModal() {

@@ -1,41 +1,29 @@
 <template>
-    <div class="flex flex-col w-screen ">
+  <div class="flex flex-col w-screen md:max-w-xl mx-auto ">
 
-      <!-- CONTENT -->
-      <div :class="contentClass" class="relative top-24">
+    <!-- CONTENT -->
+    <div :class="contentClass" class="relative top-24">
 
-        <!--  ASSIGNMENT ANSWERS-->
-        <div :class="imagePreviewClass" class="pt-4 z-10">
+      <!--  ASSIGNMENT ANSWERS-->
 
-          <answer-preview-swiper
-              v-if="hasSnappedAnswer && !isMarking.status"
-              :is-previewing="states.isPreviewing"
-              :images="assignmentDetails.snappedAnswerPaths"
-              @nowMarking="enterMarkingMode"
-          />
+      <div v-if="$store.getters['teacherMarking/isAnswered']"
+           :class="imagePreviewClass"
+           class="pt-4 z-10"
+      >
+        <answer-preview-swiper v-if="$store.getters['teacherMarking/hasSnappedAnswer']"
+                               class="mt-10"
+        />
 
-          <written-answer-preview
-              v-if="hasWrittenAnswer && !isMarking.status"
-              :is-previewing="states.isPreviewing"
-              :answer="assignmentDetails.writtenAnswer"
-          />
-        </div>
-
-        <!-- ASSIGNMENT DETAILS -->
-        <assignment-info
-            :show="states.isMain"
-            :details="assignmentDetails"
-            :new-marks="newMarks"
+        <written-answer-preview
+            v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !$store.state.teacherMarking.states.isMarking"
         />
       </div>
-
-
-        <!-- CANVAS -->
-<!--      <div v-if="isMarking.status"-->
-<!--           class="w-full h-full bg-black-primary object-cover top-0 flex flex-row justify-center items-center absolute">-->
-<!--        <canvas id="canvas"/>-->
-<!--      </div>-->
+      <!-- ASSIGNMENT DETAILS -->
+      <assignment-info v-if="$store.getters['teacherMarking/isMainPage']"
+                       :details="$store.state.teacherMarking.assignmentDetails"/>
     </div>
+
+  </div>
 </template>
 
 <script>
@@ -60,30 +48,12 @@ export default {
   props: {
     submissionID: [String, Number],
     newMarks: [String, Number],
-    states: Object,
-    assignmentDetails: Object
-  },
-  data() {
-    return {
-      // Marking Mode: Canvas
-      canvasDimensions: {
-        height: 0.75 * screen.height,
-        width: screen.width
-      },
-
-      isMarking: {
-        status: false,
-        path: null
-      },
-
-    }
   },
   computed: {
-
     containerClass: function () {
       let value = 'bg-white';
 
-      if (this.isMarking.status) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         value = 'bg-black-primary';
       }
 
@@ -91,7 +61,7 @@ export default {
     },
 
     contentClass: function () {
-      if (this.states.isMarking) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         return 'pb-16/9';
       }
 
@@ -99,24 +69,11 @@ export default {
     },
 
     imagePreviewClass: function () {
-      if (this.states.isPreviewing) {
+      if (this.$store.state.teacherMarking.states.isPreviewing) {
         return 'bg-white px-6 pb-16';
       } else {
         return 'bg-black-primary px-16  pb-10'
       }
-    },
-
-    hasWrittenAnswer: function () {
-      return this.assignmentDetails.writtenAnswer !== null && this.assignmentDetails.writtenAnswer !== undefined;
-    },
-
-    hasSnappedAnswer: function () {
-      return this.assignmentDetails.snappedAnswerPaths !== null && this.assignmentDetails.snappedAnswerPaths !== undefined;
-    },
-  },
-  methods: {
-    enterMarkingMode(path) {
-      this.$emit('nowMarking', path)
     },
   },
   components: {

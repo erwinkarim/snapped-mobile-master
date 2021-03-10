@@ -1,16 +1,39 @@
 <template>
-  <dashboard-layout >
+  <dashboard-layout>
 
     <template v-slot:pageHeader>
-        <page-title title="Settings" class="w-3/4" />
+      <page-title title="Settings" class="w-3/4"/>
     </template>
 
     <template v-slot:content>
-      <div class="flex flex-row w-full items-center justify-center mt-10">
-        <button @click="logout"
-                class="w-2/3 mt-3 font-display text-white font-bold py-2 px-4 rounded-full h-14 text-lg inline-flex justify-center items-center bg-red-primary">
-          Log Out
-        </button>
+      <div class="w-full px-7 mt-3">
+        <section-title class="text-left mt-4" title="Profile"/>
+
+        <div v-for="detail in details"
+             :key="detail.value"
+             class="w-full text-left py-3 flex flex-row w-full border-b-1 items-center bg-white"
+        >
+          <div class="w-1/12">
+            <icon-base class=" w-full">
+              <component :is="detail.icon"/>
+            </icon-base>
+          </div>
+          <div class="w-5/6 ml-5 text-purple-primary  truncate pr-4">
+            {{ detail.value }}
+          </div>
+        </div>
+        <div @click="logout"
+             class="w-full text-left py-4 flex flex-row w-full border-b-1 items-center bg-white"
+        >
+          <div class="w-1/12">
+            <icon-base class="w-full text-red-primary">
+              <logout-icon/>
+            </icon-base>
+          </div>
+          <div class="w-5/6 ml-5 text-red-primary  truncate pr-4">
+            Log out
+          </div>
+        </div>
       </div>
     </template>
   </dashboard-layout>
@@ -20,16 +43,79 @@
 
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageTitle from "@/components/PageTitle";
+import SectionTitle from "../../../components/SectionTitle";
+import IconBaseTwo from "../../../components/IconBaseTwo";
+import IdentificationIcon from "../../../components/icons/IdentificationIcon";
+import IconBase from "../../../components/IconBase";
+import AcademicIcon from "../../../components/icons/AcademicIcon";
+import BookIcon from "../../../components/icons/BookIcon";
+import EmailIcon from "../../../components/icons/EmailIcon";
+import PhoneIcon from "../../../components/icons/PhoneIcon";
+import LogoutIcon from "../../../components/icons/LogoutIcon";
+import TeacherRepository from "../../../repositories/TeacherRepository";
 
 export default {
-name: "TeacherSettings",
+  name: "TeacherSettings",
+  components: {
+    LogoutIcon,
+    PhoneIcon,
+    EmailIcon,
+    BookIcon,
+    AcademicIcon,
+    IconBase,
+    IdentificationIcon,
+    IconBaseTwo,
+    SectionTitle,
+    PageTitle,
+    DashboardLayout
+  },
+  data() {
+    return {
+      details: {
+        fullName: {
+          value: null,
+          icon: 'identification-icon'
+        },
+        school: {
+          value: null,
+          icon: 'academic-icon'
+        },
+        email: {
+          value: null,
+          icon: 'email-icon'
+        },
+        contactNum: {
+          value: null,
+          icon: 'phone-icon'
+        }
+      }
+    };
+  },
   methods: {
     logout() {
       this.$store.dispatch('logout')
       this.$router.push({name: 'login'})
-    }
+    },
+    getDetails: function () {
+      TeacherRepository.getTeacherDetails()
+          .then(response => {
+
+            if (response.data.success) {
+
+              let data = response.data.data[0];
+
+              this.details.fullName.value = data.fullname;
+              this.details.school.value = data.school_name;
+              this.details.email.value = data.email;
+              this.details.contactNum.value = data.contact_num;
+            }
+
+          })
+    },
   },
-  components: {PageTitle, DashboardLayout}
+  mounted() {
+    this.getDetails()
+  }
 }
 </script>
 

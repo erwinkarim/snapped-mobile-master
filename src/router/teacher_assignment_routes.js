@@ -1,13 +1,13 @@
+import App from "@/App";
+import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
 import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
-import AssignmentDetails from "@/views/teachers/TeacherAssignments/Show/Components/AssignmentDetails";
 import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
 import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
-import AssignmentForm from "@/views/teachers/TeacherAssignments/Create/Components/AssignmentForm";
 import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
 import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
-import App from "@/App";
 import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
 import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
+import AssignmentEdit from "@/views/teachers/TeacherAssignments/Edit/Index";
 
 const teacherAccessControlMeta = {
     checkAuth: 'true',
@@ -20,25 +20,26 @@ export default {
     children: [
         {
             path: 'assignments/create',
+            name: 'teacher.assignments.create',
             component: AssignmentCreate,
-            children: [
-                {
-                    path: '',
-                    name: 'teacher.assignments.create',
-                    component: AssignmentForm,
-                    meta: teacherAccessControlMeta,
-                    props: true,
-                },
-            ]
+            meta: teacherAccessControlMeta,
+            props: true
         },
         {
             path: 'assignments/:assignmentID',
-            component: AssignmentShow,
+            component: AssignmentDetails,
             children: [
                 {
                     path: 'show',
                     name: 'teacher.assignments.show',
-                    component: AssignmentDetails,
+                    component: AssignmentShow,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
+                {
+                    path: 'edit',
+                    name: 'teacher.assignments.edit',
+                    component: AssignmentEdit,
                     meta: teacherAccessControlMeta,
                     props: true,
                 },
@@ -53,6 +54,7 @@ export default {
                             component: AssignmentMarkDetails,
                             meta: teacherAccessControlMeta,
                             props: true,
+
                         },
                         {
                             path: 'marking',
@@ -60,6 +62,18 @@ export default {
                             component: EditSnappedAnswer,
                             meta: teacherAccessControlMeta,
                             props: true,
+                            beforeEnter: (to, from, next) => {
+                                if (!from.name) {
+                                    return next({name: 'teacher.assignments.marking.details',
+                                        params: {
+                                            assignmentID: to.params.assignmentID,
+                                            submissionID: to.params.submissionID
+                                        }
+                                    })
+                                } else {
+                                    return next()
+                                }
+                            }
                         },
                         {
                             path: 'feedback',
@@ -67,6 +81,18 @@ export default {
                             component: AssignmentMarkFeedback,
                             meta: teacherAccessControlMeta,
                             props: true,
+                            beforeEnter: (to, from, next) => {
+                                if (!from.name) {
+                                    return next({name: 'teacher.assignments.marking.details',
+                                        params: {
+                                            assignmentID: to.params.assignmentID,
+                                            submissionID: to.params.submissionID
+                                        }
+                                    })
+                                } else {
+                                    return next()
+                                }
+                            }
                         },
                         {
                             path: 'add-mark',
@@ -74,6 +100,18 @@ export default {
                             component: AssignmentAddMark,
                             meta: teacherAccessControlMeta,
                             props: true,
+                            beforeEnter: (to, from, next) => {
+                                if (!from.name) {
+                                    return next({name: 'teacher.assignments.marking.details',
+                                        params: {
+                                            assignmentID: to.params.assignmentID,
+                                            submissionID: to.params.submissionID
+                                        }
+                                    })
+                                } else {
+                                    return next()
+                                }
+                            }
                         }
 
                     ]

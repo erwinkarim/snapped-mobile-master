@@ -1,20 +1,29 @@
 <template>
-  <div :class="containerClass" class="h-screen">
+  <div :class="containerClass"
+       class="h-full md:max-w-xl mx-auto"
+  >
 
-    <!-- OVERLAYS -->
-    <div v-if="states.isShowingModal" @click="closeModalMode"
-         class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
+    <!---------------------
+            OVERLAYS
+     --------------------->
+    <div v-if="$store.state.teacherMarking.states.isShowingModal" @click="toggleModalMode()"
+         class="fixed w-full bg-black-primary bg-opacity-25 h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">
     </div>
-    <div v-if="states.isSelectingSticker" @click="toggleStickerBar"
-         class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-filter-blue bg-opacity-40 ">
+    <div v-if="$store.state.teacherMarking.states.isSelectingSticker" @click="toggleStickerBar"
+         class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">
     </div>
 
 
-    <!-- MODAL -->
-    <div v-if="states.isShowingModal"
+    <!---------------------
+            MODAL
+     --------------------->
+    <div v-if="$store.state.teacherMarking.states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal class="w-4/5 " modal-type="error" @toggleModal="closeModalMode">
-        <template slot="message">
+      <modal modal-type="error"
+             @toggleModal="toggleModalMode()"
+             class="w-4/5 "
+      >
+        <template slot="message" v-if="$store.state.teacherMarking.nowShowingModal === 'no_mark'">
           You must add mark for this assignment.
         </template>
         <template slot="button">
@@ -23,64 +32,29 @@
       </modal>
     </div>
 
+    <div
+        v-if="$store.state.teacherMarking.states.isShowingModal && $store.state.teacherMarking.nowShowingModal === 'is_submitting'"
+        class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
+      <modal @toggleModal="toggleModalMode()"
+             :has-button="false"
+             class="w-4/5 "
+      >
+        <template slot="message">
+          Submitting marking...
+        </template>
+      </modal>
+    </div>
 
     <!-- HEADER -->
-    <page-header-three :background-color="headerBackgroundColor" :bottom-padding="4">
-
-      <template v-slot:leftAction>
-        <nav-back v-if="states.isMain" class="w-2/3" :stroke-color="navBackColor"/>
-
-        <div @click="togglePreviewMode" v-if="states.isPreviewing">
-          <icon-base-two class="w-2/3">
-            <arrow-back-icon :stroke-color="navBackColor"/>
-          </icon-base-two>
-        </div>
-      </template>
-
-      <template v-slot:title v-if="states.isPreviewing">
-        Answer Preview
-      </template>
-
-      <template v-slot:rightAction v-if="states.isMain">
-        <div @click="togglePreviewMode" class="flex flex-row justify-end">
-          <icon-base-two class="w-1/3">
-            <expand-image-icon/>
-          </icon-base-two>
-        </div>
-      </template>
-
-    </page-header-three>
+    <page-header/>
 
     <!-- CONTENT -->
-    <router-view
+    <div class="relative">
+      <router-view/>
+    </div>
 
-        :states="states"
-
-        :assignment-details="assignmentDetails"
-
-        @feedback="handleFeedback"
-        :feedback="submission.feedback"
-
-        @marks="handleMark"
-        :new-marks="submission.marks"
-
-        @nowMarking="handleNowMarking"
-        :now-marking="nowMarking"
-
-        :now-loading-sticker="nowLoadingSticker"
-    />
-
-    <!-- BOTTOM BAR -->
-    <bottom-bar
-        :states="states"
-        :isMarkedAssignment="isMarkedAssignment"
-
-        @togglePreviewMode="handleTogglePreviewMode"
-        @toggleMarkingMode="handleToggleMarkingMode"
-        @toggleStickerBar="handleToggleStickerBar"
-        @loadSticker="handleLoadSticker"
-        @submit="submit"
-    />
+    <!-- BOTTOM -->
+    <bottom-bar v-if="!$store.state.teacherMarking.states.isLoading"/>
 
   </div>
 </template>
@@ -95,229 +69,76 @@ import BottomBar from "@/views/teachers/TeacherAssignments/Mark/Components/Botto
 import SubmissionRepository from "@/repositories/SubmissionRepository";
 import Modal from "@/components/Modal";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
+import router from "@/router";
+import moment from "moment";
+import UndoIcon from "@/components/icons/UndoIcon";
+import PageHeader from "@/views/teachers/TeacherAssignments/Mark/Components/PageHeader";
 
 export default {
   name: "Index",
   props: {
-    submissionID: [String, Number]
+    submissionID: [String, Number],
+    markID: [String, Number],
   },
-  data() {
-    return {
-      // States
-      states: {
-        isLoading: true,
-        isMain: true,
-        isPreviewing: false,
-        isMarking: false,
-        isSelectingSticker: false,
-        isWritingFeedback: false,
-        isShowingModal: false
-      },
-
-      // Assignment Details
-      assignmentDetails: {
-        submissionID: null,
-        studentID: null,
-        studentName: null,
-        assignmentID: null,
-        assignmentTitle: null,
-        snappedAnswerPaths: null,
-        writtenAnswer: null,
-        marks: null,
-        createdAt: null,
-        updatedAt: null,
-        submittedTime: null,
-        submittedDate: null
-      },
-
-      nowMarking: null,
-      nowLoadingSticker: null,
-
-      submission: {
-        feedback: '',
-        marks: null
-      }
-    }
-  },
-
 
   watch: {
-    '$route': 'handleRouteChange'
+    '$route': 'handleRouteChange',
   },
   computed: {
 
     containerClass: function () {
-      let value = 'bg-white';
+      let value = 'bg-white mb-40 ';
 
-      if (this.states.isMarking) {
+      if (this.$store.state.teacherMarking.states.isMarking) {
         value = 'bg-black-primary';
       }
 
       return value;
     },
 
-    headerBackgroundColor: function () {
-
-      let value = 'bg-black-primary';
-
-      if (this.states.isPreviewing || this.states.isWritingFeedback) {
-        value = 'bg-white'
-      }
-      return value;
-    },
-
-    navBackColor: function () {
-      if (this.states.isPreviewing) {
-        return 'purple-primary'
-      } else {
-        return 'white'
-      }
-    },
-
-    isMarkedAssignment: function () {
-      return this.assignmentDetails.marks !== null;
-    },
 
   },
   methods: {
     handleRouteChange() {
+
+      this.scrollToTop();
+
+
       let path = this.$route.name;
 
-      if (path === 'teacher.assignments.marking.details') {
-        this.resetState();
-        this.states.isMain = true;
+      if (path === 'teacher.assignments.marking.details' && !this.$store.state.teacherMarking.states.isPreviewing) {
+        this.$store.commit('teacherMarking/setMainMode')
       }
 
       if (path === 'teacher.assignments.marking.feedback') {
-        this.resetState();
-        this.states.isWritingFeedback = true;
+        this.$store.commit('teacherMarking/setWritingFeedbackMode')
       }
     },
 
-    // SUBMISSIONS
-    handleFeedback(value) {
-      this.submission.feedback = value
-    },
-    handleMark(value) {
-      this.submission.marks = value
-    },
-
-    handleNowMarking(path) {
-      this.resetState();
-      this.states.isMarking = true;
-
-      this.nowMarking = path;
-    },
-
-    // MODE: PREVIEW
-    handleTogglePreviewMode() {
-      this.togglePreviewMode()
-    },
-    togglePreviewMode() {
-      this.states.isPreviewing = !this.states.isPreviewing;
-      this.states.isMain = !this.states.isMain;
-
-      if (this.states.isPreviewing) {
-        this.states.isMarking = false;
-      }
-    },
-
-    handleToggleMarkingMode () {
-      this.resetState();
-      this.states.isMain = true
-    },
-
-    // MODE: MODAL
-    closeModalMode() {
-      this.resetState()
-      this.states.isMain = true;
-    },
-
-    // MODE: STICKER
-    handleToggleStickerBar() {
-      this.toggleStickerBar()
-    },
-    handleLoadSticker(stickerName) {
-      this.nowLoadingSticker = stickerName;
-      this.toggleStickerBar();
-    },
     toggleStickerBar() {
-      let value = !this.states.isSelectingSticker;
-      this.resetState();
-      this.states.isMarking = true;
-      this.states.isSelectingSticker = value;
+      this.$store.commit("teacherMarking/toggleStickerBar")
     },
 
-    // SUBMISSION DETAILS
-    fetchData() {
-      SubmissionRepository.find(this.submissionID)
-          .then(response => {
-            let data = response.data.submission_details;
-
-            this.assignmentDetails.submissionID = data.submission_id;
-            this.assignmentDetails.studentID = data.student_id;
-            this.assignmentDetails.studentName = data.student_name;
-            this.assignmentDetails.assignmentID = data.assignment_id;
-            this.assignmentDetails.assignmentTitle = data.assignment_title;
-            this.assignmentDetails.writtenAnswer = data.written_answer;
-            this.assignmentDetails.createdAt = data.created_at;
-            this.assignmentDetails.updatedAt = data.updated_at;
-            this.assignmentDetails.submittedTime = data.submission_time;
-            this.assignmentDetails.submittedDate = data.submission_date;
-            this.assignmentDetails.marks = data.marks;
-
-            if (data.snap_answer_url) {
-              this.assignmentDetails.snappedAnswerPaths = data.snap_answer_url.split(',');
-            }
-
-            this.states.isLoading = false;
-          });
+    toggleModalMode() {
+      this.$store.commit('teacherMarking/toggleModalMode')
     },
 
-
-    submit() {
-
-      if (this.submission.marks === null || this.submission.marks === undefined) {
-        this.resetState()
-        this.states.isMain = true;
-        this.states.isShowingModal = true;
-      } else {
-        MarksRepository.store(
-            {
-              assignmentID: this.assignmentDetails.assignmentID,
-              studentID: this.assignmentDetails.studentID,
-              answerID: this.assignmentDetails.submissionID,
-              // snappedAnswers: [],
-              marks: this.submission.marks,
-              feedback: this.submission.feedback
-            })
-            .then(response => {
-              let content = response.data;
-
-              let type = content.messageType;
-              let message = content.message;
-
-              let data = content.data;
-
-              this.assignmentDetails.marks = data.marks;
-            })
-      }
+    scrollToTop() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     },
-
-    resetState() {
-      this.states.isLoading = false;
-      this.states.isMain = false;
-      this.states.isPreviewing = false;
-      this.states.isMarking = false;
-      this.states.isSelectingSticker = false;
-      this.states.isWritingFeedback = false;
-      this.states.isShowingModal = false
-    }
   },
   mounted() {
-    this.fetchData()
+    this.$store.commit('teacherMarking/setOriginalState')
+    this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
   },
-  components: {Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree},
+  components: {
+    PageHeader,
+    UndoIcon, Modal, BottomBar, ExpandImageIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree
+  },
 
 }
 </script>

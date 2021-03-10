@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
-import AuthenticationRepository from "@/repositories/AuthenticationRepository";
 import actions from "@/store/actions";
 import getters from "@/store/getters";
 import mutations from "@/store/mutations";
+import teacherMarking from "@/store/modules/teacherMarking";
+import teacherCreateAssignment from "@/store/modules/teacherCreateAssignment";
+import studentRanking from "@/store/modules/studentRanking";
 
 Vue.use(Vuex)
 
@@ -17,5 +18,9 @@ export default new Vuex.Store({
     getters: getters,
     mutations: mutations,
     actions: actions,
-    modules: {}
+    modules: {
+        teacherMarking: teacherMarking,
+        teacherCreateAssignment: teacherCreateAssignment,
+        studentRanking: studentRanking
+    }
 })

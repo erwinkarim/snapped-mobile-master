@@ -5,7 +5,7 @@
       <page-header-three>
 
         <template v-slot:leftAction>
-          <nav-back :to="navBackRoute" class="w-2/3" stroke-color="red-primary"/>
+          <nav-back :to="navBackRoute" class="w-2/7" stroke-color="red-primary"/>
         </template>
 
         <template v-slot:mini-title>
@@ -68,6 +68,7 @@ export default {
       } else {
         return {name: 'student.assignments.show'}
       }
+
     }
   },
   data() {
