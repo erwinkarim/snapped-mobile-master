@@ -324,7 +324,6 @@ Vue.component('v-calendar', Calendar)
 Vue.component('v-date-picker', DatePicker)
 Vue.component('multiselect', Multiselect)
 
-
 export default {
   name: "Index",
   props: {

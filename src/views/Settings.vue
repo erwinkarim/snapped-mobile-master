@@ -7,6 +7,7 @@
 
     <template v-slot:content>
       <div class="w-full px-7 mt-3">
+
         <section-title class="text-left my-4" title="Profile"/>
 
         <div v-for="detail in studentDetails"
@@ -22,8 +23,15 @@
             {{ detail.value }}
           </div>
         </div>
-        <div  @click="logout"
-            class="w-full text-left py-4 flex flex-row w-full border-b-1 items-center bg-white"
+      </div>
+
+      <div class="w-full px-7 mt-3">
+        <section-title class="text-left my-4" title="Log out"/>
+
+
+        <!-- LOGOUT -->
+        <div @click="logout"
+             class="w-full text-left py-4 flex flex-row w-full border-b-1 items-center bg-white"
         >
           <div class="w-1/12">
             <icon-base class="w-full text-red-primary">
@@ -51,24 +59,10 @@ import IconBase from "../components/IconBase";
 import IdentificationIcon from "../components/icons/IdentificationIcon";
 import IconBaseTwo from "../components/IconBaseTwo";
 import SectionTitle from "../components/SectionTitle";
-import TeacherRepository from "../repositories/TeacherRepository";
 import StudentRepository from "../repositories/StudentRepository";
 
 export default {
   name: "Settings",
-  components: {
-    LogoutIcon,
-    PhoneIcon,
-    EmailIcon,
-    BookIcon,
-    AcademicIcon,
-    IconBase,
-    IdentificationIcon,
-    IconBaseTwo,
-    SectionTitle,
-    PageTitle,
-    DashboardLayout
-  },
   data() {
     return {
       studentDetails: {
@@ -114,13 +108,25 @@ export default {
               this.studentDetails.email.value = data.email;
               this.studentDetails.contactNum.value = data.contact_num;
             }
-
           })
     },
   },
   mounted() {
     this.getDetails()
-  }
+  },
+  components: {
+    LogoutIcon,
+    PhoneIcon,
+    EmailIcon,
+    BookIcon,
+    AcademicIcon,
+    IconBase,
+    IdentificationIcon,
+    IconBaseTwo,
+    SectionTitle,
+    PageTitle,
+    DashboardLayout
+  },
 }
 </script>
 
