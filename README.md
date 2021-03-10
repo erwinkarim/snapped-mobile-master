@@ -40,12 +40,3 @@ GOOGLE_CLIENT_ID={ Client ID }
 GOOGLE_CLIENT_SECRET={ Client secret }
 GOOGLE_REDIRECT={frontend_domain}/auth/google/callback
 ```
-
-
-3) Update frontend's env:
-
-```
-VUE_APP_GOOGLE_CLASSROOM={backend_domain}/api/google
-VUE_APP_GOOGLE_CLASSROOM_CALLBACK={backend_domain}/api/google-callback
-```
-
