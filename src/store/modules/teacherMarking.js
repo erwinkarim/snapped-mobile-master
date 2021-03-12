@@ -430,8 +430,8 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
-                isSelectingObject: state.states.isSelectingObject,
-                isZoomingCanvas: !state.states.isSelectingObject ? !state.states.isZoomingCanvas : false,
+                isSelectingObject: false,
+                isZoomingCanvas: !state.states.isZoomingCanvas,
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
@@ -536,6 +536,10 @@ export default {
                 }
             }
 
+        },
+
+        resetObjectSelection(state) {
+            state.nowMarking.canvas.main.index.discardActiveObject().renderAll()
         },
 
 
@@ -664,22 +668,19 @@ export default {
             })
         },
 
-        initialiseMarkingCanvas({state, commit, dispatch}) {
-            dispatch('loadImage').then(() => {
 
-            })
-        },
+        /***********
+         SEQUENCE:
+         1) Get image size
+         2) Create new canvas
+         3) Set canvas background image
+         4) Enable actions
+         * */
+        initialiseMarkingCanvas({state, commit, dispatch, rootGetters}) {
 
-        loadImage({state, commit, dispatch, rootGetters}) {
+            dispatch('getSnappedAnswerDimensions').then(() => {
 
-
-            // First, get image's dimension. Then, resize canvas while setting background image
-            fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
-
-
-                state.nowMarking.image.dimensions.width = img.width;
-                state.nowMarking.image.dimensions.height = img.height;
-
+                // Get scale factor to fit image in canvas
                 let scaleFactor = state.nowMarking.canvas.main.dimensions.width / state.nowMarking.image.dimensions.width;
 
                 // Determine if image is longer than screen height
@@ -689,7 +690,6 @@ export default {
                 state.nowMarking.canvas.main.index = new fabric.Canvas('canvas_snapped_answer', {
                     width: scaleFactor * state.nowMarking.image.dimensions.width,
                     height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
-                    // height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
                 })
 
                 // Store canvas dimension values
@@ -715,6 +715,7 @@ export default {
                 );
 
 
+                // Enable/disable marking functions
                 dispatch('enableDragAndDropToTrash')
 
                 // Currently enable only for test account
@@ -725,7 +726,18 @@ export default {
 
                 dispatch('handleObjectScaling')
 
-            });
+
+            })
+        },
+
+        getSnappedAnswerDimensions({state, commit, dispatch}) {
+            return new Promise((resolve, reject) => {
+                fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
+                    state.nowMarking.image.dimensions.width = img.width;
+                    state.nowMarking.image.dimensions.height = img.height;
+                    resolve();
+                });
+            })
         },
 
         /*****************
@@ -778,45 +790,42 @@ export default {
 
                 },
 
+
+                /*
+                    TODO:
+                        - Without adding sticker, zoom works. Begins with Select FALSE, Zoom False
+                        - After add sticker without selecting, zoom works. Begins with Select FALSE, Zoom False
+
+                */
                 'touch:gesture': function (opt) {
 
-                    // Check if
+                    // dispatch('addDebugMessage', `touch gesture`)
 
-                    // dispatch('addDebugMessage', [
-                    //     `touch gesture : ${opt.e.touches.length}`,
-                    //     `is zooming: ${state.states.isZoomingCanvas}`,
-                    //     `is selecting: ${state.states.isSelectingObject}`
-                    // ])
-
-                    dispatch('addDebugMessage', `touch gesture`)
+                    console.log(`[GESTURE 1] Select: ${state.states.isSelectingObject} | Zoom: ${state.states.isZoomingCanvas} | Scaling object: ${state.states.isScalingObject}`)
 
 
                     // If user pinch to zoom
-                    if (opt.e.touches && opt.e.touches.length === 2) {
+                    if (opt.e.touches && opt.e.touches.length === 2 && !state.states.isScalingObject) {
 
-                        let stateChange = `selecting: ${state.states.isSelectingObject}`
-                        if (!state.states.isSelectingObject) {
-                            console.log('toggling zoom mode')
-                            commit('toggleCanvasZoomingMode')
-                            stateChange += `-> ${state.states.isSelectingObject}`
-                        } else {
-                            stateChange += `-> REMAIN`
+                        if (state.states.isSelectingObject) {
+                            commit('resetObjectSelection')
                         }
 
+                        commit('toggleCanvasZoomingMode')
 
-                        dispatch('addDebugMessage', stateChange)
+                        console.log(`[GESTURE 2] Select: ${state.states.isSelectingObject} | Zoom: ${state.states.isZoomingCanvas}`)
 
+                        // dispatch('addDebugMessage', stateChange)
 
                         if (state.states.isZoomingCanvas) {
-                            //
+
                             // dispatch('addDebugMessage', [
                             //     `touch gesture : ${opt.e.touches.length}`,
                             //     `is zooming: ${state.states.isZoomingCanvas}`,
                             //     `is selecting: ${state.states.isSelectingObject}`
                             // ])
 
-                            dispatch('addDebugMessage', `zooming`)
-
+                            // dispatch('addDebugMessage', `zooming`)
 
 
                             // Get initial canvas zoom value and initial gesture scale value
@@ -870,7 +879,7 @@ export default {
                         // dispatch('addDebugMessage', [
                         //     `selection created`
                         // ])
-                        dispatch('addDebugMessage', `selection created`)
+
 
                         commit('toggleSelectingObjectMode')
 
@@ -1036,25 +1045,37 @@ export default {
         handleObjectScaling({state, commit, dispatch}) {
             let canvas = state.nowMarking.canvas.main.index;
 
-            canvas.on('object:scaling', function (event) {
+            canvas.on({
+                'object:scaling': function (event) {
 
-                // If state isMovingObject not already set, set to true
-                if (!state.states.isScalingObject && !state.states.isZoomingCanvas) {
+                    // If state isMovingObject not already set, set to true
+                    if (event.e.touches.length === 1 && !state.states.isScalingObject && !state.states.isZoomingCanvas) {
+                        commit('toggleScalingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+                        commit('toggleOverlayScreen', 'add')
+                    }
+
+                    if (event.e.touches.length === 2) {
+                        commit('resetObjectSelection')
+                    }
+                },
+                'object:scaled': function (event) {
                     commit('toggleScalingObjectMode')
-                    console.log('begin scaling')
-                    state.nowMarking.selectedObject = event.target;
-                    commit('toggleOverlayScreen', 'add')
-                    console.log('overlay at scaling object')
-
-                }
-            })
-
-                .on('object:scaled', function (event) {
-                    commit('toggleScalingObjectMode')
-                    console.log('exit scaling')
-
                     commit('toggleOverlayScreen', 'remove')
-                })
+                },
+                'object:rotating': function (event) {
+                    // If state isMovingObject not already set, set to true
+                    if (event.e.touches.length === 1 && !state.states.isScalingObject && !state.states.isZoomingCanvas) {
+                        commit('toggleScalingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+                        commit('toggleOverlayScreen', 'add')
+                    }
+                },
+                'object:rotated': function (event) {
+                    commit('toggleScalingObjectMode')
+                    commit('toggleOverlayScreen', 'remove')
+                }
+            });
         },
 
         loadSticker({state, commit}, stickerName) {
@@ -1112,7 +1133,6 @@ export default {
                 commit('toggleOverlayScreen', 'add')
                 console.log('overlay at text edit entered')
 
-
                 oldTop = this.top;
                 oldLeft = this.left;
 
@@ -1130,6 +1150,7 @@ export default {
         },
 
         beginDrawingMode({state, commit}) {
+
             commit('toggleDrawingModeStates')
             commit('toggleDrawingMode')
 
@@ -1137,7 +1158,6 @@ export default {
             state.nowMarking.canvas.main.index.isDrawingMode = true;
 
             state.nowMarking.canvas.main.index
-
                 .on('mouse:down:before', function (e) {
                     if (state.nowDrawing.drawing) {
                         state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(245, 59, 87, 1)';
@@ -1185,7 +1205,7 @@ export default {
             let index = state.nowMarking.image.index;
             state.nowMarking.image.path = state.assignmentDetails.snappedAnswerPaths[index]
             commit('disposeCanvas')
-            dispatch('loadImage')
+            dispatch('initialiseMarkingCanvas')
         },
 
         submit({state, commit}) {
