@@ -21,7 +21,7 @@ export default {
             isZoomingCanvas: false,
             isPanningCanvas: false,
             isMovingObject: false,
-            isScalingObject: false,
+            isModifyingObject: false,
             isDrawing: false,
             isWritingFeedback: false,
             isSubmitting: false,
@@ -181,7 +181,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -201,7 +201,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -221,7 +221,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: true,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -241,7 +241,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -261,7 +261,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -281,7 +281,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: !state.states.isDrawing,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -301,7 +301,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: !state.states.isDrawing,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -354,7 +354,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -375,7 +375,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -395,7 +395,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -415,7 +415,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: !state.states.isMovingObject,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -435,7 +435,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -455,7 +455,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: !state.states.isScalingObject,
+                isModifyingObject: !state.states.isModifyingObject,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -501,16 +501,11 @@ export default {
         // Available actions: add, remove
         toggleOverlayScreen(state, action) {
 
-            console.log(`Is overlaid: ${state.nowMarking.isOverlaid}`)
             if (action === 'add' && !state.nowMarking.isOverlaid) {
                 if (state.nowMarking.overlayScreen) {
-                    console.log('adding existing overlay')
-
                     state.nowMarking.canvas.main.index.add(state.nowMarking.overlayScreen).renderAll()
                     state.nowMarking.overlayScreen.sendBackwards()
                 } else {
-                    console.log('adding fresh overlay')
-
                     state.nowMarking.overlayScreen = new fabric.Rect({
                         left: 0,
                         top: 0,
@@ -528,7 +523,6 @@ export default {
                 state.nowMarking.isOverlaid = true;
 
             } else if (action === 'remove') {
-                console.log('removing overlay')
                 if (state.nowMarking.overlayScreen) {
                     state.nowMarking.canvas.main.index.remove(state.nowMarking.overlayScreen)
                     state.nowMarking.isOverlaid = false;
@@ -556,7 +550,7 @@ export default {
                 isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -724,7 +718,7 @@ export default {
                     dispatch('enableCanvasPanning')
                 }
 
-                dispatch('handleObjectScaling')
+                dispatch('handleObjectModification')
 
 
             })
@@ -799,21 +793,14 @@ export default {
                 */
                 'touch:gesture': function (opt) {
 
-                    // dispatch('addDebugMessage', `touch gesture`)
-
-                    console.log(`[GESTURE 1] Select: ${state.states.isSelectingObject} | Zoom: ${state.states.isZoomingCanvas} | Scaling object: ${state.states.isScalingObject}`)
-
-
                     // If user pinch to zoom
-                    if (opt.e.touches && opt.e.touches.length === 2 && !state.states.isScalingObject) {
+                    if (opt.e.touches && opt.e.touches.length === 2 && !state.states.isModifyingObject) {
 
                         if (state.states.isSelectingObject) {
                             commit('resetObjectSelection')
                         }
 
                         commit('toggleCanvasZoomingMode')
-
-                        console.log(`[GESTURE 2] Select: ${state.states.isSelectingObject} | Zoom: ${state.states.isZoomingCanvas}`)
 
                         // dispatch('addDebugMessage', stateChange)
 
@@ -875,41 +862,13 @@ export default {
 
             canvas.on({
                     'selection:created': function () {
-
-                        // dispatch('addDebugMessage', [
-                        //     `selection created`
-                        // ])
-
-
                         commit('toggleSelectingObjectMode')
-
-                        console.log(`selection created | SELECT: ${state.states.isSelectingObject} | ZOOM: ${state.states.isZoomingCanvas}`)
-
-                        // if (state.states.isZoomingCanvas) {
-                        //     commit('toggleCanvasZoomingMode')
-                        // }
-
                     },
                     'selection:updated': function () {
 
-                        // dispatch('addDebugMessage', [
-                        //     `selection updated`
-                        // ])
-                        dispatch('addDebugMessage', `selection updated`)
-
-                        console.log('selection updated')
                     },
                     'selection:cleared': function () {
-                        // dispatch('addDebugMessage', [
-                        //     `selection cleared`
-                        // ])
-
-                        // dispatch('addDebugMessage', `selection cleared`)
-
-
                         commit('toggleSelectingObjectMode')
-
-                        console.log(`selection cleared | SELECT: ${state.states.isSelectingObject} | ZOOM: ${state.states.isZoomingCanvas}`)
                     },
                     'object:moving': function (event) {
 
@@ -919,18 +878,12 @@ export default {
                             state.nowMarking.selectedObject = event.target;
                             commit('toggleTrashIcon')
 
-                            if (state.states.isMovingObject) {
-                                console.log('is moving object')
-                            }
-
                             commit('toggleOverlayScreen', 'add')
-                            console.log('overlay at moving object')
 
                         }
                     },
 
                     'object:moved': function (event) {
-                        console.log('object moved')
                         commit('toggleMovingObjectMode')
                         commit('toggleTrashIcon')
                         commit('toggleOverlayScreen', 'remove')
@@ -1016,8 +969,8 @@ export default {
 
                 'touch:drag': function (opt) {
 
-                    // Ensure not moving object
-                    if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isScalingObject && !state.states.isDrawing) {
+                    // Ensure single finger touch and not performing other actions
+                    if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isModifyingObject && !state.states.isDrawing) {
 
                         this.selection = false;
 
@@ -1031,7 +984,7 @@ export default {
                         let deltaX = lastX - initialX;
                         let deltaY = lastY - initialY;
 
-                        let delta = new fabric.Point(deltaX / 35, deltaY / 35);
+                        let delta = new fabric.Point(deltaX / 20, deltaY / 20);
                         canvas.relativePan(delta);
 
                         state.dragCount++;
@@ -1042,14 +995,14 @@ export default {
             })
         },
 
-        handleObjectScaling({state, commit, dispatch}) {
+        handleObjectModification({state, commit, dispatch}) {
             let canvas = state.nowMarking.canvas.main.index;
 
             canvas.on({
                 'object:scaling': function (event) {
 
                     // If state isMovingObject not already set, set to true
-                    if (event.e.touches.length === 1 && !state.states.isScalingObject && !state.states.isZoomingCanvas) {
+                    if (event.e.touches.length === 1 && !state.states.isModifyingObject && !state.states.isZoomingCanvas) {
                         commit('toggleScalingObjectMode')
                         state.nowMarking.selectedObject = event.target;
                         commit('toggleOverlayScreen', 'add')
@@ -1065,7 +1018,7 @@ export default {
                 },
                 'object:rotating': function (event) {
                     // If state isMovingObject not already set, set to true
-                    if (event.e.touches.length === 1 && !state.states.isScalingObject && !state.states.isZoomingCanvas) {
+                    if (event.e.touches.length === 1 && !state.states.isModifyingObject && !state.states.isZoomingCanvas) {
                         commit('toggleScalingObjectMode')
                         state.nowMarking.selectedObject = event.target;
                         commit('toggleOverlayScreen', 'add')
@@ -1124,14 +1077,11 @@ export default {
             textBox.enterEditing()
 
             commit('toggleOverlayScreen', 'add')
-            console.log('overlay at textbox edit')
-
 
             // Listen to textbox events
             textBox.on("editing:entered", function () {
 
                 commit('toggleOverlayScreen', 'add')
-                console.log('overlay at text edit entered')
 
                 oldTop = this.top;
                 oldLeft = this.left;
@@ -1258,20 +1208,6 @@ export default {
                 }
             })
         },
-
-
-        addDebugMessage({state}, payload) {
-            console.log(payload)
-            // state.debug.status = true;
-            //
-            // if (state.debug.message.length >=5) {
-            //     state.debug.message.shift();
-            // }
-            //
-            // state.debug.message.push(payload);
-
-
-        }
 
     },
     getters: {
