@@ -162,12 +162,15 @@ export default {
       this.$store.commit('teacherMarking/togglePreviewMode');
     },
     toggleStickerBar() {
+      this.$store.commit('teacherMarking/resetObjectSelection')
       this.$store.commit('teacherMarking/toggleStickerBar')
     },
     beginDrawingMode() {
+      this.$store.commit('teacherMarking/resetObjectSelection')
       this.$store.dispatch('teacherMarking/beginDrawingMode')
     },
     loadTextBox() {
+      this.$store.commit('teacherMarking/resetObjectSelection')
       this.$store.dispatch('teacherMarking/loadTextBox')
     },
     doneEditSnappedAnswer() {

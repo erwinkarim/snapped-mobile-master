@@ -17,8 +17,11 @@ export default {
             isPreviewing: false,
             isMarking: false,
             isSelectingSticker: false,
+            isSelectingObject: false,
+            isZoomingCanvas: false,
+            isPanningCanvas: false,
             isMovingObject: false,
-            isScalingObject: false,
+            isModifyingObject: false,
             isDrawing: false,
             isWritingFeedback: false,
             isSubmitting: false,
@@ -75,7 +78,8 @@ export default {
                 }
             },
             trashObject: null,
-            overlayScreen: null
+            overlayScreen: null, // overlay screen object
+            isOverlaid: false, // is canvas overlaid
         },
 
         // Drawing Mode states
@@ -108,7 +112,13 @@ export default {
             marks: null
         },
 
-        dragCount: 0
+        dragCount: 0,
+
+
+        debug: {
+            status: false,
+            message: []
+        }
     }),
     mutations: {
 
@@ -166,9 +176,12 @@ export default {
                 isPreviewing: !state.states.isPreviewing,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -183,9 +196,12 @@ export default {
                 isPreviewing: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -200,9 +216,12 @@ export default {
                 isPreviewing: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: true,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -217,9 +236,12 @@ export default {
                 isPreviewing: true,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -234,16 +256,18 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: !state.states.isSelectingSticker,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
         },
-
 
         toggleEditingTextboxMode(state) {
             state.states = {
@@ -252,9 +276,12 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: !state.states.isDrawing,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -269,9 +296,12 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: !state.states.isDrawing,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -298,6 +328,9 @@ export default {
                 isPreviewing: true,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: !state.states.isMovingObject,
                 isWritingFeedback: false,
@@ -316,9 +349,12 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -334,9 +370,32 @@ export default {
                 isPreviewing: true,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
+                isWritingFeedback: false,
+                isSubmitting: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+        },
+
+        toggleSelectingObjectMode(state) {
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: false,
+                isMarking: true,
+                isSelectingSticker: false,
+                isSelectingObject: !state.states.isSelectingObject,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
+                isDrawing: false,
+                isMovingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -351,9 +410,32 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: !state.states.isMovingObject,
-                isScalingObject: false,
+                isModifyingObject: false,
+                isWritingFeedback: false,
+                isSubmitting: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+        },
+
+        toggleCanvasZoomingMode(state) {
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: false,
+                isMarking: true,
+                isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: !state.states.isZoomingCanvas,
+                isPanningCanvas: false,
+                isDrawing: false,
+                isMovingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -368,9 +450,12 @@ export default {
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: !state.states.isScalingObject,
+                isModifyingObject: !state.states.isModifyingObject,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -415,7 +500,8 @@ export default {
 
         // Available actions: add, remove
         toggleOverlayScreen(state, action) {
-            if (action === 'add') {
+
+            if (action === 'add' && !state.nowMarking.isOverlaid) {
                 if (state.nowMarking.overlayScreen) {
                     state.nowMarking.canvas.main.index.add(state.nowMarking.overlayScreen).renderAll()
                     state.nowMarking.overlayScreen.sendBackwards()
@@ -431,13 +517,23 @@ export default {
 
                     state.nowMarking.canvas.main.index.add(state.nowMarking.overlayScreen).renderAll()
                     state.nowMarking.overlayScreen.sendBackwards()
+
                 }
+
+                state.nowMarking.isOverlaid = true;
+
             } else if (action === 'remove') {
                 if (state.nowMarking.overlayScreen) {
                     state.nowMarking.canvas.main.index.remove(state.nowMarking.overlayScreen)
+                    state.nowMarking.isOverlaid = false;
+
                 }
             }
 
+        },
+
+        resetObjectSelection(state) {
+            state.nowMarking.canvas.main.index.discardActiveObject().renderAll()
         },
 
 
@@ -449,9 +545,12 @@ export default {
                 isPreviewing: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
                 isSubmitting: false,
                 isShowingModal: false,
@@ -563,23 +662,18 @@ export default {
             })
         },
 
-        initialiseMarkingCanvas({state, commit, dispatch}) {
-            dispatch('loadImage').then(() => {
+        /***********
+         SEQUENCE:
+         1) Get image size
+         2) Create new canvas
+         3) Set canvas background image
+         4) Enable actions
+         * */
+        initialiseMarkingCanvas({state, commit, dispatch, rootGetters}) {
 
-            })
-        },
+            dispatch('getSnappedAnswerDimensions').then(() => {
 
-        // TODO: Refactor. Pecahkan kepada fungsi-fungsi berasingan.
-        loadImage({state, commit, dispatch, rootGetters}) {
-
-
-            // First, get image's dimension. Then, resize canvas while setting background image
-            fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
-
-
-                state.nowMarking.image.dimensions.width = img.width;
-                state.nowMarking.image.dimensions.height = img.height;
-
+                // Get scale factor to fit image in canvas
                 let scaleFactor = state.nowMarking.canvas.main.dimensions.width / state.nowMarking.image.dimensions.width;
 
                 // Determine if image is longer than screen height
@@ -589,7 +683,6 @@ export default {
                 state.nowMarking.canvas.main.index = new fabric.Canvas('canvas_snapped_answer', {
                     width: scaleFactor * state.nowMarking.image.dimensions.width,
                     height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
-                    // height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
                 })
 
                 // Store canvas dimension values
@@ -615,17 +708,29 @@ export default {
                 );
 
 
+                // Enable/disable marking functions
                 dispatch('enableDragAndDropToTrash')
 
                 // Currently enable only for test account
-                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com' ) {
+                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com') {
                     dispatch('enableCanvasZoom')
                     dispatch('enableCanvasPanning')
                 }
 
-                dispatch('handleObjectScaling')
+                dispatch('handleObjectModification')
 
-            });
+
+            })
+        },
+
+        getSnappedAnswerDimensions({state, commit, dispatch}) {
+            return new Promise((resolve, reject) => {
+                fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
+                    state.nowMarking.image.dimensions.width = img.width;
+                    state.nowMarking.image.dimensions.height = img.height;
+                    resolve();
+                });
+            })
         },
 
         /*****************
@@ -641,69 +746,105 @@ export default {
                 // ON MOUSE WHEEL
                 'mouse:wheel': function (opt) {
 
+                    commit('toggleCanvasZoomingMode')
 
-                    let delta = opt.e.deltaY;
-                    let zoom = canvas.getZoom();
-                    zoom *= 0.999 ** delta;
-                    if (zoom > 6) zoom = 6;
-                    if (zoom < 1) zoom = 1;
-                    canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
+                    if (state.states.isZoomingCanvas) {
+                        let delta = opt.e.deltaY;
+                        let zoom = canvas.getZoom();
+                        zoom *= 0.999 ** delta;
+                        if (zoom > 6) zoom = 6;
+                        if (zoom < 1) zoom = 1;
+                        canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
 
-                    opt.e.preventDefault();
-                    opt.e.stopPropagation();
+                        opt.e.preventDefault();
+                        opt.e.stopPropagation();
 
+                        let vpt = this.viewportTransform;
 
-                    let vpt = this.viewportTransform;
-
-                    if (zoom < 400 / 1000) {
-                        vpt[4] = 200 - 1000 * zoom / 2;
-                        vpt[5] = 200 - 1000 * zoom / 2;
-                    } else {
-                        if (vpt[4] >= 0) {
-                            vpt[4] = 0;
-                        } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-                            vpt[4] = canvas.getWidth() - 1000 * zoom;
+                        if (zoom < 400 / 1000) {
+                            vpt[4] = 200 - 1000 * zoom / 2;
+                            vpt[5] = 200 - 1000 * zoom / 2;
+                        } else {
+                            if (vpt[4] >= 0) {
+                                vpt[4] = 0;
+                            } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
+                                vpt[4] = canvas.getWidth() - 1000 * zoom;
+                            }
+                            if (vpt[5] >= 0) {
+                                vpt[5] = 0;
+                            } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
+                                vpt[5] = canvas.getHeight() - 1000 * zoom;
+                            }
                         }
-                        if (vpt[5] >= 0) {
-                            vpt[5] = 0;
-                        } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-                            vpt[5] = canvas.getHeight() - 1000 * zoom;
-                        }
+
+                        commit('toggleCanvasZoomingMode')
                     }
+
+
                 },
 
-                // ON TOUCH GESTURE. TEMPORARILY DISABLE TILL FEATURE RELEASE
+
+                /*
+                    TODO:
+                        - Without adding sticker, zoom works. Begins with Select FALSE, Zoom False
+                        - After add sticker without selecting, zoom works. Begins with Select FALSE, Zoom False
+
+                */
                 'touch:gesture': function (opt) {
 
                     // If user pinch to zoom
-                    if (opt.e.touches && opt.e.touches.length === 2) {
+                    if (opt.e.touches && opt.e.touches.length === 2 && !state.states.isModifyingObject) {
 
-                        // Get initial canvas zoom value and initial gesture scale value
-                        let zoom = canvas.getZoom();
-                        let delta = opt.self.scale;
-
-                        if (opt.self.state === "start") {
-                            zoom = delta > 1 ? zoom + 1 : zoom;
+                        if (state.states.isSelectingObject) {
+                            commit('resetObjectSelection')
                         }
 
-                        // Slow zoom in, quicker zoom out
-                        if (delta > 1) {
-                            zoom = zoom * (1.01 ** delta);
-                        } else {
-                            zoom = zoom ** (delta);
+                        commit('toggleCanvasZoomingMode')
+
+                        // dispatch('addDebugMessage', stateChange)
+
+                        if (state.states.isZoomingCanvas) {
+
+                            // dispatch('addDebugMessage', [
+                            //     `touch gesture : ${opt.e.touches.length}`,
+                            //     `is zooming: ${state.states.isZoomingCanvas}`,
+                            //     `is selecting: ${state.states.isSelectingObject}`
+                            // ])
+
+                            // dispatch('addDebugMessage', `zooming`)
+
+
+                            // Get initial canvas zoom value and initial gesture scale value
+                            let zoom = canvas.getZoom();
+                            let delta = opt.self.scale;
+
+                            if (opt.self.state === "start") {
+                                zoom = delta > 1 ? zoom + 1 : zoom;
+                            }
+
+                            // Slow zoom in, quicker zoom out
+                            if (delta > 1) {
+                                zoom = zoom * (1.01 ** delta);
+                            } else {
+                                zoom = zoom ** (delta);
+                            }
+
+                            // Set max zoom in and max zoom out
+                            if (zoom > 4) zoom = 4;
+                            if (zoom < 1) zoom = 1;
+
+
+                            // Determine point of scaling
+                            let point = new fabric.Point(opt.self.x, opt.self.y);
+                            if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
+
+                            // // Zoom to pinch point
+                            canvas.zoomToPoint(point, zoom);
+
+                            commit('toggleCanvasZoomingMode')
+
                         }
 
-                        // Set max zoom in and max zoom out
-                        if (zoom > 4) zoom = 4;
-                        if (zoom < 1) zoom = 1;
-
-
-                        // Determine point of scaling
-                        let point = new fabric.Point(opt.self.x, opt.self.y);
-                        if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
-
-                        // // Zoom to pinch point
-                        canvas.zoomToPoint(point, zoom);
 
                     }
                 }
@@ -718,51 +859,66 @@ export default {
 
             let canvas = state.nowMarking.canvas.main.index;
 
-            canvas.on('object:moving', function (event) {
+            canvas.on({
+                    'selection:created': function () {
+                        commit('toggleSelectingObjectMode')
+                    },
+                    'selection:updated': function () {
 
-                // If state isMovingObject not already set, set to true
-                if (!state.states.isMovingObject) {
-                    commit('toggleMovingObjectMode')
-                    state.nowMarking.selectedObject = event.target;
-                    commit('toggleTrashIcon')
+                    },
+                    'selection:cleared': function () {
+                        commit('toggleSelectingObjectMode')
+                    },
+                    'object:moving': function (event) {
 
-                    commit('toggleOverlayScreen', 'add')
+                        // If state isMovingObject not already set, set to true
+                        if (!state.states.isMovingObject && event.e.touches.length === 1) {
+                            commit('toggleMovingObjectMode')
+                            state.nowMarking.selectedObject = event.target;
+                            commit('toggleTrashIcon')
+
+                            commit('toggleOverlayScreen', 'add')
+
+                        }
+                    },
+
+                    'object:moved': function (event) {
+                        commit('toggleMovingObjectMode')
+                        commit('toggleTrashIcon')
+                        commit('toggleOverlayScreen', 'remove')
+
+                        // Set trash area
+                        let trashHorizontalCenter = state.nowMarking.canvas.main.index.width / 2;
+                        let trashVerticalCenter = state.nowMarking.canvas.main.dimensions.height * 0.9;
+                        let margin = state.nowMarking.canvas.main.index.width / 12;
+                        let trashMaxLeft = trashHorizontalCenter - margin;
+                        let trashMaxRight = trashHorizontalCenter + (margin * 2)
+                        let trashMaxTop = trashVerticalCenter - (margin)
+                        let trashMaxBottom = trashVerticalCenter + (margin * 2)
+
+                        // Get object dimensions
+                        let objectLeft = state.nowMarking.selectedObject.left;
+                        let objectTop = state.nowMarking.selectedObject.top;
+                        let objectWidth = state.nowMarking.selectedObject.width;
+                        let objectHeight = state.nowMarking.selectedObject.height;
+                        let objectHorizontalCenter = objectLeft + (objectWidth / 2);
+                        let objectVerticalCenter = objectTop + (objectHeight / 2);
+
+                        if (state.nowMarking.selectedObject.get('type') === 'textbox') {
+                            objectVerticalCenter = objectTop;
+                            objectHorizontalCenter = objectLeft;
+                        }
+
+                        if (
+                            ((objectHorizontalCenter > trashMaxLeft) && (objectHorizontalCenter < trashMaxRight))
+                            && ((objectVerticalCenter > trashMaxTop) && (objectVerticalCenter < trashMaxBottom))
+                        ) {
+                            state.nowMarking.canvas.main.index.remove(state.nowMarking.selectedObject);
+                        }
+                    }
+
                 }
-            })
-                .on('object:moved', function (event) {
-                    commit('toggleMovingObjectMode')
-                    commit('toggleTrashIcon')
-                    commit('toggleOverlayScreen', 'remove')
-
-                    // Set trash area
-                    let trashHorizontalCenter = state.nowMarking.canvas.main.index.width / 2;
-                    let trashVerticalCenter = state.nowMarking.canvas.main.dimensions.height * 0.9;
-                    let margin = state.nowMarking.canvas.main.index.width / 12;
-                    let trashMaxLeft = trashHorizontalCenter - margin;
-                    let trashMaxRight = trashHorizontalCenter + (margin * 2)
-                    let trashMaxTop = trashVerticalCenter - (margin)
-                    let trashMaxBottom = trashVerticalCenter + (margin * 2)
-
-                    // Get object dimensions
-                    let objectLeft = state.nowMarking.selectedObject.left;
-                    let objectTop = state.nowMarking.selectedObject.top;
-                    let objectWidth = state.nowMarking.selectedObject.width;
-                    let objectHeight = state.nowMarking.selectedObject.height;
-                    let objectHorizontalCenter = objectLeft + (objectWidth / 2);
-                    let objectVerticalCenter = objectTop + (objectHeight / 2);
-
-                    if (state.nowMarking.selectedObject.get('type') === 'textbox') {
-                        objectVerticalCenter = objectTop;
-                        objectHorizontalCenter = objectLeft;
-                    }
-
-                    if (
-                        ((objectHorizontalCenter > trashMaxLeft) && (objectHorizontalCenter < trashMaxRight))
-                        && ((objectVerticalCenter > trashMaxTop) && (objectVerticalCenter < trashMaxBottom))
-                    ) {
-                        state.nowMarking.canvas.main.index.remove(state.nowMarking.selectedObject);
-                    }
-                })
+            )
         },
 
         /********************************
@@ -812,8 +968,8 @@ export default {
 
                 'touch:drag': function (opt) {
 
-                    // Ensure not moving object
-                    if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isScalingObject && !state.states.isDrawing) {
+                    // Ensure single finger touch and not performing other actions
+                    if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isModifyingObject && !state.states.isDrawing) {
 
                         this.selection = false;
 
@@ -827,7 +983,7 @@ export default {
                         let deltaX = lastX - initialX;
                         let deltaY = lastY - initialY;
 
-                        let delta = new fabric.Point(deltaX / 35, deltaY / 35);
+                        let delta = new fabric.Point(deltaX / 20, deltaY / 20);
                         canvas.relativePan(delta);
 
                         state.dragCount++;
@@ -838,23 +994,40 @@ export default {
             })
         },
 
-        handleObjectScaling({state, commit, dispatch}) {
+        handleObjectModification({state, commit, dispatch}) {
             let canvas = state.nowMarking.canvas.main.index;
 
-            canvas.on('object:scaling', function (event) {
+            canvas.on({
+                'object:scaling': function (event) {
 
-                // If state isMovingObject not already set, set to true
-                if (!state.states.isScalingObject) {
-                    commit('toggleScalingObjectMode')
-                    state.nowMarking.selectedObject = event.target;
-                    commit('toggleOverlayScreen', 'add')
-                }
-            })
+                    // If state isMovingObject not already set, set to true
+                    if (event.e.touches.length === 1 && !state.states.isModifyingObject && !state.states.isZoomingCanvas) {
+                        commit('toggleScalingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+                        commit('toggleOverlayScreen', 'add')
+                    }
 
-                .on('object:scaled', function (event) {
+                    if (event.e.touches.length === 2) {
+                        commit('resetObjectSelection')
+                    }
+                },
+                'object:scaled': function (event) {
                     commit('toggleScalingObjectMode')
                     commit('toggleOverlayScreen', 'remove')
-                })
+                },
+                'object:rotating': function (event) {
+                    // If state isMovingObject not already set, set to true
+                    if (event.e.touches.length === 1 && !state.states.isModifyingObject && !state.states.isZoomingCanvas) {
+                        commit('toggleScalingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+                        commit('toggleOverlayScreen', 'add')
+                    }
+                },
+                'object:rotated': function (event) {
+                    commit('toggleScalingObjectMode')
+                    commit('toggleOverlayScreen', 'remove')
+                }
+            });
         },
 
         loadSticker({state, commit}, stickerName) {
@@ -926,6 +1099,7 @@ export default {
         },
 
         beginDrawingMode({state, commit}) {
+
             commit('toggleDrawingModeStates')
             commit('toggleDrawingMode')
 
@@ -933,7 +1107,6 @@ export default {
             state.nowMarking.canvas.main.index.isDrawingMode = true;
 
             state.nowMarking.canvas.main.index
-
                 .on('mouse:down:before', function (e) {
                     if (state.nowDrawing.drawing) {
                         state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(245, 59, 87, 1)';
@@ -981,7 +1154,7 @@ export default {
             let index = state.nowMarking.image.index;
             state.nowMarking.image.path = state.assignmentDetails.snappedAnswerPaths[index]
             commit('disposeCanvas')
-            dispatch('loadImage')
+            dispatch('initialiseMarkingCanvas')
         },
 
         submit({state, commit}) {
@@ -1033,7 +1206,7 @@ export default {
                     reject()
                 }
             })
-        }
+        },
 
     },
     getters: {
