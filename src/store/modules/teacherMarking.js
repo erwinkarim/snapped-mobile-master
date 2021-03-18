@@ -15,6 +15,7 @@ export default {
             isLoading: true,
             isMain: true,
             isPreviewing: false,
+            isPreparingCanvas: false,
             isMarking: false,
             isSelectingSticker: false,
             isMovingObject: false,
@@ -131,8 +132,7 @@ export default {
 
             if (data.snap_answer) {
                 state.submission.type = 'snapped';
-                state.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
-                state.marking = data.snap_answer_data_url.split('|');
+                state.assignmentDetails.snappedAnswerPaths = state.marking = data.snap_answer_url.split(',');
             }
 
             if (data.written_answer) {
@@ -164,6 +164,7 @@ export default {
                 isLoading: false,
                 isMain: !state.states.isMain,
                 isPreviewing: !state.states.isPreviewing,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -181,6 +182,7 @@ export default {
                 isLoading: false,
                 isMain: true,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -198,6 +200,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -215,6 +218,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: true,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -232,6 +236,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: !state.states.isSelectingSticker,
                 isDrawing: false,
@@ -250,6 +255,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
                 isDrawing: !state.states.isDrawing,
@@ -267,6 +273,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
                 isDrawing: !state.states.isDrawing,
@@ -296,6 +303,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: true,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -314,6 +322,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -332,6 +341,26 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: true,
+                isPreparingCanvas: false,
+                isMarking: false,
+                isSelectingSticker: false,
+                isDrawing: false,
+                isMovingObject: false,
+                isScalingObject: false,
+                isWritingFeedback: false,
+                isSubmitting: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+        },
+
+        togglePreparingCanvasMode(state) {
+
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: true,
+                isPreparingCanvas: !state.states.isPreparingCanvas,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -349,6 +378,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -366,6 +396,7 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -447,6 +478,7 @@ export default {
                 isLoading: true,
                 isMain: true,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
@@ -544,19 +576,36 @@ export default {
                 });
         },
 
+
         enterMarkingMode({state, getters, commit}, nowMarking) {
 
             return new Promise((resolve, reject) => {
 
                 if (state.states.isPreviewing && !getters.isMarkedAssignment) {
 
-                    state.nowMarking.image.index = nowMarking.index;
-                    state.nowMarking.image.path = decodeURIComponent(nowMarking.dataURL);
+                    console.log('requesting dataURL')
 
-                    commit('setMarkingMode')
+                    SubmissionRepository.convertToDataURL(nowMarking.path)
+                        .then(response => {
+
+                            if (response.data.success) {
+                                console.log('received dataURL')
+                                state.nowMarking.image.index = nowMarking.index;
+                                state.nowMarking.image.path = decodeURIComponent(response.data.data);
+
+                                commit('setMarkingMode')
+                                resolve()
+                            } else {
+                                console.log('Failed to convert image to dataURL')
+                                reject()
+                            }
+                        })
+                        .catch(error => {
+                            console.log('Failed to convert image to dataURL')
+                            reject()
+                        })
 
 
-                    resolve()
                 } else {
                     reject()
                 }
@@ -618,7 +667,7 @@ export default {
                 dispatch('enableDragAndDropToTrash')
 
                 // Currently enable only for test account
-                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com' ) {
+                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com') {
                     dispatch('enableCanvasZoom')
                     dispatch('enableCanvasPanning')
                 }
@@ -1024,17 +1073,6 @@ export default {
 
         },
 
-        checkNowMarkingPathExists({state}) {
-
-            return new Promise((resolve, reject) => {
-                if (state.nowMarking.image.path) {
-                    resolve();
-                } else {
-                    reject()
-                }
-            })
-        }
-
     },
     getters: {
 
@@ -1094,12 +1132,24 @@ export default {
             return state.assignmentDetails.marksID !== null && state.assignmentDetails.marksID !== undefined;
         },
 
+        markingPathExists(state) {
+            return state.nowMarking.image.path !== null;
+        },
+
         backgroundImageScaleFactor(state) {
             return state.nowMarking.canvas.main.dimensions.width / state.nowMarking.image.dimensions.width;
         },
 
         isMainPage(state) {
             return state.states.isMain === true && state.states.isPreviewing === false && state.states.isMarking === false;
+        },
+
+        isPreviewing(state) {
+            return state.states.isMain === false && state.states.isPreviewing === true && state.states.isMarking === false;
+        },
+
+        isPreparingCanvas(state) {
+            return state.states.isPreviewing === true && state.states.isPreparingCanvas === true;
         }
 
     }

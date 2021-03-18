@@ -5,7 +5,6 @@
     <div :class="contentClass" class="relative top-24">
 
       <!--  ASSIGNMENT ANSWERS-->
-
       <div v-if="$store.getters['teacherMarking/isAnswered']"
            :class="imagePreviewClass"
            class="pt-4 z-10"
@@ -18,9 +17,16 @@
             v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !$store.state.teacherMarking.states.isMarking"
         />
       </div>
+
       <!-- ASSIGNMENT DETAILS -->
       <assignment-info v-if="$store.getters['teacherMarking/isMainPage']"
                        :details="$store.state.teacherMarking.assignmentDetails"/>
+
+      <div v-if="$store.getters['teacherMarking/isPreparingCanvas']">
+
+      </div>
+
+
     </div>
 
   </div>
@@ -75,6 +81,9 @@ export default {
         return 'bg-black-primary px-16  pb-10'
       }
     },
+  },
+  mounted() {
+    console.log('mounted details page')
   },
   components: {
     AssignmentInfo,

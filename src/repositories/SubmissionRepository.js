@@ -33,7 +33,13 @@ export default {
             });
     },
 
-    update({submissionID: submissionID, assignmentID: assignmentID, answerType: answerType, answerContent: answerContent, remarks: remarks}) {
+    update({
+               submissionID: submissionID,
+               assignmentID: assignmentID,
+               answerType: answerType,
+               answerContent: answerContent,
+               remarks: remarks
+           }) {
 
         let formData = new FormData()
 
@@ -60,5 +66,13 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+    },
+
+    convertToDataURL(path) {
+        return Repository.post(
+            `/data-url`, {
+                image_path: path
+            }
+        );
     }
 }

@@ -132,8 +132,12 @@ export default {
     },
   },
   mounted() {
+    console.log('mounted marking page')
     this.$store.commit('teacherMarking/setOriginalState')
     this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
+  },
+  destroyed() {
+    // TODO: Reset teacherMarking.js
   },
   components: {
     PageHeader,
