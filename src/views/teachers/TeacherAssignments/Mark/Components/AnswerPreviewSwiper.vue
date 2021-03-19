@@ -87,7 +87,7 @@ export default {
         })
             .then(() => {
               console.log('redirecting to edit page')
-              this.$store.commit('teacherMarking/togglePreparingCanvasMode')
+              // this.$store.commit('teacherMarking/togglePreparingCanvasMode')
               router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
             })
             .catch(error => {

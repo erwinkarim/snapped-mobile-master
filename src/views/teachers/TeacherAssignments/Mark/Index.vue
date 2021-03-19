@@ -54,7 +54,7 @@
     </div>
 
     <!-- BOTTOM -->
-    <bottom-bar v-if="!$store.state.teacherMarking.states.isLoading"/>
+    <bottom-bar v-if="showBottomBar"/>
 
   </div>
 </template>
@@ -95,6 +95,11 @@ export default {
 
       return value;
     },
+
+    showBottomBar() {
+      console.log(`Show bottom bar: ${!this.$store.state.teacherMarking.states.isLoading} | ${!this.$store.getters["teacherMarking/isPreparingCanvas"]}`)
+      return !this.$store.state.teacherMarking.states.isLoading || !this.$store.getters["teacherMarking/isPreparingCanvas"]
+    }
 
 
   },
