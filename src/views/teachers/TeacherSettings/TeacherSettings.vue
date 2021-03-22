@@ -29,7 +29,7 @@
         <section-title class="text-left my-4" title="Integrations"/>
 
         <!-- GOOGLE CLASSROOM -->
-        <div @click="integrateGoogleClassroom"
+        <div @click="handleGoogleClassroomIntegration"
              class="w-full  py-3 flex flex-row w-full border-b-1 items-center bg-white">
           <div class="w-1/12 text-center">
             <font-awesome-icon class="w-full fa-1x text-purple-primary" :icon="faIcons.google"/>
@@ -40,7 +40,7 @@
           <div :class="isGoogleClassroomIntegrated ? 'bg-purple-primary' : 'bg-gray-500'"
                class="text-white rounded-lg py-1 tracking-wide text-xs uppercase px-3 h-full w-4/12"
           >
-            {{ isGoogleClassroomIntegrated ? 'CONNECTED' : 'CONNECT' }}
+            {{ isGoogleClassroomIntegrated ? 'DISCONNECT' : 'CONNECT' }}
           </div>
 
         </div>
@@ -128,9 +128,17 @@ export default {
             }
           })
     },
-    integrateGoogleClassroom() {
+    handleGoogleClassroomIntegration() {
 
-      if (!this.isGoogleClassroomIntegrated) {
+      // If already integrated, disconnect
+      if (this.isGoogleClassroomIntegrated) {
+        GoogleClassroomRepository.disconnect()
+        .then(response => {
+          if (response.data.success) {
+            console.log(response.data.message)
+          }
+        })
+      } else {
 
         GoogleClassroomRepository.integration()
             .then(response => {

@@ -10,6 +10,10 @@ export default {
         return Repository.post('/google-callback', payload)
     },
 
+    disconnect() {
+        return Repository.post('/google/disconnect')
+    },
+
     fetchFolders() {
         return Repository.get('/drive/list-of-folders');
     },
