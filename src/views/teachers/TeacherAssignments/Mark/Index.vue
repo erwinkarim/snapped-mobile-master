@@ -19,23 +19,62 @@
      --------------------->
     <div v-if="$store.state.teacherMarking.states.isShowingModal"
          class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal modal-type="error"
+
+      <!-- ERROR: Missing mark. Prompt user to add mark before submitting  -->
+      <modal v-if="$store.state.teacherMarking.nowShowingModal === 'error_missing_mark'"
+             modal-type="error"
              @toggleModal="toggleModalMode()"
              class="w-4/5 "
       >
-        <template slot="message" v-if="$store.state.teacherMarking.nowShowingModal === 'no_mark'">
+        <template slot="message">
           You must add mark for this assignment.
         </template>
         <template slot="button">
           Okay
         </template>
       </modal>
-    </div>
 
-    <div
-        v-if="$store.state.teacherMarking.states.isShowingModal && $store.state.teacherMarking.nowShowingModal === 'is_submitting'"
-        class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-      <modal @toggleModal="toggleModalMode()"
+      <!-- ERROR: Invalid image type. Some photos not converted to dataURL yet.  -->
+      <modal v-if="$store.state.teacherMarking.nowShowingModal === 'error_invalid_image_type'"
+             modal-type="error"
+             @toggleModal="toggleModalMode()"
+             class="w-4/5 "
+      >
+        <template slot="message">
+          Please retry.
+        </template>
+        <template slot="button">
+          Okay
+        </template>
+      </modal>
+
+      <!-- ERROR: Submissions failed  -->
+      <modal v-if="$store.state.teacherMarking.nowShowingModal === 'error_submit_markings'"
+             modal-type="error"
+             @toggleModal="toggleModalMode()"
+             class="w-4/5 "
+      >
+        <template slot="message">
+          {{ $store.state.teacherMarking.states.errorMessages || 'Oops! There seems to be an error in your submission.'}}
+        </template>
+        <template slot="button">
+          Okay
+        </template>
+      </modal>
+
+      <modal v-if="$store.state.teacherMarking.nowShowingModal === 'is_checking'"
+          @toggleModal="toggleModalMode()"
+             modal-type="no-icon"
+             :has-button="false"
+             class="w-4/5 "
+      >
+        <template slot="message">
+          Checking...
+        </template>
+      </modal>
+
+      <modal v-if="$store.state.teacherMarking.nowShowingModal === 'is_submitting'"
+          @toggleModal="toggleModalMode()"
              :has-button="false"
              class="w-4/5 "
       >
@@ -43,6 +82,7 @@
           Submitting marking...
         </template>
       </modal>
+
     </div>
 
     <!-- HEADER -->
@@ -54,7 +94,7 @@
     </div>
 
     <!-- BOTTOM -->
-    <bottom-bar v-if="showBottomBar"/>
+    <bottom-bar/>
 
   </div>
 </template>
@@ -96,11 +136,6 @@ export default {
       return value;
     },
 
-    showBottomBar() {
-      console.log(`Show bottom bar: ${!this.$store.state.teacherMarking.states.isLoading} | ${!this.$store.getters["teacherMarking/isPreparingCanvas"]}`)
-      return !this.$store.state.teacherMarking.states.isLoading || !this.$store.getters["teacherMarking/isPreparingCanvas"]
-    }
-
 
   },
   methods: {
@@ -137,12 +172,14 @@ export default {
     },
   },
   mounted() {
-    console.log('mounted marking page')
-    this.$store.commit('teacherMarking/setOriginalState')
+    this.$store.commit('teacherMarking/setInitialCanvasDimensions')
     this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
+        .then(response => {
+          this.$store.dispatch("teacherMarking/bulkConvertSubmissionsToDataURL")
+        })
   },
   destroyed() {
-    // TODO: Reset teacherMarking.js
+    this.$store.commit('teacherMarking/resetState')
   },
   components: {
     PageHeader,

@@ -1,16 +1,6 @@
 <template>
   <div class="w-full">
-
-    <div v-if="isPreparingCanvas" class="mt-16 flex flex-col">
-      <div class="font-bold text-lg">
-        Please wait.
-      </div>
-      <div>
-        Preparing canvas..
-      </div>
-    </div>
-
-    <div v-else v-my-swiper="swiperOption">
+    <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
         <div v-for="(path, index) in $store.getters['teacherMarking/images']"
              @click="enterMarkingMode(path, index)"
@@ -46,10 +36,6 @@ export default {
   },
   data() {
     return {
-
-      // states
-      isPreparingCanvas: false,
-
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
@@ -75,8 +61,6 @@ export default {
 
     enterMarkingMode(path, index) {
 
-      console.log('begin preparing canvas')
-      this.isPreparingCanvas = true;
       this.$store.commit('teacherMarking/togglePreparingCanvasMode')
 
       if (this.$store.getters["teacherMarking/isPreviewing"]) {
@@ -86,13 +70,17 @@ export default {
           path: path
         })
             .then(() => {
-              console.log('redirecting to edit page')
+              setTimeout(() => {
+                this.$store.commit('teacherMarking/setMarkingMode')
+                router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
+              }, 1200);
+
+
               // this.$store.commit('teacherMarking/togglePreparingCanvasMode')
-              router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
+
             })
             .catch(error => {
               this.$store.commit('teacherMarking/togglePreparingCanvasMode')
-              console.log('Failed to convert image to dataURL')
             })
       }
     }

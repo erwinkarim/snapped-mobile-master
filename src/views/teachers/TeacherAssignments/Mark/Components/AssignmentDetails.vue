@@ -22,8 +22,15 @@
       <assignment-info v-if="$store.getters['teacherMarking/isMainPage']"
                        :details="$store.state.teacherMarking.assignmentDetails"/>
 
-      <div v-if="this.$store.getters['teacherMarking/isPreparingCanvas']">
-
+      <div v-if="this.$store.getters['teacherMarking/isPreparingCanvas']"
+        class="mt-16"
+      >
+        <div class="font-bold text-2xl tracking-wider">
+          Please wait.
+        </div>
+        <div class="text-sm font-light mt-2">
+          Preparing canvas...
+        </div>
       </div>
 
 
@@ -85,9 +92,6 @@ export default {
     displaySubmission() {
       return this.$store.getters['teacherMarking/isAnswered'] && !this.$store.getters['teacherMarking/isPreparingCanvas'];
     }
-  },
-  mounted() {
-    console.log('mounted details page')
   },
   components: {
     AssignmentInfo,

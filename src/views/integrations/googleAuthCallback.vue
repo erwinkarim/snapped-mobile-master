@@ -67,8 +67,6 @@ export default {
           })
           .catch((error) => {
 
-            console.log('Oops! It seems that there is an error with the Google Callback function')
-
             this.isAuthenticating = false;
 
             this.title = 'Oops!'

@@ -27,20 +27,12 @@ import UndoIcon from "@/components/icons/UndoIcon";
 export default {
   name: "EditSnappedAnswer",
   created() {
-    console.log('created edit page')
     if (this.$store.getters["teacherMarking/markingPathExists"]) {
-      console.log('marking path exists')
       this.scrollToTop();
-      // this.$store.commit('teacherMarking/loadCanvas')
       this.$store.dispatch('teacherMarking/initialiseMarkingCanvas')
     } else {
-      console.log('no marking path')
       router.push({name: 'teacher.assignments.marking.details'})
     }
-  },
-  mounted() {
-    console.log('mounted edit page')
-
   },
   computed: {
     canvasContainerStyle() {

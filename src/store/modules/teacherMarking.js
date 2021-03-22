@@ -7,10 +7,8 @@ import MarksRepository from "@/repositories/teachers/MarksRepository";
 import 'fabric-history';
 import getters from "@/store/getters";
 
-export default {
-    namespaced: true,
-    state: () => ({
-
+const getDefaultState = () => {
+    return {
         states: {
             isLoading: true,
             isMain: true,
@@ -22,6 +20,7 @@ export default {
             isScalingObject: false,
             isDrawing: false,
             isWritingFeedback: false,
+            isCheckingSubmission: false,
             isSubmitting: false,
             isShowingModal: false,
             isSavingEditedSnappedAnswer: false
@@ -109,8 +108,13 @@ export default {
             marks: null
         },
 
-        dragCount: 0
-    }),
+        errorMessages: null
+    }
+}
+
+export default {
+    namespaced: true,
+    state: () => getDefaultState(),
     mutations: {
 
         setAssignmentDetails(state, data) {
@@ -171,6 +175,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -189,6 +194,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -207,6 +213,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: true,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -225,6 +232,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -243,6 +251,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -262,6 +271,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -280,6 +290,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -309,6 +320,7 @@ export default {
                 isDrawing: false,
                 isMovingObject: !state.states.isMovingObject,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: !state.states.isShowingModal,
                 isSavingEditedSnappedAnswer: false
@@ -329,6 +341,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -348,6 +361,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -367,6 +381,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -385,6 +400,7 @@ export default {
                 isMovingObject: !state.states.isMovingObject,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -403,6 +419,7 @@ export default {
                 isMovingObject: false,
                 isScalingObject: !state.states.isScalingObject,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -472,43 +489,7 @@ export default {
         },
 
 
-        setOriginalState(state) {
-
-            state.states = {
-                isLoading: true,
-                isMain: true,
-                isPreviewing: false,
-                isPreparingCanvas: false,
-                isMarking: false,
-                isSelectingSticker: false,
-                isDrawing: false,
-                isMovingObject: false,
-                isScalingObject: false,
-                isWritingFeedback: false,
-                isSubmitting: false,
-                isShowingModal: false,
-                isSavingEditedSnappedAnswer: false
-            };
-
-            // Assignment Details
-            state.assignmentDetails = {
-                submissionID: null,
-                studentID: null,
-                studentName: null,
-                assignmentID: null,
-                assignmentTitle: null,
-                snappedAnswerPaths: null,
-                writtenAnswer: null,
-                createdAt: null,
-                updatedAt: null,
-                submittedTime: null,
-                submittedDate: null,
-                marksID: null,
-                marks: null,
-                markedSnappedAnswerPaths: null,
-                answer_tag: null
-            };
-
+        setInitialCanvasDimensions(state) {
 
             // Determine canvas dimensions
             let canvasWidth = 0.9 * window.innerWidth;
@@ -520,60 +501,96 @@ export default {
                 }
             }
 
-            state.nowMarking = {
-                image: {
-                    index: null,
-                    path: null,
-                    dimensions: {
-                        height: null,
-                        width: null
-                    }
-                },
-                sticker: null,
-                textBox: false,
-                canvas: {
-                    main: {
-                        index: null,
-                        dimensions: {
-                            height: 0.75 * window.innerHeight,
-                            width: 0.9 * window.innerWidth
-                        }
-                    },
-                    markings: {
-                        index: null,
-                        dimensions: {
-                            height: null,
-                            width: null
-                        }
-                    }
-                },
-            };
-
-            // Marked images
-            state.marking = [];
-
-            state.submission = {
-                type: '',
-                snappedAnswers: [],
-                feedback: '',
-                marks: null
+            state.nowMarking.canvas.main.dimensions = {
+                height: 0.75 * window.innerHeight,
+                width: 0.9 * window.innerWidth
             }
 
         },
+
+        resetState(state) {
+            Object.assign(state, getDefaultState())
+        }
+
+
     },
     actions: {
 
         // FETCH: Submission Details
         fetchData({state, commit}, submissionID) {
 
-            SubmissionRepository.find(submissionID)
-                .then(response => {
+            return new Promise((resolve, reject) => {
+                SubmissionRepository.find(submissionID)
+                    .then(response => {
+                        if (response.data.success) {
+                            commit('setAssignmentDetails', response.data.data)
+                            state.states.isLoading = false;
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    });
+            });
+        },
 
-                    if (response.data.success) {
-                        commit('setAssignmentDetails', response.data.data)
-                        state.states.isLoading = false;
+        /************************
+         Convert snapped answers to dataURL asynchronously
+         *************************/
+        bulkConvertSubmissionsToDataURL({state, getters, commit}) {
+
+            let toConvert = state.marking.length;
+
+            return new Promise((resolve, reject) => {
+
+                state.marking.forEach((imagePath, index) => {
+
+                    // Check if image is already converted to dataURL
+                    let isConverted = imagePath.split(",")[0] === 'data:image/jpg;base64';
+
+                    // If not yet, convert now
+                    if (!isConverted) {
+                        SubmissionRepository.convertToDataURL(imagePath)
+                            .then(response => {
+                                if (response.data.success) {
+                                    state.marking[index] = decodeURIComponent(response.data.data);
+                                    toConvert--;
+                                } else {
+                                    console.log('Failed to convert image to dataURL')
+                                }
+                            })
+                            .catch(error => {
+                                console.log('Failed to convert image to dataURL')
+                            })
+                    } else {
+                        toConvert--;
+                    }
+
+                });
+
+
+            });
+        },
+
+        checkAllConvertedToDataURL({state}) {
+            return new Promise((resolve, reject) => {
+
+                let toCheck = state.marking.length;
+
+                state.marking.forEach((imagePath, index) => {
+                    let isConverted = imagePath.split(",")[0] === 'data:image/jpg;base64';
+
+                    if (isConverted) {
+                        toCheck--;
+
+                        if (toCheck === 0) {
+                            resolve();
+                        }
+
+                    } else {
+                        reject('Plese try again')
                     }
                 });
+            });
         },
 
 
@@ -583,27 +600,30 @@ export default {
 
                 if (state.states.isPreviewing && !getters.isMarkedAssignment) {
 
-                    console.log('requesting dataURL')
+                    // Check if image is already converted to dataURL
+                    let isConverted = nowMarking.path.split(",")[0] === 'data:image/jpg;base64';
 
-                    SubmissionRepository.convertToDataURL(nowMarking.path)
-                        .then(response => {
+                    if (isConverted) {
+                        state.nowMarking.image.index = nowMarking.index;
+                        state.nowMarking.image.path = nowMarking.path;
+                        resolve()
+                    } else {
+                        SubmissionRepository.convertToDataURL(nowMarking.path)
+                            .then(response => {
 
-                            if (response.data.success) {
-                                console.log('received dataURL')
-                                state.nowMarking.image.index = nowMarking.index;
-                                state.nowMarking.image.path = decodeURIComponent(response.data.data);
+                                if (response.data.success) {
+                                    state.nowMarking.image.index = nowMarking.index;
+                                    state.nowMarking.image.path = decodeURIComponent(response.data.data);
 
-                                commit('setMarkingMode')
-                                resolve()
-                            } else {
-                                console.log('Failed to convert image to dataURL')
+                                    resolve()
+                                } else {
+                                    reject()
+                                }
+                            })
+                            .catch(error => {
                                 reject()
-                            }
-                        })
-                        .catch(error => {
-                            console.log('Failed to convert image to dataURL')
-                            reject()
-                        })
+                            })
+                    }
 
 
                 } else {
@@ -624,7 +644,6 @@ export default {
 
             // First, get image's dimension. Then, resize canvas while setting background image
             fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
-
 
                 state.nowMarking.image.dimensions.width = img.width;
                 state.nowMarking.image.dimensions.height = img.height;
@@ -1033,36 +1052,66 @@ export default {
             dispatch('loadImage')
         },
 
-        submit({state, commit}) {
+        submit({state, commit, dispatch}) {
 
             return new Promise((resolve, reject) => {
+
                 if (state.submission.marks === null || state.submission.marks === undefined) {
-                    commit('toggleModalMode', 'no_mark')
+                    commit('toggleModalMode', 'error_missing_mark')
                     reject()
                 } else {
 
                     if (!state.states.isSubmitting) {
 
-                        commit('toggleModalMode', 'is_submitting')
 
-                        state.states.isSubmitting = true;
+                        commit('toggleModalMode', 'is_checking')
 
-                        MarksRepository.store(
-                            {
-                                assignmentID: state.assignmentDetails.assignmentID,
-                                studentID: state.assignmentDetails.studentID,
-                                answerID: state.assignmentDetails.submissionID,
-                                submissionType: state.submission.type,
-                                snappedAnswers: state.marking,
-                                marks: state.submission.marks,
-                                feedback: state.submission.feedback
-                            })
+                        dispatch('checkAllConvertedToDataURL')
+
+                            // If all image types are dataURL
                             .then(response => {
-                                if (response.data.success) {
-                                    commit('setMainMode')
-                                    resolve(state.assignmentDetails.submissionID);
-                                }
+                                commit('toggleModalMode')
+                                commit('toggleModalMode', 'is_submitting')
+
+                                MarksRepository.store(
+                                    {
+                                        assignmentID: state.assignmentDetails.assignmentID,
+                                        studentID: state.assignmentDetails.studentID,
+                                        answerID: state.assignmentDetails.submissionID,
+                                        submissionType: state.submission.type,
+                                        snappedAnswers: state.marking,
+                                        marks: state.submission.marks,
+                                        feedback: state.submission.feedback
+                                    })
+                                    .then(response => {
+                                        if (response.data.success) {
+                                            commit('setMainMode')
+                                            resolve(state.assignmentDetails.submissionID);
+                                        } else {
+                                            commit('toggleModalMode')
+                                            commit('toggleModalMode', 'error_submit_markings')
+                                            state.states.errorMessages = response.data.data.error;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        commit('toggleModalMode')
+                                        commit('toggleModalMode', 'error_submit_markings')
+                                        state.states.errorMessages = error;
+                                    })
+
+
                             })
+
+                            // If some images are not converted to dataURL yet
+                            .catch(error => {
+
+                                setTimeout(() => {
+                                    commit('toggleModalMode')
+                                    commit('toggleModalMode', 'error_invalid_image_type')
+                                }, 1500)
+                            })
+
+
                     } else {
                         console.log('Already submitting a marking.')
                     }
