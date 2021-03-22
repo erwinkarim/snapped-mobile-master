@@ -2,12 +2,13 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div v-for="(dataURL, index) in $store.getters['teacherMarking/images']"
-             @click="enterMarkingMode(dataURL, index)"
+        <div v-for="(path, index) in $store.getters['teacherMarking/images']"
+             @click="enterMarkingMode(path, index)"
              :class="swiperClass"
              class=" swiper-slide rounded-2xl h-full overflow-hidden">
-          <div class="w-full py-2 px-4 h-full flex flex-col justify-start items-center object-cover top-0 items-center absolute">
-            <img :src="dataURL">
+          <div
+              class="w-full py-2 px-4 h-full flex flex-col justify-start items-center object-cover top-0 items-center absolute">
+            <img :src="path">
           </div>
         </div>
       </div>
@@ -35,7 +36,6 @@ export default {
   },
   data() {
     return {
-
       swiperOption: {
         initialSlide: 0,
         direction: 'horizontal',
@@ -58,15 +58,31 @@ export default {
     }
   },
   methods: {
-    enterMarkingMode(dataURL, index) {
-      this.$store.dispatch('teacherMarking/enterMarkingMode', {
-        index: index,
-        dataURL: dataURL
-      }).then(() => {
 
-        router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
-      })
+    enterMarkingMode(path, index) {
 
+      this.$store.commit('teacherMarking/togglePreparingCanvasMode')
+
+      if (this.$store.getters["teacherMarking/isPreviewing"]) {
+
+        this.$store.dispatch('teacherMarking/enterMarkingMode', {
+          index: index,
+          path: path
+        })
+            .then(() => {
+              setTimeout(() => {
+                this.$store.commit('teacherMarking/setMarkingMode')
+                router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
+              }, 1200);
+
+
+              // this.$store.commit('teacherMarking/togglePreparingCanvasMode')
+
+            })
+            .catch(error => {
+              this.$store.commit('teacherMarking/togglePreparingCanvasMode')
+            })
+      }
     }
   },
   directives: {

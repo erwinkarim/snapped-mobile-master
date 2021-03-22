@@ -1,7 +1,9 @@
 <template>
   <div>
 
-    <!--  HEADER: MAIN  -->
+    <!----------------------
+            HEADER: MAIN
+      ---------------------->
     <page-header-three v-if="$store.state.teacherMarking.states.isMain"
                        :background-color="headerBackgroundColor"
                        :bottom-padding="8"
@@ -16,6 +18,9 @@
 
     </page-header-three>
 
+    <!----------------------
+       HEADER: Preview
+     ---------------------->
     <page-header-three v-if="$store.state.teacherMarking.states.isPreviewing"
                        :background-color="headerBackgroundColor"
                        :bottom-padding="8"
@@ -29,12 +34,16 @@
         </div>
       </template>
 
-      <template v-slot:title>
+      <template v-slot:title
+                v-if="!$store.getters['teacherMarking/isPreparingCanvas']"
+      >
         Answer Preview
       </template>
     </page-header-three>
 
-    <!--  HEADER: MARKING  -->
+    <!----------------------
+        HEADER: MARKING
+      ---------------------->
     <page-header-three v-if="isViewingMarkingMainPage"
                        :background-color="headerBackgroundColor"
                        :bottom-padding="8"
@@ -50,9 +59,9 @@
       </template>
 
       <template v-slot:rightAction>
-                <button @click="undoEdits" class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none">
-                  RESET
-                </button>
+        <button @click="undoEdits" class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none">
+          RESET
+        </button>
       </template>
     </page-header-three>
 
@@ -80,22 +89,22 @@
             </font-awesome-layers>
 
           </button>
-<!--          <button @click="$store.commit('teacherMarking/toggleDrawingModeStates')"-->
-<!--                  class="px-3 ml-1 focus:outline-none"-->
-<!--          >-->
+          <!--          <button @click="$store.commit('teacherMarking/toggleDrawingModeStates')"-->
+          <!--                  class="px-3 ml-1 focus:outline-none"-->
+          <!--          >-->
 
-<!--            <font-awesome-layers class="text-center fa-lg focus:outline-none">-->
-<!--              <font-awesome-icon :icon="icons.circle"-->
-<!--                                 v-if="drawingModeState ==='erasing'"-->
-<!--                                 class="fa-2x text-white"-->
-<!--              />-->
-<!--              <font-awesome-icon :icon="icons.eraser"-->
-<!--                                 :class="drawingModeState ==='erasing' ? '' : 'text-white'"-->
-<!--                                 class="fa-2x focus:outline-none"-->
-<!--                                 transform="shrink-9"-->
-<!--              />-->
-<!--            </font-awesome-layers>-->
-<!--          </button>-->
+          <!--            <font-awesome-layers class="text-center fa-lg focus:outline-none">-->
+          <!--              <font-awesome-icon :icon="icons.circle"-->
+          <!--                                 v-if="drawingModeState ==='erasing'"-->
+          <!--                                 class="fa-2x text-white"-->
+          <!--              />-->
+          <!--              <font-awesome-icon :icon="icons.eraser"-->
+          <!--                                 :class="drawingModeState ==='erasing' ? '' : 'text-white'"-->
+          <!--                                 class="fa-2x focus:outline-none"-->
+          <!--                                 transform="shrink-9"-->
+          <!--              />-->
+          <!--            </font-awesome-layers>-->
+          <!--          </button>-->
         </div>
       </template>
 

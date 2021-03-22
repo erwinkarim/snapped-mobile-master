@@ -149,11 +149,17 @@ export default {
       }
     },
     showBottomBar() {
+
+      // check if submission is tagged as unanswered
       let tag = this.$store.state.teacherMarking.assignmentDetails.answer_tag;
+
+      // Show if is not loading or preparing canvas
+      let show = this.$store.state.teacherMarking.states.isLoading === false && this.$store.getters["teacherMarking/isPreparingCanvas"] === false;
+
       if (tag) {
         return tag !== 'unanswered';
       } else {
-        return true
+        return show
       }
     }
   },
