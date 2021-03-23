@@ -20,10 +20,29 @@
         </div>
       </div>
 
+<!--      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">-->
+<!--        <div v-if="markExists" class="text-purple-primary mr-1">-->
+<!--          <b>{{ submission.marks }}</b>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">-->
+<!--        <icon-base-two v-if="isMarked">-->
+<!--          <success-icon/>-->
+<!--        </icon-base-two>-->
+<!--        <icon-base-two v-if="isUnanswered">-->
+<!--          <error-icon/>-->
+<!--        </icon-base-two>-->
       <div class="w-1/12 relative h-full flex flex-row items-center justify-center">
+        <div v-if="markExists" class="text-purple-primary mr-1/12">
+          <b>{{ submission.marks }}</b>
+        </div>
         <icon-base-two v-if="isMarked">
           <success-icon/>
         </icon-base-two>
+        <icon-base-two v-if="isUnanswered">
+          <error-icon/>
+        </icon-base-two>
+
         <!--        <icon-base class="absolute h-full w-full" icon-name="arrow-right-icon" icon-color="white"-->
         <!--                   view-box="-15 -20 60 55">-->
         <!--          <ArrowRightIcon/>-->
@@ -41,6 +60,7 @@ import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import moment from "moment";
 import router from "@/router";
 import SuccessIcon from "@/components/icons/SuccessIcon";
+import ErrorIcon from "@/components/icons/ErrorIcon";
 
 export default {
   name: "AssignmentSubmissionCard",
@@ -56,8 +76,14 @@ export default {
     },
   },
   computed: {
+    markExists() {
+      return this.submission.marks !== null && this.submission.marks !== undefined;
+    },
     isMarked() {
-      return this.submission.marksID !== null && this.submission.marksID !== undefined;
+      return this.submission.marksID !== null && this.submission.marksID !== undefined && !this.isUnanswered;
+    },
+    isUnanswered() {
+      return this.submission.answerTag === 'unanswered';
     },
     subjectName () {
       if (this.meta) {
@@ -96,7 +122,7 @@ export default {
       }
     }
   },
-  components: {SuccessIcon, ProfilePhoto, IconBaseTwo}
+  components: {SuccessIcon, ProfilePhoto, IconBaseTwo, ErrorIcon}
 }
 </script>
 
