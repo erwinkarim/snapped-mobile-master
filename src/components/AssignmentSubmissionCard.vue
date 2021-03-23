@@ -1,6 +1,6 @@
 <template>
 
-  <div @click="showSubmission" class="max-w-sm md:max-w-xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 py-3 md:py-5 ">
+  <div @click="showSubmission" :class="isUnanswered ? 'bg-red-200 bg-opacity-50' : 'bg-gray-secondary'" class="max-w-sm md:max-w-xl rounded rounded-xl justify-between overflow-hidden flex flex-col px-3 py-3 md:py-5 ">
     <div class="flex flex-row items-center h-full">
 
       <div class="w-2/12">
@@ -20,11 +20,11 @@
         </div>
       </div>
 
-<!--      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">-->
-<!--        <div v-if="markExists" class="text-purple-primary mr-1">-->
-<!--          <b>{{ submission.marks }}</b>-->
-<!--        </div>-->
-<!--      </div>-->
+      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">
+        <div v-if="markExists" class="text-purple-primary mr-1">
+          <b>{{ submission.marks }}</b>
+        </div>
+      </div>
 <!--      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">-->
 <!--        <icon-base-two v-if="isMarked">-->
 <!--          <success-icon/>-->
@@ -32,22 +32,22 @@
 <!--        <icon-base-two v-if="isUnanswered">-->
 <!--          <error-icon/>-->
 <!--        </icon-base-two>-->
-      <div class="w-1/12 relative h-full flex flex-row items-center justify-center">
-        <div v-if="markExists" class="text-purple-primary mr-1/12">
-          <b>{{ submission.marks }}</b>
-        </div>
-        <icon-base-two v-if="isMarked">
-          <success-icon/>
-        </icon-base-two>
-        <icon-base-two v-if="isUnanswered">
-          <error-icon/>
-        </icon-base-two>
+<!--      <div class="w-1/8 relative h-full flex flex-row items-center justify-center">-->
+<!--        <div v-if="markExists" class="text-purple-primary mr-1/12">-->
+<!--          <b>{{ submission.marks }}</b>-->
+<!--        </div>-->
+<!--        <icon-base-two v-if="isMarked">-->
+<!--          <success-icon/>-->
+<!--        </icon-base-two>-->
+<!--        <icon-base-two v-if="isUnanswered">-->
+<!--          <error-icon/>-->
+<!--        </icon-base-two>-->
 
         <!--        <icon-base class="absolute h-full w-full" icon-name="arrow-right-icon" icon-color="white"-->
         <!--                   view-box="-15 -20 60 55">-->
         <!--          <ArrowRightIcon/>-->
         <!--        </icon-base>-->
-      </div>
+<!--      </div>-->
 
     </div>
 
