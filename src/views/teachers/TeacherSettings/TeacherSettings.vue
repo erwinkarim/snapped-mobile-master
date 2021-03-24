@@ -50,8 +50,6 @@
 
       <div class="w-full px-7 mt-3">
         <section-title class="text-left my-4" title="Log out"/>
-
-
         <!-- LOGOUT -->
         <div @click="logout"
              class="w-full text-left py-4 flex flex-row w-full border-b-1 items-center bg-white"
@@ -133,11 +131,11 @@ export default {
       // If already integrated, disconnect
       if (this.isGoogleClassroomIntegrated) {
         GoogleClassroomRepository.disconnect()
-        .then(response => {
-          if (response.data.success) {
-            console.log(response.data.message)
-          }
-        })
+            .then(response => {
+              if (response.data.success) {
+                this.$store.dispatch('setAuthUser')
+              }
+            })
       } else {
 
         GoogleClassroomRepository.integration()
