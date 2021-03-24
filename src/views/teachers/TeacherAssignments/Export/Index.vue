@@ -149,7 +149,6 @@ export default {
       GoogleClassroomRepository.fetchFolders()
           .then(response => {
             if (response.data.success) {
-              // console.log(response.data.data.folders)
               this.isLoading = false;
               this.folders = response.data.data.folders;
             }

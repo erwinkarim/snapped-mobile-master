@@ -7,7 +7,18 @@
 
     <template v-slot:content>
       <div class="w-full px-7 mt-3">
-        <section-title class="text-left mt-4" title="Profile"/>
+
+        <div class="flex flex-row items-center justify-between mb-3">
+          <section-title class="text-left mt-4" title="Profile"/>
+
+          <!--  ROUTE LINK: USER EDIT PROFILE  -->
+<!--          <router-link :to="{name: 'auth.profile.edit'}">-->
+<!--            <font-awesome-icon-->
+<!--                :icon="faIcons.edit"-->
+<!--                class="w-full fa-1x text-purple-primary"-->
+<!--            />-->
+<!--          </router-link>-->
+        </div>
 
         <div v-for="detail in details"
              :key="detail.value"
@@ -70,15 +81,14 @@
 
 <script>
 
-import GoogleClassroomRepository from "@/repositories/GoogleClassroomRepository";
-
 export default {
   name: "TeacherSettings",
   data() {
     return {
 
       faIcons: {
-        google: faGoogle
+        google: faGoogle,
+        edit: faEdit
       },
 
       details: {
@@ -206,7 +216,7 @@ export default {
     SectionTitle,
     PageTitle,
     DashboardLayout,
-    FontAwesomeIcon
+    FontAwesomeIcon,
   },
 }
 
@@ -223,10 +233,12 @@ import EmailIcon from "../../../components/icons/EmailIcon";
 import PhoneIcon from "../../../components/icons/PhoneIcon";
 import LogoutIcon from "../../../components/icons/LogoutIcon";
 import TeacherRepository from "../../../repositories/TeacherRepository";
+import GoogleClassroomRepository from "@/repositories/GoogleClassroomRepository";
 
 // FONT AWESOME
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {faGoogle} from '@fortawesome/free-brands-svg-icons'
+import {faEdit} from "@fortawesome/free-solid-svg-icons";
 </script>
 
 <style scoped>
