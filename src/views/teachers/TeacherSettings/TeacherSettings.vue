@@ -10,12 +10,14 @@
 
         <div class="flex flex-row items-center justify-between mb-3">
           <section-title class="text-left mt-4" title="Profile"/>
-          <router-link :to="{name: 'auth.profile.edit'}">
-            <font-awesome-icon
-                :icon="faIcons.edit"
-                class="w-full fa-1x text-purple-primary"
-            />
-          </router-link>
+
+          <!--  ROUTE LINK: USER EDIT PROFILE  -->
+<!--          <router-link :to="{name: 'auth.profile.edit'}">-->
+<!--            <font-awesome-icon-->
+<!--                :icon="faIcons.edit"-->
+<!--                class="w-full fa-1x text-purple-primary"-->
+<!--            />-->
+<!--          </router-link>-->
         </div>
 
         <div v-for="detail in details"

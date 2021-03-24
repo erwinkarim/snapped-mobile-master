@@ -18,13 +18,13 @@ export default [
     student_assignment_routes,
     teacher_assignment_routes,
 
-    // User update profile details
-    {
-        path: '/auth/profile/edit',
-        name: 'auth.profile.edit',
-        component: UserProfileEdit,
-        props: true
-    },
+    // User update profile details. TEMPORARILY DISABLED TILL RELEASE DATE
+    // {
+    //     path: '/auth/profile/edit',
+    //     name: 'auth.profile.edit',
+    //     component: UserProfileEdit,
+    //     props: true
+    // },
 
     // INTEGRATIONS
     {
