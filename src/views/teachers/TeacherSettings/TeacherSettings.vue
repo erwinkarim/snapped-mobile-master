@@ -134,7 +134,6 @@ export default {
             .then(response => {
               if (response.data.success) {
                 this.$store.dispatch('setAuthUser')
-                console.log(response.data.message)
               }
             })
       } else {
