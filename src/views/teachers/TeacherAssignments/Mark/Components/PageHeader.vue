@@ -58,8 +58,18 @@
         </div>
       </template>
 
+      <!--
+          If is selecting object, display trash button
+          Otherwise, display reset button
+       -->
       <template v-slot:rightAction>
-        <button @click="undoEdits" class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none">
+        <button v-if="showTrashIcon"
+                @click="removeSelectedObject"
+                class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none"
+        >
+          <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.trash"/>
+        </button>
+        <button v-if="showResetButton" @click="undoEdits" class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none">
           RESET
         </button>
       </template>
@@ -125,7 +135,7 @@ import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import UndoIcon from "@/components/icons/UndoIcon";
 import router from "@/router";
 
-import {faCircle, faMarker, faEraser} from '@fortawesome/free-solid-svg-icons'
+import {faCircle, faMarker, faEraser, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 
 export default {
@@ -135,11 +145,20 @@ export default {
       icons: {
         circle: faCircle,
         marker: faMarker,
-        eraser: faEraser
+        eraser: faEraser,
+        trash: faTrash
       }
     }
   },
   computed: {
+
+    showTrashIcon() {
+      return this.$store.state.teacherMarking.states.isSelectingObject;
+    },
+
+    showResetButton() {
+      return !this.$store.state.teacherMarking.states.isSelectingObject && !this.$store.state.teacherMarking.states.isMovingObject && !this.$store.state.teacherMarking.states.isScalingObject;
+    },
 
     isViewingMarkingMainPage() {
       return this.$store.state.teacherMarking.states.isMarking && !this.$store.state.teacherMarking.states.isDrawing
@@ -201,6 +220,10 @@ export default {
       if (action === 'erasing' && !this.$store.state.teacherMarking.nowDrawing.erasing) {
 
       }
+    },
+
+    removeSelectedObject(){
+      this.$store.dispatch('teacherMarking/removeSelectedObject');
     },
 
     undoEdits() {

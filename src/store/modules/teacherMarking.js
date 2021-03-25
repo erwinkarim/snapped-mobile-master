@@ -400,13 +400,16 @@ export default {
         },
 
         toggleSelectingObjectMode(state) {
+
+            let isSelectingObject = state.nowMarking.canvas.main.index.getActiveObject();
+
             state.states = {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
-                isSelectingObject: !state.states.isSelectingObject,
+                isSelectingObject: isSelectingObject,
                 isZoomingCanvas: false,
                 isPanningCanvas: false,
                 isDrawing: false,
@@ -441,6 +444,9 @@ export default {
         },
 
         toggleMovingObjectMode(state) {
+
+            let isSelectingObject = state.nowMarking.canvas.main.index.getActiveObject();
+
             state.states = {
                 isLoading: false,
                 isMain: false,
@@ -448,7 +454,7 @@ export default {
                 isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
-                isSelectingObject: false,
+                isSelectingObject: state.states.isMovingObject ? isSelectingObject: false,
                 isZoomingCanvas: false,
                 isPanningCanvas: false,
                 isDrawing: false,
@@ -483,6 +489,9 @@ export default {
         },
 
         toggleScalingObjectMode(state) {
+
+            let isSelectingObject = state.nowMarking.canvas.main.index.getActiveObject();
+
             state.states = {
                 isLoading: false,
                 isMain: false,
@@ -490,7 +499,7 @@ export default {
                 isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
-                isSelectingObject: false,
+                isSelectingObject: state.states.isModifyingObject ? isSelectingObject: false,
                 isZoomingCanvas: false,
                 isPanningCanvas: false,
                 isDrawing: false,
@@ -502,41 +511,6 @@ export default {
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
-        },
-
-        toggleTrashIcon(state) {
-
-            if (state.states.isMovingObject) {
-                let trash = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" className="svg-inline--fa fa-trash fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"> <path fill="#FFFFFF"  d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"></path></svg>';
-
-                if (!state.nowMarking.trashObject) {
-                    fabric.loadSVGFromString(trash, (objects, options) => {
-
-                        let obj = fabric.util.groupSVGElements(objects, options);
-
-                        obj.scaleToHeight(state.nowMarking.canvas.main.dimensions.height / 24)
-                            .set({
-                                left: state.nowMarking.canvas.main.dimensions.width / 2,
-                                top: state.nowMarking.canvas.main.dimensions.height * 0.9,
-                                width: state.nowMarking.canvas.main.dimensions.width / 12,
-                                height: state.nowMarking.canvas.main.dimensions.width / 12,
-                                selectable: false
-                            })
-                            .setCoords();
-
-
-                        state.nowMarking.trashObject = obj;
-                        state.nowMarking.canvas.main.index.add(obj).renderAll();
-                    });
-                } else {
-                    state.nowMarking.canvas.main.index.add(state.nowMarking.trashObject).renderAll()
-
-                }
-
-            } else {
-                state.nowMarking.canvas.main.index.remove(state.nowMarking.trashObject).renderAll()
-            }
-
         },
 
         // Available actions: add, remove
@@ -839,14 +813,6 @@ export default {
 
 
                 },
-
-
-                /*
-                    TODO:
-                        - Without adding sticker, zoom works. Begins with Select FALSE, Zoom False
-                        - After add sticker without selecting, zoom works. Begins with Select FALSE, Zoom False
-
-                */
                 'touch:gesture': function (opt) {
 
                     // If user pinch to zoom
@@ -917,62 +883,7 @@ export default {
             let canvas = state.nowMarking.canvas.main.index;
 
             canvas.on({
-                    'selection:created': function () {
-                        commit('toggleSelectingObjectMode')
-                    },
-                    'selection:updated': function () {
 
-                    },
-                    'selection:cleared': function () {
-                        commit('toggleSelectingObjectMode')
-                    },
-                    'object:moving': function (event) {
-
-                        // If state isMovingObject not already set, set to true
-                        if (!state.states.isMovingObject && event.e.touches.length === 1) {
-                            commit('toggleMovingObjectMode')
-                            state.nowMarking.selectedObject = event.target;
-                            commit('toggleTrashIcon')
-
-                            commit('toggleOverlayScreen', 'add')
-
-                        }
-                    },
-
-                    'object:moved': function (event) {
-                        commit('toggleMovingObjectMode')
-                        commit('toggleTrashIcon')
-                        commit('toggleOverlayScreen', 'remove')
-
-                        // Set trash area
-                        let trashHorizontalCenter = state.nowMarking.canvas.main.index.width / 2;
-                        let trashVerticalCenter = state.nowMarking.canvas.main.dimensions.height * 0.9;
-                        let margin = state.nowMarking.canvas.main.index.width / 12;
-                        let trashMaxLeft = trashHorizontalCenter - margin;
-                        let trashMaxRight = trashHorizontalCenter + (margin * 2)
-                        let trashMaxTop = trashVerticalCenter - (margin)
-                        let trashMaxBottom = trashVerticalCenter + (margin * 2)
-
-                        // Get object dimensions
-                        let objectLeft = state.nowMarking.selectedObject.left;
-                        let objectTop = state.nowMarking.selectedObject.top;
-                        let objectWidth = state.nowMarking.selectedObject.width;
-                        let objectHeight = state.nowMarking.selectedObject.height;
-                        let objectHorizontalCenter = objectLeft + (objectWidth / 2);
-                        let objectVerticalCenter = objectTop + (objectHeight / 2);
-
-                        if (state.nowMarking.selectedObject.get('type') === 'textbox') {
-                            objectVerticalCenter = objectTop;
-                            objectHorizontalCenter = objectLeft;
-                        }
-
-                        if (
-                            ((objectHorizontalCenter > trashMaxLeft) && (objectHorizontalCenter < trashMaxRight))
-                            && ((objectVerticalCenter > trashMaxTop) && (objectVerticalCenter < trashMaxBottom))
-                        ) {
-                            state.nowMarking.canvas.main.index.remove(state.nowMarking.selectedObject);
-                        }
-                    }
 
                 }
             )
@@ -1083,7 +994,33 @@ export default {
                 'object:rotated': function (event) {
                     commit('toggleScalingObjectMode')
                     commit('toggleOverlayScreen', 'remove')
-                }
+                },
+                'object:moving': function (event) {
+
+                    // If state isMovingObject not already set, set to true
+                    if (!state.states.isMovingObject && event.e.touches.length === 1) {
+                        commit('toggleMovingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+
+                        commit('toggleOverlayScreen', 'add')
+
+                    }
+                },
+                'object:moved': function (event) {
+                    commit('toggleMovingObjectMode')
+                    commit('toggleOverlayScreen', 'remove')
+                },
+
+                'selection:created': function () {
+                    commit('toggleSelectingObjectMode')
+                },
+                'selection:updated': function () {
+
+                },
+                'selection:cleared': function () {
+                    commit('toggleSelectingObjectMode')
+                },
+
             });
         },
 
@@ -1179,6 +1116,10 @@ export default {
 
         },
 
+        removeSelectedObject({state}) {
+            state.nowMarking.canvas.main.index.remove(state.nowMarking.canvas.main.index.getActiveObject());
+        },
+
         doneEditSnappedAnswer({state, commit}) {
 
             // Load marking canvas on snapped answer canvas
@@ -1186,7 +1127,6 @@ export default {
 
             return new Promise((resolve, reject) => {
                 state.marking[state.nowMarking.image.index] = state.nowMarking.canvas.main.index.toDataURL()
-                // state.marking[state.nowMarking.image.index] = state.nowMarking.canvas.main.index.toDataURL()
                 commit('setPreviewingMode')
                 resolve()
             })
@@ -1213,6 +1153,8 @@ export default {
             commit('disposeCanvas')
             dispatch('initialiseMarkingCanvas')
         },
+
+
 
         submit({state, commit, dispatch}) {
 
