@@ -250,6 +250,8 @@ export default {
                   studentGender: submission.student_gender,
                   submittedAt: submission.submission_created_at,
                   marksID: submission.marks_id,
+                  marks: submission.marks,
+                  answerTag: submission.answer_tag,
                   assignmentID: data.assignment_details.assignment_id
                 }
 

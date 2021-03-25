@@ -37,7 +37,7 @@
       <!-- BUTTON -->
       <button :disabled="!validateForm"
               @click="login"
-              class="w-full mt-3  md:max-w-xl lg:max-w-2xl mx-auto font-display text-purple-primary font-bold py-2  md:text-2xl px-4 rounded-full h-14 md:h-20 text-lg inline-flex justify-center items-center">
+              class="w-full mt-3  md:max-w-xl lg:max-w-2xl mx-auto font-display text-purple-primary font-bold py-2  md:text-2xl px-4 rounded-full h-14 md:h-20 text-lg focus:outline-none inline-flex justify-center items-center">
         <span class="mr-3">Sign in</span>
         <svg width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M0 4H14M14 4L11.5 1M14 4L11.5 7" stroke="#3A4276" stroke-width="2"/>
