@@ -62,7 +62,9 @@
             </div>
             <input
                 @change="handleSnappedQuestion"
-                type="file" accept='image/*' multiple
+                type="file"
+                accept='image/*'
+                multiple
                 class="hidden"
             >
           </div>

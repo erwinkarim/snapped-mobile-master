@@ -45,50 +45,71 @@
           </div>
         </div>
 
-        <!-- VIEW STORED ANSWER -->
-        <div v-if="isWrittenAnswer" class="mt-10">
-          <div>
-            Your Written Answer
-          </div>
-          <div
-              class="flex flex-row justify-between mt-5 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
-
-            <router-link
-                :to="{name:'student.assignments.answer.write' , params: { assignmentDetails : assignmentDetails, isEditingAnswer: true}}">
-              <div>
-                Edit Answer
-              </div>
-
-            </router-link>
-
-            <div class="w-1/12">
-              <icon-base-two class="w-6/7">
-                <trash-icon/>
-              </icon-base-two>
-            </div>
-          </div>
-
-        </div>
-
         <!-- VIEW SNAPPED ANSWER -->
         <div class="mt-10" v-if="isSnappedAnswer">
           <div class="mb-4">
             Your Snapped Answer
           </div>
           <div class="flex flex-col">
-            <div v-for="(answer,index) in snappedAnswers"
-                 class="flex flex-row justify-between mt-3 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
 
-              <div @click="handleSnappedAnswerPreview(index)">
-                View Photo
+            <div v-for="(image,key) in snappedAnswerPreviews"
+                 class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+            >
+
+              <div class="mt-5 w-full">
+                {{`cropper_${key}`}}
+                <vue-cropper :ref="`cropper_${key}`"
+                             :container-style="vueCropperContainerStyle(key)"
+                             :src="image.source"
+                             alt="Source Image"
+                             @ready="handleVueCropperReady"
+                >
+                </vue-cropper>
+
+                <div v-if="image.cropping" class="flex flex-row items-center mt-4 md:mt-4 ">
+                  <button @click="toggleSnappedCroppingStatus(key)"
+                          class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-full">
+                      Cancel
+                    </div>
+                  </button>
+                  <button @click="saveCroppedSnappedAnswer(key)"
+                          class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-green-400 focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-3/4">
+                      Done
+                    </div>
+                    <div class="w-1/4">
+                      <icon-base-two class="w-1/2">
+                        <crop-icon/>
+                      </icon-base-two>
+                    </div>
+                  </button>
+                </div>
+
+                <div v-else class="flex flex-row items-center mt-2 md:mt-4 ">
+                  <button @click="removeSnappedAnswer(key)"
+                          class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-3/4">
+                      Remove
+                    </div>
+                    <div class="w-1/4">
+                      <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.trash"/>
+                    </div>
+                  </button>
+                  <button @click="toggleSnappedCroppingStatus(key)"
+                          class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-purple-primary focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-3/4">
+                      Crop
+                    </div>
+                    <div class="w-1/4">
+                      <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.crop"/>
+                    </div>
+                  </button>
+                </div>
               </div>
 
-              <div class="w-1/12" @click="removeSnappedAnswer(index)">
-                <icon-base-two class="w-6/7">
-                  <trash-icon/>
-                </icon-base-two>
-              </div>
             </div>
+
           </div>
 
 
@@ -117,16 +138,6 @@
       </div>
     </template>
 
-    <template slot="content" v-if="isPreviewingSnappedAnswer">
-      <div class="pb-16/9  h-20 bg-white">
-        <div
-            class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-          <img :src="snappedAnswerPreviews[snappedAnswerPreviewIndex]"/>
-        </div>
-      </div>
-
-    </template>
-
 
     <template v-slot:bottomBar>
       <div class="w-full md:max-w-xl px-2">
@@ -151,6 +162,15 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import CropIcon from "@/components/icons/CropIcon";
+
+// Vue Cropper
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
+
+// FONT AWESOME
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {faTrash, faCropAlt} from "@fortawesome/free-solid-svg-icons";
 
 export default {
   name: "AnswerSave",
@@ -169,11 +189,16 @@ export default {
       submissionStatus: null,
 
       snappedAnswerPreviews: [],
-      snappedAnswerPreviewIndex: null,
 
       remarks: '',
 
-      snappedAnswers: []
+      snappedAnswers: [],
+
+      // Icons
+      icons: {
+        crop: faCropAlt,
+        trash: faTrash
+      }
     }
   },
   computed: {
@@ -199,11 +224,6 @@ export default {
       }
     },
 
-    handleSnappedAnswerPreview(index) {
-      this.snappedAnswerPreviewIndex = index;
-      this.toggleSnappedAnswerPreview();
-    },
-
     onFileSelected(e) {
       let files = e.target.files || e.dataTransfer.files
 
@@ -212,9 +232,33 @@ export default {
       }
 
       if (files[0].type.match("image.*")) {
-        this.snappedAnswers.push(files[0]);
         this.generateSnappedAnswerPreview(files)
       }
+
+      e.target.value = ''
+
+    },
+
+    handleVueCropperReady(e) {
+      let cropper = e.target.cropper;
+
+      cropper.autoCrop = false;
+
+      cropper.clear();
+      cropper.disable();
+
+      // If this is new photo uploaded, add image to snapped answers array
+      if (!cropper.replaced) {
+        cropper.getCroppedCanvas({
+          maxWidth: 720,
+          maxHeight: 720,
+          fillColor: '#fff'
+        }).toBlob((blob) => {
+          this.snappedAnswers.push(blob)
+        },'image/jpeg');
+      }
+
+
     },
 
     generateSnappedAnswerPreview(files) {
@@ -228,16 +272,76 @@ export default {
         let that = this;
 
         reader.onload = function (e) {
-          that.snappedAnswerPreviews.push(e.target.result);
+
+          that.snappedAnswerPreviews.push({
+            source: e.target.result,
+            cropping: false
+          });
         }
 
         reader.readAsDataURL(f);
       });
     },
 
-    removeSnappedAnswer(index) {
-      this.snappedAnswers.splice(index, 1);
-      this.snappedAnswerPreviews.splice(index, 1);
+    toggleSnappedCroppingStatus(key) {
+      this.snappedAnswerPreviews[key].cropping = !this.snappedAnswerPreviews[key].cropping;
+
+      let cropperKey = `cropper_${key}`
+      let cropper = this.$refs[cropperKey][0];
+
+      // If cropping, enable
+      if (this.snappedAnswerPreviews[key].cropping) {
+        cropper.enable();
+      } else{
+        cropper.clear();
+        cropper.disable();
+      }
+    },
+
+    vueCropperContainerStyle(key) {
+      let style = {
+        width: '100%',
+        // display: 'none'
+      }
+
+      if (this.snappedAnswerPreviews[key].cropping) {
+        style.display = 'flex'
+      }
+      return  style;
+    },
+
+    saveCroppedSnappedAnswer(key) {
+      let cropperKey = `cropper_${key}`
+
+      let cropper = this.$refs[cropperKey][0];
+
+      let cropped =  cropper.getCroppedCanvas({
+        maxWidth: 720,
+        maxHeight: 720,
+        fillColor: '#fff'
+      });
+
+      let dataURL = cropped.toDataURL("image/jpeg");
+      cropper.replace(dataURL);
+      this.snappedAnswerPreviews[key].source = dataURL;
+
+      cropped.toBlob((blob) => {
+              this.snappedAnswers[key] = blob;
+            },'image/jpeg');
+
+      this.toggleSnappedCroppingStatus(key)
+
+    },
+
+    removeSnappedAnswer(key) {
+
+      let cropperKey = `cropper_${key}`
+
+      let cropper = this.$refs[cropperKey][0];
+      cropper.destroy();
+
+      this.snappedAnswers.splice(key, 1);
+      this.snappedAnswerPreviews.splice(key, 1);
     },
 
     submit() {
@@ -262,8 +366,8 @@ export default {
 
   },
   mounted() {
+
     if (this.isSnappedAnswer) {
-      this.snappedAnswers = this.answer.content
       this.generateSnappedAnswerPreview(this.answer.content)
     }
   },
@@ -273,13 +377,15 @@ export default {
     }
   },
   components: {
+    CropIcon,
     ArrowBackIcon,
     PageHeaderThree,
-    DashboardLayout, Modal, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo
+    DashboardLayout, Modal, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo,
+    FontAwesomeIcon,
+    VueCropper
   }
 }
 </script>
 
-<style scoped>
-
+<style>
 </style>

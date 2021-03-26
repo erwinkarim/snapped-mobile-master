@@ -164,7 +164,12 @@
                 class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
               <div class="mr-3">
                 Snap Answer
-                <input class="hidden" type="file" accept='image/*' multiple @change="onFileSelected"/>
+                <input @change="onFileSelected"
+                       type="file"
+                       accept='image/*'
+                       multiple
+                       class="hidden"
+                />
               </div>
               <icon-base-two class="hidden w-1/12 xs:block">
                 <camera-icon/>
@@ -333,6 +338,7 @@ export default {
 
           });
     },
+
     onFileSelected(e) {
       let files = e.target.files || e.dataTransfer.files
 

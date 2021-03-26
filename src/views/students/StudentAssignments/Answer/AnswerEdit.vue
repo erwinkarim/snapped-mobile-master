@@ -73,6 +73,21 @@
             Okay
           </template>
         </modal>
+
+        <modal v-if="errors"
+               modal-type="error"
+               class="w-4/5 "
+               @toggleModal="toggleModal"
+        >
+          <template slot="message">
+            <div>
+              {{ errors }}
+            </div>
+          </template>
+          <template slot="button">
+            Okay
+          </template>
+        </modal>
       </div>
 
 
@@ -88,60 +103,93 @@
           </div>
         </div>
 
-        <!-- VIEW STORED ANSWER -->
-        <div v-if="isWrittenAnswer" class="mt-10">
-          <div>
-            Your Written Answer
+        <!-- VIEW EXISTING ANSWERS -->
+        <div class="mt-10" v-if="isSnappedAnswer && existingSnappedAnswers.length">
+          <div class="mb-4">
+            Current Answers
           </div>
-          <div
-              class="flex flex-row justify-between mt-5 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
-            <div @click="editWrittenAnswer">
-              Edit Answer
+          <div v-for="(image,key) in existingSnappedAnswers"
+               class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+          >
+            <div class="mt-5 w-full">
+              <img :src="image.path"/>
+            </div>
+
+            <div class="flex flex-row items-center mt-2 md:mt-4 ">
+              <button @click="removeSnappedAnswer(key, 'existing')"
+                      class="flex flex-row items-center w-full py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                <div class="text-white text-sm md:text-lg w-3/4">
+                  Remove
+                </div>
+                <div class="w-1/4">
+                  <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.trash"/>
+                </div>
+              </button>
             </div>
           </div>
-
         </div>
 
-        <!-- VIEW SNAPPED ANSWER -->
+
+        <!-- VIEW NEW ANSWERS -->
         <div class="mt-10" v-if="isSnappedAnswer">
           <div class="mb-4">
-            Your Snapped Answer
+            New Answers
           </div>
-          <div class="flex flex-col">
 
-            <!-- EXISTING SNAPPED ANSWERS -->
-            <div v-for="(answer, index) in existingSnappedAnswers"
-                 class="flex flex-row justify-between mt-3 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
+          <div v-for="(image,key) in snappedAnswerPreviews"
+               class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+          >
 
-              <div @click="handleSnappedAnswerPreview(index, 'existing')">
-                View Photo
+            <div class="mt-5 w-full">
+
+              <vue-cropper :ref="`cropper_${key}`"
+                           :src="image.source"
+                           alt="Source Image"
+                           @ready="handleVueCropperReady"
+              >
+              </vue-cropper>
+
+              <div v-if="image.cropping" class="flex flex-row items-center mt-4 md:mt-4 ">
+                <button @click="toggleSnappedCroppingStatus(key)"
+                        class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                  <div class="text-white text-sm md:text-lg w-full">
+                    Cancel
+                  </div>
+                </button>
+                <button @click="saveCroppedSnappedAnswer(key)"
+                        class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-green-400 focus:outline-none">
+                  <div class="text-white text-sm md:text-lg w-3/4">
+                    Done
+                  </div>
+                  <div class="w-1/4">
+                    <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.crop"/>
+                  </div>
+                </button>
               </div>
 
-              <div @click="removeSnappedAnswer(index, 'existing')" class="w-1/12">
-                <icon-base-two class="w-6/7">
-                  <trash-icon/>
-                </icon-base-two>
+              <div v-else class="flex flex-row items-center mt-2 md:mt-4 ">
+                <button @click="removeSnappedAnswer(key, 'new')"
+                        class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                  <div class="text-white text-sm md:text-lg w-3/4">
+                    Remove
+                  </div>
+                  <div class="w-1/4">
+                    <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.trash"/>
+                  </div>
+                </button>
+                <button @click="toggleSnappedCroppingStatus(key)"
+                        class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-purple-primary focus:outline-none">
+                  <div class="text-white text-sm md:text-lg w-3/4">
+                    Crop
+                  </div>
+                  <div class="w-1/4">
+                    <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.crop"/>
+                  </div>
+                </button>
               </div>
             </div>
 
-            <!-- NEW SNAPPED ANSWERS -->
-            <div v-for="(answer, index) in addedSnappedAnswers"
-                 class="flex flex-row justify-between mt-3 px-5 py-5 items-center bg-gray-secondary text-blue-secondary rounded-lg">
-
-              <div @click="handleSnappedAnswerPreview(index, 'new')">
-                View Photo
-              </div>
-
-              <div @click="removeSnappedAnswer(index, 'new')" class="w-1/12">
-                <icon-base-two class="w-6/7">
-                  <trash-icon/>
-                </icon-base-two>
-              </div>
-            </div>
-
-
           </div>
-
 
           <!-- ADD MORE PHOTO -->
           <div class="flex mb-4 -mx-1">
@@ -176,18 +224,10 @@
       </div>
     </template>
 
-    <template v-if="isPreviewingSnappedAnswer" slot="content">
-      <div
-          class="w-full h-full object-cover top-0 flex flex-row justify-center items-center absolute">
-        <img :src="isPreviewingPath"/>
-      </div>
-    </template>
-
-
     <template v-slot:bottomBar v-if="isMainPage">
       <div class="w-full md:max-w-xl px-2">
         <button @click="submit"
-                class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
+                class="w-full font-bold rounded-full bg-yellow-primary text-purple-primary text-sm  py-4 px-1 flex flex-row justify-center">
           Submit Answer
         </button>
       </div>
@@ -206,6 +246,14 @@ import SubmissionRepository from "@/repositories/SubmissionRepository";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import Modal from "@/components/Modal";
 
+// Vue Cropper
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
+
+// FONT AWESOME
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {faTrash, faCropAlt} from "@fortawesome/free-solid-svg-icons";
+
 export default {
   name: "AnswerEdit",
   props: {
@@ -223,11 +271,9 @@ export default {
 
       backendStoragePath: `${process.env.VUE_APP_BACKEND_STORAGE}/submissions/`,
 
-      // Previews for both existing and newly added photos
-      snappedAnswerPreviews: {
-        existing: [],
-        new: []
-      },
+      snappedAnswers: [],
+      snappedAnswerPreviews: [],
+
       isPreviewingPath: null,
 
       // Existing snapped answers
@@ -247,7 +293,16 @@ export default {
       },
 
       newAnswer: [],
-      remarks: null
+      remarks: null,
+
+      // Icons
+      icons: {
+        crop: faCropAlt,
+        trash: faTrash
+      },
+
+      // Catch error
+      errors: null
     }
   },
   computed: {
@@ -266,6 +321,15 @@ export default {
     },
   },
   methods: {
+
+    handleLoadedExistingAnswers(key) {
+
+      let answerKey = `answer_${key}`;
+      let image = this.$refs[answerKey];
+
+      this.$refs[`cropper_${key}`].replace(image)
+    },
+
     fetchData() {
 
       SubmissionRepository.find(this.submissionID)
@@ -283,18 +347,16 @@ export default {
               if (data.snap_answer) {
                 this.answer.type = 'snapped';
 
-                let originalNames = data.snap_answer.split(',');
-                let originalPaths = data.snap_answer_url.split(',');
+                let existingAnswerFileNames = data.snap_answer.split(',');
+                let existingAnswerFilePaths = data.snap_answer_url.split(',');
 
-                for (let i = 0; i < originalNames.length; i++) {
+                for (let i = 0; i < existingAnswerFileNames.length; i++) {
                   this.existingSnappedAnswers.push({
-                    name: originalNames[i],
-                    path: originalPaths[i]
+                    name: existingAnswerFileNames[i],
+                    path: existingAnswerFilePaths[i]
                   })
                 }
 
-                // Add existing Snapped Answer previews
-                this.snappedAnswerPreviews.existing = originalPaths;
               }
 
               if (data.written_answer) {
@@ -308,46 +370,95 @@ export default {
           })
     },
 
-    async createFile(fileName, filePath) {
-      let response = await fetch(filePath);
-      let data = await response.blob();
+    handleVueCropperReady(e) {
+      let cropper = e.target.cropper;
 
-      return new File([data], fileName);
+      cropper.autoCrop = false;
+
+      cropper.clear();
+      cropper.disable();
+
+      // If this is new photo uploaded, add image to snapped answers array
+      if (!cropper.replaced) {
+
+        cropper.getCroppedCanvas({
+          maxWidth: 720,
+          maxHeight: 720,
+          fillColor: '#fff'
+        }).toBlob((blob) => {
+          this.addedSnappedAnswers.push(blob)
+        }, 'image/jpeg');
+      }
+    },
+
+    toggleSnappedCroppingStatus(key) {
+      this.snappedAnswerPreviews[key].cropping = !this.snappedAnswerPreviews[key].cropping;
+
+      let cropperKey = `cropper_${key}`
+      let cropper = this.$refs[cropperKey][0];
+
+      // If cropping, enable
+      if (this.snappedAnswerPreviews[key].cropping) {
+        cropper.enable();
+        // cropper.crop();
+      } else {
+        cropper.clear();
+        cropper.disable();
+      }
+    },
+
+    saveCroppedSnappedAnswer(key) {
+      let cropperKey = `cropper_${key}`
+
+      let cropper = this.$refs[cropperKey][0];
+
+      let cropped = cropper.getCroppedCanvas({
+        maxWidth: 720,
+        maxHeight: 720,
+        fillColor: '#fff'
+      });
+
+      let dataURL = cropped.toDataURL("image/jpeg");
+      cropper.replace(dataURL);
+      this.snappedAnswerPreviews[key].source = dataURL;
+
+      cropped.toBlob((blob) => {
+        this.addedSnappedAnswers[key] = blob;
+      }, 'image/jpeg');
+
+      this.toggleSnappedCroppingStatus(key)
+
     },
 
     submit() {
 
       // Compile Snapped Answers, to remove and newly added.
-      if (this.answer.type === 'snapped') {
-        this.newAnswer = {
-          toRemove: this.removedSnappedAnswers,
-          toAdd: this.addedSnappedAnswers
-        }
+      let data = {
+        toRemove: this.removedSnappedAnswers,
+        toAdd: this.addedSnappedAnswers
       }
 
-      if ((this.snappedAnswerPreviews.existing.length + this.snappedAnswerPreviews.new.length) > 0) {
-
-        SubmissionRepository.update(
-            {
-              submissionID: this.submissionID,
-              assignmentID: this.assignmentDetails.id,
-              answerType: this.answer.type,
-              answerContent: this.newAnswer,
-              remarks: this.remarks,
-            })
-            .then(response => {
-              if (response.data.success) {
-                this.submissionStatus = 'success';
-                this.toggleModal();
-              } else {
-                this.submissionStatus = 'error';
-                this.toggleModal()
+      SubmissionRepository.update(
+          {
+            submissionID: this.submissionID,
+            assignmentID: this.assignmentDetails.id,
+            answerType: this.answer.type,
+            answerContent: data,
+            remarks: this.remarks,
+          })
+          .then(response => {
+            if (response.data.success) {
+              this.submissionStatus = 'success';
+              this.toggleModal();
+            } else {
+              this.submissionStatus = 'error';
+              this.toggleModal()
+            }
+          })
+          .catch(error => {
+                this.errors = error
               }
-            })
-      } else {
-        this.submissionStatus = 'error';
-        this.toggleModal()
-      }
+          )
     },
 
     editWrittenAnswer() {
@@ -369,6 +480,7 @@ export default {
     },
 
     onFileSelected(e) {
+
       let files = e.target.files || e.dataTransfer.files
 
       if (!files.length) {
@@ -376,9 +488,10 @@ export default {
       }
 
       if (files[0].type.match("image.*")) {
-        this.addedSnappedAnswers.push(files[0]);
         this.generateSnappedAnswerPreview(files)
       }
+
+      e.target.value = ''
     },
 
     generateSnappedAnswerPreview(files) {
@@ -392,7 +505,11 @@ export default {
         let that = this;
 
         reader.onload = function (e) {
-          that.snappedAnswerPreviews.new.push(e.target.result);
+
+          that.snappedAnswerPreviews.push({
+            source: e.target.result,
+            cropping: false
+          });
         }
 
         reader.readAsDataURL(f);
@@ -402,16 +519,20 @@ export default {
     removeSnappedAnswer(index, type) {
 
       if (type === 'existing') {
-        let toRemove = this.existingSnappedAnswers[index];
-        this.removedSnappedAnswers.push(toRemove.name)
+        this.removedSnappedAnswers.push(this.existingSnappedAnswers[index].name)
         this.existingSnappedAnswers.splice(index, 1);
-        this.snappedAnswerPreviews.existing.splice(index, 1);
-
       }
 
       if (type === 'new') {
+
+        let cropperKey = `cropper_${index}`
+
+        let cropper = this.$refs[cropperKey][0];
+        cropper.destroy();
+
+
         this.addedSnappedAnswers.splice(index, 1);
-        this.snappedAnswerPreviews.new.splice(index, 1);
+        this.snappedAnswerPreviews.splice(index, 1);
       }
 
     },
@@ -450,7 +571,11 @@ export default {
   mounted() {
     this.fetchData();
   },
-  components: {Modal, ArrowBackIcon, TrashIcon, IconBaseTwo, NavBack, PageHeaderThree, DashboardLayout}
+  components: {
+    Modal, ArrowBackIcon, TrashIcon, IconBaseTwo, NavBack, PageHeaderThree, DashboardLayout,
+    VueCropper,
+    FontAwesomeIcon
+  }
 }
 </script>
 
