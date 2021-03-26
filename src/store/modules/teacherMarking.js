@@ -607,10 +607,11 @@ export default {
                 state.marking.forEach((imagePath, index) => {
 
                     // Check if image is already converted to dataURL
-                    let isConverted = imagePath.split(",")[0] === 'data:image/jpg;base64';
+                    let isConverted = imagePath.split(",")[0] === 'data:image/jpg;base64' || imagePath.split(",")[0] === 'data:image/jpeg;base64' || imagePath.split(",")[0] === 'data:image/png;base64';
 
                     // If not yet, convert now
                     if (!isConverted) {
+
                         SubmissionRepository.convertToDataURL(imagePath)
                             .then(response => {
                                 if (response.data.success) {
