@@ -121,7 +121,7 @@ export default {
             }
           })
 
-      TeacherRepository.getSubmissions(1)
+      TeacherRepository.getSubmissions()
           .then(response => {
             if (response.data.success) {
               this.numOfSubmissions = response.data.data.length;
