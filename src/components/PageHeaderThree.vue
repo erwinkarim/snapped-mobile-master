@@ -31,8 +31,10 @@
 
     <!-- MAIN TITLE  -->
     <div v-if="hasScrollAnimation" :class="pageTitleClass"
-         class="w-full px-5 mt-24 md:mt-36 break-all overflow-hidden "
+         class="w-full px-5 break-all overflow-hidden "
     >
+<!--         class="w-full px-5 mt-24 md:mt-36 break-all overflow-hidden "-->
+<!--    >-->
       <div class="text-left text-4xl font-bold text-purple-primary">
         <slot name="title"/>
       </div>
@@ -152,7 +154,8 @@ export default {
       value += ' ' + this.headerCustomClass;
 
       if (this.hasScrollAnimation) {
-        value += ' fixed pb-6'
+        value += ' top-0 sticky pb-6'
+        // value += ' fixed pb-6'
       }
 
       return value;
