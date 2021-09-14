@@ -115,7 +115,8 @@
           <!-- Background Stack Green -->
           <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
             <!-- Background Stack Overlay -->
-            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">
+<!--            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">-->
+            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-100 bg-black bg-opacity-10  pb-2/3 ">
             </div>
           </div>
         </div>
