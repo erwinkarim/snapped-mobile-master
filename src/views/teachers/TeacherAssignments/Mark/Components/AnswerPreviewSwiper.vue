@@ -60,6 +60,7 @@ export default {
   methods: {
 
     enterMarkingMode(path, index) {
+      this.scrollToTop();
 
       this.$store.commit('teacherMarking/togglePreparingCanvasMode')
 
@@ -83,7 +84,14 @@ export default {
               this.$store.commit('teacherMarking/togglePreparingCanvasMode')
             })
       }
-    }
+    },
+    scrollToTop() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    },
   },
   directives: {
     mySwiper: directive

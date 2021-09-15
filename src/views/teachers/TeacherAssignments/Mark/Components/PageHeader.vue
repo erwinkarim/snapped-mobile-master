@@ -28,13 +28,13 @@
 
       <template v-slot:leftAction>
         <div @click="togglePreviewMode">
-          <icon-base-two class="w-1/4 ml-6">
+          <icon-base-two class="w-1/4 ml-8">
             <arrow-back-icon :stroke-color="navBackColor"/>
           </icon-base-two>
         </div>
       </template>
 
-      <template v-slot:title
+      <template v-slot:mini-title
                 v-if="!$store.getters['teacherMarking/isPreparingCanvas']"
       >
         Answer Preview

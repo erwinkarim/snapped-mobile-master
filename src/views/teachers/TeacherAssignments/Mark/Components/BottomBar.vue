@@ -165,6 +165,7 @@ export default {
   },
   methods: {
     togglePreviewMode() {
+      this.scrollToTop();
       this.$store.commit('teacherMarking/togglePreviewMode');
     },
     toggleStickerBar() {
@@ -200,6 +201,14 @@ export default {
     handleRouteChange() {
       let path = this.$route.path;
       this.show = !(path.includes('/add-mark') || path.includes('/feedback'));
+    },
+
+    scrollToTop() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     },
   },
   components: {
