@@ -175,6 +175,7 @@ export default {
           title: null,
           description: null
         },
+        remarks: null,
         snap_question_paths: []
       },
       submissions: [],
@@ -225,6 +226,7 @@ export default {
               this.assignment.dueDatetime = data.assignment_details.due_datetime;
               this.assignment.written_question.title = data.assignment_details.written_question_title;
               this.assignment.written_question.description = data.assignment_details.written_question_description;
+              this.assignment.remarks = data.assignment_details.remarks;
 
               if (data.assignment_details.snap_question_url) {
                 this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');

@@ -74,6 +74,13 @@
             </svg>
           </div>
         </button>
+
+        <!-- REMARKS -->
+        <div
+                class="flex flex-col mt-8 text-purple-primary text-xs-plus"
+        >
+          {{ assignment.remarks }}
+        </div>
       </div>
 
       <!-- Snapped Question -->
