@@ -149,25 +149,35 @@ export default {
       }
     },
     showBottomBar() {
+
+      // check if submission is tagged as unanswered
       let tag = this.$store.state.teacherMarking.assignmentDetails.answer_tag;
+
+      // Show if is not loading or preparing canvas
+      let show = this.$store.state.teacherMarking.states.isLoading === false && this.$store.getters["teacherMarking/isPreparingCanvas"] === false;
+
       if (tag) {
         return tag !== 'unanswered';
       } else {
-        return true
+        return show
       }
     }
   },
   methods: {
     togglePreviewMode() {
+      this.scrollToTop();
       this.$store.commit('teacherMarking/togglePreviewMode');
     },
     toggleStickerBar() {
+      this.$store.commit('teacherMarking/resetObjectSelection')
       this.$store.commit('teacherMarking/toggleStickerBar')
     },
     beginDrawingMode() {
+      this.$store.commit('teacherMarking/resetObjectSelection')
       this.$store.dispatch('teacherMarking/beginDrawingMode')
     },
     loadTextBox() {
+      this.$store.commit('teacherMarking/resetObjectSelection')
       this.$store.dispatch('teacherMarking/loadTextBox')
     },
     doneEditSnappedAnswer() {
@@ -191,6 +201,14 @@ export default {
     handleRouteChange() {
       let path = this.$route.path;
       this.show = !(path.includes('/add-mark') || path.includes('/feedback'));
+    },
+
+    scrollToTop() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     },
   },
   components: {

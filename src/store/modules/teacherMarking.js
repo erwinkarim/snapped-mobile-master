@@ -7,20 +7,23 @@ import MarksRepository from "@/repositories/teachers/MarksRepository";
 import 'fabric-history';
 import getters from "@/store/getters";
 
-export default {
-    namespaced: true,
-    state: () => ({
-
+const getDefaultState = () => {
+    return {
         states: {
             isLoading: true,
             isMain: true,
             isPreviewing: false,
+            isPreparingCanvas: false,
             isMarking: false,
             isSelectingSticker: false,
+            isSelectingObject: false,
+            isZoomingCanvas: false,
+            isPanningCanvas: false,
             isMovingObject: false,
-            isScalingObject: false,
+            isModifyingObject: false,
             isDrawing: false,
             isWritingFeedback: false,
+            isCheckingSubmission: false,
             isSubmitting: false,
             isShowingModal: false,
             isSavingEditedSnappedAnswer: false
@@ -75,7 +78,8 @@ export default {
                 }
             },
             trashObject: null,
-            overlayScreen: null
+            overlayScreen: null, // overlay screen object
+            isOverlaid: false, // is canvas overlaid
         },
 
         // Drawing Mode states
@@ -107,9 +111,13 @@ export default {
             feedback: '',
             marks: null
         },
+        errorMessages: null
+    }
+}
 
-        dragCount: 0
-    }),
+export default {
+    namespaced: true,
+    state: () => getDefaultState(),
     mutations: {
 
         setAssignmentDetails(state, data) {
@@ -131,8 +139,7 @@ export default {
 
             if (data.snap_answer) {
                 state.submission.type = 'snapped';
-                state.assignmentDetails.snappedAnswerPaths = data.snap_answer_data_url.split('|');
-                state.marking = data.snap_answer_data_url.split('|');
+                state.assignmentDetails.snappedAnswerPaths = state.marking = data.snap_answer_url.split(',');
             }
 
             if (data.written_answer) {
@@ -164,12 +171,17 @@ export default {
                 isLoading: false,
                 isMain: !state.states.isMain,
                 isPreviewing: !state.states.isPreviewing,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -181,12 +193,17 @@ export default {
                 isLoading: false,
                 isMain: true,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -198,12 +215,17 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: true,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -215,12 +237,17 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: true,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -232,30 +259,39 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: !state.states.isSelectingSticker,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
         },
 
-
         toggleEditingTextboxMode(state) {
             state.states = {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: !state.states.isDrawing,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -267,12 +303,17 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: !state.states.isDrawing,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -296,11 +337,16 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: true,
+                isPreparingCanvas: false,
                 isMarking: false,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: !state.states.isMovingObject,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: !state.states.isShowingModal,
                 isSavingEditedSnappedAnswer: false
@@ -314,12 +360,17 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -332,12 +383,60 @@ export default {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: true,
+                isPreparingCanvas: false,
+                isMarking: false,
+                isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
+                isDrawing: false,
+                isMovingObject: false,
+                isModifyingObject: false,
+                isWritingFeedback: false,
+                isSubmitting: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+        },
+
+        toggleSelectingObjectMode(state) {
+
+            let isSelectingObject = state.nowMarking.canvas.main.index.getActiveObject();
+
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: false,
+                isMarking: true,
+                isSelectingSticker: false,
+                isSelectingObject: isSelectingObject,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
+                isDrawing: false,
+                isMovingObject: false,
+                isModifyingObject: false,
+                isWritingFeedback: false,
+                isCheckingSubmission: false,
+                isSubmitting: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+        },
+
+        togglePreparingCanvasMode(state) {
+
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: true,
+                isPreparingCanvas: !state.states.isPreparingCanvas,
                 isMarking: false,
                 isSelectingSticker: false,
                 isDrawing: false,
                 isMovingObject: false,
                 isScalingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -345,16 +444,44 @@ export default {
         },
 
         toggleMovingObjectMode(state) {
+
+            let isSelectingObject = state.nowMarking.canvas.main.index.getActiveObject();
+
+            state.states = {
+                isLoading: false,
+                isMain: false,
+                isPreviewing: false,
+                isPreparingCanvas: false,
+                isMarking: true,
+                isSelectingSticker: false,
+                isSelectingObject: state.states.isMovingObject ? isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
+                isDrawing: false,
+                isMovingObject: !state.states.isMovingObject,
+                isModifyingObject: false,
+                isWritingFeedback: false,
+                isSubmitting: false,
+                isShowingModal: false,
+                isSavingEditedSnappedAnswer: false
+            };
+        },
+
+        toggleCanvasZoomingMode(state) {
             state.states = {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: false,
+                isZoomingCanvas: !state.states.isZoomingCanvas,
+                isPanningCanvas: false,
                 isDrawing: false,
-                isMovingObject: !state.states.isMovingObject,
-                isScalingObject: false,
+                isMovingObject: false,
+                isModifyingObject: false,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
@@ -362,60 +489,34 @@ export default {
         },
 
         toggleScalingObjectMode(state) {
+
+            let isSelectingObject = state.nowMarking.canvas.main.index.getActiveObject();
+
             state.states = {
                 isLoading: false,
                 isMain: false,
                 isPreviewing: false,
+                isPreparingCanvas: false,
                 isMarking: true,
                 isSelectingSticker: false,
+                isSelectingObject: state.states.isModifyingObject ? isSelectingObject: false,
+                isZoomingCanvas: false,
+                isPanningCanvas: false,
                 isDrawing: false,
                 isMovingObject: false,
-                isScalingObject: !state.states.isScalingObject,
+                isModifyingObject: !state.states.isModifyingObject,
                 isWritingFeedback: false,
+                isCheckingSubmission: false,
                 isSubmitting: false,
                 isShowingModal: false,
                 isSavingEditedSnappedAnswer: false
             };
         },
 
-        toggleTrashIcon(state) {
-
-            if (state.states.isMovingObject) {
-                let trash = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="trash" className="svg-inline--fa fa-trash fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"> <path fill="#FFFFFF"  d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"></path></svg>';
-
-                if (!state.nowMarking.trashObject) {
-                    fabric.loadSVGFromString(trash, (objects, options) => {
-
-                        let obj = fabric.util.groupSVGElements(objects, options);
-
-                        obj.scaleToHeight(state.nowMarking.canvas.main.dimensions.height / 24)
-                            .set({
-                                left: state.nowMarking.canvas.main.dimensions.width / 2,
-                                top: state.nowMarking.canvas.main.dimensions.height * 0.9,
-                                width: state.nowMarking.canvas.main.dimensions.width / 12,
-                                height: state.nowMarking.canvas.main.dimensions.width / 12,
-                                selectable: false
-                            })
-                            .setCoords();
-
-
-                        state.nowMarking.trashObject = obj;
-                        state.nowMarking.canvas.main.index.add(obj).renderAll();
-                    });
-                } else {
-                    state.nowMarking.canvas.main.index.add(state.nowMarking.trashObject).renderAll()
-
-                }
-
-            } else {
-                state.nowMarking.canvas.main.index.remove(state.nowMarking.trashObject).renderAll()
-            }
-
-        },
-
         // Available actions: add, remove
         toggleOverlayScreen(state, action) {
-            if (action === 'add') {
+
+            if (action === 'add' && !state.nowMarking.isOverlaid) {
                 if (state.nowMarking.overlayScreen) {
                     state.nowMarking.canvas.main.index.add(state.nowMarking.overlayScreen).renderAll()
                     state.nowMarking.overlayScreen.sendBackwards()
@@ -431,52 +532,26 @@ export default {
 
                     state.nowMarking.canvas.main.index.add(state.nowMarking.overlayScreen).renderAll()
                     state.nowMarking.overlayScreen.sendBackwards()
+
                 }
+
+                state.nowMarking.isOverlaid = true;
+
             } else if (action === 'remove') {
                 if (state.nowMarking.overlayScreen) {
                     state.nowMarking.canvas.main.index.remove(state.nowMarking.overlayScreen)
+                    state.nowMarking.isOverlaid = false;
+
                 }
             }
 
         },
 
+        resetObjectSelection(state) {
+            state.nowMarking.canvas.main.index.discardActiveObject().renderAll()
+        },
 
-        setOriginalState(state) {
-
-            state.states = {
-                isLoading: true,
-                isMain: true,
-                isPreviewing: false,
-                isMarking: false,
-                isSelectingSticker: false,
-                isDrawing: false,
-                isMovingObject: false,
-                isScalingObject: false,
-                isWritingFeedback: false,
-                isSubmitting: false,
-                isShowingModal: false,
-                isSavingEditedSnappedAnswer: false
-            };
-
-            // Assignment Details
-            state.assignmentDetails = {
-                submissionID: null,
-                studentID: null,
-                studentName: null,
-                assignmentID: null,
-                assignmentTitle: null,
-                snappedAnswerPaths: null,
-                writtenAnswer: null,
-                createdAt: null,
-                updatedAt: null,
-                submittedTime: null,
-                submittedDate: null,
-                marksID: null,
-                marks: null,
-                markedSnappedAnswerPaths: null,
-                answer_tag: null
-            };
-
+        setInitialCanvasDimensions(state) {
 
             // Determine canvas dimensions
             let canvasWidth = 0.9 * window.innerWidth;
@@ -488,61 +563,99 @@ export default {
                 }
             }
 
-            state.nowMarking = {
-                image: {
-                    index: null,
-                    path: null,
-                    dimensions: {
-                        height: null,
-                        width: null
-                    }
-                },
-                sticker: null,
-                textBox: false,
-                canvas: {
-                    main: {
-                        index: null,
-                        dimensions: {
-                            height: 0.75 * window.innerHeight,
-                            width: 0.9 * window.innerWidth
-                        }
-                    },
-                    markings: {
-                        index: null,
-                        dimensions: {
-                            height: null,
-                            width: null
-                        }
-                    }
-                },
-            };
-
-            // Marked images
-            state.marking = [];
-
-            state.submission = {
-                type: '',
-                snappedAnswers: [],
-                feedback: '',
-                marks: null
+            state.nowMarking.canvas.main.dimensions = {
+                height: 0.75 * window.innerHeight,
+                width: 0.9 * window.innerWidth
             }
 
         },
+
+        resetState(state) {
+            Object.assign(state, getDefaultState())
+        }
+
+
     },
     actions: {
 
         // FETCH: Submission Details
         fetchData({state, commit}, submissionID) {
 
-            SubmissionRepository.find(submissionID)
-                .then(response => {
+            return new Promise((resolve, reject) => {
+                SubmissionRepository.find(submissionID)
+                    .then(response => {
+                        if (response.data.success) {
+                            commit('setAssignmentDetails', response.data.data)
+                            state.states.isLoading = false;
+                            resolve();
+                        } else {
+                            reject();
+                        }
+                    });
+            });
+        },
 
-                    if (response.data.success) {
-                        commit('setAssignmentDetails', response.data.data)
-                        state.states.isLoading = false;
+        /************************
+         Convert snapped answers to dataURL asynchronously
+         *************************/
+        bulkConvertSubmissionsToDataURL({state, getters, commit}) {
+
+            let toConvert = state.marking.length;
+
+            return new Promise((resolve, reject) => {
+
+                state.marking.forEach((imagePath, index) => {
+
+                    // Check if image is already converted to dataURL
+                    let isConverted = imagePath.split(",")[0] === 'data:image/jpg;base64' || imagePath.split(",")[0] === 'data:image/jpeg;base64' || imagePath.split(",")[0] === 'data:image/png;base64';
+
+                    // If not yet, convert now
+                    if (!isConverted) {
+
+                        SubmissionRepository.convertToDataURL(imagePath)
+                            .then(response => {
+                                if (response.data.success) {
+                                    state.marking[index] = decodeURIComponent(response.data.data);
+                                    toConvert--;
+                                } else {
+                                    console.log('Failed to convert image to dataURL')
+                                }
+                            })
+                            .catch(error => {
+                                console.log('Failed to convert image to dataURL')
+                            })
+                    } else {
+                        toConvert--;
+                    }
+
+                });
+
+
+            });
+        },
+
+        checkAllConvertedToDataURL({state}) {
+            return new Promise((resolve, reject) => {
+
+                let toCheck = state.marking.length;
+
+                state.marking.forEach((imagePath, index) => {
+                    let isConverted = imagePath.split(",")[0] === 'data:image/jpg;base64' || imagePath.split(",")[0] === 'data:image/png;base64';
+
+                    if (isConverted) {
+                        toCheck--;
+
+                        if (toCheck === 0) {
+                            resolve();
+                        }
+
+                    } else {
+                        reject('Please try again')
                     }
                 });
+            });
         },
+
 
         enterMarkingMode({state, getters, commit}, nowMarking) {
 
@@ -550,35 +663,48 @@ export default {
 
                 if (state.states.isPreviewing && !getters.isMarkedAssignment) {
 
-                    state.nowMarking.image.index = nowMarking.index;
-                    state.nowMarking.image.path = decodeURIComponent(nowMarking.dataURL);
+                    // Check if image is already converted to dataURL
+                    let isConverted = nowMarking.path.split(",")[0] === 'data:image/jpg;base64';
 
-                    commit('setMarkingMode')
+                    if (isConverted) {
+                        state.nowMarking.image.index = nowMarking.index;
+                        state.nowMarking.image.path = nowMarking.path;
+                        resolve()
+                    } else {
+                        SubmissionRepository.convertToDataURL(nowMarking.path)
+                            .then(response => {
+
+                                if (response.data.success) {
+                                    state.nowMarking.image.index = nowMarking.index;
+                                    state.nowMarking.image.path = decodeURIComponent(response.data.data);
+
+                                    resolve()
+                                } else {
+                                    reject()
+                                }
+                            })
+                            .catch(error => {
+                                reject()
+                            })
+                    }
 
 
-                    resolve()
                 } else {
                     reject()
                 }
             })
         },
 
-        initialiseMarkingCanvas({state, commit, dispatch}) {
-            dispatch('loadImage').then(() => {
+        /***********
+         SEQUENCE:
+         1) Get image size
+         2) Create new canvas
+         3) Set canvas background image
+         4) Enable actions
+         * */
+        initialiseMarkingCanvas({state, commit, dispatch, rootGetters}) {
 
-            })
-        },
-
-        // TODO: Refactor. Pecahkan kepada fungsi-fungsi berasingan.
-        loadImage({state, commit, dispatch, rootGetters}) {
-
-
-            // First, get image's dimension. Then, resize canvas while setting background image
-            fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
-
-
-                state.nowMarking.image.dimensions.width = img.width;
-                state.nowMarking.image.dimensions.height = img.height;
+            dispatch('getSnappedAnswerDimensions').then(() => {
 
                 let scaleFactor = state.nowMarking.canvas.main.dimensions.width / state.nowMarking.image.dimensions.width;
 
@@ -589,7 +715,6 @@ export default {
                 state.nowMarking.canvas.main.index = new fabric.Canvas('canvas_snapped_answer', {
                     width: scaleFactor * state.nowMarking.image.dimensions.width,
                     height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : scaleFactor * state.nowMarking.image.dimensions.height + 0.3 * window.innerHeight,
-                    // height: imageIsLongerThanScreenHeight ? scaleFactor * state.nowMarking.image.dimensions.height : 0.7 * window.innerHeight,
                 })
 
                 // Store canvas dimension values
@@ -615,17 +740,29 @@ export default {
                 );
 
 
+                // Enable/disable marking functions
                 dispatch('enableDragAndDropToTrash')
 
                 // Currently enable only for test account
-                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com' ) {
+                if (rootGetters['getAuthEmail'] === 'cikgu@snapped.com' || rootGetters['getAuthEmail'] === 'cikgumaria@snapped.com') {
                     dispatch('enableCanvasZoom')
                     dispatch('enableCanvasPanning')
                 }
 
-                dispatch('handleObjectScaling')
+                dispatch('handleObjectModification')
 
-            });
+
+            })
+        },
+
+        getSnappedAnswerDimensions({state, commit, dispatch}) {
+            return new Promise((resolve, reject) => {
+                fabric.Image.fromURL(state.nowMarking.image.path, (img, error) => {
+                    state.nowMarking.image.dimensions.width = img.width;
+                    state.nowMarking.image.dimensions.height = img.height;
+                    resolve();
+                });
+            })
         },
 
         /*****************
@@ -641,69 +778,97 @@ export default {
                 // ON MOUSE WHEEL
                 'mouse:wheel': function (opt) {
 
+                    commit('toggleCanvasZoomingMode')
 
-                    let delta = opt.e.deltaY;
-                    let zoom = canvas.getZoom();
-                    zoom *= 0.999 ** delta;
-                    if (zoom > 6) zoom = 6;
-                    if (zoom < 1) zoom = 1;
-                    canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
+                    if (state.states.isZoomingCanvas) {
+                        let delta = opt.e.deltaY;
+                        let zoom = canvas.getZoom();
+                        zoom *= 0.999 ** delta;
+                        if (zoom > 6) zoom = 6;
+                        if (zoom < 1) zoom = 1;
+                        canvas.zoomToPoint({x: opt.e.offsetX, y: opt.e.offsetY}, zoom);
 
-                    opt.e.preventDefault();
-                    opt.e.stopPropagation();
+                        opt.e.preventDefault();
+                        opt.e.stopPropagation();
 
+                        let vpt = this.viewportTransform;
 
-                    let vpt = this.viewportTransform;
-
-                    if (zoom < 400 / 1000) {
-                        vpt[4] = 200 - 1000 * zoom / 2;
-                        vpt[5] = 200 - 1000 * zoom / 2;
-                    } else {
-                        if (vpt[4] >= 0) {
-                            vpt[4] = 0;
-                        } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-                            vpt[4] = canvas.getWidth() - 1000 * zoom;
+                        if (zoom < 400 / 1000) {
+                            vpt[4] = 200 - 1000 * zoom / 2;
+                            vpt[5] = 200 - 1000 * zoom / 2;
+                        } else {
+                            if (vpt[4] >= 0) {
+                                vpt[4] = 0;
+                            } else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
+                                vpt[4] = canvas.getWidth() - 1000 * zoom;
+                            }
+                            if (vpt[5] >= 0) {
+                                vpt[5] = 0;
+                            } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
+                                vpt[5] = canvas.getHeight() - 1000 * zoom;
+                            }
                         }
-                        if (vpt[5] >= 0) {
-                            vpt[5] = 0;
-                        } else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-                            vpt[5] = canvas.getHeight() - 1000 * zoom;
-                        }
+
+                        commit('toggleCanvasZoomingMode')
                     }
-                },
 
-                // ON TOUCH GESTURE. TEMPORARILY DISABLE TILL FEATURE RELEASE
+
+                },
                 'touch:gesture': function (opt) {
 
                     // If user pinch to zoom
-                    if (opt.e.touches && opt.e.touches.length === 2) {
+                    if (opt.e.touches && opt.e.touches.length === 2 && !state.states.isModifyingObject) {
 
-                        // Get initial canvas zoom value and initial gesture scale value
-                        let zoom = canvas.getZoom();
-                        let delta = opt.self.scale;
-
-                        if (opt.self.state === "start") {
-                            zoom = delta > 1 ? zoom + 1 : zoom;
+                        if (state.states.isSelectingObject) {
+                            commit('resetObjectSelection')
                         }
 
-                        // Slow zoom in, quicker zoom out
-                        if (delta > 1) {
-                            zoom = zoom * (1.01 ** delta);
-                        } else {
-                            zoom = zoom ** (delta);
+                        commit('toggleCanvasZoomingMode')
+
+                        // dispatch('addDebugMessage', stateChange)
+
+                        if (state.states.isZoomingCanvas) {
+
+                            // dispatch('addDebugMessage', [
+                            //     `touch gesture : ${opt.e.touches.length}`,
+                            //     `is zooming: ${state.states.isZoomingCanvas}`,
+                            //     `is selecting: ${state.states.isSelectingObject}`
+                            // ])
+
+                            // dispatch('addDebugMessage', `zooming`)
+
+
+                            // Get initial canvas zoom value and initial gesture scale value
+                            let zoom = canvas.getZoom();
+                            let delta = opt.self.scale;
+
+                            if (opt.self.state === "start") {
+                                zoom = delta > 1 ? zoom + 1 : zoom;
+                            }
+
+                            // Slow zoom in, quicker zoom out
+                            if (delta > 1) {
+                                zoom = zoom * (1.01 ** delta);
+                            } else {
+                                zoom = zoom ** (delta);
+                            }
+
+                            // Set max zoom in and max zoom out
+                            if (zoom > 4) zoom = 4;
+                            if (zoom < 1) zoom = 1;
+
+
+                            // Determine point of scaling
+                            let point = new fabric.Point(opt.self.x, opt.self.y);
+                            if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
+
+                            // // Zoom to pinch point
+                            canvas.zoomToPoint(point, zoom);
+
+                            commit('toggleCanvasZoomingMode')
+
                         }
 
-                        // Set max zoom in and max zoom out
-                        if (zoom > 4) zoom = 4;
-                        if (zoom < 1) zoom = 1;
-
-
-                        // Determine point of scaling
-                        let point = new fabric.Point(opt.self.x, opt.self.y);
-                        if (zoom < 1) point = new fabric.Point(canvas.width / 2, canvas.height / 2);
-
-                        // // Zoom to pinch point
-                        canvas.zoomToPoint(point, zoom);
 
                     }
                 }
@@ -718,51 +883,11 @@ export default {
 
             let canvas = state.nowMarking.canvas.main.index;
 
-            canvas.on('object:moving', function (event) {
+            canvas.on({
 
-                // If state isMovingObject not already set, set to true
-                if (!state.states.isMovingObject) {
-                    commit('toggleMovingObjectMode')
-                    state.nowMarking.selectedObject = event.target;
-                    commit('toggleTrashIcon')
 
-                    commit('toggleOverlayScreen', 'add')
                 }
-            })
-                .on('object:moved', function (event) {
-                    commit('toggleMovingObjectMode')
-                    commit('toggleTrashIcon')
-                    commit('toggleOverlayScreen', 'remove')
-
-                    // Set trash area
-                    let trashHorizontalCenter = state.nowMarking.canvas.main.index.width / 2;
-                    let trashVerticalCenter = state.nowMarking.canvas.main.dimensions.height * 0.9;
-                    let margin = state.nowMarking.canvas.main.index.width / 12;
-                    let trashMaxLeft = trashHorizontalCenter - margin;
-                    let trashMaxRight = trashHorizontalCenter + (margin * 2)
-                    let trashMaxTop = trashVerticalCenter - (margin)
-                    let trashMaxBottom = trashVerticalCenter + (margin * 2)
-
-                    // Get object dimensions
-                    let objectLeft = state.nowMarking.selectedObject.left;
-                    let objectTop = state.nowMarking.selectedObject.top;
-                    let objectWidth = state.nowMarking.selectedObject.width;
-                    let objectHeight = state.nowMarking.selectedObject.height;
-                    let objectHorizontalCenter = objectLeft + (objectWidth / 2);
-                    let objectVerticalCenter = objectTop + (objectHeight / 2);
-
-                    if (state.nowMarking.selectedObject.get('type') === 'textbox') {
-                        objectVerticalCenter = objectTop;
-                        objectHorizontalCenter = objectLeft;
-                    }
-
-                    if (
-                        ((objectHorizontalCenter > trashMaxLeft) && (objectHorizontalCenter < trashMaxRight))
-                        && ((objectVerticalCenter > trashMaxTop) && (objectVerticalCenter < trashMaxBottom))
-                    ) {
-                        state.nowMarking.canvas.main.index.remove(state.nowMarking.selectedObject);
-                    }
-                })
+            )
         },
 
         /********************************
@@ -812,8 +937,8 @@ export default {
 
                 'touch:drag': function (opt) {
 
-                    // Ensure not moving object
-                    if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isScalingObject && !state.states.isDrawing) {
+                    // Ensure single finger touch and not performing other actions
+                    if (opt.e.touches && opt.e.touches.length === 1 && !state.states.isMovingObject && !state.states.isModifyingObject && !state.states.isDrawing) {
 
                         this.selection = false;
 
@@ -827,7 +952,7 @@ export default {
                         let deltaX = lastX - initialX;
                         let deltaY = lastY - initialY;
 
-                        let delta = new fabric.Point(deltaX / 35, deltaY / 35);
+                        let delta = new fabric.Point(deltaX / 20, deltaY / 20);
                         canvas.relativePan(delta);
 
                         state.dragCount++;
@@ -838,23 +963,66 @@ export default {
             })
         },
 
-        handleObjectScaling({state, commit, dispatch}) {
+        handleObjectModification({state, commit, dispatch}) {
             let canvas = state.nowMarking.canvas.main.index;
 
-            canvas.on('object:scaling', function (event) {
+            canvas.on({
+                'object:scaling': function (event) {
 
-                // If state isMovingObject not already set, set to true
-                if (!state.states.isScalingObject) {
-                    commit('toggleScalingObjectMode')
-                    state.nowMarking.selectedObject = event.target;
-                    commit('toggleOverlayScreen', 'add')
-                }
-            })
+                    // If state isMovingObject not already set, set to true
+                    if (event.e.touches.length === 1 && !state.states.isModifyingObject && !state.states.isZoomingCanvas) {
+                        commit('toggleScalingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+                        commit('toggleOverlayScreen', 'add')
+                    }
 
-                .on('object:scaled', function (event) {
+                    if (event.e.touches.length === 2) {
+                        commit('resetObjectSelection')
+                    }
+                },
+                'object:scaled': function (event) {
                     commit('toggleScalingObjectMode')
                     commit('toggleOverlayScreen', 'remove')
-                })
+                },
+                'object:rotating': function (event) {
+                    // If state isMovingObject not already set, set to true
+                    if (event.e.touches.length === 1 && !state.states.isModifyingObject && !state.states.isZoomingCanvas) {
+                        commit('toggleScalingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+                        commit('toggleOverlayScreen', 'add')
+                    }
+                },
+                'object:rotated': function (event) {
+                    commit('toggleScalingObjectMode')
+                    commit('toggleOverlayScreen', 'remove')
+                },
+                'object:moving': function (event) {
+
+                    // If state isMovingObject not already set, set to true
+                    if (!state.states.isMovingObject && event.e.touches.length === 1) {
+                        commit('toggleMovingObjectMode')
+                        state.nowMarking.selectedObject = event.target;
+
+                        commit('toggleOverlayScreen', 'add')
+
+                    }
+                },
+                'object:moved': function (event) {
+                    commit('toggleMovingObjectMode')
+                    commit('toggleOverlayScreen', 'remove')
+                },
+
+                'selection:created': function () {
+                    commit('toggleSelectingObjectMode')
+                },
+                'selection:updated': function () {
+
+                },
+                'selection:cleared': function () {
+                    commit('toggleSelectingObjectMode')
+                },
+
+            });
         },
 
         loadSticker({state, commit}, stickerName) {
@@ -926,6 +1094,7 @@ export default {
         },
 
         beginDrawingMode({state, commit}) {
+
             commit('toggleDrawingModeStates')
             commit('toggleDrawingMode')
 
@@ -933,7 +1102,6 @@ export default {
             state.nowMarking.canvas.main.index.isDrawingMode = true;
 
             state.nowMarking.canvas.main.index
-
                 .on('mouse:down:before', function (e) {
                     if (state.nowDrawing.drawing) {
                         state.nowMarking.canvas.main.index.freeDrawingBrush.color = 'rgba(245, 59, 87, 1)';
@@ -949,6 +1117,10 @@ export default {
 
         },
 
+        removeSelectedObject({state}) {
+            state.nowMarking.canvas.main.index.remove(state.nowMarking.canvas.main.index.getActiveObject());
+        },
+
         doneEditSnappedAnswer({state, commit}) {
 
             // Load marking canvas on snapped answer canvas
@@ -956,7 +1128,6 @@ export default {
 
             return new Promise((resolve, reject) => {
                 state.marking[state.nowMarking.image.index] = state.nowMarking.canvas.main.index.toDataURL()
-                // state.marking[state.nowMarking.image.index] = state.nowMarking.canvas.main.index.toDataURL()
                 commit('setPreviewingMode')
                 resolve()
             })
@@ -981,39 +1152,70 @@ export default {
             let index = state.nowMarking.image.index;
             state.nowMarking.image.path = state.assignmentDetails.snappedAnswerPaths[index]
             commit('disposeCanvas')
-            dispatch('loadImage')
+            dispatch('initialiseMarkingCanvas')
         },
 
-        submit({state, commit}) {
+
+
+        submit({state, commit, dispatch}) {
 
             return new Promise((resolve, reject) => {
+
                 if (state.submission.marks === null || state.submission.marks === undefined) {
-                    commit('toggleModalMode', 'no_mark')
+                    commit('toggleModalMode', 'error_missing_mark')
                     reject()
                 } else {
 
                     if (!state.states.isSubmitting) {
 
-                        commit('toggleModalMode', 'is_submitting')
+                        commit('toggleModalMode', 'is_checking')
 
-                        state.states.isSubmitting = true;
+                        dispatch('checkAllConvertedToDataURL')
 
-                        MarksRepository.store(
-                            {
-                                assignmentID: state.assignmentDetails.assignmentID,
-                                studentID: state.assignmentDetails.studentID,
-                                answerID: state.assignmentDetails.submissionID,
-                                submissionType: state.submission.type,
-                                snappedAnswers: state.marking,
-                                marks: state.submission.marks,
-                                feedback: state.submission.feedback
-                            })
+                            // If all image types are dataURL
                             .then(response => {
-                                if (response.data.success) {
-                                    commit('setMainMode')
-                                    resolve(state.assignmentDetails.submissionID);
-                                }
+                                commit('toggleModalMode')
+                                commit('toggleModalMode', 'is_submitting')
+
+                                MarksRepository.store(
+                                    {
+                                        assignmentID: state.assignmentDetails.assignmentID,
+                                        studentID: state.assignmentDetails.studentID,
+                                        answerID: state.assignmentDetails.submissionID,
+                                        submissionType: state.submission.type,
+                                        snappedAnswers: state.marking,
+                                        marks: state.submission.marks,
+                                        feedback: state.submission.feedback
+                                    })
+                                    .then(response => {
+                                        if (response.data.success) {
+                                            commit('setMainMode')
+                                            resolve(state.assignmentDetails.submissionID);
+                                        } else {
+                                            commit('toggleModalMode')
+                                            commit('toggleModalMode', 'error_submit_markings')
+                                            state.states.errorMessages = response.data.data.error;
+                                        }
+                                    })
+                                    .catch(error => {
+                                        commit('toggleModalMode')
+                                        commit('toggleModalMode', 'error_submit_markings')
+                                        state.states.errorMessages = error;
+                                    })
+
+
                             })
+
+                            // If some images are not converted to dataURL yet
+                            .catch(error => {
+
+                                setTimeout(() => {
+                                    commit('toggleModalMode')
+                                    commit('toggleModalMode', 'error_invalid_image_type')
+                                }, 1500)
+                            })
+
+
                     } else {
                         console.log('Already submitting a marking.')
                     }
@@ -1023,17 +1225,6 @@ export default {
 
 
         },
-
-        checkNowMarkingPathExists({state}) {
-
-            return new Promise((resolve, reject) => {
-                if (state.nowMarking.image.path) {
-                    resolve();
-                } else {
-                    reject()
-                }
-            })
-        }
 
     },
     getters: {
@@ -1094,12 +1285,24 @@ export default {
             return state.assignmentDetails.marksID !== null && state.assignmentDetails.marksID !== undefined;
         },
 
+        markingPathExists(state) {
+            return state.nowMarking.image.path !== null;
+        },
+
         backgroundImageScaleFactor(state) {
             return state.nowMarking.canvas.main.dimensions.width / state.nowMarking.image.dimensions.width;
         },
 
         isMainPage(state) {
             return state.states.isMain === true && state.states.isPreviewing === false && state.states.isMarking === false;
+        },
+
+        isPreviewing(state) {
+            return state.states.isMain === false && state.states.isPreviewing === true && state.states.isMarking === false;
+        },
+
+        isPreparingCanvas(state) {
+            return state.states.isPreviewing === true && state.states.isPreparingCanvas === true;
         }
 
     }

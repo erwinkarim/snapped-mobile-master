@@ -115,7 +115,8 @@
           <!-- Background Stack Green -->
           <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
             <!-- Background Stack Overlay -->
-            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">
+<!--            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">-->
+            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-100 bg-black bg-opacity-10  pb-2/3 ">
             </div>
           </div>
         </div>
@@ -174,6 +175,7 @@ export default {
           title: null,
           description: null
         },
+        remarks: null,
         snap_question_paths: []
       },
       submissions: [],
@@ -224,6 +226,7 @@ export default {
               this.assignment.dueDatetime = data.assignment_details.due_datetime;
               this.assignment.written_question.title = data.assignment_details.written_question_title;
               this.assignment.written_question.description = data.assignment_details.written_question_description;
+              this.assignment.remarks = data.assignment_details.remarks;
 
               if (data.assignment_details.snap_question_url) {
                 this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
@@ -250,6 +253,8 @@ export default {
                   studentGender: submission.student_gender,
                   submittedAt: submission.submission_created_at,
                   marksID: submission.marks_id,
+                  marks: submission.marks,
+                  answerTag: submission.answer_tag,
                   assignmentID: data.assignment_details.assignment_id
                 }
 

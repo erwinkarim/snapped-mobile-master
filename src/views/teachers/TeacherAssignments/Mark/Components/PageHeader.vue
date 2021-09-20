@@ -1,7 +1,9 @@
 <template>
   <div>
 
-    <!--  HEADER: MAIN  -->
+    <!----------------------
+            HEADER: MAIN
+      ---------------------->
     <page-header-three v-if="$store.state.teacherMarking.states.isMain"
                        :background-color="headerBackgroundColor"
                        :bottom-padding="8"
@@ -16,6 +18,9 @@
 
     </page-header-three>
 
+    <!----------------------
+       HEADER: Preview
+     ---------------------->
     <page-header-three v-if="$store.state.teacherMarking.states.isPreviewing"
                        :background-color="headerBackgroundColor"
                        :bottom-padding="8"
@@ -23,18 +28,22 @@
 
       <template v-slot:leftAction>
         <div @click="togglePreviewMode">
-          <icon-base-two class="w-1/4 ml-6">
+          <icon-base-two class="w-1/4 ml-8">
             <arrow-back-icon :stroke-color="navBackColor"/>
           </icon-base-two>
         </div>
       </template>
 
-      <template v-slot:title>
+      <template v-slot:mini-title
+                v-if="!$store.getters['teacherMarking/isPreparingCanvas']"
+      >
         Answer Preview
       </template>
     </page-header-three>
 
-    <!--  HEADER: MARKING  -->
+    <!----------------------
+        HEADER: MARKING
+      ---------------------->
     <page-header-three v-if="isViewingMarkingMainPage"
                        :background-color="headerBackgroundColor"
                        :bottom-padding="8"
@@ -49,10 +58,20 @@
         </div>
       </template>
 
+      <!--
+          If is selecting object, display trash button
+          Otherwise, display reset button
+       -->
       <template v-slot:rightAction>
-                <button @click="undoEdits" class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none">
-                  RESET
-                </button>
+        <button v-if="showTrashIcon"
+                @click="removeSelectedObject"
+                class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none"
+        >
+          <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.trash"/>
+        </button>
+        <button v-if="showResetButton" @click="undoEdits" class="z-70 text-white tracking-wide text-sm px-2 py-2 focus:outline-none">
+          RESET
+        </button>
       </template>
     </page-header-three>
 
@@ -80,22 +99,22 @@
             </font-awesome-layers>
 
           </button>
-<!--          <button @click="$store.commit('teacherMarking/toggleDrawingModeStates')"-->
-<!--                  class="px-3 ml-1 focus:outline-none"-->
-<!--          >-->
+          <!--          <button @click="$store.commit('teacherMarking/toggleDrawingModeStates')"-->
+          <!--                  class="px-3 ml-1 focus:outline-none"-->
+          <!--          >-->
 
-<!--            <font-awesome-layers class="text-center fa-lg focus:outline-none">-->
-<!--              <font-awesome-icon :icon="icons.circle"-->
-<!--                                 v-if="drawingModeState ==='erasing'"-->
-<!--                                 class="fa-2x text-white"-->
-<!--              />-->
-<!--              <font-awesome-icon :icon="icons.eraser"-->
-<!--                                 :class="drawingModeState ==='erasing' ? '' : 'text-white'"-->
-<!--                                 class="fa-2x focus:outline-none"-->
-<!--                                 transform="shrink-9"-->
-<!--              />-->
-<!--            </font-awesome-layers>-->
-<!--          </button>-->
+          <!--            <font-awesome-layers class="text-center fa-lg focus:outline-none">-->
+          <!--              <font-awesome-icon :icon="icons.circle"-->
+          <!--                                 v-if="drawingModeState ==='erasing'"-->
+          <!--                                 class="fa-2x text-white"-->
+          <!--              />-->
+          <!--              <font-awesome-icon :icon="icons.eraser"-->
+          <!--                                 :class="drawingModeState ==='erasing' ? '' : 'text-white'"-->
+          <!--                                 class="fa-2x focus:outline-none"-->
+          <!--                                 transform="shrink-9"-->
+          <!--              />-->
+          <!--            </font-awesome-layers>-->
+          <!--          </button>-->
         </div>
       </template>
 
@@ -116,7 +135,7 @@ import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import UndoIcon from "@/components/icons/UndoIcon";
 import router from "@/router";
 
-import {faCircle, faMarker, faEraser} from '@fortawesome/free-solid-svg-icons'
+import {faCircle, faMarker, faEraser, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
 
 export default {
@@ -126,11 +145,20 @@ export default {
       icons: {
         circle: faCircle,
         marker: faMarker,
-        eraser: faEraser
+        eraser: faEraser,
+        trash: faTrash
       }
     }
   },
   computed: {
+
+    showTrashIcon() {
+      return this.$store.state.teacherMarking.states.isSelectingObject;
+    },
+
+    showResetButton() {
+      return !this.$store.state.teacherMarking.states.isSelectingObject && !this.$store.state.teacherMarking.states.isMovingObject && !this.$store.state.teacherMarking.states.isScalingObject;
+    },
 
     isViewingMarkingMainPage() {
       return this.$store.state.teacherMarking.states.isMarking && !this.$store.state.teacherMarking.states.isDrawing
@@ -192,6 +220,10 @@ export default {
       if (action === 'erasing' && !this.$store.state.teacherMarking.nowDrawing.erasing) {
 
       }
+    },
+
+    removeSelectedObject(){
+      this.$store.dispatch('teacherMarking/removeSelectedObject');
     },
 
     undoEdits() {

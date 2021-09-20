@@ -10,6 +10,10 @@ export default {
         return Repository.post('/logout', payload)
     },
 
+    updateUserDetails(payload) {
+        return Repository.put('/user/update', payload)
+    },
+
     getUserDetails () {
         return Repository.post('/details')
     }

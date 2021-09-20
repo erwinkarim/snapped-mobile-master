@@ -74,9 +74,6 @@ export default {
             this.loading = false
 
           })
-          .catch(err => {
-            console.log(err)
-          })
     },
     getHumanDate(datetime) {
       return moment(datetime, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY")

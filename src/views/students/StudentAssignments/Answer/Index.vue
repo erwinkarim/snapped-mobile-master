@@ -132,7 +132,7 @@ export default {
 
             this.handleError({
               status: true,
-              message: 'Please snap an answer!'
+              message: error
             })
           })
 

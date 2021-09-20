@@ -7,7 +7,18 @@
 
     <template v-slot:content>
       <div class="w-full px-7 mt-3">
-        <section-title class="text-left mt-4" title="Profile"/>
+
+        <div class="flex flex-row items-center justify-between mb-3">
+          <section-title class="text-left mt-4" title="Profile"/>
+
+          <!--  ROUTE LINK: USER EDIT PROFILE  -->
+<!--          <router-link :to="{name: 'auth.profile.edit'}">-->
+<!--            <font-awesome-icon-->
+<!--                :icon="faIcons.edit"-->
+<!--                class="w-full fa-1x text-purple-primary"-->
+<!--            />-->
+<!--          </router-link>-->
+        </div>
 
         <div v-for="detail in details"
              :key="detail.value"
@@ -29,7 +40,7 @@
         <section-title class="text-left my-4" title="Integrations"/>
 
         <!-- GOOGLE CLASSROOM -->
-        <div @click="integrateGoogleClassroom"
+        <div @click="handleGoogleClassroomIntegration"
              class="w-full  py-3 flex flex-row w-full border-b-1 items-center bg-white">
           <div class="w-1/12 text-center">
             <font-awesome-icon class="w-full fa-1x text-purple-primary" :icon="faIcons.google"/>
@@ -40,7 +51,7 @@
           <div :class="isGoogleClassroomIntegrated ? 'bg-purple-primary' : 'bg-gray-500'"
                class="text-white rounded-lg py-1 tracking-wide text-xs uppercase px-3 h-full w-4/12"
           >
-            {{ isGoogleClassroomIntegrated ? 'CONNECTED' : 'CONNECT' }}
+            {{ isGoogleClassroomIntegrated ? 'DISCONNECT' : 'CONNECT' }}
           </div>
 
         </div>
@@ -50,8 +61,6 @@
 
       <div class="w-full px-7 mt-3">
         <section-title class="text-left my-4" title="Log out"/>
-
-
         <!-- LOGOUT -->
         <div @click="logout"
              class="w-full text-left py-4 flex flex-row w-full border-b-1 items-center bg-white"
@@ -72,15 +81,14 @@
 
 <script>
 
-import GoogleClassroomRepository from "@/repositories/GoogleClassroomRepository";
-
 export default {
   name: "TeacherSettings",
   data() {
     return {
 
       faIcons: {
-        google: faGoogle
+        google: faGoogle,
+        edit: faEdit
       },
 
       details: {
@@ -128,9 +136,17 @@ export default {
             }
           })
     },
-    integrateGoogleClassroom() {
+    handleGoogleClassroomIntegration() {
 
-      if (!this.isGoogleClassroomIntegrated) {
+      // If already integrated, disconnect
+      if (this.isGoogleClassroomIntegrated) {
+        GoogleClassroomRepository.disconnect()
+            .then(response => {
+              if (response.data.success) {
+                this.$store.dispatch('setAuthUser')
+              }
+            })
+      } else {
 
         GoogleClassroomRepository.integration()
             .then(response => {
@@ -200,7 +216,7 @@ export default {
     SectionTitle,
     PageTitle,
     DashboardLayout,
-    FontAwesomeIcon
+    FontAwesomeIcon,
   },
 }
 
@@ -217,10 +233,12 @@ import EmailIcon from "../../../components/icons/EmailIcon";
 import PhoneIcon from "../../../components/icons/PhoneIcon";
 import LogoutIcon from "../../../components/icons/LogoutIcon";
 import TeacherRepository from "../../../repositories/TeacherRepository";
+import GoogleClassroomRepository from "@/repositories/GoogleClassroomRepository";
 
 // FONT AWESOME
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {faGoogle} from '@fortawesome/free-brands-svg-icons'
+import {faEdit} from "@fortawesome/free-solid-svg-icons";
 </script>
 
 <style scoped>

@@ -148,9 +148,7 @@ export default {
 
       GoogleClassroomRepository.fetchFolders()
           .then(response => {
-            console.log(response)
             if (response.data.success) {
-              // console.log(response.data.data.folders)
               this.isLoading = false;
               this.folders = response.data.data.folders;
             }
@@ -179,8 +177,6 @@ export default {
             .catch(error => {
               console.log('Oops! It seems that there is something wrong with this export module.')
             })
-      } else {
-        console.log('no folder selected!')
       }
 
     }

@@ -108,14 +108,20 @@
     </template>
 
     <template v-slot:bottomBar>
-      <button @click="toggleDeleteModal"
+      <div class="flex flex-row w-full max-w-xl">
+        <div class="px-2 w-4/7">
+          <button @click="toggleDeleteModal"
               class="w-full font-bold rounded-full text-white text-sm bg-red-primary border-2 border-red-primary py-3 px-1 flex flex-row justify-center mr-2">
         Delete
       </button>
-      <button @click="submit"
+        </div>
+        <div class="px-2 w-3/7">
+          <button @click="submit"
               class="w-full font-bold rounded-full text-purple-primary text-sm bg-white border-2 border-purple-primary py-3 px-1 flex flex-row justify-center">
         Update
       </button>
+        </div>
+      </div>
     </template>
   </dashboard-layout>
 </template>

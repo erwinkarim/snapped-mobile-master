@@ -5,8 +5,7 @@
     <div :class="contentClass" class="relative top-24">
 
       <!--  ASSIGNMENT ANSWERS-->
-
-      <div v-if="$store.getters['teacherMarking/isAnswered']"
+      <div v-if="displaySubmission"
            :class="imagePreviewClass"
            class="pt-4 z-10"
       >
@@ -18,9 +17,23 @@
             v-if="$store.getters['teacherMarking/hasWrittenAnswer'] && !$store.state.teacherMarking.states.isMarking"
         />
       </div>
+
       <!-- ASSIGNMENT DETAILS -->
       <assignment-info v-if="$store.getters['teacherMarking/isMainPage']"
                        :details="$store.state.teacherMarking.assignmentDetails"/>
+
+      <div v-if="this.$store.getters['teacherMarking/isPreparingCanvas']"
+        class="mt-16"
+      >
+        <div class="font-bold text-2xl tracking-wider">
+          Please wait.
+        </div>
+        <div class="text-sm font-light mt-2">
+          Preparing canvas...
+        </div>
+      </div>
+
+
     </div>
 
   </div>
@@ -75,6 +88,10 @@ export default {
         return 'bg-black-primary px-16  pb-10'
       }
     },
+
+    displaySubmission() {
+      return this.$store.getters['teacherMarking/isAnswered'] && !this.$store.getters['teacherMarking/isPreparingCanvas'];
+    }
   },
   components: {
     AssignmentInfo,

@@ -103,7 +103,6 @@ router.beforeEach((to, from, next) => {
                             if (store.getters.getAuthUserRole === to.meta.checkRole) {
                                 return next()
                             } else {
-                                console.log('No Access!')
                                 return next(false)
                             }
                         } else{
@@ -127,7 +126,6 @@ router.beforeEach((to, from, next) => {
             }
 
         } else {
-            console.log('Not authorised')
             return next({name: 'login'})
         }
 

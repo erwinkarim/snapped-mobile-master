@@ -26,14 +26,13 @@ import UndoIcon from "@/components/icons/UndoIcon";
 
 export default {
   name: "EditSnappedAnswer",
-  mounted() {
-    this.$store.dispatch('teacherMarking/checkNowMarkingPathExists').catch(() => {
+  created() {
+    if (this.$store.getters["teacherMarking/markingPathExists"]) {
+      this.scrollToTop();
+      this.$store.dispatch('teacherMarking/initialiseMarkingCanvas')
+    } else {
       router.push({name: 'teacher.assignments.marking.details'})
-    })
-    this.scrollToTop();
-    // this.$store.commit('teacherMarking/loadCanvas')
-    // this.$store.commit('teacherMarking/loadCanvas')
-    this.$store.dispatch('teacherMarking/initialiseMarkingCanvas')
+    }
   },
   computed: {
     canvasContainerStyle() {

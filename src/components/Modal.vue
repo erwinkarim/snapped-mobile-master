@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white px-10 rounded-2xl pt-12 pb-10">
+  <div class="bg-white px-10 rounded-2xl pt-12 pb-10 xl:max-w-md">
 
     <!-- ICON -->
     <div v-if="!isNoIcon" class=" w-full flex flex-row items-center justify-center mb-12">

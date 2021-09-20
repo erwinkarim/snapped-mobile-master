@@ -18,7 +18,8 @@
 
     </div>
     <div v-else>
-      <bottom-navbar class="block fixed inset-x-0 border-t-1/4 bottom-0 z-40 shadow bg-white h-14 md:h-20"/>
+<!--      <bottom-navbar class="block fixed inset-x-0 border-t-1/4 bottom-0 z-40 shadow bg-white h-14 md:h-20"/>-->
+      <bottom-navbar class="block fixed inset-x-0 border-t-1/4 bottom-0 z-40 lg:z-50 xl:z-70 shadow bg-white h-14 md:h-20"/>
     </div>
 
   </div>
