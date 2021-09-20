@@ -13,6 +13,7 @@
     <g :style="{fill: getStrokeColor}" :fill="iconColor">
       <slot/>
     </g>
+
   </svg>
 </template>
 
@@ -41,6 +42,10 @@ name: "IconBaseTwo",
 
       if (this.strokeColor === 'purple-primary') {
         return '#3A4276'
+      }
+
+      if (this.strokeColor === 'purple-secondary') {
+        return '#7B7F9E'
       }
 
       if (this.strokeColor === 'red-primary') {

@@ -1,0 +1,391 @@
+<template>
+
+  <dashboard-layout :content-fills-screen="isPreviewingSnappedAnswer"
+                    :has-custom-bottom-bar="isMainPage"
+                    :no-bottom-bar=" isPreviewingSnappedAnswer"
+  >
+
+    <template v-slot:pageHeader>
+      <page-header-three>
+
+        <template v-slot:leftAction>
+          <nav-back v-if="isMainPage"
+                    type="cancel"
+                    :to="{name: 'student.assignments.show'}"
+                    class="w-2/7" stroke-color="red-primary"
+          />
+
+          <div @click="toggleSnappedAnswerPreview"
+               v-if="isPreviewingSnappedAnswer"
+          >
+            <icon-base-two class="w-2/7 ml-5">
+              <arrow-back-icon/>
+            </icon-base-two>
+          </div>
+        </template>
+
+        <template v-slot:mini-title>
+          Answer
+        </template>
+
+      </page-header-three>
+    </template>
+
+    <template slot="content" v-if="isMainPage">
+
+      <div class="relative pt-40 px-6 h-full text-left text-purple-primary">
+
+        <!-- SUBMISSION DETAIL -->
+        <div>
+          <div>
+            Your answer will be submitted to
+          </div>
+          <div class="font-bold mt-1">
+            {{ assignmentDetails ? assignmentDetails.title : '' }}
+          </div>
+        </div>
+
+        <!-- VIEW SNAPPED ANSWER -->
+        <div class="mt-10" v-if="isSnappedAnswer">
+          <div class="mb-4">
+            Your Snapped Answer
+          </div>
+          <div class="flex flex-col">
+
+            <div v-for="(image,key) in snappedAnswerPreviews"
+                 class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+            >
+
+              <div class="mt-5 w-full">
+                {{`cropper_${key}`}}
+                <vue-cropper :ref="`cropper_${key}`"
+                             :container-style="vueCropperContainerStyle(key)"
+                             :src="image.source"
+                             alt="Source Image"
+                             @ready="handleVueCropperReady"
+                >
+                </vue-cropper>
+
+                <div v-if="image.cropping" class="flex flex-row items-center mt-4 md:mt-4 ">
+                  <button @click="toggleSnappedCroppingStatus(key)"
+                          class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-full">
+                      Cancel
+                    </div>
+                  </button>
+                  <button @click="saveCroppedSnappedAnswer(key)"
+                          class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-green-400 focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-3/4">
+                      Done
+                    </div>
+                    <div class="w-1/4">
+                      <icon-base-two class="w-1/2">
+                        <crop-icon/>
+                      </icon-base-two>
+                    </div>
+                  </button>
+                </div>
+
+                <div v-else class="flex flex-row items-center mt-2 md:mt-4 ">
+                  <button @click="removeSnappedAnswer(key)"
+                          class="flex flex-row items-center w-1/2  py-3 md:py-5 mr-1 rounded-lg bg-red-primary focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-3/4">
+                      Remove
+                    </div>
+                    <div class="w-1/4">
+                      <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.trash"/>
+                    </div>
+                  </button>
+                  <button @click="toggleSnappedCroppingStatus(key)"
+                          class="flex flex-row items-center  py-3  md:py-5 w-1/2 ml-1 rounded-lg bg-purple-primary focus:outline-none">
+                    <div class="text-white text-sm md:text-lg w-3/4">
+                      Crop
+                    </div>
+                    <div class="w-1/4">
+                      <font-awesome-icon class="w-full fa-1x text-white" :icon="icons.crop"/>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- ADD MORE PHOTO -->
+          <div class="flex mb-4 -mx-1">
+            <label
+                class="text-center pl-6 pr-2 py-5 mt-2  appearance-none border rounded-md border-none w-full text-lg font-normal leading-tight focus:outline-none focus:shadow-outline text-red-primary">
+              + Add more photo
+              <input class="hidden" type="file" accept="image/*" multiple @change="onFileSelected">
+            </label>
+          </div>
+        </div>
+
+
+        <div class="mt-6">
+          <div>
+            Your remarks
+          </div>
+          <div class="mt-4 h-36 ">
+            <textarea v-model="remarks"
+                      class="resize-y text-purple-primary py-4 px-5 h-full w-full bg-gray-secondary rounded focus:outline-none placeholder-purple-secondary"
+                      placeholder="Remarks"></textarea>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+
+    <template v-slot:bottomBar>
+      <div class="w-full md:max-w-xl px-2">
+        <button @click="submit"
+                :disabled="isSubmitting"
+                class="w-full font-bold rounded-full text-purple-primary text-sm bg-yellow-primary py-4 px-1 flex flex-row justify-center">
+          Submit Answer
+        </button>
+      </div>
+    </template>
+  </dashboard-layout>
+
+</template>
+
+<script>
+import PageTitleTwo from "@/components/PageTitleTwo";
+import NavBack from "@/components/NavBack";
+import IconBaseTwo from "@/components/IconBaseTwo";
+import TrashIcon from "@/components/icons/TrashIcon";
+import Modal from "@/components/Modal";
+import DashboardLayout from "@/views/layout/DashboardLayout";
+import PageHeaderThree from "@/components/PageHeaderThree";
+import router from "@/router";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import CropIcon from "@/components/icons/CropIcon";
+
+// Vue Cropper
+import VueCropper from 'vue-cropperjs';
+import 'cropperjs/dist/cropper.css';
+
+// FONT AWESOME
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+import {faTrash, faCropAlt} from "@fortawesome/free-solid-svg-icons";
+
+export default {
+  name: "AnswerSave",
+  props: {
+    answer: Object,
+    assignmentDetails: Object,
+  },
+  data() {
+    return {
+
+      // States
+      isMainPage: true,
+      isPreviewingSnappedAnswer: false,
+      isSubmitting: false,
+      isShowingModal: false,
+      submissionStatus: null,
+
+      snappedAnswerPreviews: [],
+
+      remarks: '',
+
+      snappedAnswers: [],
+
+      // Icons
+      icons: {
+        crop: faCropAlt,
+        trash: faTrash
+      }
+    }
+  },
+  computed: {
+    hasAnswerContent() {
+      return this.answer.type !== null && this.answer.content !== '';
+    },
+    isWrittenAnswer() {
+      return this.answer.type === 'written';
+    },
+    isSnappedAnswer() {
+      return this.answer.type === 'snapped';
+    },
+  },
+  methods: {
+
+    toggleSnappedAnswerPreview() {
+      if (this.isPreviewingSnappedAnswer) {
+        this.isMainPage = true;
+        this.isPreviewingSnappedAnswer = false;
+      } else {
+        this.isMainPage = false;
+        this.isPreviewingSnappedAnswer = true;
+      }
+    },
+
+    onFileSelected(e) {
+      let files = e.target.files || e.dataTransfer.files
+
+      if (!files.length) {
+        return
+      }
+
+      if (files[0].type.match("image.*")) {
+        this.generateSnappedAnswerPreview(files)
+      }
+
+      e.target.value = ''
+
+    },
+
+    handleVueCropperReady(e) {
+      let cropper = e.target.cropper;
+
+      cropper.autoCrop = false;
+
+      cropper.clear();
+      cropper.disable();
+
+      // If this is new photo uploaded, add image to snapped answers array
+      if (!cropper.replaced) {
+        cropper.getCroppedCanvas({
+          maxWidth: 720,
+          maxHeight: 720,
+          fillColor: '#fff'
+        }).toBlob((blob) => {
+          this.snappedAnswers.push(blob)
+        },'image/jpeg');
+      }
+
+
+    },
+
+    generateSnappedAnswerPreview(files) {
+      files.forEach(f => {
+
+        if (!f.type.match("image.*")) {
+          return;
+        }
+
+        let reader = new FileReader();
+        let that = this;
+
+        reader.onload = function (e) {
+
+          that.snappedAnswerPreviews.push({
+            source: e.target.result,
+            cropping: false
+          });
+        }
+
+        reader.readAsDataURL(f);
+      });
+    },
+
+    toggleSnappedCroppingStatus(key) {
+      this.snappedAnswerPreviews[key].cropping = !this.snappedAnswerPreviews[key].cropping;
+
+      let cropperKey = `cropper_${key}`
+      let cropper = this.$refs[cropperKey][0];
+
+      // If cropping, enable
+      if (this.snappedAnswerPreviews[key].cropping) {
+        cropper.enable();
+      } else{
+        cropper.clear();
+        cropper.disable();
+      }
+    },
+
+    vueCropperContainerStyle(key) {
+      let style = {
+        width: '100%',
+        // display: 'none'
+      }
+
+      if (this.snappedAnswerPreviews[key].cropping) {
+        style.display = 'flex'
+      }
+      return  style;
+    },
+
+    saveCroppedSnappedAnswer(key) {
+      let cropperKey = `cropper_${key}`
+
+      let cropper = this.$refs[cropperKey][0];
+
+      let cropped =  cropper.getCroppedCanvas({
+        maxWidth: 720,
+        maxHeight: 720,
+        fillColor: '#fff'
+      });
+
+      let dataURL = cropped.toDataURL("image/jpeg");
+      cropper.replace(dataURL);
+      this.snappedAnswerPreviews[key].source = dataURL;
+
+      cropped.toBlob((blob) => {
+              this.snappedAnswers[key] = blob;
+            },'image/jpeg');
+
+      this.toggleSnappedCroppingStatus(key)
+
+    },
+
+    removeSnappedAnswer(key) {
+
+      let cropperKey = `cropper_${key}`
+
+      let cropper = this.$refs[cropperKey][0];
+      cropper.destroy();
+
+      this.snappedAnswers.splice(key, 1);
+      this.snappedAnswerPreviews.splice(key, 1);
+    },
+
+    submit() {
+      if (this.isSnappedAnswer) {
+        if (this.snappedAnswers.length > 0) {
+          this.$emit('snappedAnswer', this.snappedAnswers)
+          this.$emit('submit', this.remarks)
+        } else {
+          this.$emit('error', {
+            status: true,
+            message: 'Please snap an answer!'
+          })
+        }
+      }
+
+      if (this.isWrittenAnswer) {
+        this.$emit('submit', this.remarks)
+      }
+
+    },
+
+
+  },
+  mounted() {
+
+    if (this.isSnappedAnswer) {
+      this.generateSnappedAnswerPreview(this.answer.content)
+    }
+  },
+  created() {
+    if (!this.hasAnswerContent) {
+      router.push({name: 'student.assignments.show'})
+    }
+  },
+  components: {
+    CropIcon,
+    ArrowBackIcon,
+    PageHeaderThree,
+    DashboardLayout, Modal, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo,
+    FontAwesomeIcon,
+    VueCropper
+  }
+}
+</script>
+
+<style>
+</style>

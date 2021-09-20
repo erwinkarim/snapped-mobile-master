@@ -10,6 +10,18 @@ Deployment: [Vercel](https://vercel.com/bbv)
 npm install
 ```
 
+### Environment variables (.env)
+```
+NODE_ENV=
+VUE_APP_URL=
+VUE_APP_TITLE=
+VUE_APP_BACKEND_ENDPOINT=
+```
+
+### Install FabricJS with Touch Gestures
+Replace default [fabric.js file]((../node_modules/fabric/dist/fabric.js)) with custom build file.
+Get custom build with gesture from [here](http://fabricjs.com/build/).
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -18,11 +30,22 @@ npm run serve
 ### Compiles and minifies for production
 ```
 npm run build
-
-### Processes CSS, including extensions from tailwind.config.js
-```
 npm run build:styles
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Implementing integration with Google Classroom.
+
+1) Get an OAuth client ID from Google Developers Console
+
+```
+Redirect URI: {frontend_domain}/auth/google/callback
+```
+
+2) Update backend's .env with values from Google oAuth Client generated
+
+```
+GOOGLE_APP_ID={ App ID }
+GOOGLE_CLIENT_ID={ Client ID }
+GOOGLE_CLIENT_SECRET={ Client secret }
+GOOGLE_REDIRECT={frontend_domain}/auth/google/callback
+```

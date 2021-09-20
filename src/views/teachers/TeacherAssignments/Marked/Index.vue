@@ -1,12 +1,15 @@
 <template>
+
 </template>
 
 <script>
 
+
 export default {
-  name: "AssignmentCalendar",
+  name: "Index",
 }
 </script>
 
 <style scoped>
+
 </style>

@@ -24,7 +24,7 @@ import RadialProgressBar from 'vue-radial-progress'
 export default {
   name: "CircleProgressBar",
   props: {
-    displayValue: String,
+    displayValue: [String, Number],
     diameter : Number,
     completedSteps: Number,
     totalSteps: Number,

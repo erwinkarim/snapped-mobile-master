@@ -1,10 +1,14 @@
 <template>
-  <section id="bottom-navigation"
-           class="md:hidden block fixed inset-x-0 border-t-1/4 bottom-0 z-10 shadow bg-white h-14">
+  <section id="bottom-navigation">
 
-    <div id="tabs" class="flex flex-row h-full items-center justify-around">
-      <router-link :to="{name: tab.routeName}" :key="tab.routeName" v-for="tab in tabs" class=" w-1/5 h-3/4 pt-1 flex flex-row justify-center items-center" exact>
-        <div class="w-5/7">
+    <div id="tabs" class="flex flex-row md:max-w-2xl h-full items-center justify-around mx-auto md:w-6/7">
+      <router-link v-for="tab in tabs"
+                   :key="tab.routeName"
+                   :to="{name: tab.routeName}"
+                   class=" w-1/5 pt-1 flex flex-row justify-center items-center"
+                   exact
+      >
+        <div class="w-5/7 md:w-4/7">
           <bottom-navbar-icon-base :tab-name="tab.tabName" :icon="tab.icon" />
         </div>
       </router-link>

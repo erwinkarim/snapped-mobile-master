@@ -7,13 +7,14 @@ import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
 import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
 import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
 import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
-import TeacherAssignments from "@/views/teachers/TeacherAssignments/TeacherAssignments";
+import TeacherAssignments from "@/views/teachers/TeacherAssignments/Index/TeacherAssignments";
 import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
+import App from "@/App";
 
 export default  {
 
     path: '/teacher',
-    component: DashboardLayout,
+    component: App,
     children: [
 
         /* HOME */
@@ -41,6 +42,7 @@ export default  {
             path: 'class/:classID/details',
             name: 'teacher.class.details',
             component: TeacherClassDetails,
+            props: true,
             meta: {
                 checkAuth: 'true',
                 checkRole: 'Teacher'
@@ -56,42 +58,6 @@ export default  {
                 checkAuth: 'true',
                 checkRole: 'Teacher'
             },
-        },
-        {
-            path: 'student/:studentID',
-            component: StudentDetails,
-            children: [
-                {
-                    path: 'show',
-                    name: 'teacher.student.show',
-                    component: StudentBadges,
-                    meta: {
-                        checkAuth: 'true',
-                        checkRole: 'Teacher'
-                    },
-                    props: true,
-                },
-                {
-                    path: 'assignments',
-                    name: 'teacher.student.show.assignments',
-                    component: StudentAssignments,
-                    meta: {
-                        checkAuth: 'true',
-                        checkRole: 'Teacher'
-                    },
-                    props: true
-                },
-                {
-                    path: 'overview',
-                    name: 'teacher.student.show.overview',
-                    component: StudentOverview,
-                    props: true,
-                    meta: {
-                        checkAuth: 'true',
-                        checkRole: 'Teacher'
-                    },
-                }
-            ]
         },
 
         /*  ASSIGNMENTS */

@@ -1,7 +1,9 @@
 <template>
-  <div class="px-5">
-    <div :key="assignment.id" v-for="assignment in assignments"
-         class="mb-3 max-w-sm h-28 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3">
+  <div class="px-5 md:mt-4">
+    <router-link v-for="assignment in assignments"
+                 :key="assignment.id"
+                 :to="{name: 'teacher.assignments.show', params: { assignmentID: assignment.id }}"
+         class="mb-3 max-w-sm md:max-w-xl md:w-3/4 md:mx-auto rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3">
 
       <div class="">
         <assignment-score-circle
@@ -26,7 +28,7 @@
       </div>
 
 
-    </div>
+    </router-link>
   </div>
 </template>
 
@@ -36,11 +38,14 @@ import StudentRepository from "@/repositories/StudentRepository";
 import moment from "moment";
 import CircleProgressBar from "@/components/CircleProgressBar";
 import AssignmentScoreCircle from "@/views/students/StudentDetails/components/AssignmentScoreCircle";
+import router from "@/router";
 
 export default {
   name: "StudentAssignments",
   components: {AssignmentScoreCircle, CircleProgressBar},
   props: {
+    userRole: String,
+    isAuthStudent:Boolean,
     studentID:  [String, Number],
   },
   data() {
@@ -53,9 +58,6 @@ export default {
       // data
       assignments: [],
     }
-  },
-  created() {
-    this.fetchData()
   },
   watch: {
     '$route': 'fetchData',
@@ -72,12 +74,17 @@ export default {
             this.loading = false
 
           })
-          .catch(err => {
-            console.log(err)
-          })
     },
     getHumanDate(datetime) {
       return moment(datetime, "YYYY-MM-DD hh:mm:ss").format("DD MMMM YYYY")
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
+  created() {
+    if (this.userRole !== 'Teacher' && !this.isAuthStudent ) {
+      router.push({name:'student.profile.show'})
     }
   }
 }

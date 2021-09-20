@@ -1,29 +1,28 @@
 <template>
-  <div class="mt-8 mb-4">
+  <div class="mt-8 mb-32">
     <section-title class="text-left" title="Personal Information"/>
     <div class="mt-5">
-      <div class="flex flex-row text-xs justify-between py-1">
-        <div class="text-left text-purple-secondary">
+      <div class="flex flex-row text-xs justify-between w-full py-1">
+        <div class="text-left text-purple-secondary w-2/5">
           School ID
         </div>
-        <div class="text-right text-purple-primary">
+        <div class="text-right text-purple-primary w-4/5 truncate">
           {{ schoolID }}
         </div>
       </div>
-      <div class="flex flex-row text-xs justify-between  py-1">
-        <div class="text-left text-purple-secondary">
+      <div class="flex flex-row text-xs justify-between w-full py-1">
+        <div class="text-left text-purple-secondary w-2/5">
           Email
         </div>
-        <div class="text-right text-purple-primary">
+        <div class="text-right text-purple-primary w-4/5 truncate">
           {{ email }}
-
         </div>
       </div>
-      <div class="flex flex-row text-xs justify-between  py-1">
-        <div class="text-left text-purple-secondary">
+      <div class="flex flex-row text-xs justify-between w-full py-1">
+        <div class="text-left text-purple-secondary w-2/5">
           Contact Number
         </div>
-        <div class="text-right text-purple-primary">
+        <div class="text-right text-purple-primary w-4/5 truncate">
           {{ contactNum }}
         </div>
       </div>
@@ -64,7 +63,6 @@ export default {
   },
   methods: {
     updateDate() {
-      console.log('test')
 
       if (typeof this.details !== "undefined") {
         this.schoolID = this.details.school_id

@@ -2,32 +2,17 @@
   <div class="w-full">
     <div v-my-swiper="swiperOption">
       <div class="swiper-wrapper">
-        <div class="swiper-slide" :key="item.assignmentID" v-for="item in assignments">
 
-          <div class="max-w-sm h-30 rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-col px-3 pt-5 pb-3">
-            <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">{{ item.title }}</div>
-
-            <div class="text-left text-purple-primary text-px-10 truncate pr-10">{{ item.description }}</div>
-
-            <div class="flex flex-row">
-
-              <div class="flex flex-row w-3/4 text-left text-px-10 text-purple-secondary">
-                <div class="w-1/4 truncate"> {{ item.subjectName }}</div>
-                <div class="w-1/4  truncate mx-1"> {{ item.classroomName }}</div>
-                <div class="w-2/4"> {{ getHumanDate(item.dueDatetime) }}</div>
-              </div>
-
-              <div class="w-1/4 bg-purple-secondary rounded-full">
-
-              </div>
-            </div>
-
-          </div>
-        </div>
+        <assignment-card
+            v-for="assignment in assignments"
+            :key="assignment.assignmentID"
+            :assignment="assignment"
+            :route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
+            :description-lines="2"
+            class="mt-4 swiper-slide h-32 min-h-1/6"
+        />
       </div>
       <div class="swiper-pagination"></div>
-      <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
-      <!--      <div class="swiper-button-next" slot="button-next"></div>-->
     </div>
   </div>
 </template>
@@ -37,9 +22,12 @@ import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import 'swiper/swiper-bundle.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from 'moment'
+import AssignmentRepository from "@/repositories/AssignmentRepository";
+import AssignmentCard from "@/components/AssignmentCard";
 
 export default {
   components: {
+    AssignmentCard
 
   },
   directives: {
@@ -47,6 +35,7 @@ export default {
   },
   data() {
     return {
+      numOfAssignments: 0,
       nowDatetime: '',
       assignments: [],
       swiperOption: {
@@ -71,23 +60,31 @@ export default {
       }
     }
   },
+  watch: {
+    'numOfAssignments' : 'emitNumOfAssignments'
+  },
   methods: {
     getNowDatetime() {
       this.nowDatetime = moment().format()
     },
+    emitNumOfAssignments () {
+      this.$emit('numOfAssignments', this.numOfAssignments)
+    },
     getAssignments: function () {
 
-      TeacherRepository.getTeacherAssignments()
+      AssignmentRepository.active()
           .then(response => {
 
             const data = response.data.data
+
+            this.numOfAssignments = data.length;
 
             for (let i = 0; i < data.length; i++) {
 
               let item = data[i];
 
               let assignmentDetail = {
-                assignmentID: item.id,
+                assignmentID: item.assignment_id,
                 subjectName: item.subject_name,
                 classroomName: item.classroom_name,
                 title: item.title,

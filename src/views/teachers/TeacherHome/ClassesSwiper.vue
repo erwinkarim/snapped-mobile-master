@@ -10,20 +10,23 @@
                 <ProfilePhotoStacked/>
               </icon-base>
 
-              <div class="text-left text-px-10 ml-1 mt-2 text-purple-secondary">
+              <div class="text-left text-px-10 ml-1 mt-3 text-purple-secondary">
                 <span class="font-bold text-xs">{{ item.numOfStudents }}</span> Students
+              </div>
+
+              <!-- Num of Active Assignments -->
+              <div class="text-left text-px-10 ml-1 mt-1 text-purple-secondary">
+                <span class="font-bold text-xs mr-1">{{ item.numOfActiveAssignments }}</span> Active Assignments
               </div>
             </div>
 
-            <div class="flex flex-row mt-4 text-left w-full items-end">
-              <div class="text-md flex-grow pb-2">
+            <div class="flex flex-row mt-4 text-left w-full items-start justify-between">
+              <div class="text-sm md:text-md pb-2 w-4/5 md:w-6/7 truncate">
                 <span class="truncate">{{ item.className }} </span>
               </div>
-              <div v-if="item.isHomeroom === 'true'">
-                <icon-base width="28" height="50" icon-name="app-logo" icon-color="white" view-box="-5 5 27 27">
+                <icon-base-two class="w-1/5 md:w-1/7" v-if="item.isHomeroom === true">
                   <BookmarkIcon/>
-                </icon-base>
-              </div>
+                </icon-base-two>
             </div>
 
           </div>
@@ -47,10 +50,11 @@ import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import router from "@/router";
+import IconBaseTwo from "@/components/IconBaseTwo";
 
 
 export default {
-  components: {ProfilePhotoStacked, BookmarkIcon, IconBase, StackedProfilePhoto},
+  components: {IconBaseTwo, ProfilePhotoStacked, BookmarkIcon, IconBase, StackedProfilePhoto},
   directives: {
     mySwiper: directive
   },
@@ -61,7 +65,7 @@ export default {
         initialSlide: 0,
         direction: 'horizontal',
         speed: 200,
-        slidesPerView: 2.3,
+        slidesPerView: 2.2,
         spaceBetween: 15,
         freeMode: false,
         loop: false,
@@ -94,7 +98,8 @@ export default {
                 classID : item.class_id,
                 className: item.class_name,
                 numOfStudents: item.num_of_students,
-                isHomeroom : item.homeroom
+                isHomeroom : item.homeroom,
+                numOfActiveAssignments: item.num_of_active_assignments
               }
 
               this.classes.push(classDetail);
