@@ -551,21 +551,26 @@ export default {
             state.nowMarking.canvas.main.index.discardActiveObject().renderAll()
         },
 
-        setInitialCanvasDimensions(state) {
+        setInitialCanvasDimensions(state, containerWidth, containerHeight) {
 
             // Determine canvas dimensions
-            let canvasWidth = 0.9 * window.innerWidth;
-            if (window.innerWidth > 700) {
-                if (window.innerWidth > 1000) {
-                    canvasWidth = 0.5 * window.innerWidth;
-                } else {
-                    canvasWidth = 0.65 * window.innerWidth;
-                }
-            }
+            let canvasWidth = 0.9 * containerWidth;
+            // let canvasWidth = 0.9 * window.innerWidth;
+            // if (window.innerWidth > 700) {
+            //     if (window.innerWidth > 1000) {
+            //         canvasWidth = 0.9 * containerWidth;
+                    // canvasWidth = 0.5 * window.innerWidth;
+                // } else {
+                //     canvasWidth = 0.9 * containerWidth;
+                    // canvasWidth = 0.65 * window.innerWidth;
+            //     }
+            // }
 
             state.nowMarking.canvas.main.dimensions = {
-                height: 0.75 * window.innerHeight,
-                width: 0.9 * window.innerWidth
+                height: containerHeight,
+                width: canvasWidth
+                // height: 0.75 * window.innerHeight,
+                // width: 0.9 * window.innerWidth
             }
 
         },
@@ -1049,8 +1054,10 @@ export default {
             // let oldTop = state.nowMarking.canvas.main.dimensions.height / 2;
             // let oldLeft = window.innerWidth / 2;
 
-            let oldTop = window.innerWidth / 2;
-            let oldLeft = window.innerWidth / 2;
+            let oldTop = state.nowMarking.canvas.main.dimensions.width / 2;
+            let oldLeft = state.nowMarking.canvas.main.dimensions.width / 2;
+            // let oldTop = window.innerWidth / 2;
+            // let oldLeft = window.innerWidth / 2;
 
 
             let textBox = new fabric.Textbox('', {
@@ -1059,7 +1066,8 @@ export default {
                 textAlign: "center",
                 fontFamily: "Segoe UI",
                 top: oldTop,
-                left: window.innerWidth / 2,
+                left: state.nowMarking.canvas.main.dimensions.width / 2,
+                // left: window.innerWidth / 2,
                 fontSize: 24,
                 fill: "#F53B57",
                 lockUniScaling: true
@@ -1082,7 +1090,8 @@ export default {
 
 
                 this.top = state.nowMarking.canvas.main.dimensions.height / 2;
-                this.left = window.innerWidth / 2;
+                this.left = state.nowMarking.canvas.main.dimensions.width / 2;
+                // this.left = window.innerWidth / 2;
 
             }).on("editing:exited", function () {
                 this.top = oldTop;

@@ -1,5 +1,5 @@
 <template>
-  <div :class="containerClass"
+  <div :class="containerClass" ref="container"
        class="h-full md:max-w-xl mx-auto"
   >
 
@@ -172,7 +172,8 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit('teacherMarking/setInitialCanvasDimensions')
+    // this.$store.commit('teacherMarking/setInitialCanvasDimensions')
+    this.$store.commit('teacherMarking/setInitialCanvasDimensions', this.$refs.container.clientWidth, this.$refs.container.clientHeight)
     this.$store.dispatch('teacherMarking/fetchData', this.submissionID)
         .then(response => {
           this.$store.dispatch("teacherMarking/bulkConvertSubmissionsToDataURL")

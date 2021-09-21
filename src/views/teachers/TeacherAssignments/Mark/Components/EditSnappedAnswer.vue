@@ -1,7 +1,7 @@
 <template>
   <div class="relative top-24 md:top-30 min-h-90vh w-full h-full relative md:max-w-xl bg-black-primary">
     <div :style="canvasContainerStyle"
-         class=" absolute h-full object-cover top-0 z-50 left-5 w-9/10 mx-auto bg-black-primary"
+         class=" absolute h-full object-cover top-0 z-50 left-5 w-9/10 mx-auto bg-black-primary overflow-auto"
     >
       <canvas class="absolute" id="canvas_snapped_answer" crossOrigin="Anonymous"/>
     </div>
