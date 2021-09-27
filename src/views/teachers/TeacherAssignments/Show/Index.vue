@@ -82,7 +82,7 @@
             />
 
             <!-- Submissions -->
-            <div class="mt-8 px-8 mb-24" v-if="!isPreviewing">
+            <div class="mt-8 px-8 mb-8" v-if="!isPreviewing">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
                   Submissions
@@ -103,7 +103,27 @@
               <div v-else class="text-purple-secondary text-xs-plus text-left mt-4">
                 No ongoing submissions at the moment.
               </div>
+            </div>
 
+            <!-- Not Yet Submitted -->
+            <div class="mt-4 px-8 mb-24" v-if="!isPreviewing && hasNotSubmitted">
+              <div class="flex flex-row justify-between text-purple-primary font-bold">
+                <div>
+                  Not Submitted
+                </div>
+                <div v-if="meta.totalNotSubmitted && meta.totalStudents" class="tracking-wide">
+                  {{ meta.totalNotSubmitted }}/{{ meta.totalStudents }}
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <unsubmitted-card
+                        v-for="submission in not_submitted"
+                        :key="submission.student_id"
+                        :submission="submission"
+                        :meta="meta" class="mb-3"
+                />
+              </div>
             </div>
 
           </div>
@@ -135,6 +155,7 @@ import QuestionPreviewSwiper from "@/components/QuestionPreviewSwiper";
 import CountdownTimer from "@/components/CountdownTimer";
 import TextMultilineTruncate from "@/components/TextMultilineTruncate";
 import AssignmentSubmissionCard from "@/components/AssignmentSubmissionCard";
+import UnsubmittedCard from "../../../../components/UnsubmittedCard";
 import CameraIcon from "@/components/icons/CameraIcon";
 import PenIcon from "@/components/icons/PenIcon";
 import DashboardLayout from "@/views/layout/DashboardLayout";
@@ -185,13 +206,19 @@ export default {
         subjectID: null,
         subjectName: null,
         totalSubmissions: null,
-        totalStudents: null
-      }
+        totalStudents: null,
+        totalNotSubmitted: null
+      },
+      not_submitted: []
     }
   },
   computed: {
     hasSubmissions: function () {
       return Array.isArray(this.submissions) && this.submissions.length > 0;
+    },
+
+    hasNotSubmitted: function(){
+      return Array.isArray(this.not_submitted) && this.not_submitted.length > 0;
     },
 
     hasWrittenQuestion: function () {
@@ -239,6 +266,7 @@ export default {
               this.meta.subjectName = data.assignment_details.subject_name;
               this.meta.totalSubmissions = data.total_of_submissions;
               this.meta.totalStudents = data.total_of_students;
+              this.meta.totalNotSubmitted = data.not_yet_submitted.length;
 
               // Submission
 
@@ -259,6 +287,21 @@ export default {
                 }
 
                 this.submissions.push(details)
+              }
+
+              // Not Yet Submitted
+
+              for (let i = 0; i < data.not_yet_submitted.length; i++) {
+
+                let not_submitted = data.not_yet_submitted[i];
+
+                let details = {
+                  studentID: not_submitted.student_id,
+                  studentName: not_submitted.student_name,
+                  studentGender: not_submitted.student_gender,
+                }
+
+                this.not_submitted.push(details)
               }
             }
 
@@ -287,6 +330,7 @@ export default {
     ArrowBackIcon,
     PageHeaderThree,
     AssignmentQuestionCard,
+    UnsubmittedCard,
     QuestionPreviewSwiper,
     CountdownTimer,
     TextMultilineTruncate,

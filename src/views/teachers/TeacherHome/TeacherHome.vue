@@ -117,14 +117,14 @@ export default {
           .then(response => {
 
             if (response.data.success) {
-              this.numOfPublishedAssignments = response.data.data.length;
+              this.numOfPublishedAssignments = response.data.meta.total;
             }
           })
 
       TeacherRepository.getSubmissions()
           .then(response => {
             if (response.data.success) {
-              this.numOfSubmissions = response.data.data.length;
+              this.numOfSubmissions = response.data.meta.total;
             }
           })
 
