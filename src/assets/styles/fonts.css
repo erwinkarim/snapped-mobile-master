@@ -1,0 +1,5 @@
+@font-face {
+    font-family: "sf-pro";
+    src: local("sf-pro"),
+url('./src/assets/fonts/sf-pro-display.ttf') format("truetype");
+}
