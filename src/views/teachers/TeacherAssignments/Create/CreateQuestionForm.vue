@@ -35,7 +35,7 @@
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
           class="flex -mx-1 mb-4"
       >
-        <div class="px-1 w-1/2 h-12">
+        <div class="px-1 w-1/2 h-28">
           <button @click="$store.dispatch('teacherCreateAssignment/beginWritingQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
@@ -69,6 +69,25 @@
             >
           </div>
         </label>
+      </div>
+      <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
+          class="flex -mx-1"
+      >
+        <!-- zoom meeting-->
+        <div class="px-1 w-full h-12">
+          <button @click="$store.dispatch('teacherCreateAssignment/beginZoomMeeting')"
+                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-1 justify-center py-4">
+              <icon-base-two class="w-12">
+                <camera-icon class="w-12"/>
+              </icon-base-two>
+            </div>
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Zoom
+            </div>
+          </button>
+        </div>
       </div>
 
       <!-- FORM: Written Question -->
@@ -173,6 +192,125 @@
           </label>
         </div>
       </div>
+
+      <!-- FORM: Zoom Question -->
+      <div v-if="$store.state.teacherCreateAssignment.states.isCreatingZoomMeeting">
+        <div class="flex -mx-1 mb-4" >
+          <!-- Join / leave meeting -->
+          <div class="px-1 w-1/2 h-28">
+            <button @click="createZoomMeeting"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <phone-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                New
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/2 h-28">
+            <button @click="leaveZoomMeeting"
+                    class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <trash-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Leave
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex -mx-1 mb-4" >
+          <!-- video canvas -->
+          <div class="px-1 w-full">
+            <!--video id="self-view-video" width="854" height="480"></video-->
+            <canvas class="border-2 border-black" id="self-view-canvas" width="854" height="480"></canvas>
+          </div>
+        </div>
+
+        <div class="flex -mx-1 mb-4" >
+          <!-- camera and mic controls -->
+          <div class="px-1 w-1/2 h-28">
+            <button @click="toggleVideoButton"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <camera-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Camera
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/2 h-28">
+            <button @click="toggleMicButton"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <pen-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Mic
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex -mx-1 mb-4" >
+          <!-- recording controls -->
+          <div class="px-1 w-1/2 h-28">
+            <button @click="startRecording"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <camera-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Rec Start
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/2 h-28">
+            <button @click="stopRecording"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <camera-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Rec Stop
+              </div>
+            </button>
+          </div>
+        </div>
+
+
+        <div class="flex -mx-1 mb-4" >
+          <p>recording gallery here</p>
+        </div>
+        <div id="video-preview-gallery" class="flex -mx-1 mb-4" >
+        </div>
+
+        <div class="flex -mx-1 mb-4" >
+          <p>Streaming details here:</p>
+        </div>
+
+      </div>
     </div>
 
 
@@ -211,8 +349,20 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
 import PenIcon from "@/components/icons/PenIcon";
 import CropIcon from "@/components/icons/CropIcon";
+import PhoneIcon from "@/components/icons/PhoneIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+import ZoomVideo from '@zoom/videosdk';
+import KJUR from 'jsrsasign';
+
+let stream; // zoom stream
+const client = ZoomVideo.createClient(); // zoom client
+let mc = null; // local media record to record zoom stream (theorically)
+let ms = null;
+let chunks = [];
+let mediaStream = null;
 
 export default {
   name: "CreateQuestionForm",
@@ -231,9 +381,175 @@ export default {
       }
 
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
+    },
+    createZoomMeeting(e) {
+      //happens when create a zoom meeting clicked
+
+      console.log('create a zoom meeting');
+      client.init('en-US', 'CDN');
+
+      //create session
+      // 1. generate jwt
+
+      console.log('generate jwt');
+      const iat = Math.round((new Date().getTime() - 30000) / 1000)
+      const exp = iat + 60 * 60 * 2
+
+      const oHeader = { alg: 'HS256', typ: 'JWT' }
+
+      const oPayload = {
+        app_key: process.env.VUE_APP_ZOOM_VIDEO_SDK_KEY,
+        tpc: 'test',
+        version: 1,
+        role_type: 1,
+        iat: iat,
+        exp: exp,
+        pwd: 'password'
+      }
+
+      const sHeader = JSON.stringify(oHeader)
+      const sPayload = JSON.stringify(oPayload)
+      const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, process.env.VUE_APP_ZOOM_VIDEO_SDK_SECRET);
+      console.log('signature:', signature);
+
+      // 2. actually create the session
+      console.log('create a zoom session');
+      client.join('test', signature, 'erwinkarim@gmail.com', 'password').then(() => {
+        console.log('join success');
+        stream = client.getMediaStream()
+
+        console.log('stream', stream);
+        console.log('client', client);
+        console.log('sessionInfo', client.getSessionInfo());
+        console.log('clientinfo', client.getCurrentUserInfo().userId);
+      }).catch((error) => {
+        console.log('join failed');
+        console.log(error)
+      })
+
+    },
+    leaveZoomMeeting(e) {
+      // leave zoom meeting
+      client.leave(true);
+
+
+      console.log('leave success');
+    },
+    async toggleVideoButton(e) {
+
+      var mcstream = null;
+
+      try {
+        console.log('video start');
+        console.log('client', client);
+        await stream.startVideo();
+        await stream.renderVideo(
+          document.querySelector('#self-view-canvas'),
+          client.getCurrentUserInfo().userId,
+          854, 480, 0, 0, 3
+        );
+
+        //build up the media recorder
+        console.log('building media recorder');
+
+        // need to change this so can let go of the camera
+        navigator.mediaDevices.getUserMedia({ video: true }).then((mcstream) => {
+          console.log('mcstream', mcstream);
+
+          // mime type works differently in diffrent browsers
+          mc = new MediaRecorder(mcstream, {
+            audioBitsPerSecond : 128000, videoBitsPerSecond : 2500000, mimeType : 'video/webm;codecs=vp8'
+          });
+
+          mc.onstart = (e) => {
+            console.log('mc on start');
+          }
+
+          mc.onstop = (e) => {
+            console.log('mc on stop');
+
+            //collect all data and dump it
+            const blob = new Blob(chunks, {type: 'video/webm'});
+            chunks = [];
+
+            //put the blob in a video gallery
+            var url = URL.createObjectURL(blob);
+            console.log('url', url);
+            var videoTag = document.createElement('video');
+            videoTag.autoplay = false;
+            videoTag.controls = true;
+            videoTag.height = 480;
+            videoTag.width = 854;
+            videoTag.src = url;
+
+            document.querySelector('#video-preview-gallery').appendChild(videoTag);
+            // if revoke, the video won't show, so have to figure out how to dump from blob to a local file
+            // or an array of blobs, to hold the correct dataURL
+            // currently situation if you resume recording, doesn't work.
+            // URL.revokeObjectURL(url);
+
+          }
+
+          mc.ondataavailable = (e) => {
+            console.log('mc on dataavailable');
+
+            //pump data in the chunks array.
+            chunks.push(e.data);
+
+            // after stop `dataavilable` event run one more time
+            if (mc.state === 'recording') {
+                mc.stop();
+            }
+          }
+
+          console.log('mc creation successful', mc);
+        });
+
+      } catch (e) {
+        console.log('error starting video', e);
+      }
+    },
+    toggleMicButton(e){
+      console.log('toogle mic button');
+
+      // have to kill mc, because keeps the camera on for some reason
+
+      //stop video for now; destory mc
+      stream.stopVideo();
+
+      //clear canvas
+      stream.clearVideoCanvas(document.querySelector('#self-view-canvas'));
+
+    },
+    startRecording(){
+      console.log('start record');
+
+      mc.start();
+      /*
+        plan:
+        1. use mediarecorder to capture
+      */
+
+    },
+    stopRecording(){
+      console.log('stop record');
+
+      let canvas = document.querySelector('#self-view-canvas');
+      mc.stop();
+
+      //dump the recording
+
+      /*
+        plan
+        1. use mediarecorder to capture
+        2. when stop, stop recording and push out captured data to a gallery
+      */
     }
   },
-  components: {CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo, VueCropper}
+  components: {
+    CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
+    VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon
+  }
 }
 </script>
 

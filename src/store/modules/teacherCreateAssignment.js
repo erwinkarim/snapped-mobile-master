@@ -12,6 +12,7 @@ export default {
         states: {
             isMain: true,
             isCreatingQuestion: false,
+            isCreatingZoomMeeting: false,
             isSelectingDuration: false,
             isSelectingQuestionType: false,
             isWritingQuestion: false,
@@ -21,7 +22,9 @@ export default {
             isShowingScheduler: false,
             isPublishing: false,
             isPublished: false,
-            isShowingError: false
+            isShowingError: false,
+            isVideoOn: false,
+            isMicOn: false,
         },
 
         // Main details to be submitted
@@ -78,6 +81,7 @@ export default {
         cancelCreatingQuestionMode(state) {
             state.states.isMain = true;
             state.states.isCreatingQuestion = false;
+            state.states.isCreatingZoomMeeting = false;
             state.states.isSelectingQuestionType = false;
             state.states.isWritingQuestion = false;
             state.states.isSnappingQuestion = false;
@@ -104,6 +108,11 @@ export default {
         toggleWritingQuestionMode(state) {
             state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
             state.states.isWritingQuestion = !state.states.isWritingQuestion;
+        },
+
+        toogleZoomQuestionMode(state) {
+          state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
+          state.states.isCreatingZoomMeeting = !state.states.isCreatingZoomMeeting;
         },
 
         toggleSnappingQuestionMode(state) {
@@ -139,6 +148,16 @@ export default {
         toggleCroppingSnappedQuestionMode(state, key) {
             state.creatingQuestionDetails.snappedPreviews[key].preview = !state.creatingQuestionDetails.snappedPreviews[key].preview;
             state.creatingQuestionDetails.snappedPreviews[key].cropping = !state.creatingQuestionDetails.snappedPreviews[key].cropping;
+        },
+
+        toogleVideoButton(state,key) {
+          state.states.isVideoOn = !state.states.isVideoOn;
+          console.log('toogle video button');
+        },
+
+        toogleMicButton(state,key) {
+          state.states.isMicOn = !state.states.isMicOn;
+          console.log('toogle mic button');
         },
 
         saveQuestionToDraft(state) {
@@ -206,6 +225,7 @@ export default {
             state.states = {
                 isMain: true,
                 isCreatingQuestion: false,
+                isCreatingZoomMeeting: false,
                 isSelectingDuration: false,
                 isSelectingQuestionType: false,
                 isWritingQuestion: false,
@@ -273,6 +293,11 @@ export default {
         beginWritingQuestion({state, commit, getters}) {
             commit('toggleWritingQuestionMode')
             state.creatingQuestionDetails.type = 'written';
+        },
+
+        beginZoomMeeting({state, commit, getters}) {
+            commit('toogleZoomQuestionMode');
+            state.creatingQuestionDetails.type ='zoom';
         },
 
         saveWrittenQuestionToDraft({state, commit, getters}) {
