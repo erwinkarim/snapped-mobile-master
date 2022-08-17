@@ -308,6 +308,12 @@ export default {
                 this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
               }
 
+              if (data.assignment_details.recording_url){
+                this.assignment.recording_path = data.assignment_details.recording_url;
+              }
+
+              console.log('assignment', this.assignment);
+
               // Assignment meta
               this.meta.classroomID = data.assignment_details.classroom_id;
               this.meta.classroomName = data.assignment_details.classroom_name;

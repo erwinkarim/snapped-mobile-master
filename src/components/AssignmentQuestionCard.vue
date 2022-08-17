@@ -109,6 +109,22 @@
         />
       </div>
 
+      <!-- Zoom Question -->
+      <div v-if="hasZoomQuestion"
+           class="flex flex-col mt-8 text-purple-primary text-xs-plus mb-20"
+      >
+        <div v-if="!isPreviewing"
+             class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
+        >
+          <video controls height="640" width="854">
+            <!-- must ensure all recordings are in mp4 format -->
+            <source :src="assignment.recording_path" type="video/mp4" />
+            Your browser don't support video tag.
+          </video>
+        </div>
+
+      </div>
+
 
     </div>
   </div>
@@ -145,6 +161,11 @@ export default {
 
     hasSnappedQuestion: function () {
       return this.assignment.snap_question_paths !== undefined && this.assignment.snap_question_paths.length > 0;
+    },
+
+    hasZoomQuestion: function () {
+      console.log('asking hasZoomQuestion');
+      return this.assignment.recording_path !== undefined && this.assignment.recording_path.length > 0;
     },
 
     hasReadMore() {

@@ -216,11 +216,9 @@ export default {
     hasSubmissions: function () {
       return Array.isArray(this.submissions) && this.submissions.length > 0;
     },
-
     hasNotSubmitted: function(){
       return Array.isArray(this.not_submitted) && this.not_submitted.length > 0;
     },
-
     hasWrittenQuestion: function () {
       return this.assignment.written_question.title || this.assignment.written_question.description;
     },
@@ -228,11 +226,9 @@ export default {
     hasSnappedQuestion: function () {
       return this.assignment.snap_question_paths.length > 0;
     },
-
     swiperActiveSlideNumber() {
       return this.swiperDetails ? this.swiperDetails.activeSlideIndex + 1 : '-';
     },
-
     swiperSlidesCount() {
       return this.swiperDetails ? this.swiperDetails.slidesCount : 0;
     },
@@ -258,6 +254,12 @@ export default {
               if (data.assignment_details.snap_question_url) {
                 this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
               }
+
+              if (data.assignment_details.recording_url){
+                this.assignment.recording_path = data.assignment_details.recording_url;
+              }
+
+              console.log('assignment', this.assignment);
 
               // Assignment meta
               this.meta.classroomID = data.assignment_details.classroom_id;

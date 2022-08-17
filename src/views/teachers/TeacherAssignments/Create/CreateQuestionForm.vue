@@ -247,7 +247,7 @@
                 </icon-base-two>
               </div>
               <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Camera
+                Camera On
               </div>
             </button>
           </div>
@@ -261,7 +261,7 @@
                 </icon-base-two>
               </div>
               <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Mic
+                Camera Off
               </div>
             </button>
           </div>
@@ -415,7 +415,6 @@ export default {
       // 2. actually create the session
       console.log('create a zoom session');
       client.join('test', signature, 'erwinkarim@gmail.com', 'password').then(() => {
-        console.log('join success');
         stream = client.getMediaStream()
 
         console.log('stream', stream);
@@ -426,6 +425,8 @@ export default {
         console.log('join failed');
         console.log(error)
       })
+
+      console.log('join success');
 
     },
     leaveZoomMeeting(e) {
@@ -452,13 +453,27 @@ export default {
         //build up the media recorder
         console.log('building media recorder');
 
+        mcstream = await navigator.mediaDevices.getUserMedia({ video: true });
+
+        mc = new MediaRecorder(mcstream, {
+          audioBitsPerSecond : 128000, videoBitsPerSecond : 2500000, mimeType : 'video/webm;codecs=vp8'
+        });
+
+        mc.onstart = (e) => { console.log('mc onstart'); };
+        mc.onstop = (e) => { console.log('mc onstop'); };
+        mc.ondataavailable = (e) => { console.log('mc ondataavailable'); };
+
+        console.log('mc creation successful');
+        mcstream = null;
+
         // need to change this so can let go of the camera
+        /*
         navigator.mediaDevices.getUserMedia({ video: true }).then((mcstream) => {
           console.log('mcstream', mcstream);
 
           // mime type works differently in diffrent browsers
           mc = new MediaRecorder(mcstream, {
-            audioBitsPerSecond : 128000, videoBitsPerSecond : 2500000, mimeType : 'video/webm;codecs=vp8'
+            audioBitsPerSecond : 128000, videoBitsPerSecond : 2500000, mimeType : 'video/webm;codecs=vp9'
           });
 
           mc.onstart = (e) => {
@@ -504,6 +519,7 @@ export default {
 
           console.log('mc creation successful', mc);
         });
+        */
 
       } catch (e) {
         console.log('error starting video', e);
@@ -516,9 +532,12 @@ export default {
 
       //stop video for now; destory mc
       stream.stopVideo();
+      mc.stop();
+      mc = null;
 
       //clear canvas
       stream.clearVideoCanvas(document.querySelector('#self-view-canvas'));
+
 
     },
     startRecording(){
