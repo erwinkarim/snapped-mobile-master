@@ -4,6 +4,25 @@ import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
 import {get} from "v-calendar/src/utils/_";
 
+/*
+  state to handle assignment creations
+  1. question creation
+  the gist is ;-
+  creation question => creatingQuestionDetails
+
+  when press 'save' (in CreateQuestionForm.vue)
+  * save<XXX>ToDraf
+    * creatingQuestionDetails => questionDraft
+
+  when press 'save' again (in TeacherAssignments/Create/Index.vue)
+  * calls saveQuestion
+    * questionDraft => assignmentDetails.question
+    * questionDraft is cleared
+    * change the state from isCreatingQuestion to isWritingQuestion
+
+  when press publish
+  * sendData is called to push the question to the server/db
+*/
 export default {
     namespaced: true,
     state: () => ({
@@ -12,17 +31,19 @@ export default {
         states: {
             isMain: true,
             isCreatingQuestion: false,
-            isCreatingZoomMeeting: false,
+            isCreatingZoomQuestion: false,
             isSelectingDuration: false,
             isSelectingQuestionType: false,
             isWritingQuestion: false,
             isSnappingQuestion: false,
+            isZoomQuestion: false,
             isCroppingSnappedQuestion: false,
             isResettingQuestion: false,
             isShowingScheduler: false,
             isPublishing: false,
             isPublished: false,
             isShowingError: false,
+            isInZoomMeeting: false,
             isVideoOn: false,
             isMicOn: false,
         },
@@ -38,7 +59,8 @@ export default {
                 title: null,
                 writtenQuestion: null,
                 snappedQuestions: [],
-                snappedPreviews: []
+                snappedPreviews: [],
+                zoomMeetings: null
             },
             published_at: moment(),
         },
@@ -51,6 +73,7 @@ export default {
             writtenQuestion: null,
             snappedQuestions: [],
             snappedPreviews: [],
+            zoomMeetings: null,
         },
 
         // Currently creating question details. To be used instantaneous.
@@ -61,6 +84,7 @@ export default {
             writtenQuestion: null,
             snappedQuestions: [],
             snappedPreviews: [],
+            zoomMeetings: null,
         },
 
         selectables: {
@@ -81,10 +105,11 @@ export default {
         cancelCreatingQuestionMode(state) {
             state.states.isMain = true;
             state.states.isCreatingQuestion = false;
-            state.states.isCreatingZoomMeeting = false;
+            state.states.isCreatingZoomQuestion = false;
             state.states.isSelectingQuestionType = false;
             state.states.isWritingQuestion = false;
             state.states.isSnappingQuestion = false;
+            state.states.isZoomQuestion = false;
         },
 
         beginEditingQuestionMode(state, savedQuestionType) {
@@ -94,6 +119,7 @@ export default {
             state.states.isEditingQuestion = true;
 
             state.states.isSnappingQuestion = savedQuestionType === 'snapped';
+            state.states.isZoomQuestion = savedQuestionType === 'zoom';
         },
 
         beginEditingWrittenQuestionMode(state){
@@ -112,7 +138,7 @@ export default {
 
         toogleZoomQuestionMode(state) {
           state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
-          state.states.isCreatingZoomMeeting = !state.states.isCreatingZoomMeeting;
+          state.states.isCreatingZoomQuestion = !state.states.isCreatingZoomQuestion;
         },
 
         toggleSnappingQuestionMode(state) {
@@ -140,6 +166,11 @@ export default {
             state.states.isSelectingDuration = !state.states.isSelectingDuration;
         },
 
+        toggleIsInZoomMeeting(state) {
+          state.states.isInZoomMeeting = !state.states.isInZoomMeeting;
+
+        },
+
         toggleSnappedQuestionPreviewStatus(state, key) {
             state.creatingQuestionDetails.snappedPreviews[key].preview = !state.creatingQuestionDetails.snappedPreviews[key].preview;
             state.creatingQuestionDetails.snappedPreviews[key].cropping = false;
@@ -150,9 +181,9 @@ export default {
             state.creatingQuestionDetails.snappedPreviews[key].cropping = !state.creatingQuestionDetails.snappedPreviews[key].cropping;
         },
 
-        toogleVideoButton(state,key) {
+        toggleVideo(state) {
           state.states.isVideoOn = !state.states.isVideoOn;
-          console.log('toogle video button');
+          console.log('inside toggleVideo fn', state.states.isVideoOn);
         },
 
         toogleMicButton(state,key) {
@@ -160,16 +191,20 @@ export default {
           console.log('toogle mic button');
         },
 
+        // push creatingQuestionsDetails -> questionDraft
         saveQuestionToDraft(state) {
+          console.log('creatingQuestionDetails.zoomMeetings', state.creatingQuestionDetails.zoomMeetings);
             state.questionDraft = {
                 type: JSON.parse(JSON.stringify(state.creatingQuestionDetails.type)),
                 title: JSON.parse(JSON.stringify(state.creatingQuestionDetails.title)),
                 writtenQuestion: JSON.parse(JSON.stringify(state.creatingQuestionDetails.writtenQuestion)),
                 snappedQuestions: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedQuestions)),
                 snappedPreviews: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedPreviews)),
+                zoomMeetings: state.creatingQuestionDetails.zoomMeetings,
             }
         },
 
+        // push questionDraft -> assignmentDetails.question
         saveQuestionToAssignmentDetails(state) {
             state.assignmentDetails.question = {
                 type: JSON.parse(JSON.stringify(state.questionDraft.type)),
@@ -177,9 +212,11 @@ export default {
                 writtenQuestion: JSON.parse(JSON.stringify(state.questionDraft.writtenQuestion)),
                 snappedQuestions: JSON.parse(JSON.stringify(state.questionDraft.snappedQuestions)),
                 snappedPreviews: JSON.parse(JSON.stringify(state.questionDraft.snappedPreviews)),
+                zoomMeetings: state.questionDraft.zoomMeetings,
             }
         },
 
+        // set questionDraft and creatingQuestionDetails to null
         resetCreatingQuestion(state) {
 
             state.questionDraft = {
@@ -187,7 +224,8 @@ export default {
                 title: null,
                 writtenQuestion: null,
                 snappedQuestions: [],
-                snappedPreviews: []
+                snappedPreviews: [],
+                zoomMeetings: null
             }
 
             state.creatingQuestionDetails = {
@@ -195,10 +233,15 @@ export default {
                 title: null,
                 writtenQuestion: null,
                 snappedQuestions: [],
-                snappedPreviews: []
+                snappedPreviews: [],
+                zoomMeetings: null
             }
         },
 
+        /* push:
+          * assignmentDetails.question -> questionDraft
+          a* ssignmentDetails.question -> creatingQuestionDetails
+        */
         loadSavedQuestionForEdit(state, type) {
 
             state.questionDraft = {
@@ -206,7 +249,8 @@ export default {
                 title: JSON.parse(JSON.stringify(state.assignmentDetails.question.title)),
                 writtenQuestion: JSON.parse(JSON.stringify(state.assignmentDetails.question.writtenQuestion)),
                 snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
-                snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews))
+                snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews)),
+                zoomMeetings: state.assignmentDetails.question.zoomMeetings,
             }
 
             state.creatingQuestionDetails = {
@@ -214,11 +258,12 @@ export default {
                 title: JSON.parse(JSON.stringify(state.assignmentDetails.question.title)),
                 writtenQuestion: JSON.parse(JSON.stringify(state.assignmentDetails.question.writtenQuestion)),
                 snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
-                snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews))
+                snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews)),
+                zoomMeetings: state.assignmentDetails.question.zoomMeetings,
             }
         },
 
-
+        // init, basically everything to null.
         initialise(state) {
 
             // STATES
@@ -226,6 +271,7 @@ export default {
                 isMain: true,
                 isCreatingQuestion: false,
                 isCreatingZoomMeeting: false,
+                isInZoomMeeting: false,
                 isSelectingDuration: false,
                 isSelectingQuestionType: false,
                 isWritingQuestion: false,
@@ -248,7 +294,8 @@ export default {
                     type: null,
                     title: null,
                     writtenQuestion: null,
-                    snappedQuestions: []
+                    snappedQuestions: [],
+                    zoomeMeetings: null
                 },
                 published_at: moment(),
             }
@@ -261,6 +308,7 @@ export default {
                 writtenQuestion: null,
                 snappedQuestions: [],
                 snappedPreviews: [],
+                zoomMeetings: null
             }
 
             // Currently creating question details. To be used instantaneous.
@@ -271,6 +319,7 @@ export default {
                 writtenQuestion: null,
                 snappedQuestions: [],
                 snappedPreviews: [],
+                zoomMeetings: null,
             }
 
             state.selectables = {
@@ -295,7 +344,8 @@ export default {
             state.creatingQuestionDetails.type = 'written';
         },
 
-        beginZoomMeeting({state, commit, getters}) {
+        // triggered when user select zoom meeting question
+        beginWritingZoomQuestion({state, commit, getters}) {
             commit('toogleZoomQuestionMode');
             state.creatingQuestionDetails.type ='zoom';
         },
@@ -371,7 +421,6 @@ export default {
             });
         },
 
-
         saveCroppedSnappedQuestion({state, commit}, payload) {
 
             state.creatingQuestionDetails.snappedPreviews[payload.key].source = payload.dataURL
@@ -389,6 +438,28 @@ export default {
                 commit('resetCreatingQuestion')
                 commit('toggleSnappingQuestionMode')
             }
+        },
+
+        // handled when recording stops
+        // payload should be the zoom recording file in blob
+        handleZoomQuestion({state, commit}, payload) {
+          console.log('trigger when new video stored');
+
+          state.creatingQuestionDetails.zoomMeetings = payload;
+          console.log('payload', payload);
+        },
+
+        //pushing questionDetails.zoomMeetings to assignmentDetails.question
+        saveZoomQuestionToDraf({state, commit}) {
+          console.log('saving zoom question draf')
+
+          commit('saveQuestionToDraft');
+
+          if(state.creatingQuestionDetails.zoomMeetings) {
+            commit('toogleZoomQuestionMode');
+          } else {
+            commit('toggleShowingErrorMode');
+          }
         },
 
         // MODE: MODAL
@@ -497,6 +568,23 @@ export default {
                         }
                     }
 
+                    // if user opt to zoom question
+                    if (getters.creatingQuestionType === 'zoom') {
+                      console.log('saving zoom question');
+
+                      commit('saveQuestionToDraft');
+
+                      if (getters.hasZoomQuestionDraf) {
+                        commit('saveQuestionToAssignmentDetails');
+                        commit('resetCreatingQuestion')
+                        commit('toggleCreatingQuestionMode')
+                      } else {
+                        console.log('please record something');
+                      }
+
+                      // plan. sanitize and push to server
+                    }
+
                 } else {
                     console.log('please fill in title')
                 }
@@ -582,6 +670,7 @@ export default {
                         formData.append('snap_question[' + i + ']', file);
                     }
 
+                    // the part where actually save the assignment
                     Repository.post('/assignments/store',
                         formData,
                         {
@@ -655,7 +744,11 @@ export default {
         },
 
         hasSavedQuestion: (state) => {
-            return state.assignmentDetails.question.type && (state.assignmentDetails.question.writtenQuestion || state.assignmentDetails.question.snappedQuestions.length);
+          return state.assignmentDetails.question.type && (
+            state.assignmentDetails.question.writtenQuestion ||
+            state.assignmentDetails.question.snappedQuestions.length ||
+            state.assignmentDetails.question.zoomMeetings !== null
+          );
         },
 
         hasSavedDueDatetime: (state) => {
@@ -674,8 +767,22 @@ export default {
             return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
         },
 
+        hasZoomQuestionDraf(state){
+          return state.questionDraft.type ?
+            state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null :
+            false;
+        },
+
         hasErrors(state) {
             return state.errors.length || state.states.isShowingError
+        },
+
+        hasZoomMeeting(state) {
+          return state.states.isInZoomMeeting;
+        },
+
+        hasZoomVideo(state) {
+          return state.states.isVideoOn;
         }
 
     }

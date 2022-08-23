@@ -6,14 +6,8 @@ export default {
 
 
     all({
-            pageNum: pageNum,
-            perPage: perPage,
-            is_active: isActive,
-            date: date,
-            month: month,
-            year: year,
-            subjects: subjects
-        }) {
+      pageNum: pageNum, perPage: perPage, is_active: isActive, date: date, month: month, year: year, subjects: subjects
+    }) {
 
         if (!pageNum) pageNum = 1;
         if (!perPage) perPage = 50;
@@ -64,6 +58,7 @@ export default {
     },
 
     update(assignmentID, dueDateTime) {
+      console.log('push to server');
         return Repository.put(`${resource}/${assignmentID}/update`, {
             due_datetime: dueDateTime
         });

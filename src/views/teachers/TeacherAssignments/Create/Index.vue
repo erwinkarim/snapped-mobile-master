@@ -35,7 +35,8 @@
         </template>
         <template v-slot:rightAction>
           <button @click="$store.dispatch('teacherCreateAssignment/saveQuestion')"
-                  class="font-bold text-red-primary"
+            class="font-bold "
+            :disabled="$store.getters['teacherCreateAssignment/hasZoomMeeting']"
           >
             Save
           </button>
