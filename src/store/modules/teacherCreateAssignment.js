@@ -46,6 +46,9 @@ export default {
             isInZoomMeeting: false,
             isVideoOn: false,
             isMicOn: false,
+            isRecording: false,
+            isScreenShare: false,
+            meeting_id: null,
         },
 
         // Main details to be submitted
@@ -186,9 +189,18 @@ export default {
           console.log('inside toggleVideo fn', state.states.isVideoOn);
         },
 
-        toogleMicButton(state,key) {
+        toggleMic(state) {
           state.states.isMicOn = !state.states.isMicOn;
           console.log('toogle mic button');
+        },
+
+        toggleShareScreen(state) {
+          state.states.isScreenShare = !state.states.isScreenShare;
+          console.log('inside toggleShareScreen fn', state.states.isScreenShare);
+        },
+
+        toggleRecording(state) {
+            state.states.isRecording = !state.states.isRecording;
         },
 
         // push creatingQuestionsDetails -> questionDraft
@@ -263,6 +275,11 @@ export default {
             }
         },
 
+
+        setMeetingId(state, key) {
+          state.states.meeting_id = key;
+        },
+
         // init, basically everything to null.
         initialise(state) {
 
@@ -270,7 +287,7 @@ export default {
             state.states = {
                 isMain: true,
                 isCreatingQuestion: false,
-                isCreatingZoomMeeting: false,
+                isCreatingZoomQuestion: false,
                 isInZoomMeeting: false,
                 isSelectingDuration: false,
                 isSelectingQuestionType: false,
@@ -281,7 +298,13 @@ export default {
                 isShowingScheduler: false,
                 isPublishing: false,
                 isPublished: false,
-                isShowingError: false
+                isShowingError: false,
+                isInZoomMeeting: false,
+                isVideoOn: false,
+                isMicOn: false,
+                isScreenShare: false,
+                isRecording: false,
+                meeting_id: null,
             };
 
             // Main details to be submitted
@@ -637,13 +660,15 @@ export default {
             }
         }
         ,
-        sendData({state, commit, getters, dispatch}) {
+        // send data to the server
+        async sendData({state, commit, getters, dispatch}) {
 
             dispatch('checkForm');
 
             if (!getters.hasErrors) {
 
                 let counter = 0;
+                let zoom_meeting = null;
 
                 if (state.states.isShowingScheduler) {
                     commit('toggleShowingSchedulerMode')
@@ -652,6 +677,37 @@ export default {
                 commit('togglePublishingMode')
                 commit('toggleShowingSchedulerMode')
 
+                // from lavarel code, it seems push the video to the server first and to get meeting
+                // and then push the assignment  details
+
+                // pre-flight check: see if it's a zoom meeting video.
+                // if it's a zoom meeting, upload the video first and update assignment details
+                console.log('check if got zoom video');
+                if(state.assignmentDetails.question.type === 'zoom'){
+                  let formData = new FormData();
+                  const path = '/zoom-meeting/push_s3';
+                  let recUrl = state.assignmentDetails.question.zoomMeetings;
+                  console.log('recovering video from ', recUrl);
+
+                  console.log('getting the video file');
+                  let recBlob = await fetch(recUrl).then( r =>
+                    r.blob()).then(blobFile =>
+                      new File([blobFile], "test.webm", { type: "video/webm"})
+                  );
+
+                  formData.append('zoomMeetings', recBlob);
+
+                  await Repository.post(path, formData,   {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                  }).then( (res) => {
+                    zoom_meeting = res.data.zoom_meeting;
+                    console.log('res', res);
+                  });
+                }
+                console.log('done sending a zoom video', zoom_meeting);
+
+                console.log('pushing the assignment detail');
+                // push the assignment details for each class.
                 state.assignmentDetails.classroom_id.forEach((classroom, index) => {
 
                     let formData = new FormData();
@@ -664,6 +720,7 @@ export default {
                     formData.append('due_datetime', moment(state.assignmentDetails.due_datetime).format('YYYY-MM-DD HH:mm:ss'));
                     formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
                     formData.append('remarks', state.assignmentDetails.remarks ?? '');
+                    formData.append('recording_meeting_id', zoom_meeting.meeting_id);
 
                     for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
                         let file = state.assignmentDetails.question.snappedQuestions[i];
@@ -700,9 +757,86 @@ export default {
                             commit('toggleShowingErrorMode')
                         });
                 });
+
+                console.log('done sending the assignment to db');
             }
         }
         ,
+        testRecordMeeting({state, commit}){
+          // test the past where posting to '/zoom-meeting/store'
+          //const host = 'https://admin.gotsnapped.tech/api';
+          const host = 'http://localhost:8000/api';
+          const path = '/zoom-meeting/store';
+          const topic = "test meeting"
+          let formData = new FormData();
+
+          formData.append('topic', topic);
+          formData.append('agenda', topic);
+          formData.append('duration', '5');
+          formData.append('host_video', '1');
+          formData.append('participant_video', '1');
+
+
+          Repository.post(path, formData).then((res) => {
+            console.log('response', res);
+
+            console.log('data', res.data.data);
+            console.log('meetind_id', res.data.data.id);
+            commit('setMeetingId', res.data.data.id);
+
+            console.log('meeting_url', res.data.data.join_url);
+          })
+
+        },
+        testGetMeetingRecordings({state}){
+          // retrive meeting recordings from state.states.meeting_id
+          console.log('meeting_id is ', state.states.meeting_id);
+
+          if(state.states.meeting_id) {
+            const path = '/zoom-meeting/' + state.states.meeting_id + '/recordings';
+            console.log('getting recordings from ', path);
+            Repository.get(path).then( (res) => {
+              console.log('res', res);
+            })
+          }
+
+        },
+        async testSendRecordings({state }){
+          console.log('in testSendRecordings');
+          const path = '/zoom-meeting/push_s3';
+
+          /*
+            plan:-
+            for testing, see if i can push the file contents from
+            questionDetails.zoomMeetings to the server and eventually to s3.
+          */
+
+          //validation, ensure the zoomMeetings is populated
+          /*
+          if(!state.assignmentDetails.zoomMeetings){
+            console.log('plese record a video');
+          }
+          */
+
+          // build up formData
+          let formData = new FormData();
+          let recUrl = state.creatingQuestionDetails.zoomMeetings;
+          let recBlob = await fetch(recUrl).then( r =>
+            r.blob()).then(blobFile =>
+              new File([blobFile], "test.webm", { type: "video/webm"})
+          );
+
+
+          formData.append('zoomMeetings', recBlob);
+
+          Repository.post(path, formData,   {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then( (res) => {
+            console.log('res', res);
+          });
+        },
         getDetails: function () {
             TeacherRepository.getTeacherDetails()
                 .then(response => {
@@ -783,6 +917,18 @@ export default {
 
         hasZoomVideo(state) {
           return state.states.isVideoOn;
+        },
+
+        hasZoomMic(state) {
+          return state.states.isMicOn;
+        },
+
+        hasZoomScreenShare(state) {
+          return state.states.isScreenShare;
+        },
+
+        hasZoomRecording(state) {
+            return state.states.isRecording;
         }
 
     }

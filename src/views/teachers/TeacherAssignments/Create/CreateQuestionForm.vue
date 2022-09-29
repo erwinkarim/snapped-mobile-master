@@ -80,7 +80,7 @@
           >
             <div class="flex col-span-1 row-span-1 justify-center py-4">
               <icon-base-two class="w-12">
-                <camera-icon class="w-12"/>
+                <zoom-icon class="w-12"/>
               </icon-base-two>
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
@@ -194,133 +194,7 @@
       </div>
 
       <!-- FORM: Zoom Question -->
-      <div v-if="$store.state.teacherCreateAssignment.states.isCreatingZoomQuestion">
-        <div class="flex -mx-1 mb-4" >
-          <!-- Join / leave meeting -->
-          <div class="px-1 w-1/2 h-28">
-            <button @click="createZoomMeeting"
-              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            >
-              <div class="flex col-span-1 row-span-1 justify-center py-4">
-                <icon-base-two class="w-12">
-                  <phone-icon class="w-12"/>
-                </icon-base-two>
-              </div>
-              <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Join
-              </div>
-            </button>
-          </div>
-          <div class="px-1 w-1/2 h-28">
-            <button @click="leaveZoomMeeting"
-                    class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            >
-              <div class="flex col-span-1 row-span-1 justify-center py-4">
-                <icon-base-two class="w-12">
-                  <trash-icon class="w-12"/>
-                </icon-base-two>
-              </div>
-              <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Leave
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <div class="flex -mx-1 mb-4" >
-          <!-- video canvas -->
-          <div class="px-1 w-full">
-            <video id="self-view-video" class="h-auto" width="854"></video>
-            <canvas class="border-2 border-black h-auto" id="self-view-canvas" height="480" width="854"></canvas>
-          </div>
-        </div>
-
-        <div class="flex -mx-1 mb-4" >
-          <!-- camera and mic controls -->
-          <div class="px-1 w-1/2 h-28">
-            <button @click="toggleVideoButton"
-              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-            >
-              <div class="flex col-span-1 row-span-1 justify-center py-4">
-                <icon-base-two class="w-12">
-                  <camera-icon class="w-12"/>
-                </icon-base-two>
-              </div>
-              <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Camera On/Off
-              </div>
-            </button>
-          </div>
-          <div class="px-1 w-1/2 h-28">
-            <button @click="toggleMicButton"
-              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-            >
-              <div class="flex col-span-1 row-span-1 justify-center py-4">
-                <icon-base-two class="w-12">
-                  <pen-icon class="w-12"/>
-                </icon-base-two>
-              </div>
-              <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Mic On/Off
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <div class="flex -mx-1 mb-4" >
-          <!-- recording controls -->
-          <div class="px-1 w-1/2 h-28">
-            <button @click="startRecording"
-              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-            >
-              <div class="flex col-span-1 row-span-1 justify-center py-4">
-                <icon-base-two class="w-12">
-                  <camera-icon class="w-12"/>
-                </icon-base-two>
-              </div>
-              <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Rec Start
-              </div>
-            </button>
-          </div>
-          <div class="px-1 w-1/2 h-28">
-            <button @click="stopRecording"
-              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-            >
-              <div class="flex col-span-1 row-span-1 justify-center py-4">
-                <icon-base-two class="w-12">
-                  <camera-icon class="w-12"/>
-                </icon-base-two>
-              </div>
-              <div class="flex col-span-1 row-span-2 justify-center py-2">
-                Rec Stop
-              </div>
-            </button>
-          </div>
-        </div>
-
-
-        <div class="flex -mx-1 mb-4" >
-          <p>recording gallery here</p>
-        </div>
-        <div id="video-preview-gallery" class="flex -mx-1 mb-4" >
-          <div v-if="$store.state.teacherCreateAssignment.creatingQuestionDetails.zoomMeetings">
-            <video
-              width="854" height="480"
-              controls="" :src="$store.state.teacherCreateAssignment.creatingQuestionDetails.zoomMeetings">
-            </video>
-          </div>
-        </div>
-
-        <div class="flex -mx-1 mb-4" >
-          <p>Streaming details here:</p>
-        </div>
-
-      </div>
+      <ZoomQuestionForm />
     </div>
 
 
@@ -362,17 +236,13 @@ import CropIcon from "@/components/icons/CropIcon";
 import PhoneIcon from "@/components/icons/PhoneIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
+import ZoomIcon from "@/components/icons/ZoomIcon";
+import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
-import ZoomVideo from '@zoom/videosdk';
-import KJUR from 'jsrsasign';
+import ZoomQuestionForm from '@/components/ZoomQuestionForm';
 
-let stream; // zoom stream
-const client = ZoomVideo.createClient(); // zoom client
-let mc = null; // local media record to record zoom stream (theorically)
-let ms = null;
-let chunks = [];
-let mediaStream = null;
+
 
 export default {
   name: "CreateQuestionForm",
@@ -392,215 +262,11 @@ export default {
 
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
     },
-    async createZoomMeeting(e) {
-      //happens when create a zoom meeting clicked
-
-      console.log('create a zoom meeting');
-      client.init('en-US', 'CDN');
-
-      //create session
-      // 1. generate jwt
-
-      //console.log('generate jwt');
-      const iat = Math.round((new Date().getTime() - 30000) / 1000)
-      const exp = iat + 60 * 60 * 2
-
-      const oHeader = { alg: 'HS256', typ: 'JWT' }
-
-      const oPayload = {
-        app_key: process.env.VUE_APP_ZOOM_VIDEO_SDK_KEY,
-        tpc: 'session',
-        version: 1,
-        role_type: 1,
-        iat: iat,
-        exp: exp,
-        pwd: 'password'
-      }
-
-      const sHeader = JSON.stringify(oHeader)
-      const sPayload = JSON.stringify(oPayload)
-      const signature = KJUR.jws.JWS.sign('HS256', sHeader, sPayload, process.env.VUE_APP_ZOOM_VIDEO_SDK_SECRET);
-      //console.log('signature:', signature);
-
-      // 2. actually create the session
-      console.log('create a zoom session');
-      await client.join('session', signature, 'erwinkarim@gmail.com', 'password').then(() => {
-        stream = client.getMediaStream()
-
-        /*
-        console.log('stream', stream);
-        console.log('client', client);
-        console.log('sessionInfo', client.getSessionInfo());
-        console.log('clientinfo', client.getCurrentUserInfo().userId);
-        */
-      }).catch((error) => {
-        console.log('join failed; check connection or ad-blocks');
-        console.log(error)
-      })
-
-      console.log('join success');
-      this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
-    },
-    leaveZoomMeeting(e) {
-      // switch off camera and mic if on
-      if(this.$store.state.teacherCreateAssignment.states.isVideoOn){
-          this.stopZoomVideo(e);
-      }
-
-      // leave zoom meeting
-      client.leave(true);
-
-      console.log('leave success');
-      this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
-    },
-    async toggleVideoButton(e) {
-      var videoState = this.$store.state.teacherCreateAssignment.states.isVideoOn;
-
-      if (videoState){
-        // video is on, stop video
-        this.stopZoomVideo(e);
-      } else {
-        // video is off, start video
-        this.startZoomVideo(e);
-      }
-    },
-    async startZoomVideo(e) {
-      var mcstream = null;
-
-      try {
-        console.log('video start');
-        // await stream.startVideo();
-
-        // from zoom sdk docs
-        if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {
-          console.log('video started in chrome');
-          // if desktop Chrome or Edge (Chromium) with SharedArrayBuffer not enabled
-          await stream.startVideo({
-            videoElement: document.querySelector('#self-view-video')
-          });
-        } else {
-          // all other browsers and desktop Chrome or Edge (Chromium) with SharedArrayBuffer enabled
-          console.log('video started in firefox');
-          /*
-          await stream.startVideo(() => {
-            stream.renderVideo(
-              document.querySelector('#self-view-canvas'),
-              client.getCurrentUserInfo().userId,
-              854, 480, 0, 0, 3)
-          });
-          */
-          await stream.startVideo();
-          await stream.renderVideo(
-            document.querySelector('#self-view-canvas'),
-            client.getCurrentUserInfo().userId,
-            854, 480, 0, 0, 3
-          );
-        }
-
-        /*
-        await stream.renderVideo(
-          document.querySelector('#self-view-canvas'),
-          //document.querySelector('#self-view-video'),
-          client.getCurrentUserInfo().userId,
-          854, 480, 0, 0, 3
-        );
-        */
-
-        console.log('successfully rendered video');
-        this.$store.commit('teacherCreateAssignment/toggleVideo');
-
-        //build up the media recorder
-        console.log('building media recorder');
-
-        mcstream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-        mc = new MediaRecorder(mcstream, {
-          audioBitsPerSecond : 128000, videoBitsPerSecond : 2500000, mimeType : 'video/webm;codecs=vp8'
-        });
-
-        mc.onstart = (e) => { console.log('mc onstart'); };
-        mc.onstop = (e) => {
-          console.log('mc onstop');
-
-          //collect all data and dump it
-          const blob = new Blob(chunks, {type: 'video/webm'});
-          chunks = [];
-
-          //put the blob in a video gallery
-          var url = URL.createObjectURL(blob);
-          console.log('url', url);
-          var videoTag = document.createElement('video');
-          videoTag.autoplay = false;
-          videoTag.controls = true;
-          videoTag.height = 480;
-          videoTag.width = 854;
-          videoTag.src = url;
-
-          //always replace what's ever in the preview gallery
-          document.querySelector('#video-preview-gallery').textContent = '';
-          document.querySelector('#video-preview-gallery').appendChild(videoTag);
-
-
-          //trigger to push video content to questionDetails.zoomMeetings
-          this.$store.dispatch('teacherCreateAssignment/handleZoomQuestion', url);
-          // URL.revokeObjectURL(url);
-        };
-        mc.ondataavailable = (e) => {
-          console.log('mc ondataavailable');
-
-          //pump data in the chunks array.
-          chunks.push(e.data);
-
-          // after stop `dataavilable` event run one more time
-          if (mc.state === 'recording') {
-              mc.stop();
-          }
-        };
-
-        console.log('mc creation successful');
-        mcstream = null;
-
-      } catch (e) {
-        console.log('error starting video', e);
-      }
-
-    },
-    stopZoomVideo(e) {
-      // have to kill mc, because keeps the camera on for some reason
-
-      //stop video for now; destory mc
-      stream.stopVideo();
-
-      // have to check mc status or try catch to be safe.
-      if (mc.state ==="recording") {
-        mc.stop();
-      };
-
-      mc = null;
-
-      //clear canvas
-      //stream.clearVideoCanvas(document.querySelector('#self-view-canvas'));
-      stream.clearVideoCanvas(document.querySelector('#self-view-video'));
-
-      this.$store.commit('teacherCreateAssignment/toggleVideo');
-
-    },
-    toggleMicButton(e){
-      console.log('toggle the mic');
-    },
-    startRecording(){
-      console.log('start record');
-      mc.start();
-    },
-    stopRecording(){
-      console.log('stop record');
-
-      mc.stop();
-    }
   },
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
-    VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon
+    VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
+    MicrophoneIcon, ZoomQuestionForm,
   }
 }
 </script>
