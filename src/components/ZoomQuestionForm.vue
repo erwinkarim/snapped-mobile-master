@@ -293,7 +293,24 @@ export default {
             // decode for receiving audio stream (hear)
             safariAudioDecode = true
           }
-        }
+        };
+
+        if(window.safari !== undefined) {
+          // desktop Safari, check if desktop Safari audio has been initialized
+          if (safariAudioEncode && safariAudioDecode) {
+            // desktop Safari audio has been initialized
+            try {
+              // try to start audio automatically in Safari
+              stream.startAudio({ autoStartAudioInSafari: true })
+            } catch (error) {
+              // starting audio automatically in Safari failed, retry or handle error
+              console.log(error)
+            }
+          } else {
+            // desktop Safari audio has not been initialized, retry or handle error
+            console.log('safari audio has not finished initializing')
+          }
+        };
       })
 
       console.log('join success');
@@ -455,7 +472,23 @@ export default {
 
         // mic is off, turn on
         // additional steps for safari
-        stream.startAudio();
+        var isSafari = window.safari !== undefined
+
+        if(isSafari) {
+          // desktop Safari, check if desktop Safari audio has been initialized
+          if(safariAudioEncode && safariAudioDecode){
+            // desktop Safari audio has been initialized, continue to start audio
+            stream.startAudio()
+          } else {
+            // desktop Safari audio has not been initialized, retry or handle error
+            console.log('safari audio has not finished initializing')
+            this.status = 'Safari audio has not finished initializing. Please try again.';
+          }
+        } else {
+          // not desktop Safari, continue to start audio
+          stream.startAudio()
+        }
+        // stream.startAudio();
         
         // get audio track to tack it on mcstream
         let mic = await navigator.mediaDevices.getUserMedia({ audio: true });
