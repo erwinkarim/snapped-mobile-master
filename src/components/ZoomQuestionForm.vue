@@ -406,17 +406,21 @@ export default {
         // from zoom sdk docs
         if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {
           console.log('video started in chrome');
-          // if desktop Chrome or Edge (Chromium) with SharedArrayBuffer not enabled
+          // if desktop Chrome or Edge (Chromium) with SharedArrayBuffer enabled
           await stream.startVideo({
             videoElement: canvasHandler
           });
         } else {
-          // all other browsers and desktop Chrome or Edge (Chromium) with SharedArrayBuffer enabled
+          // all other browsers and desktop Chrome or Edge (Chromium) with SharedArrayBuffer not enabled
           console.log('video started in firefox');
+          console.log('canvasHandler', canvasHandler);
 
           // get canvas width and height and project it
 
-          await stream.startVideo();
+          // await stream.startVideo();
+          await stream.startVideo({
+            videoElement: canvasHandler
+          });
           await stream.renderVideo(
             canvasHandler,
             client.getCurrentUserInfo().userId,
