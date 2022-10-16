@@ -16,6 +16,8 @@ NODE_ENV=
 VUE_APP_URL=
 VUE_APP_TITLE=
 VUE_APP_BACKEND_ENDPOINT=
+VUE_APP_ZOOM_VIDEO_SDK_KEY=
+VUE_APP_ZOOM_VIDEO_SDK_SECRET=
 ```
 
 ### Install FabricJS with Touch Gestures
@@ -49,3 +51,7 @@ GOOGLE_CLIENT_ID={ Client ID }
 GOOGLE_CLIENT_SECRET={ Client secret }
 GOOGLE_REDIRECT={frontend_domain}/auth/google/callback
 ```
+
+## Trouble shooting
+
+* unable to join zoom session - check ad-blocker

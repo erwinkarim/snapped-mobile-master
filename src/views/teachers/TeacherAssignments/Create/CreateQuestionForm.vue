@@ -35,7 +35,7 @@
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
           class="flex -mx-1 mb-4"
       >
-        <div class="px-1 w-1/2 h-12">
+        <div class="px-1 w-1/2 h-28">
           <button @click="$store.dispatch('teacherCreateAssignment/beginWritingQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
@@ -69,6 +69,25 @@
             >
           </div>
         </label>
+      </div>
+      <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
+          class="flex -mx-1"
+      >
+        <!-- zoom meeting-->
+        <div class="px-1 w-full h-12">
+          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-1 justify-center py-4">
+              <icon-base-two class="w-12">
+                <zoom-icon class="w-12"/>
+              </icon-base-two>
+            </div>
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Zoom
+            </div>
+          </button>
+        </div>
       </div>
 
       <!-- FORM: Written Question -->
@@ -173,6 +192,9 @@
           </label>
         </div>
       </div>
+
+      <!-- FORM: Zoom Question -->
+      <ZoomQuestionForm />
     </div>
 
 
@@ -211,12 +233,20 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import CameraIcon from "@/components/icons/CameraIcon";
 import PenIcon from "@/components/icons/PenIcon";
 import CropIcon from "@/components/icons/CropIcon";
+import PhoneIcon from "@/components/icons/PhoneIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
+import ZoomIcon from "@/components/icons/ZoomIcon";
+import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
 import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
+import ZoomQuestionForm from '@/components/ZoomQuestionForm';
+
+
 
 export default {
   name: "CreateQuestionForm",
-  computed: {},
+  computed: { },
   methods: {
     handleSnappedQuestion(e) {
       this.$store.dispatch('teacherCreateAssignment/beginSnappingQuestion')
@@ -231,9 +261,13 @@ export default {
       }
 
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
-    }
+    },
   },
-  components: {CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo, VueCropper}
+  components: {
+    CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
+    VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
+    MicrophoneIcon, ZoomQuestionForm,
+  }
 }
 </script>
 

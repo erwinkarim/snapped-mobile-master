@@ -26,7 +26,8 @@
       <page-header-three v-else-if="$store.state.teacherCreateAssignment.states.isCreatingQuestion">
         <template v-slot:leftAction>
           <button @click="$store.dispatch('teacherCreateAssignment/cancelCreatingQuestion')"
-                  class="text-red-primary w-5/7">
+            :disabled="$store.getters['teacherCreateAssignment/hasZoomMeeting']"
+            class="text-red-primary w-5/7">
             Cancel
           </button>
         </template>
@@ -35,7 +36,8 @@
         </template>
         <template v-slot:rightAction>
           <button @click="$store.dispatch('teacherCreateAssignment/saveQuestion')"
-                  class="font-bold text-red-primary"
+            class="font-bold "
+            :disabled="$store.getters['teacherCreateAssignment/hasZoomMeeting']"
           >
             Save
           </button>
