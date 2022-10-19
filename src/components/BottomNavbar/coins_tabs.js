@@ -6,12 +6,12 @@ export default [
     {
         tabName: 'Scan QR',
         routeName: 'coin.scan_qr',
-        icon: QRCodeIcon,
+        icon: ScanIcon,
     },
     {
         tabName: 'Show QR',
         routeName: 'coin.show_qr',
-        icon: ScanIcon,
+        icon: QRCodeIcon,
     },
     {
         tabName: 'Top-Up',
