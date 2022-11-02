@@ -3,20 +3,17 @@
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>
-          <nav-back :to="{name: 'coin.home'}" class="w-2/7" stroke-color="red-primary"/>
+          <nav-back :to="{name: 'coin.top_up'}" class="w-2/7" stroke-color="red-primary"/>
         </template>
-        <template v-slot:mini-title>Show QR</template>
+        <template v-slot:mini-title>
+          Top Up 
+        </template>
       </page-header-three>
     </template>
 
     <template v-slot:content>
-      <div class="flex flex-col px-5 w-full md:px-10">
-        <div class="w-2/7">
-          something here
-        </div>
-      </div>
       <div class="h-30">Empty Space</div>
-      <p>Show QR Here</p>
+      <p>Top Up Buy here</p>
     </template>
 
     <template v-slot:bottomBar>
@@ -35,14 +32,9 @@ import PageTitle from "@/components/PageTitle";
 import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 
 export default {
-  data() {
-    return {
-      bottomBarClass: true,
-    }
-  },
-  name: "CoinShowQR",
+  name: "CoinTopUpBuy",
   mounted() {
-    console.log('coinshowQR mounted');
+    console.log('coinTopUpBuy mounted');
   },
   components: {
     DashboardLayout, SectionTitle, PageHeaderThree, NavBack, PageTitle,

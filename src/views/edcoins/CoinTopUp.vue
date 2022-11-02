@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout class="pt-5">
+  <dashboard-layout class="pt-5" :has-fixed-header="true" :has-custom-bottom-bar="true">
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>
@@ -12,7 +12,40 @@
     </template>
 
     <template v-slot:content>
+      <div class="h-30">Empty Space</div>
       <p>Top Up Interface Here</p>
+
+      <div class="px-5 w-full md:px-10">
+        <div class="mt-2 mb-3">
+          <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
+            <router-link class="flex flex-row items-center h-full text-left text-purple-primary" :to="{ name:'coin.top_up_buy' }">
+              <div class="flex flex-col px-2 w-1/3">
+                  Top-Up Coins
+              </div>
+            </router-link>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-3">
+          <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
+            <router-link class="flex flex-row items-center h-full text-left text-purple-primary" :to="{ name:'coin.top_up_redeem_marks' }">
+              <div class="flex flex-col px-2 w-1/3">
+                Redeem Marks
+              </div>
+            </router-link>
+          </div>
+        </div>
+
+        <div class="mt-2 mb-3">
+          <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
+            <router-link class="flex flex-row items-center h-full text-left text-purple-primary" :to="{ name: 'coin.top_up_gamified' }">
+              <div class="flex flex-col px-2 w-1/3">
+                Transfer EdCoins to Gamified 
+              </div>
+            </router-link>
+          </div>
+        </div>
+      </div>
     </template>
 
     <template v-slot:bottomBar>

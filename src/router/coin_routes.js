@@ -6,6 +6,9 @@ import CoinTrxDetail from "@/views/edcoins/CoinTrxDetail";
 import CoinScanQR from "@/views/edcoins/CoinScanQR";
 import CoinShowQR from "@/views/edcoins/CoinShowQR";
 import CoinTopUp from "@/views/edcoins/CoinTopUp";
+import CoinTopUpBuy from "@/views/edcoins/CoinTopUpBuy";
+import CoinTopUpRedeemMarks from "@/views/edcoins/CoinTopUpRedeemMarks";
+import CoinTopUpGamified from "@/views/edcoins/CoinTopUpGamified";
 
 const authControlMeta = {
     checkAuth: 'true'
@@ -43,6 +46,21 @@ export default {
         path: 'top_up',
         component: CoinTopUp,
         name : 'coin.top_up',
+      },
+      {
+        path: 'top_up/buy',
+        component: CoinTopUpBuy,
+        name : 'coin.top_up_buy',
+      },
+      {
+        path: 'top_up/redeem_marks',
+        component: CoinTopUpRedeemMarks,
+        name : 'coin.top_up_redeem_marks',
+      },
+      {
+        path: 'top_up/gamified',
+        component: CoinTopUpGamified,
+        name : 'coin.top_up_gamified',
       },
 
     ],

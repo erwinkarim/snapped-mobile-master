@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout class="pt-5">
+  <dashboard-layout class="pt-5" :has-fixed-header="true" :has-custom-bottom-bar="true">
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>
@@ -12,6 +12,10 @@
     </template>
 
     <template v-slot:content>
+      <div class="flex flex-col px-5 w-full md:px-10">
+        Something here.
+      </div>
+      <div class="h-30">Empty Space</div>
       <p>Scan QR Code Here</p>
     </template>
 

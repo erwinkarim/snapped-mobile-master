@@ -1,13 +1,13 @@
 <template>
-  <dashboard-layout class="pt-5" :has-custom-bottom-bar="bottomBarClass" >
+  <dashboard-layout class="pt-5" :has-custom-bottom-bar="true" >
 
     <template v-slot:content>
       <div class="flex flex-col px-5 w-full md:px-10">
-        <div class="w-2/7">
+        <router-link class="w-2/7" :to="{ name: 'student.home' }">
           <icon-base-two>
             <AppLogo/>
           </icon-base-two>
-        </div>
+        </router-link>
       </div>
 
       <div class="px-5 w-full md:px-10">
@@ -22,6 +22,9 @@
               <div class="flex flex-col px-2 w-1/3">
                 1234 Marks
               </div>
+              <router-link class="flex flex-col px-2 w-1/3 text-right" :to="{ name: 'coin.top_up' }">
+                Redeem
+              </router-link>
             </div>
           </div>
         </div>
@@ -36,6 +39,9 @@
             <div class="flex flex-col px-2 w-1/3">
               1234 Coins
             </div>
+              <router-link class="flex flex-col px-2 w-1/3 text-right" :to="{ name: 'coin.top_up' }">
+                Top-Up
+              </router-link>
           </div>
         </div>
       </div>
@@ -44,37 +50,29 @@
         <!-- transaction history -->
         <p>transaction history here</p>
         <div class="mt-2 mb-3">
-          <p>For demo, put a slider on how many trasactions to handle 0 to 1000 trx</p>
+          <input type="range" min="0" max="50" :value=trxCount class="slider" id="myRange" @change="sliderUpdate" />
+          <p>Showing {{ trxCount }} transaction(s)</p>
+        </div>
+
+        <div class="mt-2 mb-3">
           <section-title class="mb-5 text-left" title="Transaction History" />
-          <router-link :to="{ name: 'coin.trxDetail', params: { trxID: 1 }}">
-            <EdCoinTransactionPill />
-          </router-link>
-          <router-link :to="{ name: 'coin.trxDetail', params: { trxID: 2 }}">
-            <EdCoinTransactionPill />
-          </router-link>
-          <router-link :to="{ name: 'coin.trxDetail', params: { trxID: 3 }}">
-            <EdCoinTransactionPill />
-          </router-link>
+          <div v-if="trxCount == 0">
+            No transactions
+          </div>
+          <div v-else>
+            <div v-for="trx in trxCount">
+              <router-link :to="{ name: 'coin.trxDetail', params: { trxID: trxResult[trx].id }}">
+                <EdCoinTransactionPill :trxID=trxResult[trx].id :trxAmount=trxResult[trx].amount  :date=trxResult[trx].date />
+              </router-link>
+            </div>
+          </div>
         </div>
       </div>
 
     </template>
 
     <template v-slot:bottomBar>
-      <section id="bottom-navigation">
-        <div id="tabs" class="flex flex-row md:max-w-2xl h-full items-center justify-around mx-auto md:w-6/7">
-          <router-link v-for="tab in tabs"
-                      :key="tab.routeName"
-                      :to="{name: tab.routeName}"
-                      class=" w-1/5 pt-1 flex flex-row justify-center items-center"
-                      exact
-          >
-            <div class="w-5/7 md:w-4/7">
-              <bottom-navbar-icon-base :tab-name="tab.tabName" :icon="tab.icon" />
-            </div>
-          </router-link>
-        </div>
-      </section>
+      <CoinsBottomNavBar />
     </template>
   </dashboard-layout>
 
@@ -86,27 +84,34 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import SectionTitle from "@/components/SectionTitle";
 import EdCoinTransactionPill from "../../components/EdCoinTransactionPill.vue";
-import SquareCheckIcon from "../../components/icons/SquareCheckIcon.vue";
-import IconBase from "../../components/IconBase.vue";
+import CoinsBottomNavBar from "@/components/CoinsBottomNavBar.vue";
 import CoinsIcon from "../../components/icons/CoinsIcon.vue";
-import BottomNavbar from "@/components/BottomNavbar/BottomNavbar";
-import BottomNavbarIconBase from "@/components/BottomNavbar/BottomNavbarIconBase";
-import coins_tabs from "@/components/BottomNavbar/coins_tabs";
+import SquareCheckIcon from "../../components/icons/SquareCheckIcon.vue";
+import coin_routes from "../../router/coin_routes";
 
 export default {
   name: "CoinHome",
   data() {
     return {
       bottomBarClass: true,
-      tabs: []
+      tabs: [],
+      trxCount: 0,
+      trxResult: [],
     };
   },
   mounted() {
     console.log('CoinHome Mounted');
 
-    this.tabs = coins_tabs;
-
     // for demo: generate random data
+    for (let i = 0; i<50; i++){ 
+      var num = Math.random() * 150;
+      this.trxResult.push({
+        id: i,
+        amount: Math.round((num + Number.EPSILON) * 100) / 100,
+        date: new Date( parseInt(1000000000 + Math.random() * 1000000000000)),
+      })
+    }
+    this.trxCount = 10;
 
     /* 
       for production: check auth and get info
@@ -115,9 +120,16 @@ export default {
     */
 
   },
+  methods: {
+    sliderUpdate(e){
+      console.log('slider value', e.target.value);
+      this.trxCount = parseInt(e.target.value);
+    }
+
+  },
   components: {
     AppLogo, DashboardLayout, IconBaseTwo, SectionTitle, EdCoinTransactionPill,
-    IconBase, SquareCheckIcon, CoinsIcon, BottomNavbar, BottomNavbarIconBase,
+    SquareCheckIcon, CoinsIcon, CoinsBottomNavBar, coin_routes,
 }
 }
 
