@@ -3,7 +3,7 @@
 
     <template v-slot:content>
       <div class="flex flex-col px-5 w-full md:px-10">
-        <router-link class="w-2/7" :to="{ name: 'student.home' }">
+        <router-link class="w-2/7" :to="{ name: homeURL }">
           <icon-base-two>
             <AppLogo/>
           </icon-base-two>
@@ -19,10 +19,10 @@
               <div class="flex flex-col px-2 w-1/8">
                 <SquareCheckIcon />
               </div>
-              <div class="flex flex-col px-2 w-1/3">
+              <div class="flex flex-col px-2 w-3/8">
                 1234 Marks
               </div>
-              <router-link class="flex flex-col px-2 w-1/3 text-right" :to="{ name: 'coin.top_up' }">
+              <router-link class="flex flex-col px-2 w-1/2 text-right" :to="{ name: 'coin.top_up_redeem_marks' }">
                 Redeem
               </router-link>
             </div>
@@ -36,10 +36,10 @@
             <div class="flex flex-col px-2 w-1/8">
               <CoinsIcon />
             </div>
-            <div class="flex flex-col px-2 w-1/3">
+            <div class="flex flex-col px-2 w-3/8">
               1234 Coins
             </div>
-              <router-link class="flex flex-col px-2 w-1/3 text-right" :to="{ name: 'coin.top_up' }">
+              <router-link class="flex flex-col px-2 w-1/2 text-right" :to="{ name: 'coin.top_up_buy' }">
                 Top-Up
               </router-link>
           </div>
@@ -97,6 +97,7 @@ export default {
       tabs: [],
       trxCount: 0,
       trxResult: [],
+      homeURL: this.$store.getters.getAuthUserRole == 'Teacher' ? 'teacher.home' : 'student.home',
     };
   },
   mounted() {

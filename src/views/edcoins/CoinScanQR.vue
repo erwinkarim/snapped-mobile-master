@@ -17,6 +17,7 @@
       </div>
       <div class="h-30">Empty Space</div>
       <p>Scan QR Code Here</p>
+      <QrcodeStream @decode="decodeString" />
     </template>
 
     <template v-slot:bottomBar>
@@ -33,15 +34,21 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
 import PageTitle from "@/components/PageTitle";
 import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
+import { QrcodeStream } from 'vue-qrcode-reader'
 
 export default {
   name:"CoinScanQR",
   mounted() {
     console.log('mounted scan QR');
   },
+  methods: {
+    decodeString(decodedString){
+      console.log('decode string', decodedString);
+    },
+  },
   components: {
     DashboardLayout, SectionTitle, PageHeaderThree, NavBack, PageTitle,
-    CoinsBottomNavBarVue,
+    CoinsBottomNavBarVue, QrcodeStream,
   }
 }
 </script>

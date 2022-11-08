@@ -5,7 +5,7 @@ import WalletIcon from "@/components/icons/WalletIcon";
 
 export default [
     {
-        tabName: 'Coins Home',
+        tabName: 'Coins',
         routeName: 'coin.home',
         icon: CoinsIcon,
     },

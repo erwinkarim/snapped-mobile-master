@@ -7,6 +7,7 @@ import CoinScanQR from "@/views/edcoins/CoinScanQR";
 import CoinShowQR from "@/views/edcoins/CoinShowQR";
 import CoinTopUp from "@/views/edcoins/CoinTopUp";
 import CoinTopUpBuy from "@/views/edcoins/CoinTopUpBuy";
+import CoinTopUpBuyAck from "@/views/edcoins/CoinTopUpBuyAck";
 import CoinTopUpRedeemMarks from "@/views/edcoins/CoinTopUpRedeemMarks";
 import CoinTopUpGamified from "@/views/edcoins/CoinTopUpGamified";
 
@@ -51,6 +52,11 @@ export default {
         path: 'top_up/buy',
         component: CoinTopUpBuy,
         name : 'coin.top_up_buy',
+      },
+      {
+        path: 'top_up/buy/ack',
+        component: CoinTopUpBuyAck,
+        name : 'coin.top_up_buy_ack',
       },
       {
         path: 'top_up/redeem_marks',

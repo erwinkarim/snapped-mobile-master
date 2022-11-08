@@ -27,6 +27,11 @@
       <div class="px-5 w-full md:px-10">
         <p class="mb-5 text-left">Transaction made on {{ (trxTime).toLocaleString('en-GB') }} </p>
       </div>
+
+      <!-- status-->
+      <div class="px-5 w-full md:px-10">
+        <p class="mb-5 text-left">Status: SUCCESS | PENDING | FAILED</p>
+      </div>
     </template>
 
     <template v-slot:bottomBar>

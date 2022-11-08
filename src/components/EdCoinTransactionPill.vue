@@ -10,11 +10,13 @@
           Transaction ID: {{trxID }}
         </div>
       </div>
+      <div class="flex flex-row items-center h-full text-left text-purple-primary px-2">
+          Transaction Amount: <span :class="{ 'text-green-600': isPositive }" >{{ trxAmount }}</span>
+      </div>
       <div class="flex flex-row items-center h-full text-left text-purple-primary">
         <div class="flex flex-col px-2 w-full">
-          Transaction Amount: <div :class="{ 'text-green-600': isPositive }" >{{ trxAmount }}</div>
+          Status: SUCCESS | PENDING | FAILED
         </div>
-
       </div>
     </div>
   </div>

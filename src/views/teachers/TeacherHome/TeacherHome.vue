@@ -14,8 +14,18 @@
 
       <div class="max-w-xl">
 
+
         <!-- SECTION: SUMMARY -->
         <div class="mt-2 px-5">
+          
+          <!-- SECTION: EDCOINS -->
+          <div class="mt-2 mb-3">
+            <div class="mb-3 text-left w-full">
+              <section-title class="mb-5" title="EdCoins"/>
+            </div>
+            <EdCoinSummaryPill />
+          </div>
+
           <div class="text-left mb-3">
             <section-title class="mb-5" title="Summary"/>
           </div>
@@ -96,6 +106,7 @@ import SubmissionRepository from "@/repositories/SubmissionRepository";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import AssignmentRepository from "../../../repositories/AssignmentRepository";
+import EdCoinSummaryPill from "@/components/EdCoinSummaryPill.vue";
 
 export default {
   name: "Home",
@@ -174,7 +185,8 @@ export default {
     SectionTitle,
     AppLogo,
     IconBase,
-    PlusIcon
+    PlusIcon,
+    EdCoinSummaryPill,
   },
 }
 </script>

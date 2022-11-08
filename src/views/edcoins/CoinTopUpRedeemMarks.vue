@@ -13,7 +13,24 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <p>Redeem Marks here</p>
+      <div class="px-5 w-full md:px-10">
+        <div class="mt-2 mb-3">
+          <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
+            <div class="flex flex-row items-center h-full text-left text-purple-primary">
+              You can redeem up to X coins
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="px-5 w-full md:px-10">
+        <div class="mt-2 mb-3">
+          <input type="number" class="border text-2xl text-right" value="0" />
+          coins
+        </div>
+        <div>
+          <button @click="requestTopUp" class="border px-5">Request</button>
+        </div>
+      </div>
     </template>
 
     <template v-slot:bottomBar>
@@ -35,6 +52,15 @@ export default {
   name: "CoinTopRedeemMarks",
   mounted() {
     console.log('coinTopUpBuy mounted');
+  },
+  methods: {
+    requestTopUp() {
+      console.log('request top up');
+      
+      // plan: send request to server, get ack from server, then move to ack page.
+      // otherwise, give alert that it didn't work.
+      this.$router.push({ name: 'coin.top_up_buy_ack'});
+    }
   },
   components: {
     DashboardLayout, SectionTitle, PageHeaderThree, NavBack, PageTitle,
