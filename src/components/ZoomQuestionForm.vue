@@ -37,7 +37,7 @@
 
       <!-- Status Bar -->
       <div class="flex -mx-1 mb-4" >
-        <div class="h-7 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
+        <div class="py-2 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
           Status: {{ status }}
         </div>
 
@@ -108,7 +108,7 @@
             class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
             :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting'] || $store.getters['teacherCreateAssignment/hasZoomRecording']"
           >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
+            <div class="flex col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
               <icon-base-two class="w-12">
                 <circle-icon class="w-12"/>
               </icon-base-two>
@@ -194,6 +194,15 @@ let safariAudioDecode;
 let safariAudioEncode;
 let sessionTopic = genRanHex(6);
 let sessionPassword = genRanHex(6);
+
+/*
+  some issues / features
+  1. picture-in-picture when starting zoom & share screen
+  2. mic feedback problem on chrome
+    - problem when starting recording
+  3. scope display when recording only sound
+  4. media recorder state, something get lost after a recording session.
+*/
 
 export default {
   name: "ZoomeQuestionForm",
@@ -370,8 +379,9 @@ export default {
 
       } else {
         // share screen is off, turn it on
-        // problem: does not scale into when shared, instead 1:1. have to figure this out
 
+        stream.startShareScreen(canvasHandler);
+        /*
         if(!!window.chrome) {
           // if desktop Chrome and Edge (Chromium)
           stream.startShareScreen(canvasHandler);
@@ -380,6 +390,7 @@ export default {
           stream.startShareScreen(canvasHandler);
           
         }
+        */
 
         // if video is on, re-render the video to be part of it
         if(this.$store.state.teacherCreateAssignment.states.isVideoOn){
@@ -499,7 +510,7 @@ export default {
         micTrack = mic.getAudioTracks();
 
         //should attach the stream to current media recorder??
-        console.log('start Audio');
+        console.log('start Audio', micTrack);
         this.status = "Microphone started.";
       }
       this.$store.commit('teacherCreateAssignment/toggleMic');
@@ -537,6 +548,7 @@ export default {
       console.log('mcstream', mcstream);
 
       // if the mic is on, capture audio too
+      // this causes feedback in chrome
       if(this.$store.state.teacherCreateAssignment.states.isMicOn){
         console.log('adding audio track to mcstream');
         mcstream.addTrack(micTrack[0]);
