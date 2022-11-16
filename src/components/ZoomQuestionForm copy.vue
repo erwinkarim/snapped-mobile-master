@@ -44,28 +44,9 @@
       </div>
 
       <!-- video canvas -->
-      <p>Video panel</p>
       <div class="flex -mx-1 mb-4" >
         <div id="the-view" class="px-1 w-full">
         </div>
-      </div>
-
-      <p>Audio Waveform</p>
-      <div class="flex -mx-1 mb-4">
-        <canvas id="the-audio" class="px-1 w-full border-2 border-solid"> </canvas>
-      </div>
-
-      <!-- screen share  video test -->
-      <p>Screen Share Panel</p>
-      <div class="flex -mx-1 mb-4">
-        <div id="the-screen" class="px-1 w-full">
-        </div>
-      </div>
-
-      <!-- final render test -->
-      <p>Final render test</p>
-      <div class="flex -mx-1 mb-4">
-        <canvas id="canvas-render" class="border-2 border-solid w-full"></canvas>
       </div>
 
       <!-- camera and mic controls -->
@@ -203,8 +184,7 @@ import KJUR from 'jsrsasign';
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 let stream; // zoom stream
 const client = ZoomVideo.createClient(); // zoom client
-let canvasHandler = null; // canvas / video tag to be loaded to show video cam
-let screenHandler = null; // canvas / video tag to show screen share
+let canvasHandler = null; // canvas / video tag to be loaded
 let mcstream = null; // canvas stream
 let mc = null; // local media record to record zoom stream (theorically)
 let ms = null; // local media stream representing the canvas/video
@@ -215,10 +195,6 @@ let safariAudioEncode;
 let sessionTopic = genRanHex(6);
 let sessionPassword = genRanHex(6);
 
-// final rending place
-let canvasRenderHandle = null;
-let canvasRenderHandleCtx; 
-
 /*
   some issues / features
   1. picture-in-picture when starting zoom & share screen
@@ -227,10 +203,7 @@ let canvasRenderHandleCtx;
   3. scope display when recording only sound
   4. media recorder state, something get lost after a recording session.
 
-  // new plan: rebuilding the mediarecorder and zoom controls
-  1. mediarecorder needs streams 
-  2. tie video/canvas tag to stream, record anything on that
-  3. tie mic as a new stream, record anything on that. (find if can resolve the feedback problem)
+  overall, this code is messy, might consider to redo it all again
 */
 
 export default {
@@ -238,9 +211,8 @@ export default {
   data () {
     return { status: 'Ready', sessionTopic, sessionPassword };
   }, 
-  updated: async () => {
+  updated: () => {
     console.log('ZoomQuestionForm updated');
-    console.log(`Using Zoom VIDEO SDK version ${ZoomVideo.VERSION}`);
     /*
       plan: to add canvas or video tag based on browser
     */
@@ -249,35 +221,16 @@ export default {
     let canvasCheck = document.querySelector('#self-view-canvas');
     let videoCheck = document.querySelector('#self-view-video');
 
-    // testing canvas render
-
     if(canvasCheck !== null || videoCheck !== null){
       return;
     }
 
-    // setup the final render, which will be recorded.
-    canvasRenderHandle = document.querySelector('#canvas-render');
-    canvasRenderHandleCtx = canvasRenderHandle.getContext('2d');
-
-    // add video / canvas tag based on browser and there's shared array buffer disabled
+    // add video / canvas tag based on browser
     let theView = document.querySelector('#the-view')
-    //if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')){
     if(!!window.chrome){
       // it's chrome, add video tag
       canvasHandler = document.createElement('video');
       canvasHandler.id='self-view-video';
-      canvasHandler.onplay = () => {
-        // when played, draw the image on the final canvas
-        console.log('video onplay event fired');
-        setInterval(() => {
-          canvasRenderHandleCtx.drawImage(canvasHandler, 0, 0, 150, 200);
-        }, 33)
-      }
-      canvasHandler.onstop = () => {
-        console.log('video onstop event fired');
-        canvasRenderHandleCtx.clearRect(0, 0, 300, 200);
-      }
-
     } else {
       canvasHandler = document.createElement('canvas');
       canvasHandler.id='self-view-canvas';
@@ -287,86 +240,6 @@ export default {
     canvasHandler.className='border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl';
     theView.textContent = '';
     theView.appendChild(canvasHandler);
-
-    // add video / canvas tag for the screen share based on browser
-    let theScreen = document.querySelector('#the-screen');
-    if(!!window.chrome){
-      screenHandler = document.createElement('video');
-      screenHandler.id = 'screen-share-video';
-
-      screenHandler.onplay = () => {
-        // draw the share screen context on the right half
-        console.log('share screen onplay event fired');
-        setInterval(() => {
-          canvasRenderHandleCtx.drawImage(screenHandler, 150, 0, 150, 200);
-        }, 33)
-      }
-    } else {
-      screenHandler = document.createElement('canvas');
-      screenHandler.id = 'screen-share-canvas';
-    }
-    screenHandler.className='border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl';
-    theScreen.appendChild(screenHandler);
-
-
-    // capture the mic, and put it in a audioContext, so we can analyse and draw
-    // create some feedback look here.
-    const audioContext = new AudioContext();
-    micTrack = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const source = audioContext.createMediaStreamSource(micTrack)
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 2048;
-
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    analyser.getByteTimeDomainData(dataArray);
-
-    // Connect the source to be analysed
-    source.connect(analyser);
-
-    // canvas to draw the sound
-    const audioCanvas = document.querySelector('#the-audio');
-    const audioCanvasCtx = audioCanvas.getContext('2d');
-
-    console.log('audioContext', audioContext);
-
-    // draw the waveform
-    function draw() {
-      requestAnimationFrame(draw);
-
-      analyser.getByteTimeDomainData(dataArray);
-
-      audioCanvasCtx.fillStyle = "rgb(200, 200, 200)";
-      audioCanvasCtx.fillRect(0, 0, audioCanvas.width, audioCanvas.height);
-
-      audioCanvasCtx.lineWidth = 2;
-      audioCanvasCtx.strokeStyle = "rgb(0, 0, 0)";
-
-      audioCanvasCtx.beginPath();
-
-      const sliceWidth = (audioCanvas.width * 1.0) / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * audioCanvas.height) / 2;
-
-        if (i === 0) {
-          audioCanvasCtx.moveTo(x, y);
-        } else {
-          audioCanvasCtx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-      }
-
-      audioCanvasCtx.lineTo(audioCanvas.width, audioCanvas.height / 2);
-      audioCanvasCtx.stroke();
-    }
-    draw();
-
-    // create the necessary mediastream to record video + audio, hopefully w/o feedback sounds.
-
   },
   methods: {
     async createZoomMeeting(e) {
@@ -406,7 +279,7 @@ export default {
       await client.join(sessionTopic, signature, this.$store.state.authUser.email, sessionPassword).then((res) => {
         stream = client.getMediaStream();
         console.log('res', res);
-        this.status = `Join successful. Session ID: ${sessionTopic}, Password: ${sessionPassword}`;
+        this.status = `Join sucessful. Session ID: ${sessionTopic}, Password: ${sessionPassword}`;
 
         /*
         console.log('stream', stream);
@@ -450,45 +323,19 @@ export default {
         };
       })
 
-      // turn on video
-      client.on('video-active-change', async (payload) => {
-        if(payload.state === 'Active') {
-          console.log(`User: ${payload.userId} is starting video`);
-          await stream.renderVideo(canvasHandler, payload.userId, 300, 200, 0, 0, 3);
-        } else {
-          await stream.stopRenderVideo(canvasHandler, payload.userId);
-        }
-      })
-
-
-      // idea: put share screen on the right of the canvas
-      client.on('active-share-change', (payload) => {
-        console.log('active-share-change detected');
-        if (payload.state === 'Active') {
-          console.log(`user:${payload.userId} shares screen`);
-          // stream.startShareView(document.querySelector('#screen-share-canvas'), payload.userId)
-        } else if (payload.state === 'Inactive') {
-          console.log(`user:${payload.userId} stops sharing screen`);
-          // stream.stopShareView()
-        }
-      });
-
       console.log('join success');
       this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
     },
     leaveZoomMeeting(e) {
-      // switch off camera, mic, screen share and recording if they are on
+      // switch off camera, mic and screen share if they are on
       if(this.$store.state.teacherCreateAssignment.states.isVideoOn){
-          this.toggleVideoButton();
+          this.stopZoomVideo(e);
       }
       if(this.$store.state.teacherCreateAssignment.states.isMicOn){
         this.toggleMicButton();
       }
       if(this.$store.state.teacherCreateAssignment.states.isScreenShare){
         this.toggleShareScreenButton();
-      }
-      if(this.$store.state.teacherCreateAssignment.states.isRecording){
-        this.stopRecording();
       }
 
       // leave zoom meeting
@@ -498,67 +345,122 @@ export default {
       this.status = "Left the meeting.";
       this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
     },
-    async toggleVideoButton() {
+    async toggleVideoButton(e) {
       var videoState = this.$store.state.teacherCreateAssignment.states.isVideoOn;
 
       if (videoState){
         // video is on, stop video
-        this.status = 'Camera turned off';
-        stream.stopVideo();
+        this.stopZoomVideo(e);
       } else {
         // video is off, start video
-        this.status = 'Camera turned on';
-
-        if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {
-          // if desktop Chrome or Edge (Chromium) with SharedArrayBuffer not enabled
-
-          console.log('starting video on chrome w/o sharedArrayBuffer');
-          stream.startVideo({ videoElement: canvasHandler });
-        } else {
-          // all other browsers and desktop Chrome or Edge (Chromium) with SharedArrayBuffer enabled
-
-          console.log('starting video on other browser or chrome w/ SharedArrayBuffer');
-          console.log('trying to put video on ', canvasHandler);
-
-          /*
-          stream.startVideo(() => {
-            stream.renderVideo(canvasHandler, client.getCurrentUserInfo().userId, 300, 200, 0, 0, 3);
-          })
-          */
-         stream.startVideo();
-        }
+        this.startZoomVideo(e);
       }
-      this.$store.commit('teacherCreateAssignment/toggleVideo');
     },
     async toggleShareScreenButton(e) {
-      /*
-        have to figure out how to do PiP when starting both video and share screen.
-        - see if i can use renderVideo fn to do this.
-      */
       console.log('toggle share screen button pressed');
 
       var screenShareState = this.$store.state.teacherCreateAssignment.states.isScreenShare;
 
       if (screenShareState) {
-        console.log('turning screen share off');
-        // screen share is on, toggle off
+        // share screen is on, turn it off
         stream.stopShareScreen();
-        this.status = 'Screen share turned off';
+
+        //reset canvas to normal height?
+        canvasHandler.width=854;
+        canvasHandler.height=480;
+        
+        // if video on, reset the video thing
+        if(this.$store.state.teacherCreateAssignment.states.isVideoOn){
+          await stream.renderVideo(
+            canvasHandler,
+            client.getCurrentUserInfo().userId,
+            854, 480, 0, 0, 3
+          );
+        }
+
       } else {
-        // screen share is off, toggle on
-        //stream.startShareScreen(canvasHandler);
+        // share screen is off, turn it on
 
-        console.log('starting screen share on', screenHandler);
-        stream.startShareScreen(screenHandler);
-        this.status = 'Screen share turned on';
+        stream.startShareScreen(canvasHandler);
+        /*
+        if(!!window.chrome) {
+          // if desktop Chrome and Edge (Chromium)
+          stream.startShareScreen(canvasHandler);
+        } else {
+          // all other browsers
+          stream.startShareScreen(canvasHandler);
+          
+        }
+        */
 
-        //try to put this picture in picture for video.
-        // find the video screen share, and the scale down the share video and then put at the bottom right corner
+        // if video is on, re-render the video to be part of it
+        if(this.$store.state.teacherCreateAssignment.states.isVideoOn){
+          await stream.renderVideo(
+            document.querySelector('#self-view-canvas'),
+            client.getCurrentUserInfo().userId,
+            107, 60, 747, 400, 3
+          );
+        }
       }
 
-
-      // update the toggle state
+      // toggle share screen state
       this.$store.commit('teacherCreateAssignment/toggleShareScreen');
+
+    },
+    async startZoomVideo(e) {
+      var mcstream = null;
+
+      try {
+        console.log('video start');
+        this.status = "Starting video ...";
+        // await stream.startVideo();
+
+        // from zoom sdk docs
+        if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {
+          console.log('video started in chrome');
+          // if desktop Chrome or Edge (Chromium) with SharedArrayBuffer enabled
+          await stream.startVideo({
+            videoElement: canvasHandler
+          });
+        } else {
+          // all other browsers and desktop Chrome or Edge (Chromium) with SharedArrayBuffer not enabled
+          console.log('video started in firefox');
+          console.log('canvasHandler', canvasHandler);
+
+          // get canvas width and height and project it
+
+          // await stream.startVideo();
+          await stream.startVideo({
+            videoElement: canvasHandler
+          });
+          await stream.renderVideo(
+            canvasHandler,
+            client.getCurrentUserInfo().userId,
+            canvasHandler.width, canvasHandler.height, 0, 0, 3
+          );
+        }
+
+
+        console.log('successfully rendered video');
+        this.status = "Video Started";
+        this.$store.commit('teacherCreateAssignment/toggleVideo');
+
+      } catch (e) {
+        console.log('error starting video', e);
+        this.status = "Error starting video";
+      }
+
+    },
+    stopZoomVideo(e) {
+
+      this.status = "Stopping video ...";
+      stream.stopVideo();
+
+      //stream.clearVideoCanvas(document.querySelector('#self-view-canvas'));
+      stream.clearVideoCanvas(canvasHandler);
+
+      this.status = "Video stopped.";
+      this.$store.commit('teacherCreateAssignment/toggleVideo');
 
     },
     async toggleMicButton(e){
@@ -567,18 +469,51 @@ export default {
       var micState = this.$store.state.teacherCreateAssignment.states.isMicOn;
 
       if (micState) {
-        // mic is on, turn it off
+        // mic is on, turn off
         stream.stopAudio();
-        this.status = 'Microphone is turned off';
+
+        //destory the mic track and remove the mic track from the current streamer
+        console.log('micTrack', micTrack);
+        micTrack[0].stop();
+
+        if (mcstream !== null) {
+          let mcstreamAudioTrack = mcstream.getAudioTracks()
+          mcstreamAudioTrack[0].stop();
+        }
+
+        console.log('stop Audio');
+        this.status = "Mic stopped.";
       } else {
-        // mic is off, turn it on
-        stream.startAudio();
-        this.status = 'Microphone is turned on';
+        this.status = "Starting microphone ...";
 
-        // later capture the audio stream and put it as as osiliscope
+        // mic is off, turn on
+        // additional steps for safari
+        var isSafari = window.safari !== undefined
+
+        if(isSafari) {
+          // desktop Safari, check if desktop Safari audio has been initialized
+          if(safariAudioEncode && safariAudioDecode){
+            // desktop Safari audio has been initialized, continue to start audio
+            stream.startAudio()
+          } else {
+            // desktop Safari audio has not been initialized, retry or handle error
+            console.log('safari audio has not finished initializing')
+            this.status = 'Safari audio has not finished initializing. Please try again.';
+          }
+        } else {
+          // not desktop Safari, continue to start audio
+          stream.startAudio()
+        }
+        // stream.startAudio();
+        
+        // get audio track to tack it on mcstream
+        let mic = await navigator.mediaDevices.getUserMedia({ audio: true });
+        micTrack = mic.getAudioTracks();
+
+        //should attach the stream to current media recorder??
+        console.log('start Audio', micTrack);
+        this.status = "Microphone started.";
       }
-
-      // toggle the mic state
       this.$store.commit('teacherCreateAssignment/toggleMic');
     },
     async startRecording(){
@@ -587,18 +522,97 @@ export default {
       };
 
       console.log('start record');
-      this.$store.commit('teacherCreateAssignment/toggleRecording');
-      this.status = 'Recording started';
+      mc.start();
     },
     stopRecording(){
       console.log('stop record');
-      this.$store.commit('teacherCreateAssignment/toggleRecording');
-      this.status = 'Recording stopped';
+      mc.stop();
     },
     async startMediaRecorder() {
-      console.log('mc creation successful and ready');
+      this.status = "Start Recording ...";
 
-      // build media recorder
+      // start media recorder
+      console.log ('startMediaRecorder');
+
+      var mcstream = null;
+
+      //build up the media recorder
+      console.log('building media recorder');
+
+      // have to adjust this so weather to add video, audio or screen on the fly
+      //mcstream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+
+      if(!!window.chrome) {} else {
+        canvasHandler.getContext('bitmaprenderer'); // somehow firefox need to specify context
+      }
+      mcstream = canvasHandler.captureStream(30);
+      console.log('mcstream', mcstream);
+
+      // if the mic is on, capture audio too
+      // this causes feedback in chrome
+      if(this.$store.state.teacherCreateAssignment.states.isMicOn){
+        console.log('adding audio track to mcstream');
+        mcstream.addTrack(micTrack[0]);
+        console.log('audio track added');
+      }
+
+      // create new media recorder and associated actions
+      console.log('creating a media recorder with the following tracks', mcstream.getTracks())
+      mc = new MediaRecorder(mcstream);
+      this.status = "Recording Device is ready";
+      console.log('mediarecorder started', mc);
+
+      mc.onstart = (e) => { 
+        this.status = "Recording ...";
+        console.log('mc onstart'); 
+        this.$store.commit('teacherCreateAssignment/toggleRecording');
+      };
+      mc.onstop = (e) => {
+        console.log('mc onstop');
+
+        //collect all data and dump it
+        const blob = new Blob(chunks, {type: 'video/webm'});
+        //const blob = new Blob(chunks);
+        chunks = [];
+
+        //put the blob in a video gallery
+        var url = URL.createObjectURL(blob);
+        console.log('url', url);
+        var videoTag = document.createElement('video');
+        videoTag.autoplay = true;
+        videoTag.controls = true;
+        videoTag.height = 480;
+        videoTag.width = 854;
+        videoTag.src = url;
+
+        //always replace what's ever in the preview gallery
+        document.querySelector('#video-preview-gallery').textContent = '';
+        document.querySelector('#video-preview-gallery').appendChild(videoTag);
+
+
+        //trigger to push video content to questionDetails.zoomMeetings
+        this.$store.dispatch('teacherCreateAssignment/handleZoomQuestion', url);
+        // URL.revokeObjectURL(url);
+
+        // for debug, video content for debugging
+        console.log('record url dump', url);
+        this.status = "Recording stopped. New video dumped in gallery";
+        this.$store.commit('teacherCreateAssignment/toggleRecording');
+      };
+      mc.ondataavailable = (e) => {
+        console.log('mc ondataavailable');
+
+        //pump data in the chunks array.
+        chunks.push(e.data);
+
+        // after stop `dataavilable` event run one more time
+        if (mc.state === 'recording') {
+            mc.stop();
+        }
+        this.status = "Recording. Pushing data to cache ...";
+      };
+
+      console.log('mc creation successful and ready');
     },
   },
   components: {
