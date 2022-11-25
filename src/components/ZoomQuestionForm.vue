@@ -2,6 +2,7 @@
   <div>
     <!-- FORM: Zoom Question -->
     <div v-if="$store.state.teacherCreateAssignment.states.isCreatingZoomQuestion">
+      <p>Works best in Google Chrome. Some features may not be available in other browsers.</p>
 
       <!-- Join / leave meeting -->
       <div class="flex -mx-1 mb-4" >
@@ -65,13 +66,14 @@
       <!-- final render test -->
       <p>Final render test</p>
       <div class="flex -mx-1 mb-4">
-        <canvas id="canvas-render" class="border-2 border-solid w-full"></canvas>
+        <canvas id="canvas-render" class="border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl "></canvas>
       </div>
 
       <!-- camera and mic controls -->
       <div class="flex -mx-1 mb-4" >
         <div class="px-1 w-1/3 h-28">
           <button @click="toggleVideoButton"
+            id="video-button"
             class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
             :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
           >
@@ -88,6 +90,7 @@
         </div>
         <div class="px-1 w-1/3 h-28">
           <button @click="toggleMicButton"
+            id="mic-button"
             class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
             :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
           >
@@ -104,6 +107,7 @@
         </div>
         <div class="px-1 w-1/3 h-28">
           <button @click="toggleShareScreenButton"
+            id="screen-button"
             class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
             :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
           >
@@ -203,8 +207,12 @@ import KJUR from 'jsrsasign';
 const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 let stream; // zoom stream
 const client = ZoomVideo.createClient(); // zoom client
+
 let canvasHandler = null; // canvas / video tag to be loaded to show video cam
 let screenHandler = null; // canvas / video tag to show screen share
+let audioCanvas = null;
+let audioCanvasCtx = null;
+
 let mcstream = null; // canvas stream
 let mc = null; // local media record to record zoom stream (theorically)
 let ms = null; // local media stream representing the canvas/video
@@ -217,7 +225,8 @@ let sessionPassword = genRanHex(6);
 
 // final rending place
 let canvasRenderHandle = null;
-let canvasRenderHandleCtx; 
+let canvasRenderHandleStream = null;
+let canvasRenderHandleCtx = null; 
 
 /*
   some issues / features
@@ -238,9 +247,10 @@ export default {
   data () {
     return { status: 'Ready', sessionTopic, sessionPassword };
   }, 
-  updated: async () => {
+  async updated() { 
     console.log('ZoomQuestionForm updated');
     console.log(`Using Zoom VIDEO SDK version ${ZoomVideo.VERSION}`);
+
     /*
       plan: to add canvas or video tag based on browser
     */
@@ -258,32 +268,26 @@ export default {
     // setup the final render, which will be recorded.
     canvasRenderHandle = document.querySelector('#canvas-render');
     canvasRenderHandleCtx = canvasRenderHandle.getContext('2d');
+    canvasRenderHandleStream = canvasRenderHandle.captureStream(30);
 
     // add video / canvas tag based on browser and there's shared array buffer disabled
     let theView = document.querySelector('#the-view')
     //if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')){
-    if(!!window.chrome){
-      // it's chrome, add video tag
-      canvasHandler = document.createElement('video');
-      canvasHandler.id='self-view-video';
-      canvasHandler.onplay = () => {
-        // when played, draw the image on the final canvas
-        console.log('video onplay event fired');
-        setInterval(() => {
-          canvasRenderHandleCtx.drawImage(canvasHandler, 0, 0, 150, 200);
-        }, 33)
-      }
-      canvasHandler.onstop = () => {
-        console.log('video onstop event fired');
-        canvasRenderHandleCtx.clearRect(0, 0, 300, 200);
-      }
-
-    } else {
+    if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+      // debug: trying to force firefox to use canvas
       canvasHandler = document.createElement('canvas');
       canvasHandler.id='self-view-canvas';
+    } else if(typeof SharedArrayBuffer === 'function'){
+      // have shared array buffer enabled
+      canvasHandler = document.createElement('canvas');
+      canvasHandler.id='self-view-canvas';
+    } else {
+      // doesn't have shared array buffer enable (like chrome)
+      canvasHandler = document.createElement('video');
+      canvasHandler.id='self-view-video';
     }
-    //canvasHandler.height='480';
-    //canvasHandler.width='854';
+    canvasHandler.height='325';
+    canvasHandler.width='576';
     canvasHandler.className='border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl';
     theView.textContent = '';
     theView.appendChild(canvasHandler);
@@ -304,15 +308,21 @@ export default {
     } else {
       screenHandler = document.createElement('canvas');
       screenHandler.id = 'screen-share-canvas';
+      screenHandler.onplay = () => {
+        console.log('screen share detected');
+      }
     }
     screenHandler.className='border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl';
     theScreen.appendChild(screenHandler);
 
 
     // capture the mic, and put it in a audioContext, so we can analyse and draw
-    // create some feedback look here.
+    // also, put the stream in the final render stream, so can record things. 
     const audioContext = new AudioContext();
     micTrack = await navigator.mediaDevices.getUserMedia({ audio: true });
+    micTrack.getAudioTracks()[0].enabled = false;
+    canvasRenderHandleStream.addTrack(micTrack.getAudioTracks()[0]);
+
     const source = audioContext.createMediaStreamSource(micTrack)
     const analyser = audioContext.createAnalyser();
     analyser.fftSize = 2048;
@@ -325,8 +335,8 @@ export default {
     source.connect(analyser);
 
     // canvas to draw the sound
-    const audioCanvas = document.querySelector('#the-audio');
-    const audioCanvasCtx = audioCanvas.getContext('2d');
+    audioCanvas = document.querySelector('#the-audio');
+    audioCanvasCtx = audioCanvas.getContext('2d');
 
     console.log('audioContext', audioContext);
 
@@ -365,7 +375,57 @@ export default {
     }
     draw();
 
-    // create the necessary mediastream to record video + audio, hopefully w/o feedback sounds.
+    // start building the media recorder
+    // capture what's going on in the render canvas and the mic
+
+    mc = new MediaRecorder(canvasRenderHandleStream);
+    mc.onstart = () => {
+      // start recording
+      console.log('mc onstart');
+    }
+    mc.onstop = (e) => {
+      console.log('mc onstop');
+
+      //collect all data and dump it
+      const blob = new Blob(chunks, {type: 'video/webm'});
+      //const blob = new Blob(chunks);
+      chunks = [];
+
+      //put the blob in a video gallery
+      var url = URL.createObjectURL(blob);
+      console.log('url', url);
+      var videoTag = document.createElement('video');
+      videoTag.autoplay = true;
+      videoTag.controls = true;
+      videoTag.height = 480;
+      videoTag.width = 854;
+      videoTag.src = url;
+
+      //always replace what's ever in the preview gallery
+      document.querySelector('#video-preview-gallery').textContent = '';
+      document.querySelector('#video-preview-gallery').appendChild(videoTag);
+
+
+      //trigger to push video content to questionDetails.zoomMeetings
+      this.$store.dispatch('teacherCreateAssignment/handleZoomQuestion', url);
+      // URL.revokeObjectURL(url);
+
+      // for debug, video content for debugging
+      console.log('record url dump', url);
+    }
+    mc.ondataavailable = (e) => {
+      // move data from buffer to array
+      console.log('mc ondataavailable');
+
+      //pump data in the chunks array.
+      chunks.push(e.data);
+
+      // after stop `dataavilable` event run one more time
+      if (mc.state === 'recording') {
+          mc.stop();
+      }
+      this.status = "Recording. Pushing data to cache ...";
+    }
 
   },
   methods: {
@@ -450,17 +510,6 @@ export default {
         };
       })
 
-      // turn on video
-      client.on('video-active-change', async (payload) => {
-        if(payload.state === 'Active') {
-          console.log(`User: ${payload.userId} is starting video`);
-          await stream.renderVideo(canvasHandler, payload.userId, 300, 200, 0, 0, 3);
-        } else {
-          await stream.stopRenderVideo(canvasHandler, payload.userId);
-        }
-      })
-
-
       // idea: put share screen on the right of the canvas
       client.on('active-share-change', (payload) => {
         console.log('active-share-change detected');
@@ -475,6 +524,45 @@ export default {
 
       console.log('join success');
       this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
+
+      // create the necessary mediastream to record video + audio, hopefully w/o feedback sounds.
+      console.log('drawing the composite', canvasRenderHandleCtx, audioCanvas);
+      // draw based on inputs turned on
+
+      let drawComposite = () => {
+        // draw composite based on source canvas/video
+        requestAnimationFrame(drawComposite);
+
+        let micOn = this.$store.state.teacherCreateAssignment.states.isMicOn;
+        let videoOn = this.$store.state.teacherCreateAssignment.states.isVideoOn;
+        let screenShareOn = this.$store.state.teacherCreateAssignment.states.isScreenShare;
+
+        if (videoOn && !screenShareOn) {
+          canvasRenderHandleCtx.drawImage(canvasHandler, 0,0, 
+            canvasRenderHandle.width, canvasRenderHandle.height);
+        } else if (!videoOn && screenShareOn) {
+          canvasRenderHandleCtx.drawImage(screenHandler, 0,0 ,
+            canvasRenderHandle.width, canvasRenderHandle.height);
+        } else if (videoOn && screenShareOn) {
+          canvasRenderHandleCtx.drawImage(screenHandler, 0,0 ,
+            canvasRenderHandle.width, canvasRenderHandle.height);
+          canvasRenderHandleCtx.drawImage(canvasHandler, 
+            0,0, canvasHandler.width, canvasHandler.height,
+            canvasRenderHandle.width*3/4, canvasRenderHandle.height*3/4,
+            canvasRenderHandle.width/4, canvasRenderHandle.height/4
+          );
+        } else if (micOn && !videoOn && !screenShareOn) {
+          // only the mic is on
+          canvasRenderHandleCtx.drawImage(audioCanvas, 
+            0,0, canvasRenderHandle.width, canvasRenderHandle.height
+          );
+        } else {
+          // default
+          canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
+          canvasRenderHandleCtx.fillText("NO INPUT", canvasRenderHandle.width/2, canvasRenderHandle.height/2);
+        }
+      }; 
+      drawComposite();
     },
     leaveZoomMeeting(e) {
       // switch off camera, mic, screen share and recording if they are on
@@ -520,13 +608,13 @@ export default {
           console.log('starting video on other browser or chrome w/ SharedArrayBuffer');
           console.log('trying to put video on ', canvasHandler);
 
-          /*
           stream.startVideo(() => {
             stream.renderVideo(canvasHandler, client.getCurrentUserInfo().userId, 300, 200, 0, 0, 3);
           })
-          */
-         stream.startVideo();
         }
+
+        canvasRenderHandle.width = canvasHandler.width;
+        canvasRenderHandle.height = canvasHandler.height;
       }
       this.$store.commit('teacherCreateAssignment/toggleVideo');
     },
@@ -546,14 +634,9 @@ export default {
         this.status = 'Screen share turned off';
       } else {
         // screen share is off, toggle on
-        //stream.startShareScreen(canvasHandler);
-
         console.log('starting screen share on', screenHandler);
         stream.startShareScreen(screenHandler);
         this.status = 'Screen share turned on';
-
-        //try to put this picture in picture for video.
-        // find the video screen share, and the scale down the share video and then put at the bottom right corner
       }
 
 
@@ -569,37 +652,37 @@ export default {
       if (micState) {
         // mic is on, turn it off
         stream.stopAudio();
+        micTrack.getAudioTracks()[0].enabled = false;
         this.status = 'Microphone is turned off';
       } else {
         // mic is off, turn it on
         stream.startAudio();
+        micTrack.getAudioTracks()[0].enabled = true;
         this.status = 'Microphone is turned on';
-
-        // later capture the audio stream and put it as as osiliscope
       }
 
       // toggle the mic state
       this.$store.commit('teacherCreateAssignment/toggleMic');
     },
     async startRecording(){
-      if (mc === null){
-       this.startMediaRecorder();
-      };
-
       console.log('start record');
+
+      mc.start();
+
       this.$store.commit('teacherCreateAssignment/toggleRecording');
       this.status = 'Recording started';
     },
     stopRecording(){
       console.log('stop record');
+
+      mc.stop();
+
       this.$store.commit('teacherCreateAssignment/toggleRecording');
       this.status = 'Recording stopped';
     },
-    async startMediaRecorder() {
-      console.log('mc creation successful and ready');
+    buildMediaRecorder(){
 
-      // build media recorder
-    },
+    }
   },
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
