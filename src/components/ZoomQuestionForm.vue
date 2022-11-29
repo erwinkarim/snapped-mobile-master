@@ -388,7 +388,7 @@ export default {
       let screenShareOn = this.$store.state.teacherCreateAssignment.states.isScreenShare;
 
       // clear the picture first
-      canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
+      //canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
 
       if (videoOn && !screenShareOn) {
         // camera on, but not screen share
@@ -398,7 +398,9 @@ export default {
         // camera off, but screen is shared
         // need to figure out a way that doesn't produced clipping when recording
         // canvasRenderHandleCtx.drawImage(screenHandler, 0,0 , canvasRenderHandle.width, canvasRenderHandle.height)
-        canvasRenderHandleCtx.drawImage(screenHandler, 0, 0);
+        //canvasRenderHandleCtx.drawImage(screenHandler, 0, 0);
+        canvasRenderHandleCtx.drawImage(screenHandler, 0,0 ,
+          canvasRenderHandle.width, canvasRenderHandle.height);
       } else if (videoOn && screenShareOn) {
         // both video and screen share is on, do PiP
         // canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
@@ -589,25 +591,40 @@ export default {
         // video is on, stop video
         this.status = 'Camera turned off';
         stream.stopVideo();
+        canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
       } else {
         // video is off, start video
         this.status = 'Camera turned on';
 
-        // if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {
-        if(!(typeof SharedArrayBuffer === 'function')) {
+        console.log('checking SharedArrayBuffer', typeof SharedArrayBuffer);
+        if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {
+        // if(!(typeof SharedArrayBuffer === 'function')) {
           // if desktop Chrome or Edge (Chromium) with SharedArrayBuffer not enabled
+          console.log('site is chrome and w/o SharedArrayBuffer');
+          console.log('trying to put video on ', canvasHandler);
 
-          console.log('starting video on chrome w/o sharedArrayBuffer');
           stream.startVideo({ videoElement: canvasHandler });
+
         } else {
           // all other browsers and desktop Chrome or Edge (Chromium) with SharedArrayBuffer enabled
 
-          console.log('starting video on other browser or chrome w/ SharedArrayBuffer');
+          console.log('other browsers or chrome w/ SharedArrayBuffer')
           console.log('trying to put video on ', canvasHandler);
 
+          /*
           stream.startVideo(() => {
             stream.renderVideo(canvasHandler, client.getCurrentUserInfo().userId, 300, 200, 0, 0, 3);
           })
+          */
+         stream.startVideo().then(() => {
+          stream.renderVideo(canvasHandler, client.getCurrentUserInfo().userId,
+            canvasHandler.width, canvasHandler.height, 0, 0, 3
+          ).then(() => {
+            console.log('succesfully rendered video');
+          }).catch((e) => {
+            console.log('error render video', e);
+          });
+         })
         }
 
         canvasRenderHandle.width = canvasHandler.width;
@@ -628,19 +645,27 @@ export default {
         console.log('turning screen share off');
         // screen share is on, toggle off
         stream.stopShareScreen();
+        canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
         this.status = 'Screen share turned off';
       } else {
         // screen share is off, toggle on
         console.log('starting screen share on', screenHandler);
         stream.startShareScreen(screenHandler).then(() => {
           console.log(`setting the render screen to ${screenHandler.width} x ${screenHandler.height}`)
-          canvasRenderHandle.width = screenHandler.width;
-          canvasRenderHandle.height = screenHandler.height;
+          if(screenHandler.width == 0) {
+            canvasRenderHandle.width=1024;
+            canvasRenderHandle.height=800;
+
+          } else {
+            canvasRenderHandle.width = screenHandler.width;
+            canvasRenderHandle.height = screenHandler.height;
+          }
+        }).catch((e) => {
+          console.log('error sharing screen', e);
         });
         this.status = 'Screen share turned on';
 
       }
-
 
       // update the toggle state
       this.$store.commit('teacherCreateAssignment/toggleShareScreen');
@@ -655,6 +680,7 @@ export default {
         // mic is on, turn it off
         stream.stopAudio();
         micTrack.getAudioTracks()[0].enabled = false;
+        canvasRenderHandleCtx.clearRect(0,0, canvasRenderHandle.width, canvasRenderHandle.height);
         this.status = 'Microphone is turned off';
       } else {
         // mic is off, turn it on
