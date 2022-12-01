@@ -215,6 +215,7 @@ let audioCanvasCtx = null;
 
 let mcstream = null; // canvas stream
 let mc = null; // local media record to record zoom stream (theorically)
+let mcMimeType = !!window.safari ? "video/mp4" : "video/webm";
 let ms = null; // local media stream representing the canvas/video
 let micTrack = null; // local media stream representing user's mic
 let chunks = [];
@@ -319,6 +320,8 @@ export default {
     screenHandler.className='border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl';
     theScreen.appendChild(screenHandler);
 
+    // test: capture everything from share screen video / canvas
+    // canvasRenderHandleStream = screenHandler.captureStream();
 
     // capture the mic, and put it in a audioContext, so we can analyse and draw
     // also, put the stream in the final render stream, so can record things. 
@@ -342,7 +345,8 @@ export default {
     audioCanvas = document.querySelector('#the-audio');
     audioCanvasCtx = audioCanvas.getContext('2d');
 
-    console.log('audioContext', audioContext);
+    // debug, check audio Context
+    // console.log('audioContext', audioContext);
 
     // draw the waveform
     function draw() {
@@ -381,7 +385,7 @@ export default {
 
     // draw composite based on source canvas/video
     let drawComposite = () => {
-      requestAnimationFrame(drawComposite);
+      //requestAnimationFrame(drawComposite);
 
       let micOn = this.$store.state.teacherCreateAssignment.states.isMicOn;
       let videoOn = this.$store.state.teacherCreateAssignment.states.isVideoOn;
@@ -421,11 +425,14 @@ export default {
         canvasRenderHandleCtx.fillText("NO INPUT", canvasRenderHandle.width/2, canvasRenderHandle.height/2);
       }
     }; 
-    drawComposite();
+    // drawComposite();
+    // redraw the composite canvas 60 times / second. would like to use requestAnimationFrame, 
+    // but it pauses if the browser is off focus. 
+    setInterval(drawComposite, 1000/60);
 
     // start building the media recorder
     // capture what's going on in the render canvas and the mic
-    mc = new MediaRecorder(canvasRenderHandleStream);
+    mc = new MediaRecorder(canvasRenderHandleStream, { type: mcMimeType });
     mc.onstart = () => {
       // start recording
       console.log('mc onstart');
@@ -434,13 +441,15 @@ export default {
       console.log('mc onstop');
 
       //collect all data and dump it
-      const blob = new Blob(chunks, {type: 'video/webm'});
-      //const blob = new Blob(chunks);
+      //const blob = new Blob(chunks, {type: 'video/webm'});
+      // each browser has different idea what mimeType is supported. so safari: video/mp4, firefox & chrome: video/webm
+      const blob = new Blob(chunks, { type: mcMimeType });
       chunks = [];
 
       //put the blob in a video gallery
+      console.log('pushing new blob with memeType', mcMimeType );
       var url = URL.createObjectURL(blob);
-      console.log('url', url);
+      // console.log('url', url);
       var videoTag = document.createElement('video');
       videoTag.autoplay = true;
       videoTag.controls = true;
@@ -458,7 +467,7 @@ export default {
       // URL.revokeObjectURL(url);
 
       // for debug, video content for debugging
-      console.log('record url dump', url);
+      // console.log('record url dump', url);
     }
     mc.ondataavailable = (e) => {
       // move data from buffer to array
