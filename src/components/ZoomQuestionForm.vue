@@ -569,6 +569,11 @@ export default {
       console.log('join success');
       this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
 
+      // detect 'stop sharing' controlled by the browser
+      client.on('passively-stop-share', (payload) => {
+        console.log('detected screen share is off', payload);
+        this.toggleShareScreenButton();
+      });
 
     },
     leaveZoomMeeting(e) {
