@@ -116,13 +116,15 @@
         <div v-if="!isPreviewing"
              class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
         >
-          <video controls height="640" width="854">
+          <video autoplay controls height="640" width="854" crossorigin>
             <!-- must ensure all recordings are in mp4 format -->
             <source :src="assignment.recording_path" type="video/mp4" />
             Your browser don't support video tag.
           </video>
         </div>
-
+        <div v-if="!isPreviewing">
+          <p>If you unable to view the video, please try Google Chrome browser.</p>
+        </div>
       </div>
 
 
