@@ -13,6 +13,25 @@
       </div>
 
       <div class="px-5 w-full md:px-10">
+        <!-- SECTION: SCHOOLS -->
+        <div class="mt-2 mb-3">
+          <section-title class="mb-5 text-left" title="Schools"/>
+          <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
+            <div class="flex flex-row items-center h-full text-left text-purple-primary">
+              <div class="flex flex-col px-2 w-100">
+                <router-link :to="{ name: 'student.schools' }">
+                  {{ $store.getters['getAuthUser'].school.name }}
+                </router-link>
+              </div>
+            </div>
+            <div class="flex flex-row items-center h-full text-left text-purple-primary border-t-1">
+              <div class="flex flex-col px-2 w-100">
+                Ed School Here
+              </div>
+            </div>
+          </div>
+            
+        </div>
 
         <!-- SECTION: SUMMARY -->
         <div class="mt-2 mb-3">
