@@ -18,14 +18,20 @@
           <section-title class="mb-5 text-left" title="Schools"/>
           <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
-              <div class="flex flex-col px-2 w-100">
+              <div class="flex flex-col px-2 w-1/8">
+                <IconBaseTwo><AcademicIcon /></IconBaseTwo>
+              </div>
+              <div class="flex flex-col px-2 w-7/8">
                 <router-link :to="{ name: 'student.schools' }">
                   {{ $store.getters['getAuthUser'].school.name }}
                 </router-link>
               </div>
             </div>
             <div class="flex flex-row items-center h-full text-left text-purple-primary border-t-1">
-              <div class="flex flex-col px-2 w-100">
+              <div class="flex flex-col px-2 w-1/8">
+                <IconBaseTwo><AcademicIcon /></IconBaseTwo>
+              </div>
+              <div class="flex flex-col px-2 w-7/8">
                 Ed School Here
               </div>
             </div>
@@ -93,6 +99,7 @@ import AssignmentCard from "@/components/AssignmentCard";
 import StudentRepository from "@/repositories/StudentRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import IconBaseTwo from "@/components/IconBaseTwo";
+import AcademicIcon from "@/components/icons/AcademicIcon";
 
 export default {
   name: "StudentHome",
@@ -154,7 +161,7 @@ export default {
   },
   components: {
     IconBaseTwo,
-    AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase
+    AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase, AcademicIcon,
   },
 }
 </script>
