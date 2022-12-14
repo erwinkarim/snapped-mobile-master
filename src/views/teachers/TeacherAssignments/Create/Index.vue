@@ -160,7 +160,7 @@
 
           <textarea v-model="$store.state.teacherCreateAssignment.assignmentDetails.remarks"
                     class="py-5 pr-2 pl-6 w-full h-36 text-lg font-normal leading-tight rounded-md border border-none appearance-none mb-26 bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-                    placeholder="Remarks"
+                    placeholder="Remarks or Link"
           />
         </div>
       </div>
