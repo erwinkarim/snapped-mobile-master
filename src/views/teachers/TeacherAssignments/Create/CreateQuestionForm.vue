@@ -1,6 +1,6 @@
 <template>
   <!-- FORM QUESTION -->
-  <div class="relative top-12 flex-wrap">
+  <div class="relative top-12 flex-wrap w-full">
 
     <!--  INSTRUCTION   -->
     <div v-if="!$store.state.teacherCreateAssignment.states.isCroppingSnappedQuestion"

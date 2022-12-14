@@ -31,21 +31,18 @@
       >
 
         <!-- WRITTEN QUESTION TITLE -->
-        <div v-if="assignment.written_question.title"
+        <h2 v-if="assignment.written_question.title"
              class="mb-2"
         >
           {{ assignment.written_question.title }}
-        </div>
+        </h2>
 
         <!-- WRITTEN QUESTION DESCRIPTION -->
-        <div v-if="assignment.written_question.description"
-             id="test"
-        >
-          <div v-if="isReadingMore"
-               class="leading-relaxed"
-          >
+        <div v-if="assignment.written_question.description" id="test" >
+          <strong>Description: </strong><br />
+          <VueMarkdown v-if="isReadingMore" class="leading-relaxed" >
             {{ assignment.written_question.description }}
-          </div>
+          </VueMarkdown>
           <text-multiline-truncate v-else :lines="7">
             {{ assignment.written_question.description }}
           </text-multiline-truncate>
@@ -76,17 +73,18 @@
         </button>
 
         <!-- REMARKS -->
-        <div
-                class="flex flex-col mt-8 text-purple-primary text-xs-plus"
-        >
-          {{ assignment.remarks }}
+        <div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
+          <strong>Remarks: </strong><br />
+          <VueMarkdown>
+            {{ assignment.remarks }}
+          </VueMarkdown>
         </div>
       </div>
 
       <!-- Snapped Question -->
       <div v-if="hasSnappedQuestion"
            :class="isPreviewing ? 'mb-20' : ''"
-           class="flex flex-col mt-8 text-purple-primary text-xs-plus"
+           class="flex flex-col mt-8 text-purple-primary text-xs-plus test"
       >
         <div v-if="!isPreviewing"
              class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
@@ -138,6 +136,7 @@ import QuestionPreviewSwiper from "@/components/QuestionPreviewSwiper";
 import moment from "moment";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
+import VueMarkdown from 'vue-markdown';
 
 export default {
   name: "AssignmentQuestionCard",
@@ -169,7 +168,7 @@ export default {
       console.log('asking hasZoomQuestion');
       console.log('recording_path', this.assignment.recording_path);
       console.log('recording_path is not undefined', this.assignment.recording_path !== undefined);
-      console.log('recording_path.length', this.assignment.recording_path.length > 0);
+      //console.log('recording_path.length', this.assignment.recording_path.length > 0);
       return this.assignment.recording_path !== undefined && this.assignment.recording_path.length > 0;
     },
 
@@ -222,7 +221,7 @@ export default {
       this.$emit('swiperDetails', this.swiperDetails)
     }
   },
-  components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate}
+  components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate, VueMarkdown }
 }
 </script>
 
