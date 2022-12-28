@@ -75,10 +75,9 @@
         <!-- REMARKS -->
         <div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
           <strong>Remarks: </strong><br />
-          <VueMarkdown>
-            {{ assignment.remarks }}
-          </VueMarkdown>
+          <VueMarkdown> {{ assignment.remarks }} </VueMarkdown>
         </div>
+
       </div>
 
       <!-- Snapped Question -->
