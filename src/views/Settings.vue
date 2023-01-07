@@ -26,6 +26,18 @@
       </div>
 
       <div class="w-full px-7 mt-3">
+        <section-title class="text-left my-4" title="Report"/>
+        <div class="w-full text-left py-3 flex flex-row w-full border-b-1 items-center bg-white">
+          <div class="w-1/12">
+            <icon-base class=" w-full"><bookmark-icon /></icon-base>
+          </div>
+          <router-link :to="{ name: 'student.report-card'}" class="w-5/6 ml-5 text-purple-primary  truncate pr-4">
+            REPORT CARD
+          </router-link>
+        </div>
+      </div>
+
+      <div class="w-full px-7 mt-3">
         <section-title class="text-left my-4" title="Log out"/>
 
 
@@ -55,6 +67,7 @@ import PhoneIcon from "../components/icons/PhoneIcon";
 import EmailIcon from "../components/icons/EmailIcon";
 import BookIcon from "../components/icons/BookIcon";
 import AcademicIcon from "../components/icons/AcademicIcon";
+import BookmarkIcon from "../components/icons/BookmarkIcon";
 import IconBase from "../components/IconBase";
 import IdentificationIcon from "../components/icons/IdentificationIcon";
 import IconBaseTwo from "../components/IconBaseTwo";
@@ -85,7 +98,7 @@ export default {
         contactNum: {
           value: null,
           icon: 'phone-icon'
-        }
+        },
       }
     };
   },
@@ -116,13 +129,8 @@ export default {
   },
   components: {
     LogoutIcon,
-    PhoneIcon,
-    EmailIcon,
-    BookIcon,
-    AcademicIcon,
-    IconBase,
-    IdentificationIcon,
-    IconBaseTwo,
+    PhoneIcon, EmailIcon, BookIcon, AcademicIcon, BookmarkIcon,
+    IconBase, IdentificationIcon, IconBaseTwo,
     SectionTitle,
     PageTitle,
     DashboardLayout

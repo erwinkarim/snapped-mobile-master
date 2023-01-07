@@ -14,6 +14,15 @@ export default {
         })
     },
 
+    getReportCard() {
+        return Repository.get('/students/report-card', {
+            headers: {
+                Accept: "application/json",
+                Authorization: 'Bearer ' + token,
+            },
+        })
+    },
+
     getOverview(studentID) {
         return Repository.get(`${resource}/${studentID}/overview`)
     },

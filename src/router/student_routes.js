@@ -13,6 +13,7 @@ import StudentOverview from "@/views/students/StudentDetails/components/StudentO
 import StudentRanking from "@/views/students/StudentRanking/Index";
 import NationalRanking from "@/views/students/StudentRanking/NationalRanking";
 import SchoolRanking from "@/views/students/StudentRanking/SchoolRanking";
+import ReportCard from '@/views/students/StudentProfile/ReportCard';
 
 const studentAccessControlMeta = {
     checkAuth: 'true',
@@ -131,6 +132,13 @@ export default {
             path: 'settings',
             name: 'student.settings',
             component: Settings,
+            meta: studentAccessControlMeta
+        },
+
+        {
+            path: 'report-card',
+            name: 'student.report-card',
+            component: ReportCard,
             meta: studentAccessControlMeta
         },
     ]
