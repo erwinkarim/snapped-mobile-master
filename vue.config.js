@@ -11,7 +11,11 @@ module.exports = {
     },
     proxy: 'http://localhost:8000/',
   },
-  configureWebpack: {
-    plugins: [new BundleAnalyzerPlugin()]
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+    } else {
+      // for dev only
+      plugins: [new BundleAnalyzerPlugin()]
+    }
   },
 };
