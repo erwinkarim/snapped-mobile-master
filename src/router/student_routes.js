@@ -1,3 +1,19 @@
+const StudentHome = () => import("@/views/students/StudentHome/StudentHome.vue");
+const StudentClass = () => import("@/views/students/StudentClass/StudentClass.vue");
+const ClassRanking = () => import("@/views/students/StudentClass/Components/ClassRanking.vue");
+const ClassTeachers = () => import("@/views/students/StudentClass/Components/ClassTeachers.vue");
+const ClassClassmates = () => import("@/views/students/StudentClass/Components/ClassClassmates.vue");
+const Settings = () => import("@/views/Settings.vue");
+const AssignmentIndex = () => import("@/views/students/StudentAssignments/Index/Index.vue");
+const App = () => import("@/App.vue");
+const StudentDetails = () => import("@/views/students/StudentDetails/StudentDetails.vue");
+const StudentBadges = () => import("@/views/students/StudentDetails/components/StudentBadges.vue");
+const StudentAssignments = () => import("@/views/students/StudentDetails/components/StudentAssignments.vue");
+const StudentOverview = () => import("@/views/students/StudentDetails/components/StudentOverview.vue");
+const StudentRanking = () => import("@/views/students/StudentRanking/Index.vue");
+const NationalRanking = () => import("@/views/students/StudentRanking/NationalRanking.vue");
+const SchoolRanking = () => import("@/views/students/StudentRanking/SchoolRanking.vue");
+/*
 import StudentHome from "@/views/students/StudentHome/StudentHome";
 import StudentClass from "@/views/students/StudentClass/StudentClass";
 import ClassRanking from "@/views/students/StudentClass/Components/ClassRanking";
@@ -13,6 +29,7 @@ import StudentOverview from "@/views/students/StudentDetails/components/StudentO
 import StudentRanking from "@/views/students/StudentRanking/Index";
 import NationalRanking from "@/views/students/StudentRanking/NationalRanking";
 import SchoolRanking from "@/views/students/StudentRanking/SchoolRanking";
+*/
 
 const studentAccessControlMeta = {
     checkAuth: 'true',

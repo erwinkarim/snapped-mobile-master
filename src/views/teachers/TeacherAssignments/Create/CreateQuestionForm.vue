@@ -238,7 +238,9 @@ import PlusIcon from "@/components/icons/PlusIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import ZoomIcon from "@/components/icons/ZoomIcon";
 import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
-import VueCropper from 'vue-cropperjs';
+
+const VueCropper = () => import('vue-cropperjs');
+// import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import ZoomQuestionForm from '@/components/ZoomQuestionForm';
 

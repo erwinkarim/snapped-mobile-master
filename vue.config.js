@@ -1,3 +1,6 @@
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+
 module.exports = {
   devServer: {
     headers: {
@@ -7,5 +10,8 @@ module.exports = {
       // somehow breaks firefox
     },
     proxy: 'http://localhost:8000/',
-  }
-}
+  },
+  configureWebpack: {
+    plugins: [new BundleAnalyzerPlugin()]
+  },
+};
