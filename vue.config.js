@@ -11,6 +11,10 @@ module.exports = {
     },
     proxy: 'http://localhost:8000/',
   },
+  chainWebpack: config => {
+    // remove the prefetch plugin
+    config.plugins.delete('prefetch')
+  },
   configureWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
     } else {
