@@ -720,7 +720,7 @@ export default {
                     formData.append('due_datetime', moment(state.assignmentDetails.due_datetime).format('YYYY-MM-DD HH:mm:ss'));
                     formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
                     formData.append('remarks', state.assignmentDetails.remarks ?? '');
-                    formData.append('recording_meeting_id', zoom_meeting.meeting_id);
+                    formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
 
                     for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
                         let file = state.assignmentDetails.question.snappedQuestions[i];

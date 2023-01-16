@@ -1,3 +1,11 @@
+const AssignmentShow = () => import("@/views/students/StudentAssignments/Show/Index.vue");
+const AnswerIndex = () => import("@/views/students/StudentAssignments/Answer/Index.vue");
+const AnswerWrite = () => import("@/views/students/StudentAssignments/Answer/AnswerWrite.vue");
+const AnswerSave = () => import("@/views/students/StudentAssignments/Answer/AnswerSave.vue");
+const App = () => import("@/App.vue");
+const AnswerEdit = () => import("@/views/students/StudentAssignments/Answer/AnswerEdit.vue");
+const MarkedShow = () => import("@/views/students/StudentAssignments/Marked/Index.vue");
+/*
 import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
 import AnswerIndex from "@/views/students/StudentAssignments/Answer/Index";
 import AnswerWrite from "@/views/students/StudentAssignments/Answer/AnswerWrite";
@@ -5,6 +13,7 @@ import AnswerSave from "@/views/students/StudentAssignments/Answer/AnswerSave";
 import App from "@/App";
 import AnswerEdit from "@/views/students/StudentAssignments/Answer/AnswerEdit";
 import MarkedShow from "@/views/students/StudentAssignments/Marked/Index";
+*/
 
 const studentAccessControlMeta = {
     checkAuth: 'true',

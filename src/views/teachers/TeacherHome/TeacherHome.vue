@@ -91,11 +91,20 @@
 </template>
 
 <script>
+
+const IconBase = () => import("@/components/IconBase.vue");
+const AppLogo = () => import("@/components/icons/AppLogo.vue");
+const PlusIcon = () => import("@/components/icons/PlusIcon.vue");
+const SectionTitle = () => import("@/components/SectionTitle.vue");
+const ClassesSwiper = () => import("@/views/teachers/TeacherHome/ClassesSwiper.vue");
+
+/*
 import IconBase from "@/components/IconBase";
 import AppLogo from "@/components/icons/AppLogo";
 import PlusIcon from "@/components/icons/PlusIcon";
 import SectionTitle from "@/components/SectionTitle";
 import ClassesSwiper from "@/views/teachers/TeacherHome/ClassesSwiper";
+*/
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import AssignmentSwiper from "@/views/teachers/TeacherHome/AssignmentSwiper";
 import DashboardLayout from "@/views/layout/DashboardLayout";

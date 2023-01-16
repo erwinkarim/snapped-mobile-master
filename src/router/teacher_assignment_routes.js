@@ -1,14 +1,24 @@
 import App from "@/App";
-import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
-import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
-import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
-import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
-import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
-import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
-import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
-import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
-import AssignmentEdit from "@/views/teachers/TeacherAssignments/Edit/Index";
-import AssignmentExport from "@/views/teachers/TeacherAssignments/Export/Index";
+const AssignmentDetails = () => import("@/views/teachers/TeacherAssignments/Index.vue");
+const AssignmentShow = () => import("@/views/teachers/TeacherAssignments/Show/Index.vue");
+const AssignmentCreate = () => import("@/views/teachers/TeacherAssignments/Create/Index.vue");
+const AssignmentMark = () => import("@/views/teachers/TeacherAssignments/Mark/Index.vue");
+const AssignmentMarkDetails = () => import('@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails.vue');
+const AssignmentMarkFeedback = () => import('@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback.vue');
+const AssignmentAddMark = () => import("@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark.vue");
+const EditSnappedAnswer = () =>  import("@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer.vue");
+const AssignmentEdit = () =>  import("@/views/teachers/TeacherAssignments/Edit/Index.vue");
+const AssignmentExport = () =>  import("@/views/teachers/TeacherAssignments/Export/Index.vue");
+// import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
+// import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
+// import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
+// import AssignmentMark from "@/views/teachers/TeacherAssignments/Mark/Index";
+// import AssignmentMarkDetails from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentDetails';
+// import AssignmentMarkFeedback from '@/views/teachers/TeacherAssignments/Mark/Components/AssignmentFeedback';
+// import AssignmentAddMark from "@/views/teachers/TeacherAssignments/Mark/Components/AssignmentAddMark";
+// import EditSnappedAnswer from "@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer";
+// import AssignmentEdit from "@/views/teachers/TeacherAssignments/Edit/Index";
+// import AssignmentExport from "@/views/teachers/TeacherAssignments/Export/Index";
 
 const teacherAccessControlMeta = {
     checkAuth: 'true',

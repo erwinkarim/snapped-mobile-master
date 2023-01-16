@@ -1,4 +1,6 @@
-import Login from "@/views/Login";
+const Login = () => import("@/views/Login.vue");
+
+// import Login from "@/views/Login";
 import teacher_routes from "@/router/teacher_routes";
 import student_routes from "@/router/student_routes";
 import student_assignment_routes from "@/router/student_assignment_routes";
