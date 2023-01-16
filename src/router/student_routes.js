@@ -150,5 +150,6 @@ export default {
             component: Settings,
             meta: studentAccessControlMeta
         },
+
     ]
 }

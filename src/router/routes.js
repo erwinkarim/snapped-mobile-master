@@ -5,9 +5,9 @@ import teacher_routes from "@/router/teacher_routes";
 import student_routes from "@/router/student_routes";
 import student_assignment_routes from "@/router/student_assignment_routes";
 import teacher_assignment_routes from "@/router/teacher_assignment_routes";
-// import googleAuthCallback from "@/views/integrations/googleAuthCallback";
-const googleAuthCallback = () => import("@/views/integrations/googleAuthCallback.vue");
-// import UserProfileEdit from "@/views/auth/Edit"
+import coin_routes from "@/router/coin_routes";
+import googleAuthCallback from "@/views/integrations/googleAuthCallback";
+import UserProfileEdit from "@/views/auth/Edit"
 
 export default [
     {
@@ -20,6 +20,7 @@ export default [
     student_routes,
     student_assignment_routes,
     teacher_assignment_routes,
+    coin_routes,
 
     // User update profile details. TEMPORARILY DISABLED TILL RELEASE DATE
     // {
