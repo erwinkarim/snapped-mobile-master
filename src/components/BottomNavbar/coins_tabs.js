@@ -9,6 +9,8 @@ export default [
         routeName: 'coin.home',
         icon: CoinsIcon,
     },
+    /*
+        QR trading will be done later.
     {
         tabName: 'Scan QR',
         routeName: 'coin.scan_qr',
@@ -19,6 +21,7 @@ export default [
         routeName: 'coin.show_qr',
         icon: QRCodeIcon,
     },
+    */
     {
         tabName: 'Top-Up',
         routeName: 'coin.top_up',

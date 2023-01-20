@@ -7,7 +7,7 @@
     <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
       <div class="flex flex-row items-center h-full text-left text-purple-primary">
         <div class="flex flex-col px-2 w-full">
-          Transaction ID: {{trxID }}
+          Transaction ID: {{ trxID }}
         </div>
       </div>
       <div class="flex flex-row items-center h-full text-left text-purple-primary px-2">
@@ -15,7 +15,7 @@
       </div>
       <div class="flex flex-row items-center h-full text-left text-purple-primary">
         <div class="flex flex-col px-2 w-full">
-          Status: SUCCESS | PENDING | FAILED
+          Status: SUCCESS
         </div>
       </div>
     </div>
@@ -36,7 +36,6 @@ export default {
   }, 
   name: "EdCoinTransactionPill",
   mounted() {
-    console.log("EdCoinTransactionPill mounted");
   }
 }
 
