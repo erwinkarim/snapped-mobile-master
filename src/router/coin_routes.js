@@ -41,7 +41,7 @@ export default {
         meta: authControlMeta,
       },
       {
-        path: '/detail/:trxID',
+        path: 'detail/:trxID',
         component: CoinTrxDetail,
         name: 'coin.trxDetail',
         meta: authControlMeta,

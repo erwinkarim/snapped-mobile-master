@@ -16,34 +16,28 @@
       <div class="px-5 w-full md:px-10">
 
         <!-- from -->
-        <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
-          <div class="flex flex-col items-center h-full text-left text-purple-primary">
-            <div class="flex w-full border-b-2 border-grey-500">From Details:</div>
-            <div class="flex px-2 w-full">
-              {{ from }}
-            </div>
-          </div>
+        <EdCoinTrxPeoplePillVue :people=from :model-name=trx.from_model_name :model-id=trx.from_model_id />
+
+        <div class="overflow-hidden justify-between max-w-sm md:max-w-xl w-full text-6xl" >
+          | 
         </div>
 
+
         <!-- transaction amount -->
-        <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full">
+        <div class="overflow-hidden justify-between px-3 max-w-sm md:max-w-xl h-full">
           <div class="text-6xl text-bold px-5 w-full md:px-10">
             {{ trx.amount }} Coins
           </div>
-          <p class="mb-5 text-left">Transaction made on {{ (trx.created_at).toLocaleString('en-GB') }} </p>
+          <p class="mb-5 text-center">Transaction made on {{ new Date(trx.created_at).toLocaleString('en-GB') }} </p>
+        </div>
+
+        <div class="overflow-hidden justify-between max-w-sm md:max-w-xl w-full text-6xl" >
+          &darr;
         </div>
 
         <!-- to -->
-        <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
-          <div class="flex flex-col items-center h-full text-left text-purple-primary">
-            <div class="flex w-full border-b-2 border-grey-500">To Details:</div>
-            <div class="flex px-2 w-full">
-              {{ to }}
-            </div>
-          </div>
-        </div>
+        <EdCoinTrxPeoplePillVue :people=to :model-name=trx.to_model_name :model-id=trx.to_model_id />
       </div>
-      <div class="h-30">Empty Space</div>
 
     </template>
 
@@ -63,6 +57,9 @@ import NavBack from "@/components/NavBack";
 import PageTitle from "@/components/PageTitle";
 import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 import CoinsRepository from "../../repositories/CoinsRepository";
+import EdCoinTrxPeoplePillVue from "@/components/EdCoinTrxPeoplePill.vue";
+import IconBaseTwo from "@/components/IconBaseTwo";
+import ArrowDownIcon from "@/components/icons/ArrowDownIcon";
 
 export default {
   name: 'CoinTrxDetail',
@@ -95,7 +92,7 @@ export default {
   },
   components: {
     DashboardLayout, SectionTitle, PageHeaderThree, NavBack, PageTitle,
-    CoinsBottomNavBarVue,
+    CoinsBottomNavBarVue, EdCoinTrxPeoplePillVue,  ArrowDownIcon, IconBaseTwo,
   }
 }
 </script>

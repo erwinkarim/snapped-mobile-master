@@ -17,7 +17,7 @@
         <div class="mt-2 mb-3">
           <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
-              You can redeem up to X coins
+              You can redeem up to {{ availableMarks }} coins
             </div>
           </div>
         </div>
@@ -69,6 +69,23 @@ export default {
       console.log(response);
       this.marks = response.data.marks;
     });
+  },
+  computed: {
+    availableMarks(){
+      if(this.marks.length === 0){
+        return 0;
+      } else {
+        return this.marks.reduce((a, v) => {
+          if(v.amount_redeemed !== null){
+            console.log('v = ', v);
+            console.log(`adding ${v.final_marks} to ${a}`);
+            return a += v.final_marks;
+          } else {
+            return a;
+          }
+        }, 0);
+      }
+    },
   },
   methods: {
     requestTopUp() {

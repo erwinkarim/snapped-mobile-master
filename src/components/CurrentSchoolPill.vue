@@ -5,8 +5,8 @@
       <div class="flex flex-col px-2 w-1/6">
         <SchoolIcon />
       </div>
-      <div class="flex flex-col px-2 w-1/3">
-        <div>School Name</div>
+      <div class="flex flex-col px-2 w-full">
+        <div>{{  studentInfo.school.name }}</div>
       </div>
     </div>
   </div>
@@ -15,11 +15,20 @@
 <script>
 
 import SchoolIcon from './icons/SchoolIcon.vue';
+import StudentRepository from '@/repositories/StudentRepository.js';
 
 export default {
   name: "CurrentSchoolPill",
   mounted(){ 
     console.log("CurrentSchoolPill mounted");
+    StudentRepository.getStudentDetails().then((res) => {
+      this.studentInfo = res.data.data[0];
+    });
+  },
+  data() {
+    return {
+      studentInfo: {},
+    };
   },
   components: {
     SchoolIcon,

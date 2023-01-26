@@ -12,6 +12,7 @@
 
       <!-- total coins -->
       <div class="px-5 w-full md:px-10">
+        <section-title class="text-left" title="Coins"/>
         <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
           <div class="flex flex-row items-center h-full text-left text-purple-primary">
             <div class="flex flex-col px-2 w-1/8">
@@ -27,10 +28,10 @@
         </div>
       </div>
 
+      <!-- total marks -->
       <div class="px-5 w-full md:px-10">
-        <!-- total marks -->
-        <div class="mt-2 mb-3">
-          <section-title class="mb-5 text-left" title="Marks"/>
+        <div class="mt-3 mb-3">
+          <section-title class="text-left" title="Marks"/>
           <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
             <div class="flex flex-row items-center h-full text-left text-purple-primary">
               <div class="flex flex-col px-2 w-1/8">
@@ -47,9 +48,8 @@
         </div>
       </div>
 
+      <!-- transaction history -->
       <div class="px-5 w-full md:px-10">
-        <!-- transaction history -->
-        <p>transaction history here</p>
         <div class="mt-2 mb-3">
           <p>Showing {{ trxResult.length }} transaction(s)</p>
         </div>

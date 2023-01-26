@@ -5,10 +5,10 @@
         <CoinsIcon />
       </div>
       <div class="flex flex-col px-2 w-1/2">
-        XX Coins
+        {{ trxResult.length === 0 ? 0 : trxResult.at(0).balance }} Coins
       </div>
       <div class="flex flex-col px-2 w-1/2">
-        Ed Coins here
+        Get More Coins
       </div>
     </router-link>
   </div>
@@ -17,11 +17,21 @@
 <script>
 
 import CoinsIcon from './icons/CoinsIcon.vue';
+import CoinsRepository from "@/repositories/CoinsRepository";
 
 export default {
     name: "EdCoinSummaryPill",
+    data() {
+      return {
+        trxResult: [],
+      }
+    },
     mounted() {
-        console.log('edcoin pill mounted');
+      // load up the transactions
+      CoinsRepository.coinTrxList().then((res) => {
+        console.log('get coins trx history', res);
+        this.trxResult = res.data;
+      });
     },
     components: {
         CoinsIcon

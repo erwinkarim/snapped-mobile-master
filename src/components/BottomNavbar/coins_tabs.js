@@ -2,8 +2,14 @@ import QRCodeIcon  from "@/components/icons/QRCodeIcon";
 import CoinsIcon  from "@/components/icons/CoinsIcon";
 import ScanIcon from "@/components/icons/ScanIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
+import HomeIcon from "@/components/icons/HomeIcon";
 
 export default [
+    {
+        tabName: 'Home',
+        routeName: 'student.home', // should base on student or teacher
+        icon: HomeIcon,
+    },
     {
         tabName: 'Coins',
         routeName: 'coin.home',

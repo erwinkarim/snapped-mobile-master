@@ -100,8 +100,9 @@ export default {
       assignments: [],
       numOfNewAssignments: 0,
       numOfDueSoonAssignments: 0,
-      numOfOverdueAssignments: 0
-
+      numOfOverdueAssignments: 0,
+      trxResult: [],
+      studentInfo: {},
     }
   },
   methods: {
@@ -148,8 +149,8 @@ export default {
     },
   },
   mounted() {
-    this.getAssignments()
-    this.fetchSummary()
+    this.getAssignments();
+    this.fetchSummary();
   },
   components: {
     IconBaseTwo,

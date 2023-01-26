@@ -1,7 +1,7 @@
 <template>
   <div class="mt-2 mb-3">
     <div class="flex flex-row w-full">
-      <div class="flex flex-col w-1/2 text-left">{{ (date).toLocaleString('en-GB') }}</div>
+      <div class="flex flex-col w-1/2 text-left">{{ (new Date(date)).toLocaleString('en-GB') }}</div>
       <div class="flex flex-col w-1/2 text-right">Details</div>
     </div>
     <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
@@ -30,7 +30,7 @@ export default {
 
   }, 
   props: {
-    date: Date,
+    date: String,
     trxID: Number,
     trxAmount: { default: 0, type: Number },
   }, 
