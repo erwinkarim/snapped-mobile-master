@@ -76,9 +76,7 @@ export default {
         return 0;
       } else {
         return this.marks.reduce((a, v) => {
-          if(v.amount_redeemed !== null){
-            console.log('v = ', v);
-            console.log(`adding ${v.final_marks} to ${a}`);
+          if(v.amount_redeemed === null){
             return a += v.final_marks;
           } else {
             return a;

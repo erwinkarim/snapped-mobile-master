@@ -35,8 +35,6 @@ export default {
     trxAmount: { default: 0, type: Number },
   }, 
   name: "EdCoinTransactionPill",
-  mounted() {
-  }
 }
 
 </script>

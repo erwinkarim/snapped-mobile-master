@@ -13,7 +13,10 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <div class="px-5 w-full md:px-10">
+      <div v-if="status === 0">
+        <div>Loading ...</div>
+      </div>
+      <div v-else-if="status === 1" class="px-5 w-full md:px-10">
 
         <!-- from -->
         <EdCoinTrxPeoplePillVue :people=from :model-name=trx.from_model_name :model-id=trx.from_model_id />
@@ -37,6 +40,9 @@
 
         <!-- to -->
         <EdCoinTrxPeoplePillVue :people=to :model-name=trx.to_model_name :model-id=trx.to_model_id />
+      </div>
+      <div v-else-if="status === 2">
+        <div>Error</div>
       </div>
 
     </template>
@@ -68,6 +74,8 @@ export default {
     // will handle exceptions in the future. 
 
     return {
+      // status: 0 - loading, 1 - success, 2 - error, 3 - unauthorized
+      status: 0,
       trx: {},
       from: {},
       to: {},
@@ -76,10 +84,15 @@ export default {
   }, 
   mounted() {
     CoinsRepository.coinTrxDetail(this.$route.params.trxID).then((res) => {
-      console.log('res', res);
+      this.status = 1;
       this.trx = res.data.trx;
       this.from = res.data.from;
       this.to = res.data.to;
+    }).catch((res) => {
+      // if status is 400
+      console.log('error', res);
+      this.status = 2;
+
     });
     // for demo: generate random data
 

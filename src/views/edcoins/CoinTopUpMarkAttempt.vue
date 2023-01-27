@@ -19,12 +19,9 @@
             <div class="flex w-full text-2xl text-center">{{ status[status_condition] }} </div>
             </div>
           <div class="flex flex-row items-center h-full text-left text-purple-primary p-3 border-t-2 border-grey-500">
-            <div class="flex">Status condition explainer</div>
+            <div class="flex">{{  status_explainer[status_condition] }}</div>
           </div>
         </div>
-        <div>This is a top up attempt page</div>
-        <div>Mark Detail: {{  mark }}</div>
-        <div>Redeem status: {{ status[status_condition] }}</div>
       </div>
     </template>
 
@@ -49,6 +46,11 @@ export default {
     return {
       mark: {},
       status: ['ATTEMPT', 'SUCCESS', 'FAILED'],
+      status_explainer: [
+        'Attempting to redeem coins',
+        'Redeem coin attempt successful',
+        'Failed to redeem coins. Either it already has been redeemed or there is an error. Refresh to try again.'
+      ],
       status_condition: 0,
     }
   },

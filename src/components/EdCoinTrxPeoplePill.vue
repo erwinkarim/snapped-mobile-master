@@ -19,10 +19,10 @@ export default {
     return {
       finalModel: {},
       finalName: "finalName",
-      finalDesc: "",
+      finalDesc: "finalDesc",
     }
   },
-  beforeUpdate(){
+  created(){
     if(this.modelName === "Student"){
       this.finalName = this.people.first_name + " " + this.people.last_name;
       // load extra data once
