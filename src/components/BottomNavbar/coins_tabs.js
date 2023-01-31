@@ -3,6 +3,7 @@ import CoinsIcon  from "@/components/icons/CoinsIcon";
 import ScanIcon from "@/components/icons/ScanIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
+import StoreIcon from "@/components/icons/StoreIcon";
 
 export default [
     {
@@ -32,5 +33,10 @@ export default [
         tabName: 'Top-Up',
         routeName: 'coin.top_up',
         icon: WalletIcon,
+    },
+    {
+        tabName: 'Store',
+        routeName: 'stores.home',
+        icon: StoreIcon,
     },
 ]
