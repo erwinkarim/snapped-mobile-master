@@ -17,6 +17,7 @@
       <div>If orders is confirm. show confirmation message here.</div>
       <div>Details of the order here</div>
       <div>Link to <router-link :to="{ name:'stores.home' }">Stores Home Page</router-link>.</div>
+      <div>{{  order }}</div>
     </template>
 
     <template v-slot:bottomBar>
@@ -32,9 +33,18 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
+import StoresRepository from "@/repositories/StoresRepository";
 
 export default {
   name: 'StoresOrdersNew',
+  data() {
+    return { order: {}};
+  },
+  mounted() {
+    StoresRepository.storeGetOrder(this.$route.params.orderID).then((res) => {
+      this.order = res.data;
+    })
+  },
   components: {
     SectionTitle, DashboardLayout, CoinsBottomNavBarVue, PageHeaderThree, 
     NavBack,

@@ -5,6 +5,7 @@ const StoresProductShow = () => import("@/views/stores/StoresProductShow");
 const StoresOrders = () => import("@/views/stores/StoresOrders");
 const StoresOrdersNew = () => import("@/views/stores/StoresOrdersNew");
 const StoresOrdersShow = () => import("@/views/stores/StoresOrdersShow");
+const StoresOrdersProcess = () => import("@/views/stores/StoresOrdersProcess");
 
 import App from "@/App";
 
@@ -33,6 +34,12 @@ export default {
         path: '/orders/new',
         component: StoresOrdersNew,
         name: 'stores.orders.new',
+        meta: authControlMeta,
+      },
+      {
+        path: '/orders/process',
+        component: StoresOrdersProcess,
+        name: 'stores.orders.process',
         meta: authControlMeta,
       },
       {

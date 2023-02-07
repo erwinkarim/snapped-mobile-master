@@ -16,6 +16,8 @@
       <div class="h-30">Empty Space</div>
       <div>Making a new order for ProductID</div>
       <div>Link to <router-link :to="{ name:'stores.orders.show', params: { orderID: 1 }}">a confirmed order page</router-link>.</div>
+      <div>Ordering a {{ product.name }}</div>
+      <div><router-link :to="{ name: 'stores.orders.process', query: $route.query }">Initiate Order</router-link></div>
     </template>
 
     <template v-slot:bottomBar>
@@ -31,9 +33,19 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
+import StoresRepository from "@/repositories/StoresRepository";
 
 export default {
   name: 'StoresOrdersNew',
+  data(){
+    return { product: {}, }
+  },
+  mounted() {
+    StoresRepository.storeProduct(this.$route.query.storeID, this.$route.query.productID).then((res) => {
+      this.product = res.data;
+    })
+
+  },
   components: {
     SectionTitle, DashboardLayout, CoinsBottomNavBarVue, PageHeaderThree, 
     NavBack,

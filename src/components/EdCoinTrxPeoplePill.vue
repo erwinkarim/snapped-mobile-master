@@ -36,6 +36,11 @@ export default {
     } else if(this.modelName === "Mark"){
       this.finalName = "Assignment " + this.people.assignment_id;
       this.finalDesc = `Marks from assignment ${this.people.assignment_id}`;
+    } else if(this.modelName === "Store"){
+      this.finalName = this.people.name;
+      this.finalDesc = this.people.desc;
+      
+      //should get order details
     }
 
   },

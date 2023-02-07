@@ -22,20 +22,22 @@
         <EdCoinTrxPeoplePillVue :people=from :model-name=trx.from_model_name :model-id=trx.from_model_id />
 
         <div class="overflow-hidden justify-between max-w-sm md:max-w-xl w-full text-6xl" >
-          | 
+          <span v-if="trx.amount > 0">|</span>
+          <span v-else>&uarr;</span>
         </div>
 
 
         <!-- transaction amount -->
         <div class="overflow-hidden justify-between px-3 max-w-sm md:max-w-xl h-full">
           <div class="text-6xl text-bold px-5 w-full md:px-10">
-            {{ trx.amount }} Coins
+            {{ trx.amount < 0 ? -(trx.amount) : trx.amount }} Coins
           </div>
           <p class="mb-5 text-center">Transaction made on {{ new Date(trx.created_at).toLocaleString('en-GB') }} </p>
         </div>
 
         <div class="overflow-hidden justify-between max-w-sm md:max-w-xl w-full text-6xl" >
-          &darr;
+          <span v-if="trx.amount > 0">&darr;</span>
+          <span v-else>|</span>
         </div>
 
         <!-- to -->

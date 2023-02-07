@@ -1,7 +1,6 @@
 
 import Repository from "@/repositories/Repository";
 
-const resource = '/students';
 const token = localStorage.getItem('token');
 
 export default {
