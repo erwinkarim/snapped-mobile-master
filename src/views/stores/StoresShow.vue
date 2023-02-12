@@ -1,27 +1,24 @@
 
 <template>
-  <dashboard-layout class="pt-5" :has-custom-bottom-bar="true" >
+  <dashboard-layout :has-custom-bottom-bar="true" >
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>
           <nav-back :to="{name: 'stores.home'}" class="w-2/7" stroke-color="red-primary"/>
         </template>
-        <template v-slot:mini-title>
-          Store Name
-        </template>
+        <template v-slot:mini-title>{{  store.name }}</template>
       </page-header-three>
     </template>
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <div>Get a list of products here</div>
-      <div>Link to <router-link :to="{ name:'stores.product.show', params: { storeID: 1, productID: 1 }}">a product</router-link>.</div>
-      <div>
-        <ul>
-          <li v-for="product in products">
-            <router-link :to="{ name:'stores.product.show', params: { storeID: $route.params.storeID, productID: product.id} }">{{ product.name }} ({{ product.price }} EdCoins)</router-link>
-          </li>
-        </ul>
+      <img src="@/assets/img/300x150.jpeg" />
+      <div class="w-full text-left break-words p-2">
+        {{  store.desc }}
+      </div>
+      <h2 class="text-lg font-bold">Products</h2>
+      <div ref="product-content" class="grid grid-cols-2 gap-2">
+        <ProductCard class="col-span-1" v-for="product in products" :product="product" />
       </div>
     </template>
 
@@ -39,15 +36,21 @@ import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
 import StoresRepository from "@/repositories/StoresRepository";
+import ProductCard from "@/components/Store/ProductCard.vue";
 
 export default {
   name: 'StoresShow',
   data(){
     return {
+      store: {},
       products: [],
     };
   },
   mounted(){
+    StoresRepository.storeDetail(this.$route.params.storeID).then((res) => {
+      this.store = res.data;
+    });
+
     // load store products
     StoresRepository.storeProducts(this.$route.params.storeID).then((res) => {
       console.log('store products', res);
@@ -56,7 +59,7 @@ export default {
   },
   components: {
     SectionTitle, DashboardLayout, CoinsBottomNavBarVue, PageHeaderThree, 
-    NavBack,
+    NavBack, ProductCard,
   },
 }
 </script>

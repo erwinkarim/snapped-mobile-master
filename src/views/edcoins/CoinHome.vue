@@ -1,5 +1,5 @@
 <template>
-  <dashboard-layout class="pt-5" :has-custom-bottom-bar="true" >
+  <dashboard-layout :has-custom-bottom-bar="true" >
 
     <template v-slot:content>
       <div class="flex flex-col px-5 w-full md:px-10">

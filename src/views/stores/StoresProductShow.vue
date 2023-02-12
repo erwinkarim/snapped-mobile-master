@@ -1,10 +1,10 @@
 
 <template>
-  <dashboard-layout class="pt-5" :has-custom-bottom-bar="true" >
+  <dashboard-layout :has-custom-bottom-bar="true" >
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>
-          <nav-back :to="{name: 'stores.show', params:{ storeID: 1} }" class="w-2/7" stroke-color="red-primary"/>
+          <nav-back :to="{name: 'stores.show', params:{ storeID: $route.params.storeID} }" class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
           {{ product.name }}
@@ -14,10 +14,20 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <div>Description of a product. And also link to order this product</div>
-      <div>Link to <router-link :to="{ name:'stores.orders.new', params: { storeID: 1, productID: 1 }}">a ordering page</router-link>.</div>
-      <div>{{ product }}</div>
-      <div><router-link :to="{ name:'stores.orders.new', query: {storeID: $route.params.storeID, productID: $route.params.productID} }">Order This Product</router-link></div>
+      <img src="@/assets/img/300.jpeg" class="w-full" />
+      <div v-if="Object.keys(product).length === 0">
+        <p>Loading ...</p>
+      </div>
+      <div v-else class="w-full p-2 text-left">
+        <h2 class="text-lg font-bold">{{  product.name }}</h2>
+        <p>By {{ product.store.name }}</p>
+        <p class="w-full text-center bg-gray-secondary text-black"></p>
+        <p class="p-4 w-full text-center">
+          <router-link class="bg-purple-primary text-white opacity-100 hover:opacity-75 text-lg font-bold py-2 px-4 rounded-lg w-full" :to="{ name:'stores.orders.new', query: { storeID: $route.params.storeID, productID: $route.params.productID } }">Order This!</router-link>
+        </p>
+        <p>{{ product.price }} EdCoins</p>
+        <p>{{  product.desc }}</p>
+      </div>
     </template>
 
     <template v-slot:bottomBar>

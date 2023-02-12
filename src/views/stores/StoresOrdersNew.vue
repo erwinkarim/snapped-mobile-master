@@ -14,10 +14,14 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <div>Making a new order for ProductID</div>
-      <div>Link to <router-link :to="{ name:'stores.orders.show', params: { orderID: 1 }}">a confirmed order page</router-link>.</div>
-      <div>Ordering a {{ product.name }}</div>
-      <div><router-link :to="{ name: 'stores.orders.process', query: $route.query }">Initiate Order</router-link></div>
+      <div v-if="Object.keys(product).length === 0">
+        <p>No product</p>
+      </div>
+      <div v-else class="p-5 text-center">
+        <img class="w-full" src="@/assets/img/300.jpeg" />
+        <p>You are ordering "<strong>{{ product.name }}</strong>" for {{ product.price }} Edcoins.</p>
+        <p class="p-4"><router-link class="bg-purple-primary text-white opacity-100 hover:opacity-75 text-lg font-bold py-2 px-4 rounded-lg w-full" :to="{ name: 'stores.orders.process', query: $route.query }">Initiate Order</router-link></p>
+      </div>
     </template>
 
     <template v-slot:bottomBar>

@@ -1,6 +1,6 @@
 
 <template>
-  <dashboard-layout class="pt-5" :has-custom-bottom-bar="true" >
+  <dashboard-layout :has-custom-bottom-bar="true" >
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>
@@ -13,8 +13,8 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <div>process the order and then push to new place</div>
-      <div>don't refresh this page.</div>
+      <h2 class="text-2xl">Processing Your Order ...</h2>
+      <div>Do not refresh or reload this page.</div>
       <div>{{  msg[msg_status] }}</div>
     </template>
 

@@ -1,6 +1,6 @@
 
 <template>
-  <dashboard-layout class="pt-5" :has-custom-bottom-bar="true" >
+  <dashboard-layout :has-custom-bottom-bar="true" >
     <template v-slot:pageHeader>
       <page-header-three :bottom-padding="5">
         <template v-slot:leftAction>

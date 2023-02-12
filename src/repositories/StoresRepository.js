@@ -21,6 +21,11 @@ export default {
       }
     });
   },
+  storeProducts(){
+    // get a list of recent products, 
+    return Repository.get('/store-products');
+
+  },
   storeProduct(storeID, productID){
     // get product info 
     return Repository.get(`/stores/${storeID}/storeProducts/${productID}`, {
