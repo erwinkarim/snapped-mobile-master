@@ -15,7 +15,8 @@
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
       <div class="grid grid-cols-8">
-        <img class="col-span-1" src="@/assets/img/75.jpeg" />
+        <img v-if="order.store_product.picture != ''" class="col-span-1" :src="picture" crossorigin="anonymous" />
+        <img v-else class="col-span-1" src="@/assets/img/75.jpeg" />
         <p class="col-span-7 text-left p-2">{{  order.store_product.name }}</p>
       </div>
       <div>
@@ -25,7 +26,7 @@
       </div>
       <div>
         <h2 class="text-lg font-bold">Order Progress</h2>
-        <OrderProgressCard :status="0" />
+        <OrderProgressCard :status="order.status" />
       </div>
     </template>
 
@@ -49,6 +50,11 @@ export default {
   name: 'StoresOrdersNew',
   data() {
     return { order: {}};
+  },
+  computed: {
+    picture(){
+      return process.env.VUE_APP_S3 + this.order.store_product.picture;
+    },
   },
   mounted() {
     StoresRepository.storeGetOrder(this.$route.params.orderID).then((res) => {

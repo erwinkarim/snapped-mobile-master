@@ -13,18 +13,19 @@ export default {
     return Repository.get(`/stores/${storeID}`, {
     });
   },
+  storeRecentProducts(){
+    // get a list of recent products, 
+    console.log('get all products');
+    return Repository.get('/store-products');
+  },
   storeProducts(storeID){
-    // set all products 
+    // set all products  of a store
+    console.log('get products of a store');
     return Repository.get(`/stores/${storeID}/storeProducts`, {
       headers: { 
         'Content-Type': 'application/json'
       }
     });
-  },
-  storeProducts(){
-    // get a list of recent products, 
-    return Repository.get('/store-products');
-
   },
   storeProduct(storeID, productID){
     // get product info 

@@ -31,7 +31,7 @@
           <StoreCard v-for="store in stores" :store="store" />
         </div>
         <div ref="orders-content" class="w-full hidden">
-          <OrderCard v-for="order in orders" :order="order" />
+          <OrderCard v-for="order in orders" :order="order" :status_codes="orderStatusCodes" />
         </div>
       </div>
     </template>
@@ -61,7 +61,8 @@ export default {
       stores: [],
       products: [],
       orders: [], 
-      activeTab: 'product-content'
+      activeTab: 'product-content',
+      orderStatusCodes: [],
     };
   },
   methods: {
@@ -79,7 +80,7 @@ export default {
   },
   mounted(){
     // load products
-    StoresRepository.storeProducts().then((res) => {
+    StoresRepository.storeRecentProducts().then((res) => {
       this.products = res.data;
       console.log('products', res.data);
     });
@@ -92,7 +93,8 @@ export default {
 
     // load recent orders
     StoresRepository.storeOrders().then((res) => {
-      this.orders = res.data;
+      this.orders = res.data.orders;
+      this.orderStatusCodes = res.data.status_codes;
       console.log('orders', res.data);
     }) ;
   },

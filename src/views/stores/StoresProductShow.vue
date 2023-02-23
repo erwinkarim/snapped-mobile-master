@@ -14,7 +14,8 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <img src="@/assets/img/300.jpeg" class="w-full" />
+      <img v-if=" product.picture != ''" :src="picture" class="w-full" crossorigin="anonymous" />
+      <img v-else src="@/assets/img/300.jpeg" class="w-full" />
       <div v-if="Object.keys(product).length === 0">
         <p>Loading ...</p>
       </div>
@@ -49,6 +50,11 @@ export default {
   name: 'StoresProductShow',
   data(){
     return { product: {}, };
+  },
+  computed: {
+    picture(){
+      return process.env.VUE_APP_S3 + this.product.picture;
+    },
   },
   mounted() {
     // load the product

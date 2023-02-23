@@ -12,12 +12,14 @@
 
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
-      <img src="@/assets/img/300x150.jpeg" />
+      <img v-if="store.picture != ''" :src="picture" crossorigin="anonymous" />
+      <img v-else src="@/assets/img/300x150.jpeg" />
       <div class="w-full text-left break-words p-2">
         {{  store.desc }}
       </div>
       <h2 class="text-lg font-bold">Products</h2>
       <div ref="product-content" class="grid grid-cols-2 gap-2">
+        <div v-if="products.length == 0">No Products yet ...</div>
         <ProductCard class="col-span-1" v-for="product in products" :product="product" />
       </div>
     </template>
@@ -45,6 +47,11 @@ export default {
       store: {},
       products: [],
     };
+  },
+  computed: {
+    picture(){
+      return process.env.VUE_APP_S3 + this.store.picture;
+    }
   },
   mounted(){
     StoresRepository.storeDetail(this.$route.params.storeID).then((res) => {

@@ -1,11 +1,13 @@
 <template>
   <div class="bg-gray-secondary my-2">
     <router-link :to="{ name:'stores.product.show', params: { storeID: product.store_id, productID: product.id }}">
-      <img src="@/assets/img/150.png" class="aspect-square w-full"/>
+      <img v-if=" product.picture != '' " :src="picture" class="aspect-square w-full" crossorigin="anonymous" />
+      <img v-else src="@/assets/img/150.png" class="aspect-square w-full" />
       <div class="p-2">
         <h2 class="text-lg font-bold">{{  product.name }}</h2>
         <p>{{ product.price }} EdCoins</p>
-        <small>By {{ product.store_id }}</small>
+        <small v-if="product.store != null">By {{ product.store.name }}</small>
+        <small v-else>By {{ product.store_id }}</small>
       </div>
     </router-link>
   </div>
@@ -17,6 +19,11 @@ export default {
   props: {
     product: {},
     img: "https://via.placeholder.com/150",
+  },
+  computed: {
+    picture(){
+      return process.env.VUE_APP_S3 + this.product.picture;
+    }
   },
   name: "ProductCard",
 }
