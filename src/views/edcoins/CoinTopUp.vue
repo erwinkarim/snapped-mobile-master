@@ -15,7 +15,7 @@
       <div class="h-30">Empty Space</div>
 
       <div class="px-5 w-full md:px-10">
-        <!--div class="mt-2 mb-3">
+        <div class="mt-2 mb-3">
           <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
             <router-link class="flex flex-row items-center h-full text-left text-purple-primary" :to="{ name:'coin.top_up_buy' }">
               <div class="flex flex-col px-2">
@@ -23,7 +23,7 @@
               </div>
             </router-link>
           </div>
-        </div-->
+        </div>
 
         <div class="mt-2 mb-3">
           <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
