@@ -12,7 +12,7 @@
              class="swiper-slide rounded-2xl h-full overflow-hidden"
         >
           <div class="w-full py-2 px-4 h-full object-cover top-0 items-center absolute">
-            <img class="" :src="path">
+            <img crossorigin="anonymous" class="" :src="path">
           </div>
         </div>
       </div>
