@@ -1,10 +1,12 @@
 <template>
-  <div class="leading-relaxed" :style="style">
+  <VueMarkdown class="leading-relaxed" :style="style">
     <slot/>
-  </div>
+  </VueMarkdown>
 </template>
 
 <script>
+import VueMarkdown from 'vue-markdown';
+
 export default {
   name: "TextMultilineTruncate",
   props: {
@@ -26,8 +28,10 @@ export default {
 
       return value;
     }
-  }
-
+  },
+  components: {
+    VueMarkdown,
+  },
 }
 </script>
 

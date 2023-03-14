@@ -64,7 +64,8 @@
                 }
             },
             submittedAt() {
-            }
+            },
+            isUnanswered() { return false },
         },
         methods: {
             getHumanDate(datetime) {

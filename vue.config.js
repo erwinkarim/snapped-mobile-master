@@ -1,3 +1,6 @@
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+
 module.exports = {
   devServer: {
     headers: {
@@ -7,5 +10,16 @@ module.exports = {
       // somehow breaks firefox
     },
     proxy: 'http://localhost:8000/',
-  }
-}
+  },
+  chainWebpack: config => {
+    // remove the prefetch plugin
+    config.plugins.delete('prefetch')
+  },
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+    } else {
+      // for dev only
+      plugins: [new BundleAnalyzerPlugin()]
+    }
+  },
+};

@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div class="flex flex-row justify-between mb-4 truncate pr-10">
+      <div class="flex flex-row justify-between mb-4 pr-10">
         <text-multiline-truncate
             :lines="descriptionLines"
             class="text-left text-purple-primary text-px-10 pr-10 mb-2"

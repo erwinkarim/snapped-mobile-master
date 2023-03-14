@@ -14,8 +14,18 @@
 
       <div class="max-w-xl">
 
+
         <!-- SECTION: SUMMARY -->
         <div class="mt-2 px-5">
+          
+          <!-- SECTION: EDCOINS -->
+          <div class="mt-2 mb-3">
+            <div class="mb-3 text-left w-full">
+              <section-title class="mb-5" title="EdCoins"/>
+            </div>
+            <EdCoinSummaryPill />
+          </div>
+
           <div class="text-left mb-3">
             <section-title class="mb-5" title="Summary"/>
           </div>
@@ -81,11 +91,20 @@
 </template>
 
 <script>
+
+const IconBase = () => import("@/components/IconBase.vue");
+const AppLogo = () => import("@/components/icons/AppLogo.vue");
+const PlusIcon = () => import("@/components/icons/PlusIcon.vue");
+const SectionTitle = () => import("@/components/SectionTitle.vue");
+const ClassesSwiper = () => import("@/views/teachers/TeacherHome/ClassesSwiper.vue");
+
+/*
 import IconBase from "@/components/IconBase";
 import AppLogo from "@/components/icons/AppLogo";
 import PlusIcon from "@/components/icons/PlusIcon";
 import SectionTitle from "@/components/SectionTitle";
 import ClassesSwiper from "@/views/teachers/TeacherHome/ClassesSwiper";
+*/
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import AssignmentSwiper from "@/views/teachers/TeacherHome/AssignmentSwiper";
 import DashboardLayout from "@/views/layout/DashboardLayout";
@@ -96,6 +115,7 @@ import SubmissionRepository from "@/repositories/SubmissionRepository";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import AssignmentRepository from "../../../repositories/AssignmentRepository";
+import EdCoinSummaryPill from "@/components/EdCoinSummaryPill.vue";
 
 export default {
   name: "Home",
@@ -174,7 +194,8 @@ export default {
     SectionTitle,
     AppLogo,
     IconBase,
-    PlusIcon
+    PlusIcon,
+    EdCoinSummaryPill,
   },
 }
 </script>

@@ -1,15 +1,23 @@
+const TeacherHome = () => import("@/views/teachers/TeacherHome/TeacherHome.vue");
+const TeacherClasses = () => import("@/views/teachers/TeacherClasses/TeacherClasses.vue");
+const TeacherClassDetails = () => import("@/views/teachers/TeacherClasses/TeacherClassDetails.vue");
+const TeacherStudents = () => import("@/views/teachers/TeachersStudents/TeacherStudents.vue");
+const TeacherAssignments = () => import("@/views/teachers/TeacherAssignments/Index/TeacherAssignments.vue");
+const TeacherSettings = () => import("@/views/teachers/TeacherSettings/TeacherSettings.vue");
+const App = () => import("@/App.vue");
+
 import DashboardLayout from "@/views/layout/DashboardLayout";
-import TeacherHome from "@/views/teachers/TeacherHome/TeacherHome";
-import TeacherClasses from "@/views/teachers/TeacherClasses/TeacherClasses";
-import TeacherClassDetails from "@/views/teachers/TeacherClasses/TeacherClassDetails";
-import TeacherStudents from "@/views/teachers/TeachersStudents/TeacherStudents";
-import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
-import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
-import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
-import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
-import TeacherAssignments from "@/views/teachers/TeacherAssignments/Index/TeacherAssignments";
-import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
-import App from "@/App";
+// import TeacherHome from "@/views/teachers/TeacherHome/TeacherHome";
+// import TeacherClasses from "@/views/teachers/TeacherClasses/TeacherClasses";
+// import TeacherClassDetails from "@/views/teachers/TeacherClasses/TeacherClassDetails";
+// import TeacherStudents from "@/views/teachers/TeachersStudents/TeacherStudents";
+// import StudentDetails from "@/views/students/StudentDetails/StudentDetails";
+// import StudentBadges from "@/views/students/StudentDetails/components/StudentBadges";
+// import StudentAssignments from "@/views/students/StudentDetails/components/StudentAssignments";
+// import StudentOverview from "@/views/students/StudentDetails/components/StudentOverview";
+// import TeacherAssignments from "@/views/teachers/TeacherAssignments/Index/TeacherAssignments";
+// import TeacherSettings from "@/views/teachers/TeacherSettings/TeacherSettings";
+// import App from "@/App";
 
 export default  {
 

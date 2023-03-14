@@ -14,7 +14,21 @@
 
       <div class="px-5 w-full md:px-10">
 
-        <!-- SECTION: SUMMARY -->
+        <!-- SECTION: EDCOINS -->
+        <div class="mt-2 mb-3">
+          <div class="mb-3 text-left w-full">
+            <section-title class="mb-5" title="EdCoins"/>
+          </div>
+          <EdCoinSummaryPillVue />
+        </div>
+
+        <!-- SECTION: CURRENT SCHOOL -->
+        <div class="mt-2 mb-3">
+            <section-title class="mb-5 text-left" title="Current School"/>
+            <CurrentSchoolPillVue />
+        </div>
+
+        <!-- SECTION: ASSIGNMENT SUMMARY -->
         <div class="mt-2 mb-3">
             <section-title class="mb-5 text-left" title="Assignments"/>
 
@@ -39,7 +53,7 @@
 
         </div>
 
-        <!-- SECTION: ASSIGNMENTS -->
+        <!-- SECTION: ACTIVE ASSIGNMENTS -->
         <div class="mt-5">
           <div class="mb-3 text-left w-full">
             <section-title class="mb-5" title="Active Assignments"/>
@@ -57,6 +71,8 @@
             </template>
           </assignment-card>
         </div>
+
+
       </div>
     </template>
 
@@ -74,6 +90,8 @@ import AssignmentCard from "@/components/AssignmentCard";
 import StudentRepository from "@/repositories/StudentRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import IconBaseTwo from "@/components/IconBaseTwo";
+import EdCoinSummaryPillVue from "@/components/EdCoinSummaryPill.vue";
+import CurrentSchoolPillVue from "../../../components/CurrentSchoolPill.vue";
 
 export default {
   name: "StudentHome",
@@ -82,8 +100,9 @@ export default {
       assignments: [],
       numOfNewAssignments: 0,
       numOfDueSoonAssignments: 0,
-      numOfOverdueAssignments: 0
-
+      numOfOverdueAssignments: 0,
+      trxResult: [],
+      studentInfo: {},
     }
   },
   methods: {
@@ -130,12 +149,12 @@ export default {
     },
   },
   mounted() {
-    this.getAssignments()
-    this.fetchSummary()
+    this.getAssignments();
+    this.fetchSummary();
   },
   components: {
     IconBaseTwo,
-    AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase
+    AssignmentCard, DashboardLayout, ActiveAssignment, SectionTitle, UserProfile, AppLogo, IconBase, EdCoinSummaryPillVue, CurrentSchoolPillVue,
   },
 }
 </script>

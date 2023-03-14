@@ -312,6 +312,10 @@ export default {
                 this.assignment.recording_path = data.assignment_details.recording_url;
               }
 
+              if (data.assignment_details.remarks){
+                this.assignment.remarks = data.assignment_details.remarks;
+              }
+
               console.log('assignment', this.assignment);
 
               // Assignment meta
