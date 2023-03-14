@@ -164,10 +164,12 @@ export default {
     },
 
     hasZoomQuestion: function () {
+      /*
       console.log('asking hasZoomQuestion');
       console.log('recording_path', this.assignment.recording_path);
       console.log('recording_path is not undefined', this.assignment.recording_path !== undefined);
-      //console.log('recording_path.length', this.assignment.recording_path.length > 0);
+      console.log('recording_path.length', this.assignment.recording_path.length > 0);
+      */
       return this.assignment.recording_path !== undefined && this.assignment.recording_path.length > 0;
     },
 
