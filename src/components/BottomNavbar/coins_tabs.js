@@ -8,7 +8,7 @@ import StoreIcon from "@/components/icons/StoreIcon";
 export default [
     {
         tabName: 'Home',
-        routeName: 'student.home', // should base on student or teacher
+        routeName: 'login', // should base on student or teacher
         icon: HomeIcon,
     },
     {
