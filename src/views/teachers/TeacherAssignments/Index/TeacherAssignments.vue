@@ -236,7 +236,8 @@ export default {
                     description: item.written_description,
                     dueDatetime: item.due_datetime,
                     totalSubmitted: item.number_of_submissions,
-                    totalMarked: item.num_of_marked_submissions
+                    totalMarked: item.num_of_marked_submissions,
+                    school_name: item.school_name,
                   }
 
                   if (item.marks_id) {

@@ -250,6 +250,7 @@ export default {
               this.assignment.written_question.title = data.assignment_details.written_question_title;
               this.assignment.written_question.description = data.assignment_details.written_question_description;
               this.assignment.remarks = data.assignment_details.remarks;
+              this.assignment.school_name = data.assignment_details.school_name;
 
               if (data.assignment_details.snap_question_url) {
                 this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
@@ -269,6 +270,7 @@ export default {
               this.meta.totalSubmissions = data.total_of_submissions;
               this.meta.totalStudents = data.total_of_students;
               this.meta.totalNotSubmitted = data.not_yet_submitted.length;
+              this.meta.school_name = data.assignment_details.school_name;
 
               // Submission
 

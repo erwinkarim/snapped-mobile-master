@@ -64,7 +64,6 @@
             </infinite-loading>
           </div>
 
-
         </div>
 
       </div>
@@ -215,12 +214,14 @@ export default {
             .then(response => {
 
               if (response.data.success) {
-                const data = response.data.data
+                const data = response.data.data;
+                console.log('data', data);
 
                 for (let i = 0; i < data.length; i++) {
 
                   let item = data[i];
 
+                  // retarded
                   let assignmentDetail = {
                     assignmentID: item.assignment_id,
                     subjectName: item.subject_name,
@@ -229,8 +230,8 @@ export default {
                     description: item.written_description,
                     dueDatetime: item.due_datetime,
                     totalSubmitted: item.number_of_submissions,
-                    hasSubmitted: item.has_submitted === "yes"
-
+                    hasSubmitted: item.has_submitted === "yes",
+                    school_name: item.school_name,
                   }
 
                   if (item.marks_id) {
@@ -243,6 +244,8 @@ export default {
                   this.assignments.push(assignmentDetail);
                   this.hasError = false;
                 }
+
+                // also load edschool assignments because retar
 
                 // Update meta details and pageNum for filters
                 this.meta = response.data.meta;
@@ -262,8 +265,6 @@ export default {
       }
 
     },
-
-
     handleSelectedDate(date) {
       this.filters.date = date;
     },

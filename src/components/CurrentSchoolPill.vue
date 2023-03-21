@@ -9,6 +9,15 @@
         <div>{{  studentInfo.school.name }}</div>
       </div>
     </div>
+    <div class="flex flex-row items-center h-full text-left text-purple-primary mt-4">
+      <div class="flex flex-col px-2 w-1/6">
+        <SchoolIcon />
+      </div>
+      <!-- Every student is on EdSchool -->
+      <div class="flex flex-col px-2 w-full">
+        <div>EdSchool</div>
+      </div>
+    </div>
   </div>
 </template>
 

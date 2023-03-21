@@ -94,11 +94,26 @@
         <div class="px-7 pb-3 mt-3 w-full">
           <!--       <input v-model="teacherID" class="invisible">-->
           <input v-model="$store.state.teacherCreateAssignment.assignmentDetails.title"
-                 class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-                 type="text" placeholder="Title" autocomplete="off">
+						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+						type="text" placeholder="Title" autocomplete="off">
+
+					<!--
+						TODO:
+						- load school (and if teacher is edschool teacher, add eddschool)
+						- load classes based on school
+						- looking the store, state, SMH
+					-->
+					<select v-model="$store.state.teacherCreateAssignment.assignmentDetails.school_id"
+						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+					>
+            <option disabled value="">School</option>
+            <option v-for="school in $store.state.teacherCreateAssignment.selectables.schools" :value="school.id">
+							{{ school.name  }}
+						</option>
+					</select>
 
           <select v-model="$store.state.teacherCreateAssignment.assignmentDetails.subject_id"
-                  class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
             <option disabled value="">Subject</option>
             <option v-for="subject in $store.state.teacherCreateAssignment.selectables.subjects"
@@ -108,15 +123,16 @@
             </option>
           </select>
 
+
           <multiselect v-model="$store.state.teacherCreateAssignment.assignmentDetails.classroom_id"
-                       :options="$store.state.teacherCreateAssignment.selectables.classrooms"
-                       :show-labels="false"
-                       :hide-selected="true"
-                       :multiple="true"
-                       track-by="id"
-                       label="name"
-                       placeholder="Class"
-                       class="mt-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+						:options="$store.state.teacherCreateAssignment.selectables.classrooms"
+						:show-labels="false"
+						:hide-selected="true"
+						:multiple="true"
+						track-by="id"
+						label="name"
+						placeholder="Class"
+						class="mt-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
             <!--            <option disabled value="">Class</option>-->
             <!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
@@ -207,18 +223,18 @@
               <p class="mb-3">Pick date and time to publish the assignment.</p>
             </div>
             <v-date-picker class="place-self-center"
-                           v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
-                           mode="dateTime"
-            />
+							v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
+							mode="dateTime"
+						/>
           </div>
           <span slot="button">
-                          <button @click="$store.dispatch('teacherCreateAssignment/sendData')"
-                                  :disabled="$store.state.teacherCreateAssignment.states.isPublishing"
-                                  class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
-                          >
-                            Schedule Publish
-                          </button>
-                      </span>
+						<button @click="$store.dispatch('teacherCreateAssignment/sendData')"
+							:disabled="$store.state.teacherCreateAssignment.states.isPublishing"
+							class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
+						>
+							Schedule Publish
+						</button>
+					</span>
         </modal>
       </div>
 
@@ -339,80 +355,71 @@ export default {
   methods: {},
   mounted() {
     this.$store.commit('teacherCreateAssignment/initialise')
+		this.$store.dispatch('teacherCreateAssignment/getSchools');
     this.$store.dispatch('teacherCreateAssignment/getClasses')
     this.$store.dispatch('teacherCreateAssignment/getSubjects')
 
     this.$store.watch(
-        (state) => {
-          return this.$store.state.teacherCreateAssignment.assignmentDetails.title
-        },
-        (newValue, oldValue) => {
-          let maxCharCount = 255;
-          let overLimit = newValue ? newValue.length > maxCharCount : false;
+			(state) => {
+				return this.$store.state.teacherCreateAssignment.assignmentDetails.title
+			},
+			(newValue, oldValue) => {
+				let maxCharCount = 255;
+				let overLimit = newValue ? newValue.length > maxCharCount : false;
 
-          if (overLimit) {
-            this.$store.dispatch('teacherCreateAssignment/setAssignmentTitle', oldValue)
-          }
-        },
+				if (overLimit) {
+					this.$store.dispatch('teacherCreateAssignment/setAssignmentTitle', oldValue)
+				}
+			},
     )
   },
   components: {
-    ErrorModal,
-    CreateQuestionForm,
-    VueCropper,
-    ClockIcon,
-    TrashIcon,
-    Modal,
-    ArrowBackIcon,
-    CameraIcon,
-    PenIcon,
-    DashboardLayout,
-    PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo
+    ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo
   }
 }
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style>
-.multiselect__placeholder {
-  color: #7B7F9E;
-}
+	.multiselect__placeholder {
+		color: #7B7F9E;
+	}
 
-.multiselect__input {
-  font-weight: 400;
-  background: #F1F3F6;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-  color: #7B7F9E;
-}
+	.multiselect__input {
+		font-weight: 400;
+		background: #F1F3F6;
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+		color: #7B7F9E;
+	}
 
-.multiselect__select {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-}
+	.multiselect__select {
+		margin-top: 1.25rem;
+		margin-bottom: 1.25rem;
+	}
 
-.multiselect__tags {
-  background: #F1F3F6;
-  font-weight: 400;
-  min-height: 0;
-  padding-top: 1.25rem;
-  padding-left: 1.5rem;
-  padding-bottom: 1.25rem;
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
+	.multiselect__tags {
+		background: #F1F3F6;
+		font-weight: 400;
+		min-height: 0;
+		padding-top: 1.25rem;
+		padding-left: 1.5rem;
+		padding-bottom: 1.25rem;
+		font-size: 1.125rem;
+		line-height: 1.75rem;
+	}
 
-.multiselect__tag {
-  background-color: #7B7F9E;
-}
+	.multiselect__tag {
+		background-color: #7B7F9E;
+	}
 
-.multiselect__option--disabled {
-  background: purple;
-  color: white;
-  font-style: italic;
-}
+	.multiselect__option--disabled {
+		background: purple;
+		color: white;
+		font-style: italic;
+	}
 
-.multiselect__option--highlight {
-  background: #bfbfbf;
-}
+	.multiselect__option--highlight {
+		background: #bfbfbf;
+	}
 </style>

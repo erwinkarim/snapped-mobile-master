@@ -8,7 +8,7 @@
              class=" swiper-slide rounded-2xl h-full overflow-hidden">
           <div
               class="w-full py-2 px-4 h-full flex flex-col justify-start items-center object-cover top-0 items-center absolute">
-            <img :src="path">
+            <img :src="path" crossorigin="anonymous">
           </div>
         </div>
       </div>
