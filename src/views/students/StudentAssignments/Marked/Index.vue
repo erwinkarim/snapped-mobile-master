@@ -29,7 +29,7 @@
                 <div v-for="(path, index) in details.markingPicturePaths"
                      class=" swiper-slide rounded-2xl h-full overflow-hidden">
                   <div class="w-full flex flex-row justify-center py-2 px-4 h-full object-cover top-0 items-center">
-                    <img :src="path">
+                    <img :src="path" crossorigin="anonymous">
                   </div>
                 </div>
               </div>

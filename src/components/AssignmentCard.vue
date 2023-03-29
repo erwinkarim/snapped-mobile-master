@@ -44,6 +44,11 @@
 
         </div>
       </div>
+
+      <div class="flex flex-row justify-around items-baseline">
+        <div class="w-full text-left text-px-10 text-purple-primary pr-1">{{  assignment.school_name }}</div>
+      </div>
+
     </div>
 
 

@@ -13,11 +13,12 @@ export default {
             }
         })
     },
-
+    getTeacherSchools(){
+        return Repository.get(`${resource}/schools`);
+    },
     getTeacherClasses () {
         return Repository.get(`${resource}/classes`)
     },
-
     getSubmissions(latest = null) {
 
         let endpoint = `${resource}/submissions`;
@@ -27,7 +28,6 @@ export default {
         return Repository.get(endpoint)
 
     },
-
     getMarkings(){
       let endpoint = `${resource}/marks`;
 
