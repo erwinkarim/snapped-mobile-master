@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-my-swiper="swiperOption">
+    <div v-my-swiper:mySwiper="swiperOption">
       <div class="swiper-wrapper">
         <div class="swiper-slide" @click="goToClass(item.classID)" :key="item.classID" v-for="item in classes">
           <div class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
@@ -43,7 +43,9 @@
 <script>
 
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
-import 'swiper/swiper-bundle.css'
+// this causes installation issues
+// import 'swiper/swiper-bundle.css'
+import 'swiper/css/swiper.css';
 import StackedProfilePhoto from "@/components/icons/ProfilePhotoStacked";
 import IconBase from "@/components/IconBase";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";

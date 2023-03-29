@@ -26,7 +26,6 @@
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "qrcode.vue": "^1.7.0",
-    "swiper": "^6.8.4",
     "tailwindcss": "^1.9.6",
     "v-calendar": "^2.1.1",
     "vue": "^2.7.0",
