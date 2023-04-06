@@ -7,7 +7,7 @@
          class="px-7 w-full text-sm leading-snug text-left break-words mt-18 text-purple-secondary">
       <div v-if="!$store.getters['teacherCreateAssignment/creatingQuestionType']"
       >
-        Fill the title and select a type of question
+        Fill the title and select a type of question. Test
       </div>
       <div v-else-if="$store.getters['teacherCreateAssignment/creatingQuestionType'] === 'written'">
         Fill the title and write your question
@@ -26,32 +26,37 @@
       <!-- TITLE -->
       <input v-model="$store.state.teacherCreateAssignment.creatingQuestionDetails.title"
              v-if="!$store.state.teacherCreateAssignment.states.isCroppingSnappedQuestion"
-             class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+             class="py-5 pr-2 pl-6 my-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
              type="text"
              placeholder="Title"
              autocomplete="off"
       >
 
+      <!-- buttons to create the right question-->
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
           class="flex -mx-1 mb-4"
       >
-        <div class="px-1 w-1/2 h-28">
-          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingQuestion')"
+        <!-- zoom meeting-->
+        <div class="px-1 w-full h-28">
+          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
             <div class="flex col-span-1 row-span-1 justify-center py-4">
               <icon-base-two class="w-12">
-                <pen-icon class="w-12"/>
+                <zoom-icon class="w-12"/>
               </icon-base-two>
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Write
+              Zoom
             </div>
           </button>
         </div>
-        <label class="px-1 w-1/2 h-12">
-          <div
-              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
+      </div>
+      <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
+          class="flex -mx-1 mb-4"
+      >
+        <label class="px-1 w-full h-28">
+          <div class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
             <div class="flex col-span-1 row-span-1 justify-center py-4">
               <icon-base-two class="w-12">
                 <camera-icon/>
@@ -71,20 +76,19 @@
         </label>
       </div>
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
-          class="flex -mx-1"
+          class="flex -mx-1 mb-4"
       >
-        <!-- zoom meeting-->
-        <div class="px-1 w-full h-12">
-          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+        <div class="px-1 w-full h-28">
+          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
             <div class="flex col-span-1 row-span-1 justify-center py-4">
               <icon-base-two class="w-12">
-                <zoom-icon class="w-12"/>
+                <pen-icon class="w-12"/>
               </icon-base-two>
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Zoom
+              Write
             </div>
           </button>
         </div>
