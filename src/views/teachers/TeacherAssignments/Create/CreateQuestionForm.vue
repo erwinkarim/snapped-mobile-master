@@ -32,7 +32,12 @@
              autocomplete="off"
       >
 
-      <!-- buttons to create the right question-->
+      <!-- 
+        buttons to create the right question
+        -- but need to change allow multiple medium of questions
+        -- so it will be either or state: either show the preview or button to create the question
+      -->
+      <!-- create zoom question button -->
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
           class="flex -mx-1 mb-4"
       >
@@ -52,6 +57,8 @@
           </button>
         </div>
       </div>
+
+      <!-- create snap question button -->
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
           class="flex -mx-1 mb-4"
       >
@@ -75,6 +82,9 @@
           </div>
         </label>
       </div>
+
+
+      <!-- create written question button -->
       <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
           class="flex -mx-1 mb-4"
       >
@@ -94,40 +104,18 @@
         </div>
       </div>
 
-      <!-- FORM: Written Question -->
-      <div v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion" class="relative">
-        <!-- DESCRIPTION -->
-        <textarea v-model="$store.state.teacherCreateAssignment.creatingQuestionDetails.writtenQuestion"
-                  class="block py-5 px-5 mt-4 w-full text-lg leading-snug text-left break-words rounded-md h-half-screen bg-gray-secondary form-textarea focus:outline-none focus:shadow-outline text-purple-secondary placeholder-purple-secondary text-m"
-                  placeholder="Enter question"
-        />
-      </div>
+      <!-- FORM: Zoom Question 
+        should add a preview / trash icon so can either edit  or preview the video
+      -->
+      <ZoomQuestionForm />
 
       <!--  If IMAGE HAS BEEN SELECTED  -->
       <div v-if="$store.state.teacherCreateAssignment.states.isSnappingQuestion">
         <div v-for="(image, key) in $store.state.teacherCreateAssignment.creatingQuestionDetails.snappedPreviews"
-             class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+             class="flex flex-col py-5 px-5 mt-1 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
         >
 
-          <div class="flex flex-row items-center">
-            <div class="w-6/7 text-left text-blue-secondary">
-              <button @click="$store.commit('teacherCreateAssignment/toggleSnappedQuestionPreviewStatus', key)"
-                      class="focus:outline-none"
-              >
-                {{ image.preview ? 'Hide image' : image.cropping ? `Return to Preview ` : 'Preview Image' }}
-              </button>
-            </div>
-            <div v-if="!image.preview && !image.cropping" class="w-1/7 flex flex-row justify-end">
-              <button @click="$store.dispatch('teacherCreateAssignment/removeSnappedQuestion', key)"
-                      class="w-2/3 focus:outline-none">
-                <icon-base-two stroke-color="purple-secondary">
-                  <trash-icon/>
-                </icon-base-two>
-              </button>
-            </div>
-          </div>
-
-          <div v-if="image.preview" class="mt-5">
+          <div v-if="image.preview" class="">
             <div class="w-full py-2 h-full object-cover">
               <img :src="image.source"/>
             </div>
@@ -197,8 +185,15 @@
         </div>
       </div>
 
-      <!-- FORM: Zoom Question -->
-      <ZoomQuestionForm />
+      <!-- FORM: Written Question -->
+      <div v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion" class="relative">
+        <!-- DESCRIPTION -->
+        <textarea v-model="$store.state.teacherCreateAssignment.creatingQuestionDetails.writtenQuestion"
+                  class="block py-5 px-5 mt-4 w-full text-lg leading-snug text-left break-words rounded-md h-half-screen bg-gray-secondary form-textarea focus:outline-none focus:shadow-outline text-purple-secondary placeholder-purple-secondary text-m"
+                  placeholder="Enter question"
+        ></textarea>
+      </div>
+
     </div>
 
 
@@ -209,24 +204,29 @@
          class="px-7"
     >
       <!-- WRITTEN QUESTION     -->
-      <div v-if="$store.getters['teacherCreateAssignment/hasWrittenQuestionDraft']"
-           class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-      >
-        <div class="w-4/5 text-left text-blue-secondary">
-          <button @click="$store.commit('teacherCreateAssignment/beginEditingWrittenQuestionMode')">
-            Edit Question
-          </button>
+      <div v-if="$store.getters['teacherCreateAssignment/hasWrittenQuestionDraft']">
+        <hr />
+        <div class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <div class="w-full text-left">{{ $store.state.teacherCreateAssignment.questionDraft.writtenQuestion }}</div>
         </div>
-        <div class="w-1/5">
-          <button @click="$store.dispatch('teacherCreateAssignment/removeWrittenQuestionDraft')">
-            <icon-base-two class="float-right mr-3 w-1/2" stroke-color="purple-secondary">
-              <trash-icon/>
-            </icon-base-two>
-          </button>
+        <div class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <div class="w-4/5 text-left text-blue-secondary">
+            <button @click="$store.commit('teacherCreateAssignment/beginEditingWrittenQuestionMode')">
+              Edit Question
+            </button>
+          </div>
+          <div class="w-1/5">
+            <button @click="$store.dispatch('teacherCreateAssignment/removeWrittenQuestionDraft')">
+              <icon-base-two class="float-right mr-3 w-1/2" stroke-color="purple-secondary">
+                <trash-icon/>
+              </icon-base-two>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- preview question contents -->
 
   </div>
 </template>

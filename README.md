@@ -55,3 +55,4 @@ GOOGLE_REDIRECT={frontend_domain}/auth/google/callback
 ## Trouble shooting
 
 * unable to join zoom session - check ad-blocker
+* swiper package is needed to deployment to netlify, although not really needed if you are building in linux

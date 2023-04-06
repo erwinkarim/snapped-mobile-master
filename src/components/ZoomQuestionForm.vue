@@ -1,6 +1,10 @@
 <template>
   <div>
     <!-- FORM: Zoom Question -->
+    <!-- todo
+        - preview mode
+        - edit mode (current form) and a way to toggle between two
+    -->
     <div v-if="$store.state.teacherCreateAssignment.states.isCreatingZoomQuestion">
       <p>Works best in Google Chrome. Some features may not be available in other browsers.</p>
 

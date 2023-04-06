@@ -418,7 +418,7 @@ export default {
 					state.creatingQuestionDetails.snappedQuestions.push(e.target.result)
 					state.creatingQuestionDetails.snappedPreviews.push({
 						source: e.target.result,
-						preview: false,
+						preview: true,
 						cropping: false
 					});
 				}
