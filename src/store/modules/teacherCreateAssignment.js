@@ -48,6 +48,7 @@ export default {
 			isRecording: false,
 			isScreenShare: false,
 			meeting_id: null,
+			isZoomPreview: false,
 		},
 
 		// Main details to be submitted
@@ -136,6 +137,9 @@ export default {
 			},
 
 			toggleWritingQuestionMode(state) {
+					/*
+						flip the writing question mode. init states, both are false
+					*/
 					state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
 					state.states.isWritingQuestion = !state.states.isWritingQuestion;
 			},
@@ -306,6 +310,7 @@ export default {
 							isScreenShare: false,
 							isRecording: false,
 							meeting_id: null,
+							isZoomPreview: false,
 					};
 
 					// Main details to be submitted
@@ -394,7 +399,10 @@ export default {
 			}
 		},
 		removeWrittenQuestionDraft({state, getters, commit}) {
-			commit('resetCreatingQuestion')
+			state.questionDraft.writtenQuestion = null;
+			state.creatingQuestionDetails.writtenQuestion = null;
+
+			// commit('resetCreatingQuestion')
 		},
 		beginSnappingQuestion({state, getters, commit}) {
 			if (!state.states.isSnappingQuestion) {
@@ -403,6 +411,7 @@ export default {
 			}
 		},
 		handleSnapQuestion({state, getters, commit, dispatch}, e) {
+			console.log('handleSnappedQuestion', e);
 			let files = e.target.files || e.dataTransfer.files
 
 			if (!files.length) { return }
@@ -434,10 +443,12 @@ export default {
 			state.creatingQuestionDetails.snappedQuestions.splice(key, 1);
 			state.creatingQuestionDetails.snappedPreviews.splice(key, 1);
 
+			/*
 			if (!state.creatingQuestionDetails.snappedQuestions.length) {
 				commit('resetCreatingQuestion')
 				commit('toggleSnappingQuestionMode')
 			}
+			*/
 		},
 		handleZoomQuestion({state, commit}, payload) {
 			// handled when recording stops
@@ -801,15 +812,22 @@ export default {
 				return state.assignmentDetails.due_datetime !== null;
 		},
 		hasEditableQuestion(state, getters) {
-				return state.states.isCreatingQuestion && !state.states.isWritingQuestion && (getters.hasWrittenQuestionDraft || getters.hasSnappedQuestionDraft)
+				return state.states.isCreatingQuestion 
+					&& !state.states.isWritingQuestion 
+					&& (getters.hasWrittenQuestionDraft || getters.hasSnappedQuestionDraft)
 		},
 		hasWrittenQuestionDraft: (state) => {
-				return state.questionDraft.type ? (state.questionDraft.type === 'written' && state.questionDraft.writtenQuestion) : false;
+				// return state.questionDraft.type ? (state.questionDraft.type === 'written' && state.questionDraft.writtenQuestion) : false;
+				return state.questionDraft.writtenQuestion !== null;
+		},
+		isEditingWrittenQuestion: (state) => {
+			return state.states.isWritingQuestion;
 		},
 		hasSnappedQuestionDraft(state) {
-				return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
+			// return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
+			return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
 		},
-		hasZoomQuestionDraf(state){
+		hasZoomQuestionDraft(state){
 			return state.questionDraft.type ?
 				state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null :
 				false;
