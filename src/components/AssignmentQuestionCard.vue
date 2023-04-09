@@ -110,9 +110,7 @@
 			</div>
 
 			<!-- Zoom Question -->
-			<div v-if="hasZoomQuestion"
-					 class="flex flex-col mt-8 text-purple-primary text-xs-plus mb-20"
-			>
+			<div v-if="hasZoomQuestion" class="flex flex-col mt-8 text-purple-primary text-xs-plus mb-20" >
 				<div v-if="!isPreviewing"
 						 class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
 				>

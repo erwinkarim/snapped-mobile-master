@@ -39,9 +39,8 @@
         -- when editing, it should have the whole screen 
       -->
       <!-- create zoom question button -->
-      <div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']"
-          class="flex -mx-1 mb-4"
-      >
+      <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
+      <div v-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex -mx-1 mb-4" >
         <!-- zoom meeting-->
         <div class="px-1 w-full h-28">
           <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
@@ -57,6 +56,40 @@
             </div>
           </button>
         </div>
+      </div>
+      <div v-else-if="$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']">
+        <video autoplay controls height="640" width="854" crossorigin>
+          <!-- must ensure all recordings are in mp4 format -->
+          <source :src="$store.state.teacherCreateAssignment.questionDraft.zoomMeetings" type="video/mp4" />
+          Your browser don't support video tag.
+        </video>
+        <div class="px-1 w-1/2 h-16">
+          <button 
+                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2" 
+              @click="$store.commit('teacherCreateAssignment/deleteZoomVideo')"
+            >
+              Delete Video
+            </div>
+          </button>
+        </div>
+        <div class="px-1 w-1/2 h-16">
+          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Edit Video
+            </div>
+          </button>
+        </div>
+
+      </div>
+      <div v-else>
+        <!-- FORM: Zoom Question 
+          should add a preview / trash icon so can either edit  or preview the video
+        -->
+        <ZoomQuestionForm />
       </div>
 
       <!-- create snap question button -->
@@ -85,7 +118,8 @@
       <!--  If IMAGE HAS BEEN SELECTED  -->
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSnappingQuestion"-->
       <div v-else>
-        <!-- displa the images-->
+        <!-- display the images-->
+        <hr class="mb-4" />
         <div v-for="(image, key) in $store.state.teacherCreateAssignment.creatingQuestionDetails.snappedPreviews"
              class="flex flex-col py-5 px-5 mt-1 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
         >
@@ -205,10 +239,6 @@
         </div>
       </div>
 
-      <!-- FORM: Zoom Question 
-        should add a preview / trash icon so can either edit  or preview the video
-      -->
-      <ZoomQuestionForm />
 
 
 

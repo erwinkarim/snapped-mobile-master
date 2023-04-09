@@ -6,181 +6,194 @@
         - edit mode (current form) and a way to toggle between two
     -->
     <div v-if="$store.state.teacherCreateAssignment.states.isCreatingZoomQuestion">
-      <p>Works best in Google Chrome. Some features may not be available in other browsers.</p>
-
-      <!-- Join / leave meeting -->
-      <div class="flex -mx-1 mb-4" >
-        <div class="px-1 w-1/2 h-28">
-          <button @click="createZoomMeeting"
-            class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
-                <phone-icon class="w-12"/>
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Join
-            </div>
-          </button>
-        </div>
-        <div class="px-1 w-1/2 h-28">
-          <button @click="leaveZoomMeeting"
-                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
-                <person-to-door-icon class="w-12"/>
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Leave
-            </div>
-          </button>
-        </div>
+      <div v-if="$store.state.teacherCreateAssignment.states.isZoomPreview">
+        Zoom Preview here
       </div>
+      <div v-else>
+        <p>Works best in Google Chrome. Some features may not be available in other browsers.</p>
 
-      <!-- Status Bar -->
-      <div class="flex -mx-1 mb-4" >
-        <div class="py-2 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
-          Status: {{ status }}
+        <!-- Join / leave meeting -->
+        <div class="flex -mx-1 mb-4" >
+          <div class="px-1 w-1/2 h-28">
+            <button @click="createZoomMeeting"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <phone-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Join
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/2 h-28">
+            <button @click="leaveZoomMeeting"
+                    class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <person-to-door-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Leave
+              </div>
+            </button>
+          </div>
         </div>
 
-      </div>
+        <!-- Status Bar -->
+        <div class="flex -mx-1 mb-4" >
+          <div class="py-2 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
+            Status: {{ status }}
+          </div>
 
-      <!-- video canvas -->
-      <p>Video panel</p>
-      <div class="flex -mx-1 mb-4" >
-        <div id="the-view" class="px-1 w-full">
         </div>
-      </div>
 
-      <p>Audio Waveform</p>
-      <div class="flex -mx-1 mb-4">
-        <canvas id="the-audio" class="px-1 w-full border-2 border-solid"> </canvas>
-      </div>
-
-      <!-- screen share  video test -->
-      <p>Screen Share Panel</p>
-      <div class="flex -mx-1 mb-4">
-        <div id="the-screen" class="px-1 w-full">
+        <!-- video canvas -->
+        <p>Video panel</p>
+        <div class="flex -mx-1 mb-4" >
+          <div id="the-view" class="px-1 w-full">
+          </div>
         </div>
-      </div>
 
-      <!-- final render test -->
-      <p>Final render test</p>
-      <div class="flex -mx-1 mb-4">
-        <canvas width="300" height="150" id="canvas-render" class="border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl "></canvas>
-      </div>
-
-      <!-- camera and mic controls -->
-      <div class="flex -mx-1 mb-4" >
-        <div class="px-1 w-1/3 h-28">
-          <button @click="toggleVideoButton"
-            id="video-button"
-            class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
-                <video-icon v-if="$store.state.teacherCreateAssignment.states.isVideoOn" class="w-12" />
-                <video-slash-icon v-else class="w-12" />
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Camera
-            </div>
-          </button>
+        <p>Audio Waveform</p>
+        <div class="flex -mx-1 mb-4">
+          <canvas id="the-audio" class="px-1 w-full border-2 border-solid"> </canvas>
         </div>
-        <div class="px-1 w-1/3 h-28">
-          <button @click="toggleMicButton"
-            id="mic-button"
-            class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
-                <microphone-icon v-if="$store.state.teacherCreateAssignment.states.isMicOn" class="w-12"/>
-                <microphone-slash-icon v-else class="w-12"/>
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Microphone 
-            </div>
-          </button>
+
+        <!-- screen share  video test -->
+        <p>Screen Share Panel</p>
+        <div class="flex -mx-1 mb-4">
+          <div id="the-screen" class="px-1 w-full">
+          </div>
         </div>
-        <div class="px-1 w-1/3 h-28">
-          <button @click="toggleShareScreenButton"
-            id="screen-button"
-            class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
-                <display-icon v-if="$store.state.teacherCreateAssignment.states.isScreenShare" class="w-12" />
-                <display-slash-icon v-else class="w-12"/>
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Screen
-            </div>
-          </button>
+
+        <!-- final render test -->
+        <p>Final render test</p>
+        <div class="flex -mx-1 mb-4">
+          <canvas width="300" height="150" id="canvas-render" class="border-2 border-black h-auto h-20 w-full md:w-screen max-w-xl "></canvas>
         </div>
+
+        <!-- camera and mic controls -->
+        <div class="flex -mx-1 mb-4" >
+          <div class="px-1 w-1/3 h-28">
+            <button @click="toggleVideoButton"
+              id="video-button"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <video-icon v-if="$store.state.teacherCreateAssignment.states.isVideoOn" class="w-12" />
+                  <video-slash-icon v-else class="w-12" />
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Camera
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/3 h-28">
+            <button @click="toggleMicButton"
+              id="mic-button"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <microphone-icon v-if="$store.state.teacherCreateAssignment.states.isMicOn" class="w-12"/>
+                  <microphone-slash-icon v-else class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Microphone 
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/3 h-28">
+            <button @click="toggleShareScreenButton"
+              id="screen-button"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <display-icon v-if="$store.state.teacherCreateAssignment.states.isScreenShare" class="w-12" />
+                  <display-slash-icon v-else class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Screen
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- recording controls -->
+        <div class="flex -mx-1 mb-4" >
+          <div class="px-1 w-1/2 h-28">
+            <button @click="startRecording"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting'] || $store.getters['teacherCreateAssignment/hasZoomRecording']"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
+                <icon-base-two class="w-12">
+                  <circle-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Rec Start
+              </div>
+            </button>
+          </div>
+          <div class="px-1 w-1/2 h-28">
+            <button @click="stopRecording"
+              class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting'] || !$store.getters['teacherCreateAssignment/hasZoomRecording']"
+            >
+              <div class="flex col-span-1 row-span-1 justify-center py-4">
+                <icon-base-two class="w-12">
+                  <stop-icon class="w-12"/>
+                </icon-base-two>
+              </div>
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                Rec Stop
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- recording gallery-->
+        <div class="flex -mx-1 mb-4" >
+          <p>recording gallery here</p>
+        </div>
+        <div id="video-preview-gallery" class="flex -mx-1 mb-4" >
+          <div v-if="$store.state.teacherCreateAssignment.creatingQuestionDetails.zoomMeetings">
+            <video
+              width="854" height="480"
+              controls="" :src="$store.state.teacherCreateAssignment.creatingQuestionDetails.zoomMeetings">
+            </video>
+          </div>
+        </div>
+
+        <!-- session info -->
+        <div class="flex -mx-1 mb-4" >
+          <p>A session by {{ $store.state.authUser.fullname }} ({{ $store.state.authUser.email }}). Session topic: {{ sessionTopic }} / session pasword: {{ sessionPassword }}</p>
+        </div>
+
+        <!-- cancel session button-->
+        <div class="flex -mx-1 mb-4" >
+          <button type="button" @click="cancelRecording" class="mt-2 p-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">Cancel Zoom Recording</button>
+        </div>
+
+        <hr />
       </div>
 
-      <!-- recording controls -->
-      <div class="flex -mx-1 mb-4" >
-        <div class="px-1 w-1/2 h-28">
-          <button @click="startRecording"
-            class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting'] || $store.getters['teacherCreateAssignment/hasZoomRecording']"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
-              <icon-base-two class="w-12">
-                <circle-icon class="w-12"/>
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Rec Start
-            </div>
-          </button>
-        </div>
-        <div class="px-1 w-1/2 h-28">
-          <button @click="stopRecording"
-            class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-            :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting'] || !$store.getters['teacherCreateAssignment/hasZoomRecording']"
-          >
-            <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
-                <stop-icon class="w-12"/>
-              </icon-base-two>
-            </div>
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Rec Stop
-            </div>
-          </button>
-        </div>
       </div>
-
-
-      <!-- recording gallery-->
-      <div class="flex -mx-1 mb-4" >
-        <p>recording gallery here</p>
-      </div>
-      <div id="video-preview-gallery" class="flex -mx-1 mb-4" >
-        <div v-if="$store.state.teacherCreateAssignment.creatingQuestionDetails.zoomMeetings">
-          <video
-            width="854" height="480"
-            controls="" :src="$store.state.teacherCreateAssignment.creatingQuestionDetails.zoomMeetings">
-          </video>
-        </div>
-      </div>
-
-      <div class="flex -mx-1 mb-4" >
-        <p>A session by {{ $store.state.authUser.fullname }} ({{ $store.state.authUser.email }}). Session topic: {{ sessionTopic }} / session pasword: {{ sessionPassword }}</p>
-      </div>
-
-    </div>
+      
   </div>
 </template>
 
@@ -725,6 +738,10 @@ export default {
 
       this.$store.commit('teacherCreateAssignment/toggleRecording');
       this.status = 'Recording stopped';
+    },
+    cancelRecording(){
+      // switch off the recording menu, back to create zoom button
+      this.$store.commit('teacherCreateAssignment/cancelZoomEditMode');
     },
   },
   components: {

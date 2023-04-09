@@ -178,12 +178,17 @@ export default {
 				state.states.isInZoomMeeting = !state.states.isInZoomMeeting;
 
 			},
-
+			cancelZoomEditMode(state){
+				state.states.isCreatingZoomQuestion = false;
+			},
+			deleteZoomVideo(state){
+				state.states.isCreatingZoomQuestion = false;
+				state.questionDraft.zoomMeetings = null;
+			},
 			toggleSnappedQuestionPreviewStatus(state, key) {
 					state.creatingQuestionDetails.snappedPreviews[key].preview = !state.creatingQuestionDetails.snappedPreviews[key].preview;
 					state.creatingQuestionDetails.snappedPreviews[key].cropping = false;
 			},
-
 			toggleCroppingSnappedQuestionMode(state, key) {
 					state.creatingQuestionDetails.snappedPreviews[key].preview = !state.creatingQuestionDetails.snappedPreviews[key].preview;
 					state.creatingQuestionDetails.snappedPreviews[key].cropping = !state.creatingQuestionDetails.snappedPreviews[key].cropping;
@@ -544,6 +549,8 @@ export default {
 
 			// Check if user has inserted a question title
 			if (state.creatingQuestionDetails.title) {
+				// all this will need to be reviewed
+
 				// If user opt to Write Question
 				if (getters.creatingQuestionType === 'written') {
 					if (getters.hasWrittenQuestionDraft) {
@@ -573,7 +580,7 @@ export default {
 					console.log('saving zoom question');
 
 					commit('saveQuestionToDraft');
-					if (getters.hasZoomQuestionDraf) {
+					if (getters.hasZoomQuestionDraft) {
 						commit('saveQuestionToAssignmentDetails');
 						commit('resetCreatingQuestion')
 						commit('toggleCreatingQuestionMode')
@@ -823,14 +830,17 @@ export default {
 		isEditingWrittenQuestion: (state) => {
 			return state.states.isWritingQuestion;
 		},
+		isEditingZoomQuestion: (state) => {
+
+			return state.states.isCreatingZoomQuestion; 
+		},
 		hasSnappedQuestionDraft(state) {
 			// return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
 			return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
 		},
 		hasZoomQuestionDraft(state){
-			return state.questionDraft.type ?
-				state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null :
-				false;
+			// return state.questionDraft.type ?  state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null : false;
+			return state.questionDraft.zoomMeetings != null;
 		},
 		hasErrors(state) { return state.errors.length || state.states.isShowingError },
 		hasZoomMeeting(state) { return state.states.isInZoomMeeting; },
