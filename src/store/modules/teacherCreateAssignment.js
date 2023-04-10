@@ -836,7 +836,8 @@ export default {
 		},
 		hasSnappedQuestionDraft(state) {
 			// return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
-			return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
+			//return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
+			return state.creatingQuestionDetails.snappedPreviews.length > 0; 
 		},
 		hasZoomQuestionDraft(state){
 			// return state.questionDraft.type ?  state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null : false;

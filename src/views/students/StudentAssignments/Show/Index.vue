@@ -30,7 +30,6 @@
 
 					<!-- Page Content -->
 					<div class="absolute z-20 md:z-40 mb-32 w-full">
-
 						<div v-if="!isPreviewing">
 							<!-- HEADER with Nav Back -->
 							<div class="flex flex-row justify-between px-5 w-full pt-3/24">
@@ -89,7 +88,6 @@
 							</div>
 
 						</div>
-
 					</div>
 
 
@@ -287,7 +285,10 @@ export default {
 
 	},
 	methods: {
-		fetchData() {
+		async fetchData() {
+			// const sleep = ms => new Promise(r => setTimeout(r, ms));
+			// await sleep(1000)
+
 
 			AssignmentRepository.find(this.assignmentID)
 					.then(response => {

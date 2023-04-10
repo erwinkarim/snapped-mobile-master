@@ -21,7 +21,7 @@
     <!-----------------------
        CREATING QUESTIONS
     ------------------------>
-    <div class="relative px-7 mt-5 w-full max-h-full">
+    <div class="relative px-3 mt-5 w-full max-h-full">
 
       <!-- TITLE -->
       <input v-model="$store.state.teacherCreateAssignment.creatingQuestionDetails.title"
@@ -42,7 +42,7 @@
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
       <div v-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex -mx-1 mb-4" >
         <!-- zoom meeting-->
-        <div class="px-1 w-full h-28">
+        <div class="w-full h-28 px-1">
           <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
@@ -57,33 +57,49 @@
           </button>
         </div>
       </div>
-      <div v-else-if="$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']">
-        <video autoplay controls height="640" width="854" crossorigin>
+      <div v-else-if="$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex flex-col -mx-1 mb-1" >
+        <video class="flex" autoplay controls height="640" width="854" crossorigin>
           <!-- must ensure all recordings are in mp4 format -->
+
           <source :src="$store.state.teacherCreateAssignment.questionDraft.zoomMeetings" type="video/mp4" />
           Your browser don't support video tag.
         </video>
-        <div class="px-1 w-1/2 h-16">
-          <button 
-                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-          >
-            <div class="flex col-span-1 row-span-2 justify-center py-2" 
-              @click="$store.commit('teacherCreateAssignment/deleteZoomVideo')"
+        <div class="flex flex-row">
+          <div class="pr-1 w-1/2 h-16">
+            <button 
+              class="mt-2 py-1 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-red-primary  focus:outline-none focus:shadow-outline"
             >
-              Delete Video
-            </div>
-          </button>
+              <div class="flex col-span-1 row-span-2 justify-center py-2" 
+                @click="$store.commit('teacherCreateAssignment/deleteZoomVideo')"
+              >
+                <div class="text-white text-sm md:text-lg w-3/4">
+                  Remove
+                </div>
+                <div class="w-1/4">
+                  <icon-base-two class="w-1/2">
+                    <trash-icon/>
+                  </icon-base-two>
+                </div>
+              </div>
+            </button>
+          </div>
+          <div class="pl-1 w-1/2 h-16">
+            <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+              class="mt-2 py-1 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-purple-primary  focus:outline-none focus:shadow-outline"
+            >
+              <div class="flex col-span-1 row-span-2 justify-center py-2">
+                <div class="text-white text-sm md:text-lg w-3/4">
+                  Retake Video
+                </div>
+                <div class="w-1/4">
+                  <icon-base-two class="w-1/2">
+                    <crop-icon/>
+                  </icon-base-two>
+                </div>
+              </div>
+            </button>
+          </div>
         </div>
-        <div class="px-1 w-1/2 h-16">
-          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
-                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-          >
-            <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Edit Video
-            </div>
-          </button>
-        </div>
-
       </div>
       <div v-else>
         <!-- FORM: Zoom Question 
@@ -92,9 +108,9 @@
         <ZoomQuestionForm />
       </div>
 
-      <!-- create snap question button -->
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
       <div v-if="!$store.getters['teacherCreateAssignment/hasSnappedQuestionDraft']" class="flex -mx-1 mb-4" >
+        <!-- create snap question button -->
         <label class="px-1 w-full h-28">
           <div class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">
             <div class="flex col-span-1 row-span-1 justify-center py-4">
@@ -115,18 +131,17 @@
           </div>
         </label>
       </div>
-      <!--  If IMAGE HAS BEEN SELECTED  -->
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSnappingQuestion"-->
       <div v-else>
         <!-- display the images-->
         <hr class="mb-4" />
         <div v-for="(image, key) in $store.state.teacherCreateAssignment.creatingQuestionDetails.snappedPreviews"
-             class="flex flex-col py-5 px-5 mt-1 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+             class="flex flex-col mt-1 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
         >
 
           <div v-if="image.preview" class="">
-            <div class="w-full py-2 h-full object-cover">
-              <img :src="image.source"/>
+            <div class="w-full h-full object-cover">
+              <img :src="image.source" class="mx-auto"/>
             </div>
             <div class="flex flex-row items-center mt-2 md:mt-4 ">
               <button @click="$store.dispatch('teacherCreateAssignment/removeSnappedQuestion', key)"
@@ -238,9 +253,6 @@
           </div>
         </div>
       </div>
-
-
-
 
       <!-- FORM: Written Question -->
       <div v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion" class="relative">
