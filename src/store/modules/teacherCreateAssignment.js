@@ -637,85 +637,82 @@ export default {
 				commit('togglePublishingMode')
 				commit('toggleShowingSchedulerMode')
 
-			// from lavarel code, it seems push the video to the server first and to get meeting
-			// and then push the assignment  details
+				// from lavarel code, it seems push the video to the server first and to get meeting
+				// and then push the assignment  details
 
-			// pre-flight check: see if it's a zoom meeting video.
-			// if it's a zoom meeting, upload the video first and update assignment details
-			console.log('check if got zoom video');
-			if(state.assignmentDetails.question.type === 'zoom'){
-				let formData = new FormData();
-				const path = '/zoom-meeting/push_s3';
-				let recUrl = state.assignmentDetails.question.zoomMeetings;
-				console.log('recovering video from ', recUrl);
+				// pre-flight check: see if it's a zoom meeting video.
+				// if it's a zoom meeting, upload the video first and update assignment details
+				console.log('check if got zoom video');
+				//if(state.assignmentDetails.question.type === 'zoom'){
+				if(state.assignmentDetails.question.zoomMeetings !== null){
+					let formData = new FormData();
+					const path = '/zoom-meeting/push_s3';
+					let recUrl = state.assignmentDetails.question.zoomMeetings;
+					console.log('recovering video from ', recUrl);
 
-				console.log('getting the video file');
-				let recBlob = await fetch(recUrl).then( r =>
-					r.blob()).then(blobFile => new File([blobFile], "test.webm", { type: "video/webm"})
-				);
+					console.log('getting the video file');
+					let recBlob = await fetch(recUrl).then( r =>
+						r.blob()).then(blobFile => new File([blobFile], "test.webm", { type: "video/webm"})
+					);
 
-				formData.append('zoomMeetings', recBlob);
+					formData.append('zoomMeetings', recBlob);
 
-				await Repository.post(path, formData,   {
-					headers: { 'Content-Type': 'multipart/form-data' }
-				}).then( (res) => {
-					zoom_meeting = res.data.zoom_meeting;
-					console.log('res', res);
-				});
-			}
-			console.log('done sending a zoom video', zoom_meeting);
-
-			console.log('pushing the assignment detail');
-			// push the assignment details for each class.
-			state.assignmentDetails.classroom_id.forEach((classroom, index) => {
-
-			let formData = new FormData();
-
-			formData.append('subject_id', state.assignmentDetails.subject_id);
-			formData.append('school_id', state.assignmentDetails.school_id);
-			formData.append('class_id', classroom.id);
-			formData.append('title', state.assignmentDetails.title);
-			formData.append('written_question_title', state.assignmentDetails.question.title);
-			formData.append('written_description', state.assignmentDetails.question.writtenQuestion ?? '');
-			formData.append('due_datetime', moment(state.assignmentDetails.due_datetime).format('YYYY-MM-DD HH:mm:ss'));
-			formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
-			formData.append('remarks', state.assignmentDetails.remarks ?? '');
-			formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
-
-			for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
-				let file = state.assignmentDetails.question.snappedQuestions[i];
-				formData.append('snap_question[' + i + ']', file);
-			}
-
-			// the part where actually save the assignment
-			Repository.post('/assignments/store',
-				formData,
-				{
+					await Repository.post(path, formData,   {
 						headers: { 'Content-Type': 'multipart/form-data' }
-				})
-				.then(response => {
-					if (response.data.success) {
-						counter++;
+					}).then( (res) => {
+						zoom_meeting = res.data.zoom_meeting;
+						console.log('res', res);
+					});
+				}
+				console.log('done sending a zoom video', zoom_meeting);
 
-						if (counter === state.assignmentDetails.classroom_id.length) {
-							commit('togglePublishingMode')
-							commit('togglePublishedMode')
-						}
-					} else {
-						counter++;
-						if (counter === state.assignmentDetails.classroom_id.length) {
-								commit('toggleShowingErrorMode')
-						}
-					}
-				})
-				.catch(error => {
-					commit('togglePublishingMode')
-					commit('toggleShowingErrorMode')
+				console.log('pushing the assignment detail');
+				// push the assignment details for each class.
+				state.assignmentDetails.classroom_id.forEach((classroom, index) => {
+
+				let formData = new FormData();
+
+				formData.append('subject_id', state.assignmentDetails.subject_id);
+				formData.append('school_id', state.assignmentDetails.school_id);
+				formData.append('class_id', classroom.id);
+				formData.append('title', state.assignmentDetails.title);
+				formData.append('written_question_title', state.assignmentDetails.question.title);
+				formData.append('written_description', state.assignmentDetails.question.writtenQuestion ?? '');
+				formData.append('due_datetime', moment(state.assignmentDetails.due_datetime).format('YYYY-MM-DD HH:mm:ss'));
+				formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
+				formData.append('remarks', state.assignmentDetails.remarks ?? '');
+				formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
+
+				for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
+					let file = state.assignmentDetails.question.snappedQuestions[i];
+					formData.append('snap_question[' + i + ']', file);
+				}
+
+				// the part where actually save the assignment
+				Repository.post('/assignments/store', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+					.then(response => {
+						if (response.data.success) {
+							counter++;
+
+							if (counter === state.assignmentDetails.classroom_id.length) {
+								commit('togglePublishingMode')
+								commit('togglePublishedMode')
+							}
+						} else {
+							counter++;
+								if (counter === state.assignmentDetails.classroom_id.length) {
+										commit('toggleShowingErrorMode')
+								}
+							}
+					})
+					.catch(error => {
+						commit('togglePublishingMode')
+						commit('toggleShowingErrorMode')
+					});
 				});
-			});
 
-			console.log('done sending the assignment to db');
-		}
+				console.log('done sending the assignment to db');
+			}
 		},
 		testRecordMeeting({state, commit}){
 			// test the past where posting to '/zoom-meeting/store'

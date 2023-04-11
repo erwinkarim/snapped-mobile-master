@@ -29,7 +29,10 @@
 				<div class="relative justify-center w-full">
 
 					<!-- Page Content -->
-					<div class="absolute z-20 md:z-40 mb-32 w-full">
+					<div v-if="isLoading">
+						<p>Loading ...</p>
+					</div>
+					<div v-else class="absolute z-20 md:z-40 mb-32 w-full">
 						<div v-if="!isPreviewing">
 							<!-- HEADER with Nav Back -->
 							<div class="flex flex-row justify-between px-5 w-full pt-3/24">

@@ -144,7 +144,7 @@ import SelectMonth from "@/components/SelectMonth";
 import SelectYear from "@/components/SelectYear";
 import SelectSubject from "@/components/SelectSubject";
 import moment from "moment";
-import StudentRepository from "@/repositories/StudentRepository";
+// import StudentRepository from "@/repositories/StudentRepository";
 import InfiniteLoading from "vue-infinite-loading";
 
 
@@ -190,7 +190,7 @@ export default {
         pageNum: this.filters.pageNum,
         perPage: this.filters.perPage,
         is_active: false,
-        date: this.filters.date,
+        date: moment(this.filters.date).format('DD MMMM YYYY'), // this.filters.date,
         month: this.filters.month,
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
