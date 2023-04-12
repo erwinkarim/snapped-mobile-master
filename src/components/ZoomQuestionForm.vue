@@ -17,6 +17,7 @@
           <div class="px-1 w-1/2 h-28">
             <button @click="createZoomMeeting"
               class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="$store.getters['teacherCreateAssignment/hasZoomMeeting']"
             >
               <div class="flex col-span-1 row-span-1 justify-center py-4">
                 <icon-base-two class="w-12">
@@ -31,6 +32,7 @@
           <div class="px-1 w-1/2 h-28">
             <button @click="leaveZoomMeeting"
                     class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+              :disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
             >
               <div class="flex col-span-1 row-span-1 justify-center py-4">
                 <icon-base-two class="w-12">
@@ -185,8 +187,13 @@
         </div>
 
         <!-- cancel session button-->
-        <div class="flex -mx-1 mb-4" >
-          <button type="button" @click="cancelRecording" class="mt-2 p-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline">Cancel Zoom Recording</button>
+        <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <div @click="cancelRecording" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+            <button>Cancel</button>
+          </div>
+          <div @click="saveRecording" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+            <button>Save</button>
+          </div>
         </div>
 
         <hr />
@@ -265,7 +272,7 @@ export default {
   data () {
     return { status: 'Ready', sessionTopic, sessionPassword };
   }, 
-  async updated() { 
+  async mounted() { 
     // called everytime the form gets updated. wanted to do mounted, but that will only called once.
 
     console.log('ZoomQuestionForm updated');
@@ -616,6 +623,7 @@ export default {
       this.$store.commit('teacherCreateAssignment/toggleIsInZoomMeeting');
     },
     async toggleVideoButton() {
+      console.log('video button toggled');
       var videoState = this.$store.state.teacherCreateAssignment.states.isVideoOn;
 
       if (videoState){
@@ -741,8 +749,20 @@ export default {
     },
     cancelRecording(){
       // switch off the recording menu, back to create zoom button
+      this.leaveZoomMeeting();
       this.$store.commit('teacherCreateAssignment/cancelZoomEditMode');
+      if(this.$store.getters['teacherCreateAssignment/hasZoomMeeting']){
+        this.$store.commit('teacherCreateAssignment/cancelZoomMeeting');
+      }
     },
+    saveRecording(){
+      console.log('saving recording');
+      this.$store.dispatch('teacherCreateAssignment/saveZoomQuestionToDraft')
+      this.leaveZoomMeeting();
+      if(this.$store.getters['teacherCreateAssignment/hasZoomMeeting']){
+        this.$store.commit('teacherCreateAssignment/cancelZoomMeeting');
+      }
+    }
   },
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,

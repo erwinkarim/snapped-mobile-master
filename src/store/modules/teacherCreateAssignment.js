@@ -181,6 +181,10 @@ export default {
 			cancelZoomEditMode(state){
 				state.states.isCreatingZoomQuestion = false;
 			},
+			cancelZoomMeeting(state){
+				state.states.isInZoomMeeting = false;
+
+			},
 			deleteZoomVideo(state){
 				state.states.isCreatingZoomQuestion = false;
 				state.questionDraft.zoomMeetings = null;
@@ -463,7 +467,7 @@ export default {
 			state.creatingQuestionDetails.zoomMeetings = payload;
 			console.log('payload', payload);
 		},
-		saveZoomQuestionToDraf({state, commit}) {
+		saveZoomQuestionToDraft({state, commit}) {
 			//pushing questionDetails.zoomMeetings to assignmentDetails.question
 			console.log('saving zoom question draf')
 

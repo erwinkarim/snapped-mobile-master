@@ -22,7 +22,10 @@
 
     <template v-slot:content>
       <div class="flex flex-col bg-red-400 w-full">
-        <div class=" relative w-full top-1/12">
+        <div v-if="isLoading">
+          Loading ...
+        </div>
+        <div v-else class=" relative w-full top-1/12">
 
           <!-- Page Content -->
           <div class="absolute w-full z-20 md:z-40 lg:z-50 mb-32">
@@ -184,6 +187,7 @@ export default {
 
       // Status
       isPreviewing: false,
+      isLoading: true,
 
       // Swiper details
       swiperDetails: null,
@@ -240,6 +244,7 @@ export default {
           .then(response => {
 
             if (response.data.success) {
+              this.isLoading = false;
 
               let data = response.data.data;
 
