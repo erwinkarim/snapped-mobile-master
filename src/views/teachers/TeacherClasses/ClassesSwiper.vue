@@ -51,7 +51,8 @@
 
 <script>
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
-import 'swiper/swiper-bundle.css'
+// import 'swiper/swiper-bundle.css'
+import 'swiper/css/swiper.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";

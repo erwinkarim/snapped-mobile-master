@@ -43,7 +43,7 @@
 <script>
 
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
-import 'swiper/swiper-bundle.css'
+// import 'swiper/swiper-bundle.css'
 import StackedProfilePhoto from "@/components/icons/ProfilePhotoStacked";
 import IconBase from "@/components/IconBase";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
