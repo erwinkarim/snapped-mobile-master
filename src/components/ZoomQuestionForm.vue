@@ -275,7 +275,7 @@ export default {
   async mounted() { 
     // called everytime the form gets updated. wanted to do mounted, but that will only called once.
 
-    console.log('ZoomQuestionForm updated');
+    console.log('ZoomQuestionForm mounted');
     console.log(`Using Zoom VIDEO SDK version ${ZoomVideo.VERSION}`);
 
     /*
