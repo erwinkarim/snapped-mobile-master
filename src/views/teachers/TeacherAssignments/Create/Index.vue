@@ -46,7 +46,7 @@
 
 
       <!-- HEADER: Writing Question -->
-      <page-header-three v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion">
+      <!--page-header-three v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion">
         <template v-slot:leftAction>
           <button @click="$store.dispatch('teacherCreateAssignment/endWritingQuestion')"
                   class="text-red-primary w-5/7"
@@ -64,7 +64,7 @@
             Save
           </button>
         </template>
-      </page-header-three>
+      </page-header-three-->
       <!-- HEADER PREVIEW IMAGE -->
       <!--      <page-header-three v-if="isPreviewing" class="px-2">-->
       <!--        <template v-slot:leftAction>-->
