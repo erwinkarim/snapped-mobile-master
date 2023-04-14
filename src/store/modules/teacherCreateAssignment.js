@@ -219,7 +219,7 @@ export default {
 
 			// push creatingQuestionsDetails -> questionDraft
 			saveQuestionToDraft(state) {
-				console.log('creatingQuestionDetails.zoomMeetings', state.creatingQuestionDetails.zoomMeetings);
+				console.log('creatingQuestionDetails.writtenQuestion', state.creatingQuestionDetails.writtenQuestion);
 					state.questionDraft = {
 							type: JSON.parse(JSON.stringify(state.creatingQuestionDetails.type)),
 							title: JSON.parse(JSON.stringify(state.creatingQuestionDetails.title)),
@@ -849,6 +849,6 @@ export default {
 		hasZoomVideo(state) { return state.states.isVideoOn; },
 		hasZoomMic(state) { return state.states.isMicOn; },
 		hasZoomScreenShare(state) { return state.states.isScreenShare; },
-		hasZoomRecording(state) { return state.states.isRecording; }
+		hasZoomRecording(state) { return state.states.isRecording; },
 	}
 }

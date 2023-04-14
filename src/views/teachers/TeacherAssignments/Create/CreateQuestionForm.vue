@@ -236,7 +236,7 @@
         <!-- something already written, so display the preview -->
         <hr />
         <div v-if="$store.getters['teacherCreateAssignment/hasWrittenQuestionDraft']" class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-          <div class="w-full text-left">{{ $store.state.teacherCreateAssignment.questionDraft.writtenQuestion }}</div>
+          <VueMarkdown :source="writtenQuestion" class="w-full text-left" />
         </div>
         <div v-if="!$store.getters['teacherCreateAssignment/isEditingWrittenQuestion']" class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div class="w-4/5 text-left text-blue-secondary">
@@ -299,6 +299,7 @@ import PlusIcon from "@/components/icons/PlusIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import ZoomIcon from "@/components/icons/ZoomIcon";
 import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
+import VueMarkdown from 'vue-markdown';
 
 const VueCropper = () => import('vue-cropperjs');
 // import VueCropper from 'vue-cropperjs';
@@ -309,7 +310,11 @@ import ZoomQuestionForm from '@/components/ZoomQuestionForm';
 
 export default {
   name: "CreateQuestionForm",
-  computed: { },
+  computed: {
+    writtenQuestion: function() {
+      return this.$store.state.teacherCreateAssignment.questionDraft.writtenQuestion;
+    },
+  },
   methods: {
     handleSnappedQuestion(e) {
       this.$store.dispatch('teacherCreateAssignment/beginSnappingQuestion')
@@ -324,12 +329,13 @@ export default {
       }
 
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
+
     },
   },
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
     VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
-    MicrophoneIcon, ZoomQuestionForm,
+    MicrophoneIcon, ZoomQuestionForm, VueMarkdown
   }
 }
 </script>
