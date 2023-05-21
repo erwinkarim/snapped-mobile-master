@@ -26,7 +26,10 @@
 		<template v-slot:content>
 
 			<div class="flex flex-col w-full max-w-xl">
-				<div class="relative justify-center w-full">
+				<div v-if="isLoading">
+					<p>Loading ...</p>
+				</div>
+				<div v-else class="relative justify-center w-full">
 
 					<!-- Page Content -->
 					<div v-if="isLoading">
