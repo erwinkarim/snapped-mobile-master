@@ -46,7 +46,7 @@
 
 
       <!-- HEADER: Writing Question -->
-      <page-header-three v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion">
+      <!--page-header-three v-if="$store.state.teacherCreateAssignment.states.isWritingQuestion">
         <template v-slot:leftAction>
           <button @click="$store.dispatch('teacherCreateAssignment/endWritingQuestion')"
                   class="text-red-primary w-5/7"
@@ -64,7 +64,7 @@
             Save
           </button>
         </template>
-      </page-header-three>
+      </page-header-three-->
       <!-- HEADER PREVIEW IMAGE -->
       <!--      <page-header-three v-if="isPreviewing" class="px-2">-->
       <!--        <template v-slot:leftAction>-->
@@ -177,7 +177,7 @@
           <textarea v-model="$store.state.teacherCreateAssignment.assignmentDetails.remarks"
                     class="py-5 pr-2 pl-6 w-full h-36 text-lg font-normal leading-tight rounded-md border border-none appearance-none mb-26 bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
                     placeholder="Remarks or Link"
-          />
+          ></textarea>
         </div>
       </div>
 

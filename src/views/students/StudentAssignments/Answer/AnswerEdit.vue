@@ -112,7 +112,7 @@
                class="flex flex-col py-5 px-5 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
             <div class="mt-5 w-full">
-              <img :src="image.path"/>
+              <img :src="image.path" crossorigin="anonymous" />
             </div>
 
             <div class="flex flex-row items-center mt-2 md:mt-4 ">

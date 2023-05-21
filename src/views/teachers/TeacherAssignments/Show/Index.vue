@@ -1,7 +1,5 @@
 <template>
-  <dashboard-layout
-      :no-bottom-bar="isPreviewing"
-  >
+  <dashboard-layout :no-bottom-bar="isPreviewing">
 
     <template v-slot:pageHeader v-if="isPreviewing">
       <page-header-three background-color="bg-transparent" class="relative">
@@ -24,7 +22,10 @@
 
     <template v-slot:content>
       <div class="flex flex-col bg-red-400 w-full">
-        <div class=" relative w-full top-1/12">
+        <div v-if="isLoading">
+          Loading ...
+        </div>
+        <div v-else class=" relative w-full top-1/12">
 
           <!-- Page Content -->
           <div class="absolute w-full z-20 md:z-40 lg:z-50 mb-32">
@@ -126,6 +127,9 @@
               </div>
             </div>
 
+            <!-- empty space-->
+            <div class="mb-16 md:mb-24"></div>
+
           </div>
 
 
@@ -135,7 +139,7 @@
           <!-- Background Stack Green -->
           <div class=" top-0 w-full z-0 sm:z-10 md:z-20 lg:z-30 xl:z-40 bg-green-primary pb-2/3">
             <!-- Background Stack Overlay -->
-<!--            <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 ">-->
+            <!--div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-50 bg-black bg-opacity-10  pb-2/3 "-->
             <div class="absolute top-0 w-full z-10 sm:z-20 md:z-30 lg:z-40 xl:z-100 bg-black bg-opacity-10  pb-2/3 ">
             </div>
           </div>
@@ -183,6 +187,7 @@ export default {
 
       // Status
       isPreviewing: false,
+      isLoading: true,
 
       // Swiper details
       swiperDetails: null,
@@ -239,6 +244,7 @@ export default {
           .then(response => {
 
             if (response.data.success) {
+              this.isLoading = false;
 
               let data = response.data.data;
 

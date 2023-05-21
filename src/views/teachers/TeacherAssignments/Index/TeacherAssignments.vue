@@ -197,7 +197,7 @@ export default {
         pageNum: this.filters.pageNum,
         perPage: this.filters.perPage,
         is_active: false,
-        date: this.filters.date,
+        date: moment(this.filters.date).format('DD MMMM YYYY'), // this.filters.date, <- time zone will screw you
         month: this.filters.month,
         year: this.filters.year,
         subjects: this.filters.subjects !== undefined ? this.filters.subjects : null
