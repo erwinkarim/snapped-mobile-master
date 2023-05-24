@@ -271,6 +271,53 @@
         </div>
       </div>
 
+      <!-- FORM: My soalan-->
+      <div v-if="!$store.getters['teacherCreateAssignment/hasMySoalanQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingMySoalanQuestion']" class="flex -mx-1 mb-4" >
+        <!-- nothing selected, show the button to create -->
+        <label class="px-1 w-full h-28">
+          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingMySoalanQuestion')"
+                  class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-1 justify-center py-4">
+              <icon-base-two class="w-12">
+                <camera-icon/>
+              </icon-base-two>
+            </div>
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              MySoalan
+            </div>
+          </button>
+        </label>
+      </div>
+      <div v-else-if="$store.getters['teacherCreateAssignment/isEditingMySoalanQuestion']" class="flex flex-col -mx-1 mb-4">
+        <h2>MySoalan Redirect</h2>
+        <p>drop down list about year and subject and info about this will redirect to mysoalan site.</p>
+        <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <div @click="$store.dispatch('teacherCreateAssignment/cancelWritingMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+            <button> Cancel </button>
+          </div>
+          <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite')" class="w-1/2 text-center text-blue-secondary ml-2 bg-gray-secondary py-5 rounded-md">
+            <button>Redirect</button>
+          </div>
+        </div>
+      </div>
+      <div v-else class="flex flex-col -mx-1 mb-4" >
+        <hr />
+        <div class="py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <p class="text-sm">MySoalan Exercise</p>
+          <p class="text-3xl">{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.collection.name }}</p>
+          <p>{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.totalObjQuestions }} Question(s)</p>
+          <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.id }}</p>
+        </div>
+        <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+            <button>Re-choose Question</button>
+          </div>
+          <div @click="$store.dispatch('teacherCreateAssignment/removeMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+            <button>Delete</button>
+          </div>
+        </div>
+      </div>
     </div>
 
 
@@ -331,6 +378,17 @@ export default {
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
 
     },
+  },
+  mounted() {
+    // if query got assign_paper, load the uuid in the question draft remove it from the query.
+    // this is done to handle redirected from mysoalan site
+    if(this.$route.query.assign_paper){
+      console.log('create q: assign_paper detected');
+      this.$store.dispatch('teacherCreateAssignment/setMySoalanAssignID', this.$route.query.assign_paper);
+
+      // load basic info about the paper from mysoalan
+      this.$store.dispatch('teacherCreateAssignment/getMySoalanInfo');
+    };
   },
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,

@@ -4,6 +4,16 @@ import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
 import {get} from "v-calendar/src/utils/_";
 
+// shoud move to repository later.
+import axios from "axios";
+
+let id = process.env.VUE_APP_MYSOALAN_KEY;
+let secret = process.env.VUE_APP_MYSOALAN_SECRET;
+
+// create token
+const token = Buffer.from(`${id}:${secret}`, 'utf8').toString('base64');
+let auth_url = 'https://api.mysoalan.com/v1/intg/oauth';
+
 /*
 	state to handle assignment creations
 	1. question creation
@@ -31,11 +41,13 @@ export default {
 			isMain: true,
 			isCreatingQuestion: false,
 			isCreatingZoomQuestion: false,
+			isCreatingMySoalanQuestion: false,
 			isSelectingDuration: false,
 			isSelectingQuestionType: false,
 			isWritingQuestion: false,
 			isSnappingQuestion: false,
 			isZoomQuestion: false,
+			isMySoalanQuestion: false,
 			isCroppingSnappedQuestion: false,
 			isResettingQuestion: false,
 			isShowingScheduler: false,
@@ -49,6 +61,7 @@ export default {
 			isScreenShare: false,
 			meeting_id: null,
 			isZoomPreview: false,
+			mySoalanInfo: null,
 		},
 
 		// Main details to be submitted
@@ -64,7 +77,8 @@ export default {
 				writtenQuestion: null,
 				snappedQuestions: [],
 				snappedPreviews: [],
-				zoomMeetings: null
+				zoomMeetings: null,
+				mySoalan: null,
 			},
 			published_at: moment(),
 		},
@@ -78,6 +92,7 @@ export default {
 			snappedQuestions: [],
 			snappedPreviews: [],
 			zoomMeetings: null,
+			mySoalan: null, 
 		},
 
 		// Currently creating question details. To be used instantaneous.
@@ -89,6 +104,7 @@ export default {
 			snappedQuestions: [],
 			snappedPreviews: [],
 			zoomMeetings: null,
+			mySoalan: null, 
 		},
 
 		selectables: {
@@ -111,6 +127,7 @@ export default {
 					state.states.isMain = true;
 					state.states.isCreatingQuestion = false;
 					state.states.isCreatingZoomQuestion = false;
+					state.states.isCreatingMySoalanQuestion = false;
 					state.states.isSelectingQuestionType = false;
 					state.states.isWritingQuestion = false;
 					state.states.isSnappingQuestion = false;
@@ -152,6 +169,12 @@ export default {
 			toggleSnappingQuestionMode(state) {
 					state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
 					state.states.isSnappingQuestion = !state.states.isSnappingQuestion;
+			},
+
+			toggleMySoalanQuestionMode(state) {
+					state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
+					state.states.isMySoalanQuestion = !state.states.isMySoalanQuestion;
+					state.states.isCreatingMySoalanQuestion = !state.states.isCreatingMySoalanQuestion;
 			},
 
 			toggleShowingErrorMode(state) {
@@ -227,6 +250,7 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedPreviews)),
 							zoomMeetings: state.creatingQuestionDetails.zoomMeetings,
+							mySoalan: state.creatingQuestionDetails.mySoalan,
 					}
 			},
 
@@ -239,6 +263,7 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.questionDraft.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.questionDraft.snappedPreviews)),
 							zoomMeetings: state.questionDraft.zoomMeetings,
+							mySoalan: state.questionDraft.mySoalan,
 					}
 			},
 
@@ -251,7 +276,8 @@ export default {
 							writtenQuestion: null,
 							snappedQuestions: [],
 							snappedPreviews: [],
-							zoomMeetings: null
+							zoomMeetings: null,
+							mySoalan: null,
 					}
 
 					state.creatingQuestionDetails = {
@@ -260,7 +286,8 @@ export default {
 							writtenQuestion: null,
 							snappedQuestions: [],
 							snappedPreviews: [],
-							zoomMeetings: null
+							zoomMeetings: null,
+							mySoalan: null,
 					}
 			},
 
@@ -277,6 +304,7 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews)),
 							zoomMeetings: state.assignmentDetails.question.zoomMeetings,
+							mySoalan: state.assignmentDetails.question.mySoalan,
 					}
 
 					state.creatingQuestionDetails = {
@@ -286,6 +314,7 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews)),
 							zoomMeetings: state.assignmentDetails.question.zoomMeetings,
+							mySoalan: state.assignmentDetails.question.mySoalan,
 					}
 			},
 
@@ -302,6 +331,7 @@ export default {
 							isMain: true,
 							isCreatingQuestion: false,
 							isCreatingZoomQuestion: false,
+							isCreatingMySoalanQuestion: false,
 							isInZoomMeeting: false,
 							isSelectingDuration: false,
 							isSelectingQuestionType: false,
@@ -320,6 +350,8 @@ export default {
 							isRecording: false,
 							meeting_id: null,
 							isZoomPreview: false,
+							isMySoalanQuestion: false,
+							mySoalanInfo: null,
 					};
 
 					// Main details to be submitted
@@ -334,7 +366,8 @@ export default {
 									title: null,
 									writtenQuestion: null,
 									snappedQuestions: [],
-									zoomeMeetings: null
+									zoomeMeetings: null,
+									mySoalan: null,
 							},
 							published_at: moment(),
 					}
@@ -347,7 +380,8 @@ export default {
 							writtenQuestion: null,
 							snappedQuestions: [],
 							snappedPreviews: [],
-							zoomMeetings: null
+							zoomMeetings: null,
+							mySoalan: null,
 					}
 
 					// Currently creating question details. To be used instantaneous.
@@ -359,6 +393,7 @@ export default {
 							snappedQuestions: [],
 							snappedPreviews: [],
 							zoomMeetings: null,
+							mySoalan: null,
 					}
 
 					state.selectables = {
@@ -366,7 +401,8 @@ export default {
 						subjects: [],
 						classrooms: []
 					}
-			}
+			},
+
 
 	},
 	actions: {
@@ -385,6 +421,49 @@ export default {
 			// triggered when user select zoom meeting question
 			commit('toogleZoomQuestionMode');
 			state.creatingQuestionDetails.type ='zoom';
+		},
+		beginWritingMySoalanQuestion({state, commit, getters}){
+			console.log('attempt to start writing mysoalan question');
+			commit('toggleMySoalanQuestionMode');
+			state.creatingQuestionDetails.type = 'mySoalan';
+		},
+		cancelWritingMySoalanQuestion({state, commit}){
+			commit('toggleMySoalanQuestionMode');
+			state.creatingQuestionDetails.type = '';
+		}, 
+		removeMySoalanQuestion({state}){
+			console.log('remove mySoalan Question');
+			// clear out from the question draft
+			state.questionDraft.mySoalan=null;
+			state.states.isCreatingMySoalanQuestion = false;
+		},
+		redirectToMySoalanSite({state, commit}){
+			console.log('actual redirect to mysoalan site');
+			/*
+				should save localsession data before being redirected.
+			*/
+
+			let redirect = window.location.host + window.location.pathname;
+			//let redirect = 'mobile.gotsnapped.tech/teacher/assignments/create'
+			let subject = 'english';
+			let level = 'year_2';
+			let q_url = 'https://snapped.mysoalan.com/papers';
+			let access_t = '';
+
+			axios.post(auth_url,{
+				teacherEmail: 'cikgumaria@snapped.com'
+			}, {
+				headers: {'Authorization': `Basic ${token}`},
+			}).then((res) => {
+				console.log('res', res);
+				access_t = res.data.accessToken;
+
+				console.log('access_t', access_t);
+				// redirect to url
+				window.location.replace(`${q_url}?token=${access_t}&redirect-url=${redirect}&subject=${subject}&level=${level}`);
+			}).catch((e) => {
+				console.log('error', e.response.message);
+			});
 		},
 		saveWrittenQuestionToDraft({state, commit, getters}) {
 			if (state.creatingQuestionDetails.writtenQuestion) {
@@ -491,7 +570,7 @@ export default {
 			TeacherRepository
 				.getTeacherSchools()
 				.then(res => {
-					console.log('res', res.data);
+					// console.log('res', res.data);
 					res.data.forEach(item => {
 						state.selectables.schools.push({
 							id: item.id, 
@@ -594,6 +673,19 @@ export default {
 
 					// plan. sanitize and push to server
 				}
+
+				// if the assignment has mySoalan assignment uuid
+				if (getters.creatingQuestionType === 'mySoalan'){
+					console.log('should save mysoalan type');
+					commit('saveQuestionToDraft');
+					if (getters.hasMySoalanQuestionDraft) {
+						commit('saveQuestionToAssignmentDetails');
+						commit('resetCreatingQuestion')
+						commit('toggleCreatingQuestionMode')
+					} else {
+						console.log('please record something');
+					}
+				}
 			} else {
 				console.log('please fill in title')
 			}
@@ -686,6 +778,7 @@ export default {
 				formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
 				formData.append('remarks', state.assignmentDetails.remarks ?? '');
 				formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
+				formData.append('mysoalan', state.assignmentDetails.question.mySoalan);
 
 				for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
 					let file = state.assignmentDetails.question.snappedQuestions[i];
@@ -802,7 +895,49 @@ export default {
 		},
 		setAssignmentTitle({state}, maxedTitle) {
 			state.assignmentDetails.title = maxedTitle;
-		}
+		},
+		/* 
+			set the mysoalan assignment id
+			- usually being used after being redirect
+			- should also load localstorage/localsession data
+		*/
+		setMySoalanAssignID(state, key){
+			console.log('teacherCreateAssignment: setting mysoal paper id', key);
+			state.state.questionDraft.mySoalan = key;
+			state.state.assignmentDetails.question.mySoalan = key;
+			state.state.creatingQuestionDetails.mySoalan = key;
+			state.state.creatingQuestionDetails.type='mySoalan';
+		},
+		async getMySoalanInfo(state){
+			console.log('teacherCreateAssignment: getting mysoalan info');
+
+			let access_t = '';
+			let assign_info_url = `https://api.mysoalan.com/v1/assign-papers/${state.state.questionDraft.mySoalan}`;
+
+			// get access token
+			await axios.post(auth_url, {
+				teacherEmail: 'cikgumaria@snapped.com',
+			}, {
+				headers: {
+					'Authorization': `Basic ${token}`,
+				},
+			}).then((res) => {
+				access_t = res.data.accessToken;
+				console.log('access_t', access_t);
+			});
+
+			// get mysoalan info
+			await axios.get(assign_info_url, {
+				headers: {
+					'Authorization': `Bearer ${access_t}`,
+				},
+			}).then((res) => {
+				console.log('assign info', res);
+				state.state.states.mySoalanInfo = res.data;
+			}).catch((e) => {
+				console.log('failed to get assignment info');
+			});
+		},
 	},
 	getters: {
 		creatingQuestionType: (state) => { return state.creatingQuestionDetails.type; },
@@ -813,7 +948,8 @@ export default {
 			return state.assignmentDetails.question.type && (
 				state.assignmentDetails.question.writtenQuestion ||
 				state.assignmentDetails.question.snappedQuestions.length ||
-				state.assignmentDetails.question.zoomMeetings !== null
+				state.assignmentDetails.question.zoomMeetings !== null ||
+				state.assignmentDetails.question.mySoalan !== null
 			);
 		},
 		hasSavedDueDatetime: (state) => {
@@ -832,17 +968,23 @@ export default {
 			return state.states.isWritingQuestion;
 		},
 		isEditingZoomQuestion: (state) => {
-
 			return state.states.isCreatingZoomQuestion; 
+		},
+		isEditingMySoalanQuestion: (state) => {
+			return state.states.isCreatingMySoalanQuestion;
 		},
 		hasSnappedQuestionDraft(state) {
 			// return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
 			//return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
+			console.log('getting hasSnappedQuestionDraft');
 			return state.creatingQuestionDetails.snappedPreviews.length > 0; 
 		},
 		hasZoomQuestionDraft(state){
 			// return state.questionDraft.type ?  state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null : false;
 			return state.questionDraft.zoomMeetings != null;
+		},
+		hasMySoalanQuestionDraft(state){
+			return state.questionDraft.mySoalan != null;
 		},
 		hasErrors(state) { return state.errors.length || state.states.isShowingError },
 		hasZoomMeeting(state) { return state.states.isInZoomMeeting; },

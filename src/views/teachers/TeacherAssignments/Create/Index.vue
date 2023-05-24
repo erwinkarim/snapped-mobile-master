@@ -372,6 +372,13 @@ export default {
 				}
 			},
     )
+
+    // if got assign_paper in the query, need to open up the create question form with the mysoal uuid
+    // this is to handle from being redirected from mysoalan site
+    if(this.$route.query.assign_paper){
+      console.log('assign paper detected, open the question form');
+      this.$store.commit('teacherCreateAssignment/toggleCreatingQuestionMode');
+    }
   },
   components: {
     ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo
