@@ -202,7 +202,8 @@ export default {
           description: null
         },
         remarks: null,
-        snap_question_paths: []
+        snap_question_paths: [],
+        mysoalan: null,
       },
       submissions: [],
       meta: {
@@ -255,6 +256,7 @@ export default {
               this.assignment.dueDatetime = data.assignment_details.due_datetime;
               this.assignment.written_question.title = data.assignment_details.written_question_title;
               this.assignment.written_question.description = data.assignment_details.written_question_description;
+              this.assignment.mysoalan = data.assignment_details.mysoalan;
               this.assignment.remarks = data.assignment_details.remarks;
               this.assignment.school_name = data.assignment_details.school_name;
 

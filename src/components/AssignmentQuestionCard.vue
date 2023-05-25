@@ -112,6 +112,15 @@
 					</div>
 				</button>
 
+				<!-- MySoalan Question-->
+				<div v-if="hasMySoalanQuestion" class="border border-solid border-black p-2 m-0">
+					<div v-if="this.mySoalan != null ">
+						<p>MySoalan Data here.</p>
+						<p>{{ this.mySoalan.name }}</p>
+						<p>{{  this.mySoalan.questions }} questions(s)</p>
+					</div>
+				</div>
+
 				<!-- REMARKS -->
 				<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
 					<strong>Remarks: </strong><br />
@@ -119,6 +128,7 @@
 				</div>
 
 			</div>
+
 
 		</div>
 	</div>
@@ -131,12 +141,36 @@ import moment from "moment";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 import VueMarkdown from 'vue-markdown';
+import MySoalanRepository from "@/repositories/MySoalanRepository";
 
 export default {
 	name: "AssignmentQuestionCard",
+	async mounted(){
+
+		// load Mysoalan Question Data for display
+		if(this.hasMySoalanQuestion){
+			console.log('should load mysoalan data');
+			// get token
+			let token = '';
+
+			await MySoalanRepository.teacher_token('cikgumaria@snapped.com').then((res) => {
+				token = res.data.accessToken;
+			});
+
+			// get info
+			await MySoalanRepository.showPaper(this.assignment.mysoalan, token).then((res) => {
+				console.log('res', res);
+				this.mySoalan = {
+					name: res.data.collection.name,
+					questions: res.data.totalObjQuestions,
+				};
+			});
+		}
+	},
 	props: {
 		assignment: Object,
 		meta: Object,
+
 		isPreviewing: Boolean,
 	},
 	data() {
@@ -145,7 +179,10 @@ export default {
 			isReadingMore: false,
 
 			// Swiper slides
-			swiperDetails: null
+			swiperDetails: null,
+
+			// mysoalan
+			mySoalan: null,
 
 		}
 	},
@@ -158,6 +195,7 @@ export default {
 			return this.assignment.snap_question_paths !== null && this.assignment.snap_question_paths.length > 0;
 		},
 
+
 		hasZoomQuestion: function () {
 			/*
 			console.log('asking hasZoomQuestion');
@@ -169,6 +207,10 @@ export default {
 			if (this.assignment.recording_path === undefined){ return false; }
 
 			return this.assignment.recording_path !== null && this.assignment.recording_path.length > 0;
+		},
+
+		hasMySoalanQuestion: function(){
+			return this.assignment.mysoalan != null;
 		},
 
 		hasReadMore() {
