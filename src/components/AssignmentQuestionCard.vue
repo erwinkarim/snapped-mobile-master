@@ -118,6 +118,9 @@
 						<p>MySoalan Data here.</p>
 						<p>{{ this.mySoalan.name }}</p>
 						<p>{{  this.mySoalan.questions }} questions(s)</p>
+						<div v-if="this.$store.getters['getAuthUserRole'] == 'Student'">
+							<a href="#" @click="answerMySoalanQuestion()">Answer this question</a>
+						</div>
 					</div>
 				</div>
 
@@ -153,7 +156,7 @@ export default {
 			// get token
 			let token = '';
 
-			await MySoalanRepository.teacher_token('cikgumaria@snapped.com').then((res) => {
+			await MySoalanRepository.getAccessToken(this.$store.getters['getAuthEmail'], this.$store.getters['getAuthUserRole']).then((res) => {
 				token = res.data.accessToken;
 			});
 
@@ -260,6 +263,23 @@ export default {
 		},
 		emitSwiperDetails() {
 			this.$emit('swiperDetails', this.swiperDetails)
+		},
+		async answerMySoalanQuestion(){
+			console.log('answering mysoalan question');
+			let token = '';
+			// let redirect = window.location.host + window.location.pathname;
+			let redirect = window.location.host + this.$router.resolve({
+				name: 'student.assignments.answer.store', params: { assignmentID: this.assignment.id }, 
+			}).href;
+
+			await MySoalanRepository.getAccessToken(this.$store.getters['getAuthEmail'], this.$store.getters['getAuthUserRole']).then((res) => {
+				token = res.data.accessToken;
+			});
+
+			let redirect_url = `https://snapped.mysoalan.com/assign-papers/${this.assignment.mysoalan}/start?token=${token}&redirect-url=${redirect}`;
+			console.log('redirect attempt', redirect_url);
+
+			window.location.replace(redirect_url);
 		}
 	},
 	components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate, VueMarkdown }

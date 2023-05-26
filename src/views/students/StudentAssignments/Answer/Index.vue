@@ -69,6 +69,7 @@
 
 <script>
 import SubmissionRepository from "@/repositories/SubmissionRepository";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 import Modal from "@/components/Modal";
 
 export default {
@@ -76,6 +77,19 @@ export default {
   components: {Modal},
   props: {
     assignmentDetails: Object
+  },
+  async mounted() {
+    if(this.$route.query['correct-questions']){
+      // fetch and re-load assignment details
+      let data = await AssignmentRepository.find(this.$route.params.assignmentID).then((res) => {
+        return res.data.data;
+      });
+
+      this.assignmentDetails = {
+        id: this.$route.params.assignmentID,
+        title: data.assignment_details.title,
+      };
+    }
   },
   data() {
     return {

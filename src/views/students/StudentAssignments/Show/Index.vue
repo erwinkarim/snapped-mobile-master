@@ -62,7 +62,6 @@
 							</div>
 						</div>
 
-
 						<!-- Assignment Detail Card -->
 						<assignment-question-card
 								:assignment="assignment"
@@ -211,7 +210,7 @@ import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 export default {
 	name: "Index",
 	props: {
-		assignmentID: [String, Number]
+		assignmentID: [String, Number],
 	},
 	data() {
 		return {
@@ -246,7 +245,7 @@ export default {
 				subjectName: null,
 				totalSubmissions: null,
 				totalStudents: null
-			}
+			},
 		}
 	},
 	computed: {
@@ -310,6 +309,7 @@ export default {
 							this.assignment.dueDatetime = data.assignment_details.due_datetime;
 							this.assignment.written_question.title = data.assignment_details.written_question_title;
 							this.assignment.written_question.description = data.assignment_details.written_question_description;
+							this.assignment.mysoalan = data.assignment_details.mysoalan;
 
 							if (data.assignment_details.snap_question) {
 								this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
@@ -363,6 +363,7 @@ export default {
 				return
 			}
 
+			// move to another page when answering something.
 			router.push({
 				name: 'student.assignments.answer.store', params: {
 					assignmentDetails: this.assignmentDetails,
@@ -390,10 +391,10 @@ export default {
 				return ''
 			}
 
-		}
+		},
 	},
-	mounted() {
-		this.fetchData();
+	async mounted() {
+		await this.fetchData();
 	},
 	components: {
 		ArrowBackIcon,

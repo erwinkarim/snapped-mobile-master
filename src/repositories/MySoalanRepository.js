@@ -13,6 +13,12 @@ let auth_url = 'https://api.mysoalan.com/v1/intg/oauth';
 let data_url = 'https://api.mysoalan.com/v1/assign-papers/';
 
 export default {
+	getAccessToken(email, role){
+		let emailOption = role == 'Student' ? { studentEmail: email} : { teacherEmail: email };
+		return axios.post(auth_url, emailOption, {
+			headers: { 'Authorization': `Basic ${token}` },
+		});
+	},
 	teacher_token(email){
 		return axios.post(auth_url, {
 			teacherEmail: email,
