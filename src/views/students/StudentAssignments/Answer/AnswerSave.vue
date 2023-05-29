@@ -133,7 +133,6 @@
                       class="resize-y text-purple-primary py-4 px-5 h-full w-full bg-gray-secondary rounded focus:outline-none placeholder-purple-secondary"
                       placeholder="Remarks"></textarea>
           </div>
-
         </div>
       </div>
     </template>
@@ -385,9 +384,9 @@ export default {
     }
   },
   created() {
-    console.log('should check if query has correct-question');
+    // console.log('should check if query has correct-question');
     if(this.$route.query['correct-questions']){
-      console.log("redirected from mysoalan, generate image file");
+      // console.log("redirected from mysoalan, generate image file");
       // this.answer.type = 'snapped';
 
 			const textToImage = new UltimateTextToImage(
