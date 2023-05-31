@@ -439,7 +439,6 @@ export default {
 		},
 		redirectToMySoalanSite({state, commit}, e){
 			console.log('actual redirect to mysoalan site');
-			console.log('e', e);
 
 			/*
 				should save localsession data before being redirected.

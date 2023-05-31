@@ -292,12 +292,12 @@
         <h2 class="pt-2 font text-2xl">MySoalan Redirect</h2>
         <p>Select from the drop down below. You will be redirected to MySoalan site where you will choose you preferred question bank. All work will be lost while redirected. Advised to use MySoalan as your first step to create the question assignment.</p>
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-            <select class="flex w-1/2 p-2" name="level" v-model="select_mysoalan_level">
+            <select class="flex w-1/2 p-2 mr-1" name="level" v-model="select_mysoalan_level">
               <option v-for="(level, index) in mysoalan_level" :value="index">
                 {{  level }}
               </option>
             </select>
-            <select class="flex w-1/2" name="subject" v-model="select_mysoalan_subject">
+            <select class="flex w-1/2 p-2 ml-1" name="subject" v-model="select_mysoalan_subject">
               <option v-for="(subject, index) in mysoalan_subject" :value="index"> 
                 {{  subject }}
               </option>
