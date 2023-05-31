@@ -437,16 +437,18 @@ export default {
 			state.questionDraft.mySoalan=null;
 			state.states.isCreatingMySoalanQuestion = false;
 		},
-		redirectToMySoalanSite({state, commit}){
+		redirectToMySoalanSite({state, commit}, e){
 			console.log('actual redirect to mysoalan site');
+			console.log('e', e);
+
 			/*
 				should save localsession data before being redirected.
 			*/
 
 			let redirect = window.location.host + window.location.pathname;
 			//let redirect = 'mobile.gotsnapped.tech/teacher/assignments/create'
-			let subject = 'english';
-			let level = 'year_2';
+			let subject = e.subject;
+			let level = e.level;
 			let q_url = 'https://snapped.mysoalan.com/papers';
 			let access_t = '';
 
