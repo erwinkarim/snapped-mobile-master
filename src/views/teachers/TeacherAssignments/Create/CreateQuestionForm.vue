@@ -292,17 +292,16 @@
         <h2 class="pt-2 font text-2xl">MySoalan Redirect</h2>
         <p>Select from the drop down below. You will be redirected to MySoalan site where you will choose you preferred question bank. All work will be lost while redirected. Advised to use MySoalan as your first step to create the question assignment.</p>
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-            <select class="flex w-1/2 p-2 mr-1" name="level" v-model="select_mysoalan_level">
-              <option v-for="(level, index) in mysoalan_level" :value="index">
-                {{  level }}
-              </option>
-            </select>
-            <select class="flex w-1/2 p-2 ml-1" name="subject" v-model="select_mysoalan_subject">
-              <option v-for="(subject, index) in mysoalan_subject" :value="index"> 
-                {{  subject }}
-              </option>
-            </select>
-
+          <select class="flex w-1/2 p-2 mr-1" name="level" v-model="select_mysoalan_level">
+            <option v-for="(level, index) in mysoalan_level" :value="index">
+              {{  level }}
+            </option>
+          </select>
+          <select class="flex w-1/2 p-2 ml-1" name="subject" v-model="select_mysoalan_subject">
+            <option v-for="(subject, index) in mysoalan_subject" :value="index"> 
+              {{  subject }}
+            </option>
+          </select>
         </div>
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div @click="$store.dispatch('teacherCreateAssignment/cancelWritingMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
@@ -321,8 +320,21 @@
           <p>{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.totalObjQuestions }} Question(s)</p>
           <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.id }}</p>
         </div>
+        <MySoalanSelector @change="detectChange" />
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-          <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+          <select class="flex w-1/2 p-2 mr-1" name="level" v-model="select_mysoalan_level">
+            <option v-for="(level, index) in mysoalan_level" :value="index">
+              {{  level }}
+            </option>
+          </select>
+          <select class="flex w-1/2 p-2 ml-1" name="subject" v-model="select_mysoalan_subject">
+            <option v-for="(subject, index) in mysoalan_subject" :value="index"> 
+              {{  subject }}
+            </option>
+          </select>
+        </div>
+        <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+          <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite', {level: select_mysoalan_level, subject: select_mysoalan_subject})" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button>Re-choose Question</button>
           </div>
           <div @click="$store.dispatch('teacherCreateAssignment/removeMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
@@ -359,6 +371,7 @@ import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import ZoomIcon from "@/components/icons/ZoomIcon";
 import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
 import VueMarkdown from 'vue-markdown';
+import MySoalanSelector from "@/components/MySoalanSelector.vue";
 
 const VueCropper = () => import('vue-cropperjs');
 // import VueCropper from 'vue-cropperjs';
@@ -386,6 +399,14 @@ export default {
     },
   },
   methods: {
+    detectChange(e) {
+      console.log('detectChange', e);
+      if(e.key == 'select_mysoalan_level'){
+        this.select_mysoalan_level = e.value;
+      } else {
+        this.select_mysoalan_subject = e.value;
+      }
+    },
     handleSnappedQuestion(e) {
       this.$store.dispatch('teacherCreateAssignment/beginSnappingQuestion')
       this.$store.dispatch('teacherCreateAssignment/handleSnapQuestion', e)
@@ -416,7 +437,7 @@ export default {
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
     VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
-    MicrophoneIcon, ZoomQuestionForm, VueMarkdown
+    MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector
   }
 }
 </script>
