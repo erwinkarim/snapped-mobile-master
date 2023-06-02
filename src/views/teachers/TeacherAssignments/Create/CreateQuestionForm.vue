@@ -291,7 +291,8 @@
         <hr />
         <h2 class="pt-2 font text-2xl">MySoalan Redirect</h2>
         <p>Select from the drop down below. You will be redirected to MySoalan site where you will choose you preferred question bank. All work will be lost while redirected. Advised to use MySoalan as your first step to create the question assignment.</p>
-        <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+        <MySoalanSelector @change="detectChange" />
+        <!--div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <select class="flex w-1/2 p-2 mr-1" name="level" v-model="select_mysoalan_level">
             <option v-for="(level, index) in mysoalan_level" :value="index">
               {{  level }}
@@ -302,7 +303,7 @@
               {{  subject }}
             </option>
           </select>
-        </div>
+        </div-->
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div @click="$store.dispatch('teacherCreateAssignment/cancelWritingMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button> Cancel </button>
@@ -321,7 +322,7 @@
           <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.id }}</p>
         </div>
         <MySoalanSelector @change="detectChange" />
-        <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+        <!--div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <select class="flex w-1/2 p-2 mr-1" name="level" v-model="select_mysoalan_level">
             <option v-for="(level, index) in mysoalan_level" :value="index">
               {{  level }}
@@ -332,7 +333,7 @@
               {{  subject }}
             </option>
           </select>
-        </div>
+        </div-->
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite', {level: select_mysoalan_level, subject: select_mysoalan_subject})" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button>Re-choose Question</button>
@@ -384,13 +385,15 @@ export default {
   name: "CreateQuestionForm",
   data() {
     return {
+      /*
       mysoalan_level: {
         year_1: "Darjah 1", year_2: "Darjah 2", year_3: "Darjah 3", year_4: "Darjah 4", year_5: "Darjah 5", year_6: "Darjah 6",
         form_1: "Tingkatan 1", form_2: "Tingkatan 2", form_4: "Tingkatan 3", form_5: "Tingkatan 4", form_6: "Tingkatan 5", 
       },
       mysoalan_subject: {english: "English", sejarah: "Sejarah", mathematics: "Mathematics", geografi: "Geography", 'pendidikan-islam': "Pendidikan Islam", 'bahasa-melayu': "Bahasa Melayu", 'pendidikan-moral': "Pendidikan Moral", 'reka-bentuk-dan-teknologi': "Reka Bentuk Dan Teknologi", 'additional-mathematics': "Additional Mathematics", physics: "Physics", chemistry: "Chemistry", biology: "Biology" },
-      select_mysoalan_level: 'year_1',
-      select_mysoalan_subject: 'english',
+      */
+      select_mysoalan_level: '',
+      select_mysoalan_subject: '',
     };
   },
   computed: {
