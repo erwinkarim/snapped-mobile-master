@@ -71,9 +71,7 @@
 			<div v-if="hasWrittenQuestion && !isPreviewing" class="flex flex-col mt-8 text-purple-primary text-xs-plus" >
 
 				<!-- WRITTEN QUESTION TITLE -->
-				<h2 v-if="assignment.written_question.title"
-						 class="mb-2"
-				>
+				<h2 v-if="assignment.written_question.title" class="mb-2" >
 					{{ assignment.written_question.title }}
 				</h2>
 
@@ -111,27 +109,21 @@
 						</svg>
 					</div>
 				</button>
-
-				<!-- MySoalan Question-->
-				<div v-if="hasMySoalanQuestion" class="border border-solid border-black p-2 m-0">
-					<div v-if="this.mySoalan != null ">
-						<p>MySoalan Data here.</p>
-						<p>{{ this.mySoalan.name }}</p>
-						<p>{{  this.mySoalan.questions }} questions(s)</p>
-						<div v-if="this.$store.getters['getAuthUserRole'] == 'Student'">
-							<a href="#" @click="answerMySoalanQuestion()">Answer this question</a>
-						</div>
-					</div>
-				</div>
-
-				<!-- REMARKS -->
-				<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
-					<strong>Remarks: </strong><br />
-					<VueMarkdown> {{ assignment.remarks }} </VueMarkdown>
-				</div>
-
 			</div>
 
+			<!-- MySoalan Question-->
+			<div v-if="hasMySoalanQuestion" class="border border-solid border-black p-2 m-0">
+				<div v-if="this.mySoalan != null ">
+					<p>{{ this.mySoalan.name }}</p>
+					<p>{{  this.mySoalan.questions }} questions(s)</p>
+				</div>
+			</div>
+
+			<!-- REMARKS -->
+			<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
+				<strong>Remarks: </strong><br />
+				<VueMarkdown> {{ assignment.remarks }} </VueMarkdown>
+			</div>
 
 		</div>
 	</div>
@@ -152,7 +144,7 @@ export default {
 
 		// load Mysoalan Question Data for display
 		if(this.hasMySoalanQuestion){
-			console.log('should load mysoalan data');
+			// console.log('should load mysoalan data');
 			// get token
 			let token = '';
 
@@ -162,7 +154,7 @@ export default {
 
 			// get info
 			await MySoalanRepository.showPaper(this.assignment.mysoalan, token).then((res) => {
-				console.log('res', res);
+				// console.log('res', res);
 				this.mySoalan = {
 					name: res.data.collection.name,
 					questions: res.data.totalObjQuestions,
@@ -213,7 +205,7 @@ export default {
 		},
 
 		hasMySoalanQuestion: function(){
-			return this.assignment.mysoalan != null;
+			return this.assignment.mysoalan !== "null";
 		},
 
 		hasReadMore() {
@@ -264,23 +256,6 @@ export default {
 		emitSwiperDetails() {
 			this.$emit('swiperDetails', this.swiperDetails)
 		},
-		async answerMySoalanQuestion(){
-			console.log('answering mysoalan question');
-			let token = '';
-			// let redirect = window.location.host + window.location.pathname;
-			let redirect = window.location.host + this.$router.resolve({
-				name: 'student.assignments.answer.store', params: { assignmentID: this.assignment.id }, 
-			}).href;
-
-			await MySoalanRepository.getAccessToken(this.$store.getters['getAuthEmail'], this.$store.getters['getAuthUserRole']).then((res) => {
-				token = res.data.accessToken;
-			});
-
-			let redirect_url = `https://snapped.mysoalan.com/assign-papers/${this.assignment.mysoalan}/start?token=${token}&redirect-url=${redirect}`;
-			console.log('redirect attempt', redirect_url);
-
-			window.location.replace(redirect_url);
-		}
 	},
 	components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate, VueMarkdown }
 }

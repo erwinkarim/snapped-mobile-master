@@ -146,33 +146,23 @@
 
 				</div>
 
-				<div v-else class="flex flex-row w-full">
+				<div v-else class="flex flex-col w-full">
+
+					<div v-if="hasMySoalanQuestion" class="flex-grow px-2" :class="!isMySoalanExclusive ? 'mb-2' : ''">
+						<!-- shows button if has mysoalan question -->
+						<a href="#" class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" @click="answerMySoalanQuestion()">
+							Answer MySoalan
+						</a>
+					</div>
 
 					<!-- BUTTON: WRITE ANSWER -->
-					<!--          <div class="flex-grow px-2">-->
-					<!--            <router-link-->
-					<!--                :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"-->
-					<!--                class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">-->
-					<!--              <div class="w-5/7">-->
-					<!--                Write Answer-->
-					<!--              </div>-->
-					<!--              <icon-base-two class="hidden w-1/7 xs:block">-->
-					<!--                <pen-icon/>-->
-					<!--              </icon-base-two>-->
-					<!--            </router-link>-->
-					<!--          </div>-->
-					<div class="flex-grow px-2">
+					<div v-if="!isMySoalanExclusive" class="flex-grow px-2">
+						<!-- don't show if there's only mysoalan question, otherwise show -->
 
-						<label
-								class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
+						<label class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
 							<div class="mr-3">
 								Snap Answer
-								<input @change="onFileSelected"
-											 type="file"
-											 accept='image/*'
-											 multiple
-											 class="hidden"
-								/>
+								<input @change="onFileSelected" type="file" accept='image/*' multiple class="hidden" />
 							</div>
 							<icon-base-two class="hidden w-1/12 xs:block">
 								<camera-icon/>
@@ -206,6 +196,7 @@ import router from "@/router";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import MySoalanRepository from "@/repositories/MySoalanRepository";
 
 export default {
 	name: "Index",
@@ -288,6 +279,19 @@ export default {
 			return this.swiperDetails ? this.swiperDetails.slidesCount : 0;
 		},
 
+		hasMySoalanQuestion: function(){
+			return this.assignment.mysoalan !== "null";
+		},
+		isMySoalanExclusive: function(){
+			/* 
+				should return true is there's only mysoalan question
+				or force automated marking
+			*/
+			return this.assignment.mysoalan !== "null" &&
+				this.assignment.written_question.description == null &&
+				this.assignment.snap_question_paths.length == 0 &&
+				this.assignment.recording_path == null;
+		}
 	},
 	methods: {
 		async fetchData() {
@@ -392,6 +396,23 @@ export default {
 			}
 
 		},
+		async answerMySoalanQuestion(){
+			console.log('answering mysoalan question');
+			let token = '';
+			// let redirect = window.location.host + window.location.pathname;
+			let redirect = window.location.host + this.$router.resolve({
+				name: 'student.assignments.answer.store', params: { assignmentID: this.assignment.id }, 
+			}).href;
+
+			await MySoalanRepository.getAccessToken(this.$store.getters['getAuthEmail'], this.$store.getters['getAuthUserRole']).then((res) => {
+				token = res.data.accessToken;
+			});
+
+			let redirect_url = `https://snapped.mysoalan.com/assign-papers/${this.assignment.mysoalan}/start?token=${token}&redirect-url=${redirect}`;
+			console.log('redirect attempt', redirect_url);
+
+			window.location.replace(redirect_url);
+		}
 	},
 	async mounted() {
 		await this.fetchData();
