@@ -287,7 +287,8 @@
           </button>
         </label>
       </div>
-      <div v-else-if="$store.getters['teacherCreateAssignment/isEditingMySoalanQuestion']" class="flex flex-col -mx-1 mb-4">
+      <div v-else-if="!$store.getters['teacherCreateAssignment/hasMySoalanQuestionDraft'] && $store.getters['teacherCreateAssignment/isEditingMySoalanQuestion']" class="flex flex-col -mx-1 mb-4">
+        <!-- click on mysoalan button, but no mysoalan question set is chosen yet -->
         <hr />
         <h2 class="pt-2 font text-2xl">MySoalan Redirect</h2>
         <p>Select from the drop down below. You will be redirected to MySoalan site where you will choose you preferred question bank. All work will be lost while redirected. Advised to use MySoalan as your first step to create the question assignment.</p>
@@ -296,12 +297,13 @@
           <div @click="$store.dispatch('teacherCreateAssignment/cancelWritingMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button> Cancel </button>
           </div>
-          <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite', {level: select_mysoalan_level, subject: select_mysoalan_subject})" class="w-1/2 text-center text-blue-secondary ml-2 bg-gray-secondary py-5 rounded-md">
+          <div @click="handleRedirectToMySoalan" class="w-1/2 text-center text-blue-secondary ml-2 bg-gray-secondary py-5 rounded-md">
             <button>Redirect</button>
           </div>
         </div>
       </div>
       <div v-else class="flex flex-col -mx-1 mb-4" >
+        <!-- already have mysoalan question set chosen -->
         <hr />
         <div class="py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <p class="text-sm">MySoalan Exercise</p>
@@ -309,9 +311,9 @@
           <p>{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.totalObjQuestions }} Question(s)</p>
           <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.id }}</p>
         </div>
-        <MySoalanSelector @change="detectChange" />
+        <MySoalanSelector @change="detectChange" v-bind:select_mysoalan_level="select_mysoalan_level" v-bind:select_mysoalan_subject="select_mysoalan_subject" />
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-          <div @click="$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite', {level: select_mysoalan_level, subject: select_mysoalan_subject})" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+          <div @click="handleRedirectToMySoalan" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button>Re-choose Question</button>
           </div>
           <div @click="$store.dispatch('teacherCreateAssignment/removeMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
@@ -361,8 +363,8 @@ export default {
   name: "CreateQuestionForm",
   data() {
     return {
-      select_mysoalan_level: '',
-      select_mysoalan_subject: '',
+      select_mysoalan_level: "",
+      select_mysoalan_subject: "",
     };
   },
   computed: {
@@ -392,18 +394,42 @@ export default {
       }
 
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
-
     },
+    handleRedirectToMySoalan(){
+      // save local selection
+      sessionStorage.setItem("mysoalan_level", this.select_mysoalan_level);
+      sessionStorage.setItem("mysoalan_subject", this.select_mysoalan_subject);
+
+
+      // then redirect to mysoalan
+      this.$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite', 
+        {level: this.select_mysoalan_level, subject: this.select_mysoalan_subject}
+      );
+    }
   },
   mounted() {
     // if query got assign_paper, load the uuid in the question draft remove it from the query.
     // this is done to handle redirected from mysoalan site
     if(this.$route.query.assign_paper){
       console.log('create q: assign_paper detected');
+
+      //setMySoalanAssignID 
       this.$store.dispatch('teacherCreateAssignment/setMySoalanAssignID', this.$route.query.assign_paper);
 
       // load basic info about the paper from mysoalan
+      // this done by getting info
       this.$store.dispatch('teacherCreateAssignment/getMySoalanInfo');
+
+      // load the mysoalan level/subject once and delete the items from sessionStorage
+      if(sessionStorage.getItem("mysoalan_level")){
+        // console.log('loading mysoalan_level/subject from session data');
+        this.select_mysoalan_level = sessionStorage.getItem("mysoalan_level");
+        this.select_mysoalan_subject = sessionStorage.getItem("mysoalan_subject");
+
+        // sessionStorage.removeItem("mysoalan_level");
+        // sessionStorage.removeItem("mysoalan_subject");
+
+      }
     };
   },
   components: {

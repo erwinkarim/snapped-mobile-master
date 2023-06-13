@@ -373,11 +373,21 @@ export default {
 			},
     )
 
-    // if got assign_paper in the query, need to open up the create question form with the mysoal uuid
-    // this is to handle from being redirected from mysoalan site
+    /*
+      if got assign_paper in the query, 
+        - need to open up the create question form with the mysoal uuid
+        - load up session data and put into teacherCreateAssignment.assignmentDetail
+        - load local selection too.
+    */
     if(this.$route.query.assign_paper){
-      console.log('assign paper detected, open the question form');
-      this.$store.commit('teacherCreateAssignment/toggleCreatingQuestionMode');
+      // console.log('assign paper detected, open the question form');
+      // go into CreateQuestionMode
+      // this.$store.commit('teacherCreateAssignment/toggleCreatingQuestionMode');
+
+      // load assignmentDetail from Session Storage
+      // this.$store.commit('teacherCreateAssignment/loadAssignmentDetailFromSessionStorage');
+      
+      this.$store.dispatch('teacherCreateAssignment/loadSessionData');
     }
   },
   components: {

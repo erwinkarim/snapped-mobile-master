@@ -178,6 +178,7 @@ export default {
 			},
 
 			toggleShowingErrorMode(state) {
+					console.log('call toggleShowingErrorMode');
 					state.states.isShowingError = !state.states.isShowingError;
 			},
 
@@ -293,10 +294,19 @@ export default {
 
 			/* push:
 				* assignmentDetails.question -> questionDraft
-				a* ssignmentDetails.question -> creatingQuestionDetails
+				* assignmentDetails.question -> creatingQuestionDetails
 			*/
 			loadSavedQuestionForEdit(state, type) {
+				console.log('called loadSavedQuestionForEdit');
 
+				Object.assign(state.questionDraft, state.assignmentDetails.question);
+				Object.assign(state.creatingQuestionDetails, state.assignmentDetails.question);
+
+				// somehow setting type cause uncontrollable stack overflow
+				state.questionDraft.type = 'mySoalan';
+				state.creatingQuestionDetails.type = 'mySoalan';
+
+				/*
 					state.questionDraft = {
 							type: type,
 							title: JSON.parse(JSON.stringify(state.assignmentDetails.question.title)),
@@ -316,6 +326,7 @@ export default {
 							zoomMeetings: state.assignmentDetails.question.zoomMeetings,
 							mySoalan: state.assignmentDetails.question.mySoalan,
 					}
+				*/
 			},
 
 
@@ -403,6 +414,20 @@ export default {
 					}
 			},
 
+			loadAssignmentDetailFromSessionStorage(state){
+				console.log('call loadAssignmentDetailFromSessionStorage');
+
+				// load from sessionStorage
+				let assignmentDetailsFromSession = sessionStorage.getItem('assignmentDetails');
+				let statesFromSession = sessionStorage.getItem('states');
+				// console.log('sessionStorage', JSON.parse(assignmentDetailsFromSession));
+	
+				// should be the right solution, but sometimes it doesn't change the value
+				// after you assign it.
+				state.assignmentDetails = JSON.parse(assignmentDetailsFromSession);
+				state.states = JSON.parse(statesFromSession);
+			}, 
+
 
 	},
 	actions: {
@@ -442,8 +467,20 @@ export default {
 
 			/*
 				should save localsession data before being redirected.
+				- also move from questionDraft -> assignmentDetail, then save changes. 
+				- state.teacherCreateAssignment.assignmentDetails
 			*/
+			commit('saveQuestionToAssignmentDetails', state);
 
+			let assignmentDetailsState = JSON.stringify(state.assignmentDetails);
+			let statesState = JSON.stringify(state.states);
+
+			// console.log('assignmentDetailsState', assignmentDetailsState);
+			// sessionStorage.removeItem("assignmentDetails");
+			sessionStorage.setItem("assignmentDetails", assignmentDetailsState);
+			sessionStorage.setItem("states", statesState);
+			
+			// now do the actual redirect
 			let redirect = window.location.host + window.location.pathname;
 			//let redirect = 'mobile.gotsnapped.tech/teacher/assignments/create'
 			let subject = e.subject;
@@ -466,7 +503,12 @@ export default {
 				console.log('error', e.response.message);
 			});
 		},
+		clearSessionData(){
+			sessionStorage.removeItem('assignmentDetails');
+			sessionStorage.removeItem('states');
+		},
 		saveWrittenQuestionToDraft({state, commit, getters}) {
+			console.log('call saveWrittenQuestionToDraft');
 			if (state.creatingQuestionDetails.writtenQuestion) {
 				commit('toggleWritingQuestionMode')
 				commit('saveQuestionToDraft')
@@ -628,6 +670,8 @@ export default {
 			this.questionDetails = details;
 		},
 		saveQuestion({state, getters, commit}) {
+			console.log('call saveQuestion');
+
 			// Check if user selected a type of question
 			if (state.creatingQuestionDetails.type) {
 
@@ -903,14 +947,15 @@ export default {
 			- should also load localstorage/localsession data
 		*/
 		setMySoalanAssignID(state, key){
-			console.log('teacherCreateAssignment: setting mysoal paper id', key);
+			console.log('setMySoalanAssignID');
+			// console.log('teacherCreateAssignment: setting mysoal paper id', key);
 			state.state.questionDraft.mySoalan = key;
 			state.state.assignmentDetails.question.mySoalan = key;
 			state.state.creatingQuestionDetails.mySoalan = key;
 			state.state.creatingQuestionDetails.type='mySoalan';
 		},
-		async getMySoalanInfo(state){
-			console.log('teacherCreateAssignment: getting mysoalan info');
+		async getMySoalanInfo(state){// 
+			// console.log('teacherCreateAssignment: getting mysoalan info');
 
 			let access_t = '';
 			let assign_info_url = `https://api.mysoalan.com/v1/assign-papers/${state.state.questionDraft.mySoalan}`;
@@ -924,7 +969,7 @@ export default {
 				},
 			}).then((res) => {
 				access_t = res.data.accessToken;
-				console.log('access_t', access_t);
+				// console.log('access_t', access_t);
 			});
 
 			// get mysoalan info
@@ -933,12 +978,24 @@ export default {
 					'Authorization': `Bearer ${access_t}`,
 				},
 			}).then((res) => {
-				console.log('assign info', res);
+				// console.log('assign info', res);
 				state.state.states.mySoalanInfo = res.data;
 			}).catch((e) => {
 				console.log('failed to get assignment info');
 			});
 		},
+		loadSessionData({state, commit, dispatch}){
+			console.log('called loadSessionData');
+			/*
+				- go into creating question mode
+				- load assignment detail from session storage
+				- move assignment detail to questionDraft / creatingQuestionDetails
+			*/
+
+      commit('toggleCreatingQuestionMode');
+			commit('loadAssignmentDetailFromSessionStorage', state);
+			commit('loadSavedQuestionForEdit', state, 'mySoalan');
+		}
 	},
 	getters: {
 		creatingQuestionType: (state) => { return state.creatingQuestionDetails.type; },
@@ -977,7 +1034,7 @@ export default {
 		hasSnappedQuestionDraft(state) {
 			// return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
 			//return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
-			console.log('getting hasSnappedQuestionDraft');
+			// console.log('getting hasSnappedQuestionDraft');
 			return state.creatingQuestionDetails.snappedPreviews.length > 0; 
 		},
 		hasZoomQuestionDraft(state){
