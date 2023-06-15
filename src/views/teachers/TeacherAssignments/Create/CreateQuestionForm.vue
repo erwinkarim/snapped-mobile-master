@@ -291,8 +291,8 @@
         <!-- click on mysoalan button, but no mysoalan question set is chosen yet -->
         <hr />
         <h2 class="pt-2 font text-2xl">MySoalan Redirect</h2>
-        <p>Select from the drop down below. You will be redirected to MySoalan site where you will choose you preferred question bank. All work will be lost while redirected. Advised to use MySoalan as your first step to create the question assignment.</p>
-        <MySoalanSelector @change="detectChange" />
+        <p>Select from the drop down below. You will be redirected to MySoalan site where you will choose you preferred question bank. We will save your work before being redirected, but zoom video unfortunately will be lost. We advise to make your zoom video the last thing to create before publishing your assignment..</p>
+        <MySoalanSelector @change="detectChange" select_mysoalan_level select_mysoalan_subject />
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div @click="$store.dispatch('teacherCreateAssignment/cancelWritingMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button> Cancel </button>
@@ -311,7 +311,7 @@
           <p>{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.totalObjQuestions }} Question(s)</p>
           <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.id }}</p>
         </div>
-        <MySoalanSelector @change="detectChange" v-bind:select_mysoalan_level="select_mysoalan_level" v-bind:select_mysoalan_subject="select_mysoalan_subject" />
+        <MySoalanSelector @change="detectChange" select_mysoalan_level select_mysoalan_subject />
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div @click="handleRedirectToMySoalan" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button>Re-choose Question</button>
@@ -428,6 +428,7 @@ export default {
 
         // sessionStorage.removeItem("mysoalan_level");
         // sessionStorage.removeItem("mysoalan_subject");
+        // console.log('mysoalan level/subject', this.select_mysoalan_level, this.select_mysoalan_subject);
 
       }
     };

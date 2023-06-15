@@ -31,13 +31,12 @@ export default {
       mysoalan_subject: {english: "English", sejarah: "Sejarah", mathematics: "Mathematics", geografi: "Geography", 'pendidikan-islam': "Pendidikan Islam", 'bahasa-melayu': "Bahasa Melayu", 'pendidikan-moral': "Pendidikan Moral", 'reka-bentuk-dan-teknologi': "Reka Bentuk Dan Teknologi", 'additional-mathematics': "Additional Mathematics", physics: "Physics", chemistry: "Chemistry", biology: "Biology" },
 			mysoalan_level_select: "",
 			mysoalan_subject_select: "",
-			// select_mysoalan_level: '',
-			// select_mysoalan_subject: '',
 		}
 	}, 
-	created(){
+	updated(){
 		this.mysoalan_level_select = this.select_mysoalan_level;
 		this.mysoalan_subject_select = this.select_mysoalan_subject;
+		// console.log('inside selector', this.mysoalan_subject_select, this.mysoalan_level_select);
 	},
 	methods: {
 		// update state of the parent

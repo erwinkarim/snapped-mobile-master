@@ -178,7 +178,7 @@ export default {
 			},
 
 			toggleShowingErrorMode(state) {
-					console.log('call toggleShowingErrorMode');
+					// console.log('call toggleShowingErrorMode');
 					state.states.isShowingError = !state.states.isShowingError;
 			},
 
@@ -257,6 +257,9 @@ export default {
 
 			// push questionDraft -> assignmentDetails.question
 			saveQuestionToAssignmentDetails(state) {
+				Object.assign(state.assignmentDetails.question, state.questionDraft);
+				
+				/*
 					state.assignmentDetails.question = {
 							type: JSON.parse(JSON.stringify(state.questionDraft.type)),
 							title: JSON.parse(JSON.stringify(state.questionDraft.title)),
@@ -266,6 +269,7 @@ export default {
 							zoomMeetings: state.questionDraft.zoomMeetings,
 							mySoalan: state.questionDraft.mySoalan,
 					}
+				*/
 			},
 
 			// set questionDraft and creatingQuestionDetails to null
@@ -297,7 +301,7 @@ export default {
 				* assignmentDetails.question -> creatingQuestionDetails
 			*/
 			loadSavedQuestionForEdit(state, type) {
-				console.log('called loadSavedQuestionForEdit');
+				// console.log('called loadSavedQuestionForEdit');
 
 				Object.assign(state.questionDraft, state.assignmentDetails.question);
 				Object.assign(state.creatingQuestionDetails, state.assignmentDetails.question);
@@ -415,7 +419,7 @@ export default {
 			},
 
 			loadAssignmentDetailFromSessionStorage(state){
-				console.log('call loadAssignmentDetailFromSessionStorage');
+				// console.log('call loadAssignmentDetailFromSessionStorage');
 
 				// load from sessionStorage
 				let assignmentDetailsFromSession = sessionStorage.getItem('assignmentDetails');
@@ -508,7 +512,7 @@ export default {
 			sessionStorage.removeItem('states');
 		},
 		saveWrittenQuestionToDraft({state, commit, getters}) {
-			console.log('call saveWrittenQuestionToDraft');
+			// console.log('call saveWrittenQuestionToDraft');
 			if (state.creatingQuestionDetails.writtenQuestion) {
 				commit('toggleWritingQuestionMode')
 				commit('saveQuestionToDraft')
@@ -670,7 +674,7 @@ export default {
 			this.questionDetails = details;
 		},
 		saveQuestion({state, getters, commit}) {
-			console.log('call saveQuestion');
+			// console.log('call saveQuestion');
 
 			// Check if user selected a type of question
 			if (state.creatingQuestionDetails.type) {
@@ -947,8 +951,8 @@ export default {
 			- should also load localstorage/localsession data
 		*/
 		setMySoalanAssignID(state, key){
-			console.log('setMySoalanAssignID');
-			// console.log('teacherCreateAssignment: setting mysoal paper id', key);
+			// console.log('setMySoalanAssignID');
+
 			state.state.questionDraft.mySoalan = key;
 			state.state.assignmentDetails.question.mySoalan = key;
 			state.state.creatingQuestionDetails.mySoalan = key;
@@ -985,7 +989,7 @@ export default {
 			});
 		},
 		loadSessionData({state, commit, dispatch}){
-			console.log('called loadSessionData');
+			// console.log('called loadSessionData');
 			/*
 				- go into creating question mode
 				- load assignment detail from session storage
