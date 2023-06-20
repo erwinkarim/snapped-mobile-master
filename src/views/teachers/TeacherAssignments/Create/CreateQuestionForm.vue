@@ -410,27 +410,38 @@ export default {
   mounted() {
     // if query got assign_paper, load the uuid in the question draft remove it from the query.
     // this is done to handle redirected from mysoalan site
+    // should do it for the first time only, since deleting it will make it pop up again.
     if(this.$route.query.assign_paper){
       console.log('create q: assign_paper detected');
 
-      //setMySoalanAssignID 
-      this.$store.dispatch('teacherCreateAssignment/setMySoalanAssignID', this.$route.query.assign_paper);
+      // check if this info needs to be loaded
+      let mySoalanLoaded = Boolean(sessionStorage.getItem('loadedMySoalan'));
 
-      // load basic info about the paper from mysoalan
-      // this done by getting info
-      this.$store.dispatch('teacherCreateAssignment/getMySoalanInfo');
+      // if not loaded, load mysoalan and set sessionStorage to true
+      if(!mySoalanLoaded){
+        console.log('mysoalan have not loaded before');
 
-      // load the mysoalan level/subject once and delete the items from sessionStorage
-      if(sessionStorage.getItem("mysoalan_level")){
-        // console.log('loading mysoalan_level/subject from session data');
-        this.select_mysoalan_level = sessionStorage.getItem("mysoalan_level");
-        this.select_mysoalan_subject = sessionStorage.getItem("mysoalan_subject");
+        //setMySoalanAssignID 
+        this.$store.dispatch('teacherCreateAssignment/setMySoalanAssignID', this.$route.query.assign_paper);
 
-        // sessionStorage.removeItem("mysoalan_level");
-        // sessionStorage.removeItem("mysoalan_subject");
-        // console.log('mysoalan level/subject', this.select_mysoalan_level, this.select_mysoalan_subject);
+        // load basic info about the paper from mysoalan
+        // this done by getting info
+        this.$store.dispatch('teacherCreateAssignment/getMySoalanInfo');
+
+        // load the mysoalan level/subject once and delete the items from sessionStorage
+        if(sessionStorage.getItem("mysoalan_level")){
+          // console.log('loading mysoalan_level/subject from session data');
+          this.select_mysoalan_level = sessionStorage.getItem("mysoalan_level");
+          this.select_mysoalan_subject = sessionStorage.getItem("mysoalan_subject");
+        }
+
+        sessionStorage.setItem('loadedMySoalan', '1');
 
       }
+
+
+      // push router to remove query
+      // this.$router.push({path: '/teacher/assignments/create'});
     };
   },
   components: {

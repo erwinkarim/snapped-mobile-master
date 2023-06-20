@@ -33,11 +33,20 @@ export default {
 			mysoalan_subject_select: "",
 		}
 	}, 
-	updated(){
-		this.mysoalan_level_select = this.select_mysoalan_level;
-		this.mysoalan_subject_select = this.select_mysoalan_subject;
-		// console.log('inside selector', this.mysoalan_subject_select, this.mysoalan_level_select);
+	created(){
+		if(sessionStorage.getItem('mysoalan_level')){
+			this.mysoalan_level_select = sessionStorage.getItem('mysoalan_level');
+			this.mysoalan_subject_select = sessionStorage.getItem('mysoalan_subject');
+		} else {
+			this.mysoalan_level_select = this.select_mysoalan_level;
+			this.mysoalan_subject_select = this.select_mysoalan_subject;
+		};
+		console.log('inside selector', this.mysoalan_subject_select, this.mysoalan_level_select);
 	},
+	/*
+	mounted(){
+	},
+	*/
 	methods: {
 		// update state of the parent
 		updateState(key){
