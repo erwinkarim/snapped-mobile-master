@@ -125,6 +125,10 @@
 				<VueMarkdown> {{ assignment.remarks }} </VueMarkdown>
 			</div>
 
+			<!-- Auto-Marking status -->
+			<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
+				<strong>Auto marking: </strong>{{  assignment.auto_marking }}
+			</div>
 		</div>
 	</div>
 </template>

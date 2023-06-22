@@ -53,7 +53,6 @@
       </modal>
     </div>
 
-
     <router-view
         @writtenAnswer="handleWrittenAnswer"
         @snappedAnswer="handleSnappedAnswer"
@@ -79,6 +78,7 @@ export default {
     assignmentDetails: Object
   },
   async mounted() {
+    // this just redirected from MySoalan
     if(this.$route.query['correct-questions']){
       // fetch and re-load assignment details
       let data = await AssignmentRepository.find(this.$route.params.assignmentID).then((res) => {
@@ -103,7 +103,8 @@ export default {
 
       answer: {
         type: null,
-        content: ''
+        content: '', 
+        mysoalan_all: 0, 
       }
     }
   },
@@ -129,6 +130,8 @@ export default {
             answerType: this.answer.type,
             answerContent: this.answer.content,
             remarks: remarks,
+            mysoalan_all: this.answer.mysoalan_all,
+            mysoalan_correct: this.answer.mysoalan_correct,
           })
           .then(response => {
 

@@ -204,6 +204,7 @@ export default {
         remarks: null,
         snap_question_paths: [],
         mysoalan: null,
+        auto_marking: false,
       },
       submissions: [],
       meta: {
@@ -250,6 +251,7 @@ export default {
               let data = response.data.data;
 
               // Assignment Details
+              // why !!??
               this.assignment.id = data.assignment_details.assignment_id;
               this.assignment.title = data.assignment_details.title;
               this.assignment.createdAt = data.assignment_details.assignment_created_at;
@@ -259,6 +261,7 @@ export default {
               this.assignment.mysoalan = data.assignment_details.mysoalan;
               this.assignment.remarks = data.assignment_details.remarks;
               this.assignment.school_name = data.assignment_details.school_name;
+              this.assignment.auto_marking = Boolean(data.assignment_details.auto_marking);
 
               if (data.assignment_details.snap_question_url) {
                 this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');

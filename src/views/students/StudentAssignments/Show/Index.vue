@@ -156,7 +156,7 @@
 					</div>
 
 					<!-- BUTTON: WRITE ANSWER -->
-					<div v-if="!isMySoalanExclusive" class="flex-grow px-2">
+					<div v-if="!isMySoalanExclusive && !isAutoMarking" class="flex-grow px-2">
 						<!-- don't show if there's only mysoalan question, otherwise show -->
 
 						<label class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
@@ -222,7 +222,8 @@ export default {
 					title: null,
 					description: null
 				},
-				snap_question_paths: []
+				snap_question_paths: [], 
+				auto_marking: false,
 			},
 
 			// Student's Submission and Marks details
@@ -291,6 +292,9 @@ export default {
 				this.assignment.written_question.description == null &&
 				this.assignment.snap_question_paths.length == 0 &&
 				this.assignment.recording_path == null;
+		},
+		isAutoMarking() {
+			return this.assignment.auto_marking;
 		}
 	},
 	methods: {
@@ -314,6 +318,7 @@ export default {
 							this.assignment.written_question.title = data.assignment_details.written_question_title;
 							this.assignment.written_question.description = data.assignment_details.written_question_description;
 							this.assignment.mysoalan = data.assignment_details.mysoalan;
+							this.assignment.auto_marking = Boolean(data.assignment_details.auto_marking);
 
 							if (data.assignment_details.snap_question) {
 								this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');

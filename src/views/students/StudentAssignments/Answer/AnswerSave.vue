@@ -385,6 +385,7 @@ export default {
   },
   created() {
     // console.log('should check if query has correct-question');
+    // this come from mysoalan redirection
     if(this.$route.query['correct-questions']){
       // console.log("redirected from mysoalan, generate image file");
       // this.answer.type = 'snapped';
@@ -402,6 +403,8 @@ export default {
       // also this.answer.type = snapped
       this.answer.type = 'snapped';
       this.answer.content = [dataURLtoBlob(textToImage)];
+      this.answer.mysoalan_correct = this.$route.query['correct-questions'];
+      this.answer.mysoalan_all = this.$route.query['total-questions'];
     }
 
     if (!this.hasAnswerContent) {
