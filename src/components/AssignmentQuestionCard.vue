@@ -16,17 +16,19 @@
 					<div class="px-1 w-1/3 truncate">
 						{{ meta.classroomName || '' }}
 					</div>
-					<div class="px-1 w-2/5 truncate">
+					<div class="px-1 w-2/5 truncate text-right">
 						{{ getHumanDate(assignment.dueDatetime) }}
 					</div>
 				</div>
 				<div class="flex flex-row justify-between mt-4 text-xs-plus text-purple-secondary">
-					<div class="w-full truncate">{{  meta.school_name }}</div>
+					<div class="w-1/2 truncate">{{  meta.school_name }}</div>
+					<div v-if="assignment.auto_marking" class="w-1/2 text-right">AUTO-MARK</div>
 				</div>
 			</div>
 
 			<!-- Zoom Question -->
-			<div v-if="hasZoomQuestion" class="flex flex-col mt-8 text-purple-primary text-xs-plus mb-2" >
+			<div v-if="hasZoomQuestion" class="flex flex-col mt-8 text-purple-primary mb-2" >
+				<strong>Zoom Video:</strong><br />
 				<div v-if="!isPreviewing"
 						 class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
 				>
@@ -37,15 +39,16 @@
 					</video>
 				</div>
 				<div v-if="!isPreviewing">
-					<p>If you unable to view the video, please try Google Chrome browser.</p>
+					<p class="text-xs-plus">If you unable to view the video, please try Google Chrome browser.</p>
 				</div>
 			</div>
 
 			<!-- Snapped Question -->
 			<div v-if="hasSnappedQuestion"
 					 :class="isPreviewing ? 'mb-20' : ''"
-					 class="flex flex-col mt-2 md:mt-8 text-purple-primary text-xs-plus test"
+					 class="flex flex-col mt-2 md:mt-8 text-purple-primary test"
 			>
+				<strong>Snapped Images: </strong><br />
 				<div v-if="!isPreviewing"
 						 class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
 				>
@@ -68,22 +71,20 @@
 			</div>
 
 			<!-- Written Question -->
-			<div v-if="hasWrittenQuestion && !isPreviewing" class="flex flex-col mt-8 text-purple-primary text-xs-plus" >
-
-				<!-- WRITTEN QUESTION TITLE -->
-				<h2 v-if="assignment.written_question.title" class="mb-2" >
-					{{ assignment.written_question.title }}
-				</h2>
-
+			<div v-if="hasWrittenQuestion && !isPreviewing" class="flex flex-col mt-8 text-purple-primary" >
 				<!-- WRITTEN QUESTION DESCRIPTION -->
 				<div v-if="assignment.written_question.description" id="test" >
-					<strong>Description: </strong><br />
-					<VueMarkdown v-if="isReadingMore" class="leading-relaxed" >
+					<strong>Written Question: </strong><br />
+					<h2 v-if="assignment.written_question.title" class="mb-2" >
+						{{ assignment.written_question.title }}
+					</h2>
+					<VueMarkdown v-if="isReadingMore" class="text-lg" >
 						{{ assignment.written_question.description }}
 					</VueMarkdown>
 					<text-multiline-truncate v-else :lines="7">
 						{{ assignment.written_question.description }}
 					</text-multiline-truncate>
+					<br />
 				</div>
 
 				<!-- WRITTEN QUESTION READ MORE BUTTON -->
@@ -112,10 +113,13 @@
 			</div>
 
 			<!-- MySoalan Question-->
-			<div v-if="hasMySoalanQuestion" class="border border-solid border-black p-2 m-0">
-				<div v-if="this.mySoalan != null ">
-					<p>{{ this.mySoalan.name }}</p>
-					<p>{{  this.mySoalan.questions }} questions(s)</p>
+			<div v-if="hasMySoalanQuestion">
+				<strong>MySoalan question: </strong><br />
+				<div class="border border-solid border-black p-2 m-0 mt-2">
+					<div v-if="this.mySoalan != null ">
+						<p>{{ this.mySoalan.name }}</p>
+						<p>{{  this.mySoalan.questions }} questions(s)</p>
+					</div>
 				</div>
 			</div>
 
@@ -123,11 +127,6 @@
 			<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
 				<strong>Remarks: </strong><br />
 				<VueMarkdown> {{ assignment.remarks }} </VueMarkdown>
-			</div>
-
-			<!-- Auto-Marking status -->
-			<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
-				<strong>Auto marking: </strong>{{  assignment.auto_marking }}
 			</div>
 		</div>
 	</div>

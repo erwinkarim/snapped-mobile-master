@@ -238,6 +238,7 @@ export default {
                     totalSubmitted: item.number_of_submissions,
                     totalMarked: item.num_of_marked_submissions,
                     school_name: item.school_name,
+                    auto_marking: item.auto_marking,
                   }
 
                   if (item.marks_id) {

@@ -29,7 +29,7 @@
              class="flex flex-row text-left text-px-10 text-purple-secondary pr-1">
           <div class="w-1/4 truncate"> {{ assignment.subjectName }}</div>
           <div class="w-1/4 truncate mx-1"> {{ assignment.classroomName }}</div>
-          <div class="w-2/4"> {{ getHumanDate(assignment.dueDatetime) }}</div>
+          <div class="w-1/2 text-right"> {{ getHumanDate(assignment.dueDatetime) }}</div>
         </div>
 
         <div class="w-2/7 md:w-1/4" v-if="!hasMarks && displayCountdownTimer">
@@ -46,7 +46,8 @@
       </div>
 
       <div class="flex flex-row justify-around items-baseline">
-        <div class="w-full text-left text-px-10 text-purple-primary pr-1">{{  assignment.school_name }}</div>
+        <div class="w-1/2 text-left text-px-10 text-purple-primary pr-1">{{  assignment.school_name }}</div>
+        <div class="w-1/2 text-right text-px-10 text-purple-primary pr-1">{{  Boolean(assignment.auto_marking) ? "AUTO-MARKING" : "" }}</div>
       </div>
 
     </div>
