@@ -1,66 +1,62 @@
 <template>
-  <router-link :to="route"
-               class="max-w-sm md:max-w-2xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3"
-  >
-
-    <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full' " class="flex flex-col justify-between">
-      <div class="flex flex-row justify-between mb-4 truncate">
-        <div class="text-left text-purple-primary text-xs-plus truncate  pr-10">
-          {{ assignment.title }}
+  <router-link :to="route" class="max-w-sm md:max-w-2xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3" >
+    <div class="w-full flex flex-col justify-between">
+      <div class="flex flex-row">
+        <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full'" class="flex justify-between mb-4 truncate">
+          <div class="text-left text-purple-primary text-xl pr-10">
+            {{ assignment.title }}
+          </div>
+          <!--div class="flex w-1/4 text-right font-bold text-green-primary text-px-12">
+            <slot name="topRightAction"/>
+          </div-->
         </div>
-        <div class="w-1/4 text-right font-bold text-green-primary text-px-12">
-          <slot name="topRightAction"/>
+
+        <!-- showing the marks circle -->
+        <div v-if="showMarks && hasMarks" class="w-1/4 text-right flex justify-end items-center font-bold text-green-primary text-px-12">
+          <circle-progress-bar
+              :display-value="assignmentMarks" :diameter="65" :completed-steps="assignmentMarks" :total-steps="100"
+              start-color="green" stroke-linecap="butt"
+            inner-stroke-color="#F1F3F6" :stroke-width="6" :inner-stroke-width="6"
+          />
         </div>
       </div>
 
       <div class="flex flex-row justify-between mb-4 pr-10">
         <text-multiline-truncate
             :lines="descriptionLines"
-            class="text-left text-purple-primary text-px-10 pr-10 mb-2"
+            class="text-left text-purple-primary pr-10 mb-2"
         >
           {{ assignment.description }}
         </text-multiline-truncate>
       </div>
 
 
-      <div class="flex flex-row justify-around items-baseline">
+      <div class="flex flex-col justify-around items-baseline">
 
-        <div :class="hasMarks ? 'w-full' : 'w-5/7'"
-             class="flex flex-row text-left text-px-10 text-purple-secondary pr-1">
-          <div class="w-1/4 truncate"> {{ assignment.subjectName }}</div>
-          <div class="w-1/4 truncate mx-1"> {{ assignment.classroomName }}</div>
-          <div class="w-1/2 text-right"> {{ getHumanDate(assignment.dueDatetime) }}</div>
-        </div>
-
-        <div class="w-2/7 md:w-1/4" v-if="!hasMarks && displayCountdownTimer">
+        <div class="w-full mb-2" v-if="!hasMarks && displayCountdownTimer">
           <countdown-timer :due-date-time="assignment.dueDatetime"
                            :has-dynamic-background-color="true"
                            :has-clock-icon="true"
                            :disable-red-alert="redAlertState"
-                           class="text-2xs md:text-xs "
+                           class=""
           />
         </div>
-        <div v-else class="w-2/7 md:w-1/4">
-
+        <div class="w-full flex flex-row text-left text-purple-secondary pr-1">
+          <div class="w-1/3 truncate"> {{ assignment.subjectName }}</div>
+          <div class="w-1/3 text-center truncate mx-1"> {{ assignment.classroomName }}</div>
+          <div class="w-1/3 text-right"> {{ getHumanDate(assignment.dueDatetime) }}</div>
         </div>
       </div>
 
-      <div class="flex flex-row justify-around items-baseline">
-        <div class="w-1/2 text-left text-px-10 text-purple-primary pr-1">{{  assignment.school_name }}</div>
-        <div class="w-1/2 text-right text-px-10 text-purple-primary pr-1">{{  Boolean(assignment.auto_marking) ? "AUTO-MARKING" : "" }}</div>
+      <div class="flex flex-col justify-around items-baseline">
+        <div class="w-full text-left text-purple-secondary pr-1">{{  assignment.school_name }}</div>
+        <div class="w-full text-right text-purple-secondary pr-1">{{  Boolean(assignment.auto_marking) ? "AUTO-MARKING" : "" }}</div>
       </div>
-
+      
     </div>
 
 
-    <div v-if="showMarks && hasMarks"
-         class="w-1/4 text-right flex flex-row justify-end items-center font-bold text-green-primary text-px-12">
-      <circle-progress-bar
-          :display-value="assignmentMarks" :diameter="65" :completed-steps="assignmentMarks" :total-steps="100"
-          start-color="green" stroke-linecap="butt"
-          inner-stroke-color="#F1F3F6" :stroke-width="6" :inner-stroke-width="6"
-      />
-    </div>
+
 
   </router-link>
 </template>

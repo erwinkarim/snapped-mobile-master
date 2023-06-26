@@ -232,6 +232,7 @@ export default {
                     totalSubmitted: item.number_of_submissions,
                     hasSubmitted: item.has_submitted === "yes",
                     school_name: item.school_name,
+                    auto_marking: item.auto_marking,
                   }
 
                   if (item.marks_id) {
