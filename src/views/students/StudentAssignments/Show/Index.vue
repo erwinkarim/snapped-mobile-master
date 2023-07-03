@@ -106,7 +106,16 @@
 						<div class="absolute top-0 z-10 w-full bg-black bg-opacity-10 md:max-w-xl sm:z-20 md:z-30 pb-2/3"></div>
 					</div>
 				</div>
+			</div>
 
+			<!-- show modal after first successful sent -->
+			<div v-if="assignmentSent" class="flex fixed top-0 flex-col justify-center items-center w-full h-screen bg-opacity-75 z-70 bg-gray-primary">
+				>
+				<modal class="w-4/5" @toggleModal="toggleModal">
+					<template v-slot:title>Marked!</template>
+					<template v-slot:message>Assignment has been submitted and marked</template>
+					<template v-slot:button>OK</template>
+				</modal>
 			</div>
 		</template>
 
@@ -209,6 +218,7 @@ export default {
 			// States
 			isLoading: true,
 			isPreviewing: false,
+			assignmentSent: false, 
 
 			// Swiper details
 			swiperDetails: null,
@@ -417,10 +427,19 @@ export default {
 			console.log('redirect attempt', redirect_url);
 
 			window.location.replace(redirect_url);
+		},
+		toggleModal() {
+			console.log('toggleModal triggered');
+			this.assignmentSent = !this.assignmentSent;
 		}
 	},
 	async mounted() {
 		await this.fetchData();
+
+		// show the modal if comes from submitted an answer.
+		if(this.$route.query.assignmentSend){
+			this.assignmentSent = true;
+		}
 	},
 	components: {
 		ArrowBackIcon,
@@ -431,7 +450,7 @@ export default {
 		CameraIcon,
 		PenIcon,
 		IconBaseTwo,
-		AssignmentSubmissionCard, TextMultilineTruncate, NavBack, DashboardLayout, AlternateBottomBar
+		AssignmentSubmissionCard, TextMultilineTruncate, NavBack, DashboardLayout, AlternateBottomBar,
 	}
 }
 </script>

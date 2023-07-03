@@ -13,7 +13,7 @@
     >
       <modal v-if="submissionStatus === 'success'"
              :modal-type="submissionStatus"
-             :redirect-route="{name: 'student.assignments.show'}"
+             :redirect-route="{name: 'student.assignments.show', query: { assignmentSend: true }}"
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
