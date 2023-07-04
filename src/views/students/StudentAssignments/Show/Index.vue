@@ -437,7 +437,7 @@ export default {
 		await this.fetchData();
 
 		// show the modal if comes from submitted an answer.
-		if(this.$route.query.assignmentSend){
+		if(parseInt(this.$route.query.assignmentSend)){
 			this.assignmentSent = true;
 		}
 	},

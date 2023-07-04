@@ -13,7 +13,7 @@
     >
       <modal v-if="submissionStatus === 'success'"
              :modal-type="submissionStatus"
-             :redirect-route="{name: 'student.assignments.show', query: { assignmentSend: true }}"
+             :redirect-route="{name: 'student.assignments.show', query: { assignmentSend: assignmentSendValue }}"
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
@@ -88,6 +88,7 @@ export default {
       this.assignmentDetails = {
         id: this.$route.params.assignmentID,
         title: data.assignment_details.title,
+        auto_marking: data.assignment_details.auto_marking,
       };
     }
   },
@@ -98,6 +99,7 @@ export default {
       isShowingModal: false,
       isSubmitting: false,
       submissionStatus: null,
+      assignmentSendValue:0,
 
       error: null,
 
@@ -139,6 +141,10 @@ export default {
             this.toggleModal();
 
             if (response.data.success) {
+              if(this.assignmentDetails.auto_marking){
+                // console.log('assignmentSendValue set to true');
+                this.assignmentSendValue = 1;
+              };
               this.submissionStatus = 'success';
               this.toggleModal();
             }
