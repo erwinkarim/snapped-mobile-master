@@ -443,6 +443,14 @@ export default {
       // push router to remove query
       // this.$router.push({path: '/teacher/assignments/create'});
     };
+
+    // if session storage have values for select_mysoalan_level and subject, should populate them too
+    if(sessionStorage.getItem('mysoalan_level')){
+      this.select_mysoalan_level = sessionStorage.getItem('mysoalan_level');
+    }
+    if(sessionStorage.getItem('mysoalan_subject')){
+      this.select_mysoalan_subject = sessionStorage.getItem('mysoalan_subject');
+    }
   },
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
