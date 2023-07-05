@@ -494,9 +494,10 @@ export default {
 
 			/*
 				should save localsession data before being redirected.
+				- move from creatingQuestionDetail -> questionDraft
 				- also move from questionDraft -> assignmentDetail, then save changes. 
-				- state.teacherCreateAssignment.assignmentDetails
 			*/
+			commit('saveQuestionToDraft', state);
 			commit('saveQuestionToAssignmentDetails', state);
 
 			let assignmentDetailsState = JSON.stringify(state.assignmentDetails);
