@@ -297,7 +297,7 @@
           <div @click="$store.dispatch('teacherCreateAssignment/cancelWritingMySoalanQuestion')" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
             <button> Cancel </button>
           </div>
-          <div @click="handleRedirectToMySoalan" class="w-1/2 text-center text-blue-secondary ml-2 bg-gray-secondary py-5 rounded-md">
+          <div @click="handleRedirectToMySoalan" :class="{ 'text-grey-secondary': !mySoalanLevelAndSubjectSelected, 'text-blue-secondary': mySoalanLevelAndSubjectSelected } "  class="w-1/2 text-center ml-2 bg-gray-secondary py-5 rounded-md">
             <button>Redirect</button>
           </div>
         </div>
@@ -371,6 +371,9 @@ export default {
     writtenQuestion: function() {
       return this.$store.state.teacherCreateAssignment.questionDraft.writtenQuestion;
     },
+    mySoalanLevelAndSubjectSelected: function(){
+      return this.select_mysoalan_level != '' && this.select_mysoalan_subject != '';
+    }
   },
   methods: {
     detectChange(e) {
@@ -396,6 +399,12 @@ export default {
       this.$store.dispatch('teacherCreateAssignment/saveCroppedSnappedQuestion', payload)
     },
     handleRedirectToMySoalan(){
+      // if level / subject not selected, don't
+      if(!this.mySoalanLevelAndSubjectSelected){
+        console.log('mysoalan level or subject is not selected')
+        return;
+      }
+
       // save local selection
       sessionStorage.setItem("mysoalan_level", this.select_mysoalan_level);
       sessionStorage.setItem("mysoalan_subject", this.select_mysoalan_subject);
