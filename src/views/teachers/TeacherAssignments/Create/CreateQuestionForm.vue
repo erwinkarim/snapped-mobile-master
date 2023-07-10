@@ -412,7 +412,11 @@ export default {
 
       // then redirect to mysoalan
       this.$store.dispatch('teacherCreateAssignment/redirectToMySoalanSite', 
-        {level: this.select_mysoalan_level, subject: this.select_mysoalan_subject}
+        {
+          level: this.select_mysoalan_level, 
+          subject: this.select_mysoalan_subject,
+          email: this.$store.state.authUser.email,
+        }
       );
     }
   },

@@ -517,8 +517,9 @@ export default {
 			let q_url = 'https://snapped.mysoalan.com/papers';
 			let access_t = '';
 
+			// teacherEmail should be based on the user itself. 
 			axios.post(auth_url,{
-				teacherEmail: 'cikgumaria@snapped.com'
+				teacherEmail: e.email,
 			}, {
 				headers: {'Authorization': `Basic ${token}`},
 			}).then((res) => {
