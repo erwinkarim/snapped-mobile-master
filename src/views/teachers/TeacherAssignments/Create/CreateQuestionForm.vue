@@ -421,17 +421,22 @@ export default {
     }
   },
   mounted() {
-    // if query got assign_paper, load the uuid in the question draft remove it from the query.
-    // this is done to handle redirected from mysoalan site
-    // should do it for the first time only, since deleting it will make it pop up again.
+    /*
+    if query got assign_paper, load the uuid in the question draft remove it from the query.
+    - this is done to handle redirected from mysoalan site
+    - should do it for the first time only, since deleting it will make it pop up again.
+    - also, check if the assignment paper id changed. usually happen when user goes back and forth using 
+      the browser buttons
+    */
     if(this.$route.query.assign_paper){
       console.log('create q: assign_paper detected');
 
       // check if this info needs to be loaded
       let mySoalanLoaded = Boolean(sessionStorage.getItem('loadedMySoalan'));
+      let mySoalanPaperChanged = this.$route.query.assign_paper != sessionStorage.getItem('mysoalanPaperID');
 
       // if not loaded, load mysoalan and set sessionStorage to true
-      if(!mySoalanLoaded){
+      if(!mySoalanLoaded || mySoalanPaperChanged){
         console.log('mysoalan have not loaded before');
 
         //setMySoalanAssignID 
@@ -449,9 +454,9 @@ export default {
         }
 
         sessionStorage.setItem('loadedMySoalan', '1');
+        sessionStorage.setItem('mysoalanPaperID', this.$route.query.assign_paper);
 
       }
-
 
       // push router to remove query
       // this.$router.push({path: '/teacher/assignments/create'});
