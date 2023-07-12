@@ -36,7 +36,7 @@
         </template>
         <template v-slot:rightAction>
           <button @click="$store.dispatch('teacherCreateAssignment/saveQuestion')"
-            class="font-bold "
+            class="font-bold"
             :disabled="$store.getters['teacherCreateAssignment/hasZoomMeeting']"
           >
             Save
@@ -174,6 +174,20 @@
             </div>
           </div>
 
+          <div class="py-5 pr-2 pl-6 my-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+            <!-- auto marking option, should be available if mysoalan is selected -->
+            <!-- auto marking is disabled if mysoalan is not selected or this is an exclusive mysoalan question -->
+            <input type="checkbox" id="auto-marking-check" name="auto-marking" 
+              v-model="$store.state.teacherCreateAssignment.assignmentDetails.auto_marking" 
+              @click="$store.commit('teacherCreateAssignment/toggleAutoMarking')" 
+              :disabled="!$store.getters['teacherCreateAssignment/hasMySoalanQuestion'] || $store.getters['teacherCreateAssignment/isMySoalanExclusive']"
+            />
+            <label for="auto-marking-check" class="ml-2"
+              :disabled="!$store.getters['teacherCreateAssignment/hasMySoalanQuestion'] || $store.getters['teacherCreateAssignment/isMySoalanExclusive']"
+            >Auto-Marking</label>
+            <br />
+            <sub>Auto-Marking explaination here.</sub>
+          </div>
           <textarea v-model="$store.state.teacherCreateAssignment.assignmentDetails.remarks"
                     class="py-5 pr-2 pl-6 w-full h-36 text-lg font-normal leading-tight rounded-md border border-none appearance-none mb-26 bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
                     placeholder="Remarks or Link"
@@ -354,6 +368,8 @@ export default {
   watch: {},
   methods: {},
   mounted() {
+    console.log('mounted teacher/create/assignment/index');
+    
     this.$store.commit('teacherCreateAssignment/initialise')
 		this.$store.dispatch('teacherCreateAssignment/getSchools');
     this.$store.dispatch('teacherCreateAssignment/getClasses')
@@ -372,6 +388,25 @@ export default {
 				}
 			},
     )
+
+    /*
+      if got assign_paper in the query, 
+        - need to open up the create question form with the mysoal uuid
+        - load up session data and put into teacherCreateAssignment.assignmentDetail
+        - load local selection too.
+    */
+    if(this.$route.query.assign_paper){
+      // console.log('assign paper detected, open the question form');
+      // go into CreateQuestionMode
+      // this.$store.commit('teacherCreateAssignment/toggleCreatingQuestionMode');
+
+      // load assignmentDetail from Session Storage
+      // this.$store.commit('teacherCreateAssignment/loadAssignmentDetailFromSessionStorage');
+
+      console.log('load session data');
+      
+      this.$store.dispatch('teacherCreateAssignment/loadSessionData');
+    }
   },
   components: {
     ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo

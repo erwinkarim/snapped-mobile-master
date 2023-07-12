@@ -134,7 +134,6 @@
                       placeholder="Remarks"></textarea>
           </div>
         </div>
-
       </div>
     </template>
 
@@ -163,6 +162,7 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import CropIcon from "@/components/icons/CropIcon";
+import { UltimateTextToImage} from "ultimate-text-to-image";
 
 // Vue Cropper
 import VueCropper from 'vue-cropperjs';
@@ -172,6 +172,14 @@ import 'cropperjs/dist/cropper.css';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 import {faTrash, faCropAlt} from "@fortawesome/free-solid-svg-icons";
 
+let dataURLtoBlob = (dataurl) => {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
 export default {
   name: "AnswerSave",
   props: {
@@ -198,7 +206,8 @@ export default {
       icons: {
         crop: faCropAlt,
         trash: faTrash
-      }
+      },
+      imageData: null,
     }
   },
   computed: {
@@ -211,6 +220,9 @@ export default {
     isSnappedAnswer() {
       return this.answer.type === 'snapped';
     },
+    hasImageData(){
+      return this.imageData != null;
+    }
   },
   methods: {
 
@@ -372,6 +384,29 @@ export default {
     }
   },
   created() {
+    // console.log('should check if query has correct-question');
+    // this come from mysoalan redirection
+    if(this.$route.query['correct-questions']){
+      // console.log("redirected from mysoalan, generate image file");
+      // this.answer.type = 'snapped';
+
+			const textToImage = new UltimateTextToImage(
+        `MySoalan: 
+        ${this.$route.query['correct-questions']} / ${this.$route.query['total-questions']}`, {
+          width: 400, height: 400, fontColor:"F1F6F9", backgroundColor: "394867", align: "center", valign: "middle", fontSize: 72, textAlign: "center",
+        }).render().toDataUrl();
+      // this.answer.content.push("")
+
+      this.imageData = textToImage;
+
+      // convert dtaURL to blob and push to this.answer.content
+      // also this.answer.type = snapped
+      this.answer.type = 'snapped';
+      this.answer.content = [dataURLtoBlob(textToImage)];
+      this.answer.mysoalan_correct = this.$route.query['correct-questions'];
+      this.answer.mysoalan_all = this.$route.query['total-questions'];
+    }
+
     if (!this.hasAnswerContent) {
       router.push({name: 'student.assignments.show'})
     }

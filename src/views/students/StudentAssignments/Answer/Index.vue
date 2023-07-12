@@ -13,7 +13,7 @@
     >
       <modal v-if="submissionStatus === 'success'"
              :modal-type="submissionStatus"
-             :redirect-route="{name: 'student.assignments.show'}"
+             :redirect-route="{name: 'student.assignments.show', query: { assignmentSend: assignmentSendValue }}"
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
@@ -53,7 +53,6 @@
       </modal>
     </div>
 
-
     <router-view
         @writtenAnswer="handleWrittenAnswer"
         @snappedAnswer="handleSnappedAnswer"
@@ -69,6 +68,7 @@
 
 <script>
 import SubmissionRepository from "@/repositories/SubmissionRepository";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 import Modal from "@/components/Modal";
 
 export default {
@@ -77,6 +77,21 @@ export default {
   props: {
     assignmentDetails: Object
   },
+  async mounted() {
+    // this just redirected from MySoalan
+    if(this.$route.query['correct-questions']){
+      // fetch and re-load assignment details
+      let data = await AssignmentRepository.find(this.$route.params.assignmentID).then((res) => {
+        return res.data.data;
+      });
+
+      this.assignmentDetails = {
+        id: this.$route.params.assignmentID,
+        title: data.assignment_details.title,
+        auto_marking: data.assignment_details.auto_marking,
+      };
+    }
+  },
   data() {
     return {
 
@@ -84,12 +99,14 @@ export default {
       isShowingModal: false,
       isSubmitting: false,
       submissionStatus: null,
+      assignmentSendValue:0,
 
       error: null,
 
       answer: {
         type: null,
-        content: ''
+        content: '', 
+        mysoalan_all: 0, 
       }
     }
   },
@@ -115,6 +132,8 @@ export default {
             answerType: this.answer.type,
             answerContent: this.answer.content,
             remarks: remarks,
+            mysoalan_all: this.answer.mysoalan_all,
+            mysoalan_correct: this.answer.mysoalan_correct,
           })
           .then(response => {
 
@@ -122,6 +141,10 @@ export default {
             this.toggleModal();
 
             if (response.data.success) {
+              if(this.assignmentDetails.auto_marking){
+                // console.log('assignmentSendValue set to true');
+                this.assignmentSendValue = 1;
+              };
               this.submissionStatus = 'success';
               this.toggleModal();
             }

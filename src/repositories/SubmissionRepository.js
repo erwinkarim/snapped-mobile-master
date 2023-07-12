@@ -8,18 +8,21 @@ export default {
         return Repository.get(`${resource}/${submissionID}/details`)
     },
 
-    store({assignmentID: assignmentID, answerType: answerType, answerContent: answerContent, remarks: remarks}) {
+    // store({assignmentID: assignmentID, answerType: answerType, answerContent: answerContent, remarks: remarks, otherInfo}) {
+    store(args){
 
         let formData = new FormData()
 
-        formData.append('assignment_id', assignmentID)
-        formData.append('remarks', remarks)
+        formData.append('assignment_id', args.assignmentID);
+        formData.append('remarks', args.remarks);
+        formData.append('mysoalan_all', args.mysoalan_all);
+        formData.append('mysoalan_correct', args.mysoalan_correct);
 
-        if (answerType === 'written') {
-            formData.append('written_answer', answerContent)
+        if (args.answerType === 'written') {
+            formData.append('written_answer', args.answerContent)
         }
-        if (answerType === 'snapped') {
-            answerContent.forEach(function (file, index) {
+        if (args.answerType === 'snapped') {
+            args.answerContent.forEach(function (file, index) {
                 formData.append(`snap_answer[${index}]`, file);
             });
         }

@@ -62,7 +62,6 @@
 							</div>
 						</div>
 
-
 						<!-- Assignment Detail Card -->
 						<assignment-question-card
 								:assignment="assignment"
@@ -107,7 +106,16 @@
 						<div class="absolute top-0 z-10 w-full bg-black bg-opacity-10 md:max-w-xl sm:z-20 md:z-30 pb-2/3"></div>
 					</div>
 				</div>
+			</div>
 
+			<!-- show modal after first successful sent -->
+			<div v-if="assignmentSent" class="flex fixed top-0 flex-col justify-center items-center w-full h-screen bg-opacity-75 z-70 bg-gray-primary">
+				>
+				<modal class="w-4/5" @toggleModal="toggleModal">
+					<template v-slot:title>Marked!</template>
+					<template v-slot:message>Assignment has been submitted and marked</template>
+					<template v-slot:button>OK</template>
+				</modal>
 			</div>
 		</template>
 
@@ -147,33 +155,23 @@
 
 				</div>
 
-				<div v-else class="flex flex-row w-full">
+				<div v-else class="flex flex-col w-full">
+
+					<div v-if="hasMySoalanQuestion" class="flex-grow px-2" :class="!isMySoalanExclusive ? 'mb-2' : ''">
+						<!-- shows button if has mysoalan question -->
+						<a href="#" class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" @click="answerMySoalanQuestion()">
+							Answer MySoalan
+						</a>
+					</div>
 
 					<!-- BUTTON: WRITE ANSWER -->
-					<!--          <div class="flex-grow px-2">-->
-					<!--            <router-link-->
-					<!--                :to="{name:'student.assignments.answer.write', params: { assignmentDetails: assignmentDetails }}"-->
-					<!--                class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">-->
-					<!--              <div class="w-5/7">-->
-					<!--                Write Answer-->
-					<!--              </div>-->
-					<!--              <icon-base-two class="hidden w-1/7 xs:block">-->
-					<!--                <pen-icon/>-->
-					<!--              </icon-base-two>-->
-					<!--            </router-link>-->
-					<!--          </div>-->
-					<div class="flex-grow px-2">
+					<div v-if="!isMySoalanExclusive && !isAutoMarking" class="flex-grow px-2">
+						<!-- don't show if there's only mysoalan question, otherwise show -->
 
-						<label
-								class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
+						<label class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
 							<div class="mr-3">
 								Snap Answer
-								<input @change="onFileSelected"
-											 type="file"
-											 accept='image/*'
-											 multiple
-											 class="hidden"
-								/>
+								<input @change="onFileSelected" type="file" accept='image/*' multiple class="hidden" />
 							</div>
 							<icon-base-two class="hidden w-1/12 xs:block">
 								<camera-icon/>
@@ -207,11 +205,12 @@ import router from "@/router";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import MySoalanRepository from "@/repositories/MySoalanRepository";
 
 export default {
 	name: "Index",
 	props: {
-		assignmentID: [String, Number]
+		assignmentID: [String, Number],
 	},
 	data() {
 		return {
@@ -219,6 +218,7 @@ export default {
 			// States
 			isLoading: true,
 			isPreviewing: false,
+			assignmentSent: false, 
 
 			// Swiper details
 			swiperDetails: null,
@@ -232,7 +232,8 @@ export default {
 					title: null,
 					description: null
 				},
-				snap_question_paths: []
+				snap_question_paths: [], 
+				auto_marking: false,
 			},
 
 			// Student's Submission and Marks details
@@ -246,7 +247,7 @@ export default {
 				subjectName: null,
 				totalSubmissions: null,
 				totalStudents: null
-			}
+			},
 		}
 	},
 	computed: {
@@ -289,6 +290,22 @@ export default {
 			return this.swiperDetails ? this.swiperDetails.slidesCount : 0;
 		},
 
+		hasMySoalanQuestion: function(){
+			return this.assignment.mysoalan !== "null";
+		},
+		isMySoalanExclusive: function(){
+			/* 
+				should return true is there's only mysoalan question
+				or force automated marking
+			*/
+			return this.assignment.mysoalan !== "null" &&
+				this.assignment.written_question.description == null &&
+				this.assignment.snap_question_paths.length == 0 &&
+				this.assignment.recording_path == null;
+		},
+		isAutoMarking() {
+			return this.assignment.auto_marking;
+		}
 	},
 	methods: {
 		async fetchData() {
@@ -310,6 +327,8 @@ export default {
 							this.assignment.dueDatetime = data.assignment_details.due_datetime;
 							this.assignment.written_question.title = data.assignment_details.written_question_title;
 							this.assignment.written_question.description = data.assignment_details.written_question_description;
+							this.assignment.mysoalan = data.assignment_details.mysoalan;
+							this.assignment.auto_marking = Boolean(data.assignment_details.auto_marking);
 
 							if (data.assignment_details.snap_question) {
 								this.assignment.snap_question_paths = data.assignment_details.snap_question_url.split(',');
@@ -363,6 +382,7 @@ export default {
 				return
 			}
 
+			// move to another page when answering something.
 			router.push({
 				name: 'student.assignments.answer.store', params: {
 					assignmentDetails: this.assignmentDetails,
@@ -390,10 +410,36 @@ export default {
 				return ''
 			}
 
+		},
+		async answerMySoalanQuestion(){
+			console.log('answering mysoalan question');
+			let token = '';
+			// let redirect = window.location.host + window.location.pathname;
+			let redirect = window.location.host + this.$router.resolve({
+				name: 'student.assignments.answer.store', params: { assignmentID: this.assignment.id }, 
+			}).href;
+
+			await MySoalanRepository.getAccessToken(this.$store.getters['getAuthEmail'], this.$store.getters['getAuthUserRole']).then((res) => {
+				token = res.data.accessToken;
+			});
+
+			let redirect_url = `https://snapped.mysoalan.com/assign-papers/${this.assignment.mysoalan}/start?token=${token}&redirect-url=${redirect}`;
+			console.log('redirect attempt', redirect_url);
+
+			window.location.replace(redirect_url);
+		},
+		toggleModal() {
+			console.log('toggleModal triggered');
+			this.assignmentSent = !this.assignmentSent;
 		}
 	},
-	mounted() {
-		this.fetchData();
+	async mounted() {
+		await this.fetchData();
+
+		// show the modal if comes from submitted an answer.
+		if(parseInt(this.$route.query.assignmentSend)){
+			this.assignmentSent = true;
+		}
 	},
 	components: {
 		ArrowBackIcon,
@@ -404,7 +450,7 @@ export default {
 		CameraIcon,
 		PenIcon,
 		IconBaseTwo,
-		AssignmentSubmissionCard, TextMultilineTruncate, NavBack, DashboardLayout, AlternateBottomBar
+		AssignmentSubmissionCard, TextMultilineTruncate, NavBack, DashboardLayout, AlternateBottomBar,
 	}
 }
 </script>

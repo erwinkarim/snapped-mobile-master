@@ -2,7 +2,9 @@
   <div v-if="timeLeft" :class="containerClass"
        class="rounded-full text-white tracking-tight flex flex-row items-center justify-center px-1 py-1">
     <div v-if="hasClockIcon" class="w-1/7 md:w-1/10">
-      <stop-watch-icon/>
+      <IconBase class="w-6" >
+        <stop-watch-icon/>
+      </IconBase>
     </div>
     <div class="w-5/7 truncate px-1">
       {{ timeLeft }}
@@ -12,11 +14,12 @@
 
 <script>
 import moment from "moment";
+import IconBase from "./IconBase.vue";
 import StopWatchIcon from "@/components/icons/StopWatchIcon";
 
 export default {
   name: "CountdownTimer",
-  components: {StopWatchIcon},
+  components: {StopWatchIcon, IconBase},
   props: {
     dueDateTime: {
       type: String,

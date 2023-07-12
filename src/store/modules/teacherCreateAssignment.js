@@ -4,6 +4,16 @@ import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
 import {get} from "v-calendar/src/utils/_";
 
+// shoud move to repository later.
+import axios from "axios";
+
+let id = process.env.VUE_APP_MYSOALAN_KEY;
+let secret = process.env.VUE_APP_MYSOALAN_SECRET;
+
+// create token
+const token = Buffer.from(`${id}:${secret}`, 'utf8').toString('base64');
+let auth_url = 'https://api.mysoalan.com/v1/intg/oauth';
+
 /*
 	state to handle assignment creations
 	1. question creation
@@ -31,11 +41,13 @@ export default {
 			isMain: true,
 			isCreatingQuestion: false,
 			isCreatingZoomQuestion: false,
+			isCreatingMySoalanQuestion: false,
 			isSelectingDuration: false,
 			isSelectingQuestionType: false,
 			isWritingQuestion: false,
 			isSnappingQuestion: false,
 			isZoomQuestion: false,
+			isMySoalanQuestion: false,
 			isCroppingSnappedQuestion: false,
 			isResettingQuestion: false,
 			isShowingScheduler: false,
@@ -49,6 +61,7 @@ export default {
 			isScreenShare: false,
 			meeting_id: null,
 			isZoomPreview: false,
+			mySoalanInfo: null,
 		},
 
 		// Main details to be submitted
@@ -58,13 +71,15 @@ export default {
 			subject_id: "",
 			classroom_id: null,
 			due_datetime: null,
+			auto_marking: false,
 			question: {
 				type: null,
 				title: null,
 				writtenQuestion: null,
 				snappedQuestions: [],
 				snappedPreviews: [],
-				zoomMeetings: null
+				zoomMeetings: null,
+				mySoalan: null,
 			},
 			published_at: moment(),
 		},
@@ -78,6 +93,7 @@ export default {
 			snappedQuestions: [],
 			snappedPreviews: [],
 			zoomMeetings: null,
+			mySoalan: null, 
 		},
 
 		// Currently creating question details. To be used instantaneous.
@@ -89,6 +105,7 @@ export default {
 			snappedQuestions: [],
 			snappedPreviews: [],
 			zoomMeetings: null,
+			mySoalan: null, 
 		},
 
 		selectables: {
@@ -111,6 +128,7 @@ export default {
 					state.states.isMain = true;
 					state.states.isCreatingQuestion = false;
 					state.states.isCreatingZoomQuestion = false;
+					state.states.isCreatingMySoalanQuestion = false;
 					state.states.isSelectingQuestionType = false;
 					state.states.isWritingQuestion = false;
 					state.states.isSnappingQuestion = false;
@@ -154,7 +172,14 @@ export default {
 					state.states.isSnappingQuestion = !state.states.isSnappingQuestion;
 			},
 
+			toggleMySoalanQuestionMode(state) {
+					state.states.isSelectingQuestionType = !state.states.isSelectingQuestionType;
+					state.states.isMySoalanQuestion = !state.states.isMySoalanQuestion;
+					state.states.isCreatingMySoalanQuestion = !state.states.isCreatingMySoalanQuestion;
+			},
+
 			toggleShowingErrorMode(state) {
+					// console.log('call toggleShowingErrorMode');
 					state.states.isShowingError = !state.states.isShowingError;
 			},
 
@@ -219,7 +244,9 @@ export default {
 
 			// push creatingQuestionsDetails -> questionDraft
 			saveQuestionToDraft(state) {
-				console.log('creatingQuestionDetails.writtenQuestion', state.creatingQuestionDetails.writtenQuestion);
+				// console.log('creatingQuestionDetails.writtenQuestion', state.creatingQuestionDetails.writtenQuestion);
+				Object.assign(state.questionDraft, state.creatingQuestionDetails);
+				/*
 					state.questionDraft = {
 							type: JSON.parse(JSON.stringify(state.creatingQuestionDetails.type)),
 							title: JSON.parse(JSON.stringify(state.creatingQuestionDetails.title)),
@@ -227,11 +254,19 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.creatingQuestionDetails.snappedPreviews)),
 							zoomMeetings: state.creatingQuestionDetails.zoomMeetings,
+							mySoalan: state.creatingQuestionDetails.mySoalan,
 					}
+				*/
 			},
 
 			// push questionDraft -> assignmentDetails.question
 			saveQuestionToAssignmentDetails(state) {
+				// console.log('questionDraft.mySoalan', state.questionDraft.mySoalan);
+				// console.log('assignmentDetails.question.mySoalan', state.assignmentDetails.question.mySoalan);
+
+				Object.assign(state.assignmentDetails.question, state.questionDraft);
+				
+				/*
 					state.assignmentDetails.question = {
 							type: JSON.parse(JSON.stringify(state.questionDraft.type)),
 							title: JSON.parse(JSON.stringify(state.questionDraft.title)),
@@ -239,7 +274,9 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.questionDraft.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.questionDraft.snappedPreviews)),
 							zoomMeetings: state.questionDraft.zoomMeetings,
+							mySoalan: state.questionDraft.mySoalan,
 					}
+				*/
 			},
 
 			// set questionDraft and creatingQuestionDetails to null
@@ -251,7 +288,8 @@ export default {
 							writtenQuestion: null,
 							snappedQuestions: [],
 							snappedPreviews: [],
-							zoomMeetings: null
+							zoomMeetings: null,
+							mySoalan: null,
 					}
 
 					state.creatingQuestionDetails = {
@@ -260,16 +298,26 @@ export default {
 							writtenQuestion: null,
 							snappedQuestions: [],
 							snappedPreviews: [],
-							zoomMeetings: null
+							zoomMeetings: null,
+							mySoalan: null,
 					}
 			},
 
 			/* push:
 				* assignmentDetails.question -> questionDraft
-				a* ssignmentDetails.question -> creatingQuestionDetails
+				* assignmentDetails.question -> creatingQuestionDetails
 			*/
 			loadSavedQuestionForEdit(state, type) {
+				// console.log('called loadSavedQuestionForEdit');
 
+				Object.assign(state.questionDraft, state.assignmentDetails.question);
+				Object.assign(state.creatingQuestionDetails, state.assignmentDetails.question);
+
+				// somehow setting type cause uncontrollable stack overflow
+				state.questionDraft.type = 'mySoalan';
+				state.creatingQuestionDetails.type = 'mySoalan';
+
+				/*
 					state.questionDraft = {
 							type: type,
 							title: JSON.parse(JSON.stringify(state.assignmentDetails.question.title)),
@@ -277,6 +325,7 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews)),
 							zoomMeetings: state.assignmentDetails.question.zoomMeetings,
+							mySoalan: state.assignmentDetails.question.mySoalan,
 					}
 
 					state.creatingQuestionDetails = {
@@ -286,7 +335,9 @@ export default {
 							snappedQuestions: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedQuestions)),
 							snappedPreviews: JSON.parse(JSON.stringify(state.assignmentDetails.question.snappedPreviews)),
 							zoomMeetings: state.assignmentDetails.question.zoomMeetings,
+							mySoalan: state.assignmentDetails.question.mySoalan,
 					}
+				*/
 			},
 
 
@@ -302,6 +353,7 @@ export default {
 							isMain: true,
 							isCreatingQuestion: false,
 							isCreatingZoomQuestion: false,
+							isCreatingMySoalanQuestion: false,
 							isInZoomMeeting: false,
 							isSelectingDuration: false,
 							isSelectingQuestionType: false,
@@ -320,6 +372,8 @@ export default {
 							isRecording: false,
 							meeting_id: null,
 							isZoomPreview: false,
+							isMySoalanQuestion: false,
+							mySoalanInfo: null,
 					};
 
 					// Main details to be submitted
@@ -329,12 +383,14 @@ export default {
 							subject_id: "",
 							classroom_id: null,
 							due_datetime: null,
+							auto_marking: false,
 							question: {
 									type: null,
 									title: null,
 									writtenQuestion: null,
 									snappedQuestions: [],
-									zoomeMeetings: null
+									zoomeMeetings: null,
+									mySoalan: null,
 							},
 							published_at: moment(),
 					}
@@ -347,7 +403,8 @@ export default {
 							writtenQuestion: null,
 							snappedQuestions: [],
 							snappedPreviews: [],
-							zoomMeetings: null
+							zoomMeetings: null,
+							mySoalan: null,
 					}
 
 					// Currently creating question details. To be used instantaneous.
@@ -359,6 +416,7 @@ export default {
 							snappedQuestions: [],
 							snappedPreviews: [],
 							zoomMeetings: null,
+							mySoalan: null,
 					}
 
 					state.selectables = {
@@ -366,7 +424,32 @@ export default {
 						subjects: [],
 						classrooms: []
 					}
-			}
+			},
+
+			loadAssignmentDetailFromSessionStorage(state){
+				// console.log('call loadAssignmentDetailFromSessionStorage');
+
+				// load from sessionStorage
+				let assignmentDetailsFromSession = sessionStorage.getItem('assignmentDetails');
+				let statesFromSession = sessionStorage.getItem('states');
+				// console.log('sessionStorage', JSON.parse(assignmentDetailsFromSession));
+	
+				// should be the right solution, but sometimes it doesn't change the value
+				// after you assign it.
+				state.assignmentDetails = JSON.parse(assignmentDetailsFromSession);
+				state.states = JSON.parse(statesFromSession);
+
+				// should set assignmetnDetails.auto_marking to true because you should have mysoalan data
+				state.assignmentDetails.auto_marking = true;
+
+				// should remove sessionData after loading
+				// sessionStorage.removeItem('assignmentDetails');
+				// sessionStorage.removeItem('states');
+			}, 
+
+			toggleAutoMarking(state){
+				state.assignmentDetails.auto_marking = !state.assignmentDetails.auto_marking;
+			},
 
 	},
 	actions: {
@@ -386,7 +469,75 @@ export default {
 			commit('toogleZoomQuestionMode');
 			state.creatingQuestionDetails.type ='zoom';
 		},
+		beginWritingMySoalanQuestion({state, commit, getters}){
+			console.log('attempt to start writing mysoalan question');
+			commit('toggleMySoalanQuestionMode');
+			state.creatingQuestionDetails.type = 'mySoalan';
+		},
+		cancelWritingMySoalanQuestion({state, commit}){
+			commit('toggleMySoalanQuestionMode');
+			state.creatingQuestionDetails.type = '';
+		}, 
+		removeMySoalanQuestion({state}){
+			// console.log('remove mySoalan Question');
+
+			// clear out from the question draft
+			// state.questionDraft.mySoalan = null;
+			state.creatingQuestionDetails.mySoalan = null;
+			state.states.isCreatingMySoalanQuestion = false;
+
+			// set auto_marking to false;
+			state.assignmentDetails.auto_marking = false;
+		},
+		redirectToMySoalanSite({state, commit}, e){
+			console.log('actual redirect to mysoalan site');
+
+			/*
+				should save localsession data before being redirected.
+				- move from creatingQuestionDetail -> questionDraft
+				- also move from questionDraft -> assignmentDetail, then save changes. 
+			*/
+			commit('saveQuestionToDraft', state);
+			commit('saveQuestionToAssignmentDetails', state);
+
+			let assignmentDetailsState = JSON.stringify(state.assignmentDetails);
+			let statesState = JSON.stringify(state.states);
+
+			// console.log('assignmentDetailsState', assignmentDetailsState);
+			// sessionStorage.removeItem("assignmentDetails");
+			sessionStorage.setItem("assignmentDetails", assignmentDetailsState);
+			sessionStorage.setItem("states", statesState);
+			sessionStorage.setItem('loadedMySoalan', '');
+			
+			// now do the actual redirect
+			let redirect = window.location.host + window.location.pathname;
+			//let redirect = 'mobile.gotsnapped.tech/teacher/assignments/create'
+			let subject = e.subject;
+			let level = e.level;
+			let q_url = 'https://snapped.mysoalan.com/papers';
+			let access_t = '';
+
+			axios.post(auth_url,{
+				teacherEmail: e.email,
+			}, {
+				headers: {'Authorization': `Basic ${token}`},
+			}).then((res) => {
+				console.log('res', res);
+				access_t = res.data.accessToken;
+
+				console.log('access_t', access_t);
+				// redirect to url
+				window.location.replace(`${q_url}?token=${access_t}&redirect-url=${redirect}&subject=${subject}&level=${level}`);
+			}).catch((e) => {
+				console.log('error', e.response.message);
+			});
+		},
+		clearSessionData(){
+			sessionStorage.removeItem('assignmentDetails');
+			sessionStorage.removeItem('states');
+		},
 		saveWrittenQuestionToDraft({state, commit, getters}) {
+			// console.log('call saveWrittenQuestionToDraft');
 			if (state.creatingQuestionDetails.writtenQuestion) {
 				commit('toggleWritingQuestionMode')
 				commit('saveQuestionToDraft')
@@ -491,7 +642,7 @@ export default {
 			TeacherRepository
 				.getTeacherSchools()
 				.then(res => {
-					console.log('res', res.data);
+					// console.log('res', res.data);
 					res.data.forEach(item => {
 						state.selectables.schools.push({
 							id: item.id, 
@@ -548,6 +699,8 @@ export default {
 			this.questionDetails = details;
 		},
 		saveQuestion({state, getters, commit}) {
+			// console.log('call saveQuestion');
+
 			// Check if user selected a type of question
 			if (state.creatingQuestionDetails.type) {
 
@@ -555,6 +708,12 @@ export default {
 			if (state.creatingQuestionDetails.title) {
 				// all this will need to be reviewed
 
+				commit('saveQuestionToDraft')
+				commit('saveQuestionToAssignmentDetails');
+				commit('resetCreatingQuestion')
+				commit('toggleCreatingQuestionMode')
+
+				/*
 				// If user opt to Write Question
 				if (getters.creatingQuestionType === 'written') {
 					if (getters.hasWrittenQuestionDraft) {
@@ -591,11 +750,27 @@ export default {
 					} else {
 						console.log('please record something');
 					}
-
 					// plan. sanitize and push to server
 				}
+
+				// if the assignment has mySoalan assignment uuid
+				if (getters.creatingQuestionType === 'mySoalan'){
+					console.log('should save mysoalan type');
+					commit('saveQuestionToDraft');
+					if (getters.hasMySoalanQuestionDraft) {
+						console.log('hasMySoalanQuestionDraft');
+						console.log('saveQuestion: questionDraft.mysoalan', state.questionDraft.mySoalan);
+
+						commit('saveQuestionToAssignmentDetails');
+						commit('resetCreatingQuestion')
+						commit('toggleCreatingQuestionMode')
+					} else {
+						console.log('mysoalan issue');
+					}
+				}
+				*/
 			} else {
-				console.log('please fill in title')
+				console.log('please fill in title');
 			}
 		} else {
 			console.log('Please select a type of question.')
@@ -686,6 +861,8 @@ export default {
 				formData.append('published_at', moment(state.assignmentDetails.published_at).format('YYYY-MM-DD HH:mm:ss'));
 				formData.append('remarks', state.assignmentDetails.remarks ?? '');
 				formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
+				formData.append('mysoalan', state.assignmentDetails.question.mySoalan);
+				formData.append('auto_marking', state.assignmentDetails.auto_marking ? 1 : 0);
 
 				for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
 					let file = state.assignmentDetails.question.snappedQuestions[i];
@@ -802,6 +979,62 @@ export default {
 		},
 		setAssignmentTitle({state}, maxedTitle) {
 			state.assignmentDetails.title = maxedTitle;
+		},
+		/* 
+			set the mysoalan assignment id
+			- usually being used after being redirect
+			- should also load localstorage/localsession data
+		*/
+		setMySoalanAssignID(state, key){
+			// console.log('setMySoalanAssignID');
+
+			state.state.questionDraft.mySoalan = key;
+			state.state.assignmentDetails.question.mySoalan = key;
+			state.state.creatingQuestionDetails.mySoalan = key;
+			state.state.creatingQuestionDetails.type='mySoalan';
+		},
+		async getMySoalanInfo(state){// 
+			// console.log('teacherCreateAssignment: getting mysoalan info');
+
+			let access_t = '';
+			let assign_info_url = `https://api.mysoalan.com/v1/assign-papers/${state.state.questionDraft.mySoalan}`;
+
+			// get access token
+			await axios.post(auth_url, {
+				teacherEmail: 'cikgumaria@snapped.com',
+			}, {
+				headers: {
+					'Authorization': `Basic ${token}`,
+				},
+			}).then((res) => {
+				access_t = res.data.accessToken;
+				// console.log('access_t', access_t);
+			});
+
+			// get mysoalan info
+			await axios.get(assign_info_url, {
+				headers: {
+					'Authorization': `Bearer ${access_t}`,
+				},
+			}).then((res) => {
+				// console.log('assign info', res);
+				state.state.states.mySoalanInfo = res.data;
+			}).catch((e) => {
+				console.log('failed to get assignment info');
+			});
+		},
+		loadSessionData({state, commit, dispatch}){
+			// console.log('called loadSessionData');
+			/*
+				- go into creating question mode
+				- load assignment detail from session storage
+				- move assignment detail to questionDraft / creatingQuestionDetails
+				- remove sessionData after loading
+			*/
+
+      commit('toggleCreatingQuestionMode');
+			commit('loadAssignmentDetailFromSessionStorage', state);
+			commit('loadSavedQuestionForEdit', state, 'mySoalan');
 		}
 	},
 	getters: {
@@ -813,7 +1046,8 @@ export default {
 			return state.assignmentDetails.question.type && (
 				state.assignmentDetails.question.writtenQuestion ||
 				state.assignmentDetails.question.snappedQuestions.length ||
-				state.assignmentDetails.question.zoomMeetings !== null
+				state.assignmentDetails.question.zoomMeetings !== null ||
+				state.assignmentDetails.question.mySoalan !== null
 			);
 		},
 		hasSavedDueDatetime: (state) => {
@@ -832,17 +1066,35 @@ export default {
 			return state.states.isWritingQuestion;
 		},
 		isEditingZoomQuestion: (state) => {
-
 			return state.states.isCreatingZoomQuestion; 
+		},
+		isEditingMySoalanQuestion: (state) => {
+			return state.states.isCreatingMySoalanQuestion;
 		},
 		hasSnappedQuestionDraft(state) {
 			// return state.questionDraft.type ? state.questionDraft.type === 'snapped' && state.questionDraft.snappedQuestions.length > 0 : false;
 			//return state.questionDraft.snappedQuestions.length > 0 || state.creatingQuestionDetails.snappedPreviews.length > 0; 
+			// console.log('getting hasSnappedQuestionDraft');
 			return state.creatingQuestionDetails.snappedPreviews.length > 0; 
 		},
 		hasZoomQuestionDraft(state){
 			// return state.questionDraft.type ?  state.questionDraft.type === 'zoom' && state.questionDraft.zoomMeetings !== null : false;
 			return state.questionDraft.zoomMeetings != null;
+		},
+		hasMySoalanQuestionDraft(state){
+			return state.creatingQuestionDetails.mySoalan != null;
+			// return state.questionDraft.mySoalan != null;
+		},
+		hasMySoalanQuestion(state){
+			return state.assignmentDetails.question.mySoalan != null;
+		},
+		isMySoalanExclusive(state){
+			// returns true is assignmentDetails.question.mysoalan is populated, and others are not.
+			// only at assignmentDetails.question level
+			let question = state.assignmentDetails.question;
+			return question.mySoalan != null && (
+				question.zoomMeetings == null && question.snappedPreviews.length == 0 && question.writtenQuestion == null
+			);
 		},
 		hasErrors(state) { return state.errors.length || state.states.isShowingError },
 		hasZoomMeeting(state) { return state.states.isInZoomMeeting; },
