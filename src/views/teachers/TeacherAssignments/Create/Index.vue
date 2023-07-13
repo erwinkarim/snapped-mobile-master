@@ -112,18 +112,7 @@
 						</option>
 					</select>
 
-          <select v-model="$store.state.teacherCreateAssignment.assignmentDetails.subject_id"
-						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
-          >
-            <option disabled value="">Subject</option>
-            <option v-for="subject in $store.state.teacherCreateAssignment.selectables.subjects"
-                    :value="subject.id"
-            >
-              {{ subject.name }}
-            </option>
-          </select>
-
-
+          <!-- classroom -->
           <multiselect v-model="$store.state.teacherCreateAssignment.assignmentDetails.classroom_id"
 						:options="$store.state.teacherCreateAssignment.selectables.classrooms"
 						:show-labels="false"
@@ -138,6 +127,17 @@
             <!--            <option v-for="classroom in classrooms" :value="classroom.id">{{ classroom.name }}</option>-->
           </multiselect>
 
+          <!-- subject -->
+          <select v-model="$store.state.teacherCreateAssignment.assignmentDetails.subject_id"
+						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+          >
+            <option disabled value="">Subject</option>
+            <option v-for="subject in $store.state.teacherCreateAssignment.selectables.subjects"
+                    :value="subject.id"
+            >
+              {{ subject.name }}
+            </option>
+          </select>
 
           <!-- CREATE/EDIT QUESTION -->
           <div
@@ -174,6 +174,7 @@
             </div>
           </div>
 
+          <!-- auto marking-->
           <div class="py-5 pr-2 pl-6 my-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
             <!-- auto marking option, should be available if mysoalan is selected -->
             <!-- auto marking is disabled if mysoalan is not selected or this is an exclusive mysoalan question -->
