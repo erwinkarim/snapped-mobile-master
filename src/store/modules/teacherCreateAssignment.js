@@ -455,16 +455,6 @@ export default {
 				state.assignmentDetails.auto_marking = !state.assignmentDetails.auto_marking;
 			},
 
-			togglePenalty(state){
-				state.assignmentDetails.penalty = !state.assignmentDetails.penalty;
-			},
-
-			setVideoMenuToTrue(state){
-				state.states.isShowingVideoMenu = true;
-			}, 
-			setVideoMenuToFalse(state){
-				state.states.isShowingVideoMenu = false;
-			}, 
 	},
 	actions: {
 		selectQuestionType(type) {
