@@ -72,6 +72,7 @@ export default {
 			classroom_id: null,
 			due_datetime: null,
 			auto_marking: false,
+			penalty: true,
 			question: {
 				type: null,
 				title: null,
@@ -384,6 +385,7 @@ export default {
 							classroom_id: null,
 							due_datetime: null,
 							auto_marking: false,
+							penalty: true,
 							question: {
 									type: null,
 									title: null,
@@ -451,6 +453,9 @@ export default {
 				state.assignmentDetails.auto_marking = !state.assignmentDetails.auto_marking;
 			},
 
+			togglePenalty(state){
+				state.assignmentDetails.penalty = !state.assignmentDetails.penalty;
+			},
 	},
 	actions: {
 		selectQuestionType(type) {

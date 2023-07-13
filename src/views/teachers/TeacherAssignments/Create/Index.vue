@@ -159,6 +159,7 @@
           </div>
 
 
+          <!-- due date -->
           <div @click="$store.commit('teacherCreateAssignment/toggleSelectingDurationMode')"
                class="flex flex-row items-center justify-between py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
           >
@@ -174,6 +175,7 @@
             </div>
           </div>
 
+          <!-- auto marking option -->
           <div class="py-5 pr-2 pl-6 my-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
             <!-- auto marking option, should be available if mysoalan is selected -->
             <!-- auto marking is disabled if mysoalan is not selected or this is an exclusive mysoalan question -->
@@ -186,10 +188,22 @@
               :disabled="!$store.getters['teacherCreateAssignment/hasMySoalanQuestion'] || $store.getters['teacherCreateAssignment/isMySoalanExclusive']"
             >Auto-Marking</label>
             <br />
-            <sub>Auto-Marking explaination here.</sub>
+            <sub>Snapped will automatically mark this assignment. Assignment must have MySoalan question type.</sub>
           </div>
+
+          <!-- penalty option -->
+          <div class="py-5 pr-2 pl-6 my-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+            <input type="checkbox" id="penalty-option" name="penalty" 
+              v-model="$store.state.teacherCreateAssignment.assignmentDetails.penalty" 
+              @click="$store.commit('teacherCreateAssignment/togglePenalty')" 
+            />
+            <label for="penalty-option" class="ml-2">Penalty</label><br />
+            <sub>Late submission will have a 20 point penalty.</sub>
+          </div>
+
+          <!-- remarks -->
           <textarea v-model="$store.state.teacherCreateAssignment.assignmentDetails.remarks"
-                    class="py-5 pr-2 pl-6 w-full h-36 text-lg font-normal leading-tight rounded-md border border-none appearance-none mb-26 bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+                    class="py-5 pr-2 pl-6 w-full h-36 mb-2 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
                     placeholder="Remarks or Link"
           ></textarea>
         </div>
