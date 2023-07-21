@@ -677,11 +677,20 @@ export default {
 					}
 				})
 		},
+		/*
+			get classes
+			- should be based on current school.
+		*/
 		getClasses({state, commit}) {
 			TeacherRepository
-			.getTeacherClasses()
+			// .getTeacherClasses()
+			.getTeacherClassesBySchool(state.assignmentDetails.school_id)
 			.then(response => {
 				if (response.data.success) {
+					// clear selected and selectables
+					state.selectables.classrooms = [];
+					state.assignmentDetails.classroom_id = [];
+
 					const data = response.data.data
 					for (let i = 0; i < data.length; i++) {
 						let item = data[i];

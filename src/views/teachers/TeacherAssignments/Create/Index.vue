@@ -105,6 +105,7 @@
 					-->
 					<select v-model="$store.state.teacherCreateAssignment.assignmentDetails.school_id"
 						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+            @change="schoolChanged()"
 					>
             <option disabled value="">School</option>
             <option v-for="school in $store.state.teacherCreateAssignment.selectables.schools" :value="school.id">
@@ -380,13 +381,19 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    schoolChanged(){
+      console.log('fire schoolChanged');
+      this.$store.dispatch('teacherCreateAssignment/getClasses')
+    },
+  },
   mounted() {
     console.log('mounted teacher/create/assignment/index');
     
     this.$store.commit('teacherCreateAssignment/initialise')
 		this.$store.dispatch('teacherCreateAssignment/getSchools');
-    this.$store.dispatch('teacherCreateAssignment/getClasses')
+    // get classes based on school
+    // this.$store.dispatch('teacherCreateAssignment/getClasses')
     this.$store.dispatch('teacherCreateAssignment/getSubjects')
 
     this.$store.watch(
