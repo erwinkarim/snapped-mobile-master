@@ -19,6 +19,9 @@ export default {
     getTeacherClasses () {
         return Repository.get(`${resource}/classes`)
     },
+    getTeacherClassesBySchool(school_id) {
+        return Repository.get(`${resource}/classes/${school_id}`);
+    }, 
     getSubmissions(latest = null) {
 
         let endpoint = `${resource}/submissions`;

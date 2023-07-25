@@ -672,11 +672,20 @@ export default {
 					}
 				})
 		},
+		/*
+			get classes
+			- should be based on current school.
+		*/
 		getClasses({state, commit}) {
 			TeacherRepository
-			.getTeacherClasses()
+			// .getTeacherClasses()
+			.getTeacherClassesBySchool(state.assignmentDetails.school_id)
 			.then(response => {
 				if (response.data.success) {
+					// clear selected and selectables
+					state.selectables.classrooms = [];
+					state.assignmentDetails.classroom_id = [];
+
 					const data = response.data.data
 					for (let i = 0; i < data.length; i++) {
 						let item = data[i];
@@ -795,7 +804,8 @@ export default {
 
 			if (!state.assignmentDetails.title) { state.errors.push('Title required.'); }
 			if (!state.assignmentDetails.subject_id) { state.errors.push('Subject required.'); }
-			if (!state.assignmentDetails.classroom_id) { state.errors.push('Classroom required.'); }
+			// if (!state.assignmentDetails.classroom_id) { state.errors.push('Classroom required.'); }
+			if (state.assignmentDetails.classroom_id == null || state.assignmentDetails.classroom_id.length == 0) { state.errors.push('Classroom required.'); }
 			if (!getters.hasSavedQuestion) { state.errors.push('Question required.'); }
 			if (!state.assignmentDetails.due_datetime) { state.errors.push('Due date required'); }
 			if (state.errors.length) { commit('toggleShowingErrorMode') }
