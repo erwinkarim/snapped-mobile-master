@@ -804,7 +804,8 @@ export default {
 
 			if (!state.assignmentDetails.title) { state.errors.push('Title required.'); }
 			if (!state.assignmentDetails.subject_id) { state.errors.push('Subject required.'); }
-			if (!state.assignmentDetails.classroom_id) { state.errors.push('Classroom required.'); }
+			// if (!state.assignmentDetails.classroom_id) { state.errors.push('Classroom required.'); }
+			if (state.assignmentDetails.classroom_id == null || state.assignmentDetails.classroom_id.length == 0) { state.errors.push('Classroom required.'); }
 			if (!getters.hasSavedQuestion) { state.errors.push('Question required.'); }
 			if (!state.assignmentDetails.due_datetime) { state.errors.push('Due date required'); }
 			if (state.errors.length) { commit('toggleShowingErrorMode') }
