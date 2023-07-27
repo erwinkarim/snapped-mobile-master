@@ -878,6 +878,7 @@ export default {
 				formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
 				formData.append('mysoalan', state.assignmentDetails.question.mySoalan);
 				formData.append('auto_marking', state.assignmentDetails.auto_marking ? 1 : 0);
+				formData.append('no_late_submission_penalty', state.assignmentDetails.penalty ? 0 : 1);
 
 				for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
 					let file = state.assignmentDetails.question.snappedQuestions[i];
