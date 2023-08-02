@@ -9,6 +9,8 @@ const AssignmentAddMark = () => import("@/views/teachers/TeacherAssignments/Mark
 const EditSnappedAnswer = () =>  import("@/views/teachers/TeacherAssignments/Mark/Components/EditSnappedAnswer.vue");
 const AssignmentEdit = () =>  import("@/views/teachers/TeacherAssignments/Edit/Index.vue");
 const AssignmentExport = () =>  import("@/views/teachers/TeacherAssignments/Export/Index.vue");
+const GroupAnalytics = () => import("@/views/analytics/Group.vue");
+const IndividualAnalytics = () => import("@/views/analytics/Individual.vue");
 // import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
 // import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
 // import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
@@ -62,6 +64,13 @@ export default {
                     props: true,
                 },
                 {
+                    path: 'analytics',
+                    name: 'teacher.assignments.group_analytics',
+                    component: GroupAnalytics,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
+                {
                     path: 'submission/:submissionID',
                     component: AssignmentMark,
                     props: true,
@@ -73,6 +82,13 @@ export default {
                             meta: teacherAccessControlMeta,
                             props: true,
 
+                        },
+                        {
+                            path: 'analytics',
+                            name: 'teacher.assignments.marking.analytics',
+                            component: IndividualAnalytics,
+                            meta: teacherAccessControlMeta,
+                            props: true,
                         },
                         {
                             path: 'marking',
