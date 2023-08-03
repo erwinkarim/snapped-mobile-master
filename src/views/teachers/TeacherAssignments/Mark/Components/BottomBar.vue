@@ -7,10 +7,18 @@
 
     <div class="w-full md:max-w-xl mx-auto">
 
-      <div v-if="this.$store.getters['teacherMarking/isMarkedAssignment']" class="w-full flex flex-row">
-        <div @click="togglePreviewMode" v-if="$store.state.teacherMarking.states.isMain"
-             class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
-          View Markings
+      <div v-if="this.$store.getters['teacherMarking/isMarkedAssignment']">
+        <div class="w-full flex flex-row">
+          <router-link :to="{ name: 'teacher.assignments.marking.analytics', params: { assignmentID: $route.params.assignmentID, submissionID: $route.params.submissionID }}"
+              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center mb-4">
+            Analytics
+          </router-link>
+        </div>
+        <div class="w-full flex flex-row">
+          <div @click="togglePreviewMode" v-if="$store.state.teacherMarking.states.isMain"
+              class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
+            View Markings
+          </div>
         </div>
       </div>
 

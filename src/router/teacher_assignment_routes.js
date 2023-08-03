@@ -71,6 +71,13 @@ export default {
                     props: true,
                 },
                 {
+                    path: 'submission/:submissionID/analytics',
+                    name: 'teacher.assignments.marking.analytics',
+                    component: IndividualAnalytics,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
+                {
                     path: 'submission/:submissionID',
                     component: AssignmentMark,
                     props: true,
@@ -82,13 +89,6 @@ export default {
                             meta: teacherAccessControlMeta,
                             props: true,
 
-                        },
-                        {
-                            path: 'analytics',
-                            name: 'teacher.assignments.marking.analytics',
-                            component: IndividualAnalytics,
-                            meta: teacherAccessControlMeta,
-                            props: true,
                         },
                         {
                             path: 'marking',
