@@ -52,7 +52,14 @@
 
     <template v-slot:bottomBar>
 
-      <div class="w-full flex flex-row">
+      <div class="w-full flex flex-col">
+        <router-link 
+          :to="{ name: 'student.marked.analytics', params: {
+            assignmentID: $route.params.assignmentID, marksID: $route.params.marksID,
+          }}"
+          class="w-full md:max-w-xl md:mx-auto font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center mb-4">
+          View Analytics
+        </router-link>
         <button @click="toggleMode"
                 class="w-full md:max-w-xl md:mx-auto font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center">
           {{ buttonText }}
@@ -166,7 +173,7 @@ export default {
     toggleMode() {
       this.isShowingFeedback = !this.isShowingFeedback;
       this.isShowingMarkings = !this.isShowingMarkings;
-    }
+    },
   },
   created() {
     this.fetchData()
