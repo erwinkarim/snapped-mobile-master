@@ -21,10 +21,11 @@
 					Analysis for role {{ role() }}
 				</div>
 				<div class="relative w-full top-1/12">
-					<p class="text-left p-2 font-bold">Questions Analysis</p>
-					<div class="w-full px-2 mb-4" v-for="item in [0,1,2]">
+					<!-- it was decided question info will be download from mysoalan through pdf -->
+					<!--p class="text-left p-2 font-bold">Questions Analysis</p-->
+					<!--div class="w-full px-2 mb-4" v-for="item in [0,1,2]">
 						<Question />
-					</div>
+					</div-->
 					<p class="text-left p-2 font-bold">Score Distribution</p>
 					<div class="w-full">
 						<PercentileHistogram />
