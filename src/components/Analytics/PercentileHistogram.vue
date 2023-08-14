@@ -17,18 +17,10 @@ export default {
 			// labels: [1,2,3,4,5,6,7],
 			datasets: [{
 				label: 'score vs count',
-				data: [
-					{x: 1, y: 1}, 
-					{x: 2, y: 2}, 
-					{x: 3, y: 3}, 
-					{x: 4, y: 4}, 
-					{x: 5, y: 3}, 
-					{x: 6, y: 2}, 
-					{x: 7, y: 1}, 
-				]
+				data: 
+				this.data.dist,
 			}]
 		};
-
 
 		let options = {
 			scales: {
@@ -39,16 +31,23 @@ export default {
         }
 		};
 
-		var myLineChart = new Chart(ctx, {
+		this.myLineChart = new Chart(ctx, {
 			type: 'line',
 			data: data,
 			options: options
 		});
 
 	},
+	updated(){
+		// should fire when data is updated
+		console.log('updated data', this.data);
+
+	}, 
 	data() {
 		return {
 			canvasName: "myCanvas" + parseInt(Math.random() * 100 ), 
+			data: this.$attrs.data,
+			myLineChart: null, 
 		}
 	}
 }

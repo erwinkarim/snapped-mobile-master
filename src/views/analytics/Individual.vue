@@ -27,8 +27,11 @@
 						<Question />
 					</div-->
 					<p class="text-left p-2 font-bold">Score Distribution</p>
-					<div class="w-full">
-						<PercentileHistogram />
+					<div class="w-full" v-if="dataLoaded">
+						<PercentileHistogram :data="{ dist }" />
+					</div>
+					<div v-else>
+						<p>Data not loaded.</p>
 					</div>
 					<div class="font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 my-4 mx-2">
 						More Info at MySoalan.com
@@ -47,14 +50,30 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import Question from "@/components/Analytics/Question.vue";
 import PercentileHistogram from "@/components/Analytics/PercentileHistogram.vue";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
 	name: "AnalyticsIndividual",
+	data() {
+		return {
+			dist: [],
+			dataLoaded: false, 
+		};
+	},
 	methods:{
 		role() {
 			return this.$route.meta.checkRole;
 		}
 	},
+	mounted(){
+		console.log()
+		// get analytics to populate the distribution chart.
+		AssignmentRepository.analytics(this.$route.params.assignmentID).then(e => {
+			console.log('msg', e);
+			this.dist = e.data.plot;
+			this.dataLoaded = true;
+		});
+	}, 
 	components: {
 		ArrowBackIcon, PageHeaderThree, DashboardLayout, IconBaseTwo, Question, PercentileHistogram
 	}
