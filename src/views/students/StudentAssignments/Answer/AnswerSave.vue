@@ -182,6 +182,7 @@ let dataURLtoBlob = (dataurl) => {
     return new Blob([u8arr], {type:mime});
 }
 
+
 export default {
   name: "AnswerSave",
   props: {
@@ -391,8 +392,8 @@ export default {
     }
 
   },
-  async created() {
-    // console.log('should check if query has correct_question');
+  created() {
+    // console.log('should check if query has correct-question');
     // this come from mysoalan redirection
     if(this.$route.query['correct_questions']){
       // console.log("redirected from mysoalan, generate image file");
