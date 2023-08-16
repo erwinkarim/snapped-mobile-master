@@ -68,7 +68,7 @@ export default {
 		return Repository.delete(`${resource}/${assignmentID}/delete`);
 	},
 
-	analytics(assignmentID){
-		return Repository.get(`${resource}/${assignmentID}/analytics`);
+	analytics(assignmentID, options = {}){
+		return Repository.get(`${resource}/${assignmentID}/analytics`, { params: options} );
 	},
 }

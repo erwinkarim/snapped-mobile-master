@@ -21,11 +21,10 @@
 					Analysis for role {{ role() }}
 				</div>
 				<div class="relative w-full top-1/12">
-					<!-- it was decided question info will be download from mysoalan through pdf -->
-					<!--p class="text-left p-2 font-bold">Questions Analysis</p-->
-					<!--div class="w-full px-2 mb-4" v-for="item in [0,1,2]">
+					<p class="text-left p-2 font-bold">Questions Analysis</p>
+					<div class="w-full px-2 mb-4" v-for="item in [0,1,2]">
 						<Question />
-					</div-->
+					</div>
 					<p class="text-left p-2 font-bold">Score Distribution</p>
 					<div class="w-full" v-if="dataLoaded">
 						<PercentileHistogram :data="{ dist }" />
@@ -68,7 +67,7 @@ export default {
 	mounted(){
 		console.log()
 		// get analytics to populate the distribution chart.
-		AssignmentRepository.analytics(this.$route.params.assignmentID).then(e => {
+		AssignmentRepository.analytics(this.$route.params.assignmentID, {submissionID: this.$route.params.submissionID}).then(e => {
 			console.log('msg', e);
 			this.dist = e.data.plot;
 			this.dataLoaded = true;
