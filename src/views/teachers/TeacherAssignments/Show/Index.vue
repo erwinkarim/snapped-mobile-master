@@ -128,7 +128,7 @@
             </div>
 
             <!-- analytics -->
-            <div class="mt-4 px-8 mb-24" v-if="!isPreviewing && hasNotSubmitted">
+            <div class="mt-4 px-8 mb-24" v-if="!isPreviewing">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 Analytics
               </div>

@@ -18,12 +18,15 @@
     <template v-slot:content>
       <div class="flex flex-col w-full">
 				<div class="relative w-full top-1/12">
-					<p class="text-left p-2 font-bold">Questions Analysis</p>
-					<div class="w-full px-2 mb-4" v-for="item in [0,1,2]">
-						<Question />
+					<div v-if="qAnalysis.length != 0">
+						<p class="text-left p-2 font-bold">Questions Analysis</p>
+						<div class="w-full px-2 mb-4" v-for="qData in qAnalysis">
+							<Question :data="{ qData }"/>
+						</div>
 					</div>
 					<p class="text-left p-2 font-bold">Score Distribution</p>
 					<div class="w-full" v-if="dataLoaded">
+						<p>Data loaded</p>
 						<PercentileHistogram :data="{ dist }" />
 					</div>
 					<div v-else>
@@ -54,6 +57,7 @@ export default {
 		return {
 			dist: [],
 			dataLoaded: false, 
+			qAnalysis: [], 
 		};
 	},
 	methods:{
@@ -68,6 +72,7 @@ export default {
 		AssignmentRepository.analytics(this.$route.params.assignmentID).then(e => {
 			console.log('msg', e);
 			this.dist = e.data.plot;
+			this.qAnalysis = e.data.q_analysis;
 			this.dataLoaded = true;
 		});
 	}, 
