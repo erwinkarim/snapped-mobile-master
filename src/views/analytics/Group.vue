@@ -32,7 +32,7 @@
 					<div v-else>
 						<p>Data not loaded.</p>
 					</div>
-					<div class="font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 my-4 mx-2">
+					<div v-if="mysoalanQ" class="font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 my-4 mx-2">
 						More Info at MySoalan.com
 					</div>
 				</div>
@@ -58,6 +58,7 @@ export default {
 			dist: [],
 			dataLoaded: false, 
 			qAnalysis: [], 
+			mysoalanQ: false,
 		};
 	},
 	methods:{
@@ -74,6 +75,14 @@ export default {
 			this.dist = e.data.plot;
 			this.qAnalysis = e.data.q_analysis;
 			this.dataLoaded = true;
+		});
+
+		// should also get assignment info. 
+		AssignmentRepository.find(this.$route.params.assignmentID).then(e => {
+			console.log('assignment', e);
+			if(e.data.data.assignment_details.mysoalan != "null"){
+				this.mysoalanQ = true;
+			}
 		});
 	}, 
 	components: {

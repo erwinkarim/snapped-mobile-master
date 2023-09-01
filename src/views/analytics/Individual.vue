@@ -60,6 +60,7 @@ export default {
 			dist: [],
 			dataLoaded: false, 
 			qAnalysis: [], 
+			mysoalanQ: false,
 		};
 	},
 	methods:{
@@ -75,6 +76,12 @@ export default {
 			this.dist = e.data.plot;
 			this.qAnalysis = e.data.q_analysis;
 			this.dataLoaded = true;
+		});
+
+		AssignmentRepository.find(this.$route.params.assignmentID).then(e => {
+			if(e.data.data.assignment_details.mysoalan != "null"){
+				this.mysoalanQ = true;
+			}
 		});
 	}, 
 	components: {
