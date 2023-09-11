@@ -79,7 +79,7 @@ export default {
   },
   async mounted() {
     // this just redirected from MySoalan
-    if(this.$route.query['correct-questions']){
+    if(this.$route.query['correct_questions']){
       // fetch and re-load assignment details
       let data = await AssignmentRepository.find(this.$route.params.assignmentID).then((res) => {
         return res.data.data;
