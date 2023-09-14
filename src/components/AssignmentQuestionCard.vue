@@ -164,6 +164,18 @@ export default {
 				};
 			});
 		}
+
+		if(this.hasZoomQuestion){
+			console.log('zoom question detected', this.assignment.recording_path);
+
+
+			if(!!window.safari && this.assignment.recording_path.match(/[.]webm$/) != null){
+				// if video is webm and browser is safari, convert to mp4
+
+				console.log('is safari and zoom video is webm');
+
+			}
+		}
 	},
 	props: {
 		assignment: Object,
@@ -181,6 +193,9 @@ export default {
 
 			// mysoalan
 			mySoalan: null,
+
+			// for zoom video. goal is playable on every browser.
+			zoomVideo: null,
 
 		}
 	},
