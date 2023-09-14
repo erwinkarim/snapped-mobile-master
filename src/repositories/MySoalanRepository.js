@@ -71,7 +71,10 @@ export default {
 				'Authorization': `Bearer ${access_t}`,
 			}
 		})
+	},
 
+	viewAssignPapers(assign_paper_uuid, access_t, return_url){
+		return `https://snapped.mysoalan.com/assign-papers/${assign_paper_uuid}/paper?token=${access_t}&redirect-url=${return_url}`;
 	}
 
 
