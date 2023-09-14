@@ -34,7 +34,7 @@
 					<div v-else>
 						<p>Data not loaded.</p>
 					</div>
-					<div class="font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 my-4 mx-2">
+					<div v-if="mysoalanQ" class="font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 my-4 mx-2">
 						<a :href="mysoalanAnalyticsPath">
 							More Info at MySoalan.com
 						</a>
