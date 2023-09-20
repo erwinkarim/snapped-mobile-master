@@ -34,7 +34,8 @@
 				>
 					<video autoplay controls height="640" width="854" crossorigin>
 						<!-- must ensure all recordings are in mp4 format -->
-						<source :src="assignment.recording_path" type="video/mp4" />
+						<!--source :src="assignment.recording_path" type="video/mp4" /-->
+						<source :src="zoomVideo" type="video/mp4" />
 						Your browser don't support video tag.
 					</video>
 				</div>
@@ -140,6 +141,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 import VueMarkdown from 'vue-markdown';
 import MySoalanRepository from "@/repositories/MySoalanRepository";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
 	name: "AssignmentQuestionCard",
@@ -174,6 +176,14 @@ export default {
 
 				console.log('is safari and zoom video is webm');
 
+				// request mp4 version from server if available.
+				await AssignmentRepository.zoomMp4(this.assignment.id).then(e => {
+					console.log('zoom_path', e);
+					this.zoomVideo = e.data.file;
+				})
+
+			} else {
+				this.zoomVideo = this.assignment.recording_path;
 			}
 		}
 	},
