@@ -428,7 +428,6 @@ export default {
         this.answer.mysoalan_result = e.data;
         console.log('mysoalan_result', JSON.stringify(this.answer.mysoalan_result) );
       });
-
     }
 
     if (!this.hasAnswerContent) {
