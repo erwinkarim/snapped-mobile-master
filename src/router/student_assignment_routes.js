@@ -1,3 +1,5 @@
+// import { component } from "vue/types/umd";
+
 const AssignmentShow = () => import("@/views/students/StudentAssignments/Show/Index.vue");
 const AnswerIndex = () => import("@/views/students/StudentAssignments/Answer/Index.vue");
 const AnswerWrite = () => import("@/views/students/StudentAssignments/Answer/AnswerWrite.vue");
@@ -5,6 +7,7 @@ const AnswerSave = () => import("@/views/students/StudentAssignments/Answer/Answ
 const App = () => import("@/App.vue");
 const AnswerEdit = () => import("@/views/students/StudentAssignments/Answer/AnswerEdit.vue");
 const MarkedShow = () => import("@/views/students/StudentAssignments/Marked/Index.vue");
+const IndividualAnalytics = () => import("@/views/analytics/Individual.vue");
 /*
 import AssignmentShow from "@/views/students/StudentAssignments/Show/Index";
 import AnswerIndex from "@/views/students/StudentAssignments/Answer/Index";
@@ -61,6 +64,13 @@ export default {
                     path: 'marked/:marksID',
                     name: 'student.marked.show',
                     component: MarkedShow,
+                    meta: studentAccessControlMeta,
+                    props: true,
+                },
+                {
+                    path: 'marked/:marksID/analytics', 
+                    name: 'student.marked.analytics',
+                    component:  IndividualAnalytics,
                     meta: studentAccessControlMeta,
                     props: true,
                 },

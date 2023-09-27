@@ -17,6 +17,8 @@ export default {
         formData.append('remarks', args.remarks);
         formData.append('mysoalan_all', args.mysoalan_all);
         formData.append('mysoalan_correct', args.mysoalan_correct);
+        formData.append('mysoalan_result_uuid', args.mysoalan_result_uuid);
+        formData.append('mysoalan_result', JSON.stringify(args.mysoalan_result) );
 
         if (args.answerType === 'written') {
             formData.append('written_answer', args.answerContent)
