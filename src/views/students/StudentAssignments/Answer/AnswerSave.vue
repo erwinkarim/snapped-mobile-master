@@ -392,7 +392,7 @@ export default {
     }
 
   },
-  created() {
+  async created() {
     // console.log('should check if query has correct_question');
     // this come from mysoalan redirection
     if(this.$route.query['correct_questions']){
