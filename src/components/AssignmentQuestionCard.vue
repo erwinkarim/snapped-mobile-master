@@ -145,7 +145,6 @@ import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 import VueMarkdown from 'vue-markdown';
 import MySoalanRepository from "@/repositories/MySoalanRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
-import ZoomVideo from "@zoom/videosdk";
 
 export default {
 	name: "AssignmentQuestionCard",
