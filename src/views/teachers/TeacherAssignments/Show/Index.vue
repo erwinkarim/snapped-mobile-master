@@ -107,7 +107,7 @@
             </div>
 
             <!-- Not Yet Submitted -->
-            <div class="mt-4 px-8 mb-24" v-if="!isPreviewing && hasNotSubmitted">
+            <div class="mt-4 px-8 mb-8" v-if="!isPreviewing && hasNotSubmitted">
               <div class="flex flex-row justify-between text-purple-primary font-bold">
                 <div>
                   Not Submitted
@@ -124,6 +124,18 @@
                         :submission="submission"
                         :meta="meta" class="mb-3"
                 />
+              </div>
+            </div>
+
+            <!-- analytics -->
+            <div class="mt-4 px-8 mb-24" v-if="!isPreviewing">
+              <div class="flex flex-row justify-between text-purple-primary font-bold">
+                Analytics
+              </div>
+              <div class="bg-gray-secondary max-w-sm md:max-w-xl rounded rounded-xl justify-between overflow-hidden flex flex-col px-3 py-3 md:py-5 ">
+                <router-link :to="{ name:'teacher.assignments.group_analytics', params: { assignmentID: $route.params.assignmentID }}">
+                  Group Analytics
+                </router-link>
               </div>
             </div>
 

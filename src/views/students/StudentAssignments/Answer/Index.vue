@@ -107,6 +107,9 @@ export default {
         type: null,
         content: '', 
         mysoalan_all: 0, 
+        mysoalan_correct: 0, 
+        mysoalan_result_uuid: '',
+        mysoalan_result: {},
       }
     }
   },
@@ -134,6 +137,8 @@ export default {
             remarks: remarks,
             mysoalan_all: this.answer.mysoalan_all,
             mysoalan_correct: this.answer.mysoalan_correct,
+            mysoalan_result: this.answer.mysoalan_result, 
+            mysoalan_result_uuid: this.answer.mysoalan_result_uuid, 
           })
           .then(response => {
 

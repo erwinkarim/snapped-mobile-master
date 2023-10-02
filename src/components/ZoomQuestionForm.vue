@@ -314,6 +314,8 @@ export default {
       canvasHandler.id='self-view-canvas';
     } else if(typeof SharedArrayBuffer === 'function'){
     */
+
+    // should  add the video element after loging in. 
     if(typeof SharedArrayBuffer === 'function'){
       // have shared array buffer enabled
       canvasHandler = document.createElement('canvas');
@@ -634,6 +636,7 @@ export default {
       } else {
         // video is off, start video
         this.status = 'Camera turned on';
+        console.log('isRenderSelfView', stream.isRenderSelfViewWithVideoElement() );
 
         console.log('checking SharedArrayBuffer', typeof SharedArrayBuffer);
         if(!!window.chrome && !(typeof SharedArrayBuffer === 'function')) {

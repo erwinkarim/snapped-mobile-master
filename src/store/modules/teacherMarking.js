@@ -1312,7 +1312,7 @@ export default {
 
         isPreparingCanvas(state) {
             return state.states.isPreviewing === true && state.states.isPreparingCanvas === true;
-        }
+        },
 
     }
 }
