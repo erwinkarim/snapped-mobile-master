@@ -30,7 +30,7 @@
 			<div v-if="hasZoomQuestion" class="flex flex-col mt-8 text-purple-primary mb-2" >
 				<strong>Zoom Video:</strong><br />
 				<div v-if="!isPreviewing"
-						 class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
+						 class="flex z-30 flex-row justify-center items-center p-0 md:px-1 md:py-4 rounded-2xl bg-black-primary"
 				>
 					<video v-if="zoomVideo != null" autoplay controls height="640" width="854" crossorigin>
 						<!-- must ensure all recordings are in mp4 format -->
@@ -38,7 +38,9 @@
 						<source :src="zoomVideo" type="video/mp4" />
 						Your browser don't support video tag.
 					</video>
-					<div v-else><p class="text-white">Loading ...</p></div>
+					<div v-else class="text-white m-8 p-8">
+						<p>Loading ...</p>
+					</div>
 				</div>
 				<div v-if="!isPreviewing">
 					<p class="text-xs-plus">If you unable to view the video, please try Google Chrome browser.</p>
