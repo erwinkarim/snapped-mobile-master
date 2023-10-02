@@ -66,8 +66,10 @@ export default {
 
 	delete(assignmentID) {
 		return Repository.delete(`${resource}/${assignmentID}/delete`);
-	},
-
+	},	 
+	zoomMp4(assignmentID){
+		return Repository.get(`${resource}/${assignmentID}/mp4Zoom`);
+  },
 	analytics(assignmentID, options = {}){
 		return Repository.get(`${resource}/${assignmentID}/analytics`, { params: options} );
 	},
