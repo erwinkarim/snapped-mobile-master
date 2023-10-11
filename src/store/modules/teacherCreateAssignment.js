@@ -897,6 +897,10 @@ export default {
 							}
 					})
 					.catch(error => {
+						// show show error mode also??
+						console.log('error obj', error);
+						state.errors.push( error.response.data.message);
+
 						commit('togglePublishingMode')
 						commit('toggleShowingErrorMode')
 					});
