@@ -19,7 +19,7 @@
         <img v-else class="col-span-1" src="@/assets/img/75.jpeg" />
         <p class="col-span-7 text-left p-2">{{  order.store_product.name }}</p>
       </div>
-      <div>
+      <div class="py-4">
         <h2 class="text-lg font-bold">Remarks</h2>
         <p class="" v-if="order.remarks ===''">No remarks</p>
         <p class="text-left">{{  order.remarks }}</p>
