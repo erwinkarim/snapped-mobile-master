@@ -16,7 +16,9 @@
       <div class="h-30">Empty Space</div>
       <div class="grid grid-cols-8">
         <img v-if="order.store_product.picture != ''" class="col-span-1" :src="picture" crossorigin="anonymous" />
-        <img v-else class="col-span-1" src="@/assets/img/75.jpeg" />
+        <div v-else class="col-span-1 text-center text-6xl p-2 m-auto w-100 flex items-center justify-items-center justify-center">
+          <BoxArchiveIcon />
+        </div>
         <p class="col-span-7 text-left p-2">{{  order.store_product.name }}</p>
       </div>
       <div class="py-4">
@@ -45,6 +47,7 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
 import StoresRepository from "@/repositories/StoresRepository";
 import OrderProgressCard from "@/components/Store/OrderProgressCard.vue";
+import BoxArchiveIcon from '@/components/icons/BoxArchiveIcon.vue';
 
 export default {
   name: 'StoresOrdersNew',
@@ -63,7 +66,7 @@ export default {
   },
   components: {
     SectionTitle, DashboardLayout, CoinsBottomNavBarVue, PageHeaderThree, 
-    NavBack, OrderProgressCard
+    NavBack, OrderProgressCard, BoxArchiveIcon, 
   },
 }
 </script>

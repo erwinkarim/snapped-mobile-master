@@ -15,7 +15,10 @@
     <template v-slot:content>
       <div class="h-30">Empty Space</div>
       <img v-if=" product.picture != ''" :src="picture" class="w-full" crossorigin="anonymous" />
-      <img v-else src="@/assets/img/300.jpeg" class="w-full" />
+      <div v-else class="text-center text-6xl w-full p-8 m-8 flex items-center justify-items-center justify-center">
+        <BoxArchiveIcon />
+      </div>
+
       <div v-if="Object.keys(product).length === 0">
         <p>Loading ...</p>
       </div>
@@ -45,6 +48,7 @@ import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
 import StoresRepository from "@/repositories/StoresRepository";
+import BoxArchiveIcon from '@/components/icons/BoxArchiveIcon.vue';
 
 export default {
   name: 'StoresProductShow',
@@ -64,7 +68,7 @@ export default {
   },
   components: {
     SectionTitle, DashboardLayout, CoinsBottomNavBarVue, PageHeaderThree, 
-    NavBack,
+    NavBack, BoxArchiveIcon
   },
 }
 </script>

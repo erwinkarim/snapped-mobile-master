@@ -38,6 +38,7 @@ import CoinsBottomNavBarVue from "@/components/CoinsBottomNavBar.vue";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
 import StoresRepository from "@/repositories/StoresRepository";
+import BoxArchiveIcon from '@/components/icons/BoxArchiveIcon.vue';
 
 export default {
   name: 'StoresOrdersNew',
@@ -52,7 +53,7 @@ export default {
   },
   components: {
     SectionTitle, DashboardLayout, CoinsBottomNavBarVue, PageHeaderThree, 
-    NavBack,
+    NavBack, BoxArchiveIcon,
   },
 }
 </script>
