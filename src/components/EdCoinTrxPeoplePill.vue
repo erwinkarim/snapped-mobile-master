@@ -1,7 +1,20 @@
 <template>
   <div class="overflow-hidden justify-between py-3 px-3 max-w-sm md:max-w-xl h-full rounded rounded-xl bg-gray-secondary">
     <div class="flex flex-col items-center h-full text-left text-purple-primary">
-      <div class="flex w-full border-b-2 border-grey-500 text-2xl">{{ finalName }} - {{ people.id }}</div>
+      <div class="flex w-full border-b-2 border-grey-500 text-2xl">
+        <router-link v-if="modelName == 'Store'" :to="{ name:'stores.show', params: { storeID: modelId}}">
+          {{  finalName }}
+        </router-link>
+        <router-link v-else-if="modelName == 'Mark'" :to="{ name:'student.assignments.show', params: { assignmentID: people.assignment_id }}">
+          {{  finalName }}
+        </router-link>
+        <router-link v-else-if="modelName == 'Student'" :to="{ name:'student.profile.show', params: { studentID: modelId}}">
+          {{  finalName }}
+        </router-link>
+        <span v-else>
+          {{  finalName }}
+        </span>
+      </div>
       <div class="flex px-2 w-full">
         {{  finalDesc }}
       </div>
