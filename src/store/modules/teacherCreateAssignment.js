@@ -72,6 +72,7 @@ export default {
 			classroom_id: null,
 			due_datetime: null,
 			auto_marking: false,
+			penalty: true,
 			question: {
 				type: null,
 				title: null,
@@ -384,6 +385,7 @@ export default {
 							classroom_id: null,
 							due_datetime: null,
 							auto_marking: false,
+							penalty: true,
 							question: {
 									type: null,
 									title: null,
@@ -451,6 +453,9 @@ export default {
 				state.assignmentDetails.auto_marking = !state.assignmentDetails.auto_marking;
 			},
 
+			togglePenalty(state){
+				state.assignmentDetails.penalty = !state.assignmentDetails.penalty;
+			},
 	},
 	actions: {
 		selectQuestionType(type) {
@@ -873,6 +878,8 @@ export default {
 				formData.append('recording_meeting_id', zoom_meeting ? zoom_meeting.meeting_id : '');
 				formData.append('mysoalan', state.assignmentDetails.question.mySoalan);
 				formData.append('auto_marking', state.assignmentDetails.auto_marking ? 1 : 0);
+				// late submission
+				formData.append('no_late_submission_penalty', state.assignmentDetails.penalty ? 0 : 1);
 
 				for (let i = 0; i < state.assignmentDetails.question.snappedQuestions.length; i++) {
 					let file = state.assignmentDetails.question.snappedQuestions[i];
