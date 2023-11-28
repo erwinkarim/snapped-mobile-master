@@ -829,7 +829,7 @@ export default {
 				}
 
 				commit('togglePublishingMode')
-				commit('toggleShowingSchedulerMode')
+				// commit('toggleShowingSchedulerMode')
 
 				// from lavarel code, it seems push the video to the server first and to get meeting
 				// and then push the assignment  details
@@ -904,6 +904,10 @@ export default {
 							}
 					})
 					.catch(error => {
+						// show show error messages also
+						console.log('error obj', error);
+						state.errors.push( error.response.data.message);
+
 						commit('togglePublishingMode')
 						commit('toggleShowingErrorMode')
 					});

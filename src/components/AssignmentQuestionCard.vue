@@ -30,13 +30,17 @@
 			<div v-if="hasZoomQuestion" class="flex flex-col mt-8 text-purple-primary mb-2" >
 				<strong>Zoom Video:</strong><br />
 				<div v-if="!isPreviewing"
-						 class="flex z-30 flex-row justify-between items-center pt-4 pr-4 pb-2 md:py-4 rounded-t-2xl bg-black-primary"
+						 class="flex z-30 flex-row justify-center items-center p-0 md:px-1 md:py-4 rounded-2xl bg-black-primary"
 				>
-					<video autoplay controls height="640" width="854" crossorigin>
+					<video v-if="zoomVideo != null" autoplay controls height="640" width="854" crossorigin>
 						<!-- must ensure all recordings are in mp4 format -->
-						<source :src="assignment.recording_path" type="video/mp4" />
+						<!--source :src="assignment.recording_path" type="video/mp4" /-->
+						<source :src="zoomVideo" type="video/mp4" />
 						Your browser don't support video tag.
 					</video>
+					<div v-else class="text-white m-8 p-8">
+						<p>Loading ...</p>
+					</div>
 				</div>
 				<div v-if="!isPreviewing">
 					<p class="text-xs-plus">If you unable to view the video, please try Google Chrome browser.</p>
@@ -140,6 +144,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 import VueMarkdown from 'vue-markdown';
 import MySoalanRepository from "@/repositories/MySoalanRepository";
+import AssignmentRepository from "@/repositories/AssignmentRepository";
 
 export default {
 	name: "AssignmentQuestionCard",
@@ -164,6 +169,35 @@ export default {
 				};
 			});
 		}
+
+		if(this.hasZoomQuestion){
+			console.log('zoom question detected', this.assignment.recording_path);
+			console.log('is safari?', !!window.safari);
+
+			var ua = window.navigator.userAgent;
+			var iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+			var webkit = !!ua.match(/WebKit/i);
+			var iOSSafari = iOS && webkit && !ua.match(/CriOS/i);
+
+			console.log('is iOS safari?', iOSSafari);
+
+
+			// if(!!window.safari && this.assignment.recording_path.match(/[.]webm$/) != null){
+			if(!!window.safari || iOSSafari){
+				// if video is webm and browser is safari, convert to mp4
+
+				console.log('is safari and zoom video is webm');
+
+				// request mp4 version from server if available.
+				await AssignmentRepository.zoomMp4(this.assignment.id).then(e => {
+					console.log('zoom_path', e);
+					this.zoomVideo = e.data.file;
+				})
+
+			} else {
+				this.zoomVideo = this.assignment.recording_path;
+			}
+		}
 	},
 	props: {
 		assignment: Object,
@@ -181,6 +215,9 @@ export default {
 
 			// mysoalan
 			mySoalan: null,
+
+			// for zoom video. goal is playable on every browser.
+			zoomVideo: null,
 
 		}
 	},

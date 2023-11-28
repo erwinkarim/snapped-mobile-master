@@ -3,13 +3,14 @@ import CoinsIcon  from "@/components/icons/CoinsIcon";
 import ScanIcon from "@/components/icons/ScanIcon";
 import WalletIcon from "@/components/icons/WalletIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
+import HomeIcon2 from "@/components/icons/HomeIcon2";
 import StoreIcon from "@/components/icons/StoreIcon";
 
 export default [
     {
         tabName: 'Home',
         routeName: 'login', // should base on student or teacher
-        icon: HomeIcon,
+        icon: HomeIcon2,
     },
     {
         tabName: 'Coins',

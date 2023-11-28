@@ -98,7 +98,6 @@
 						type="text" placeholder="Title" autocomplete="off">
 
 					<!--
-						TODO:
 						- load school (and if teacher is edschool teacher, add eddschool)
 						- load classes based on school
 						- looking the store, state, SMH

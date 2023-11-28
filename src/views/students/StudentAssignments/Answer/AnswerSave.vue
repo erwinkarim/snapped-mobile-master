@@ -163,6 +163,7 @@ import router from "@/router";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import CropIcon from "@/components/icons/CropIcon";
 import { UltimateTextToImage} from "ultimate-text-to-image";
+import MySoalanRepository from "@/repositories/MySoalanRepository";
 
 // Vue Cropper
 import VueCropper from 'vue-cropperjs';
@@ -180,6 +181,8 @@ let dataURLtoBlob = (dataurl) => {
     }
     return new Blob([u8arr], {type:mime});
 }
+
+
 export default {
   name: "AnswerSave",
   props: {
@@ -357,6 +360,11 @@ export default {
     },
 
     submit() {
+      /*
+        if this is a mysoalan redirect, need to capture extra data like
+        result_uuid and assign_paper 
+      */
+
       if (this.isSnappedAnswer) {
         if (this.snappedAnswers.length > 0) {
           this.$emit('snappedAnswer', this.snappedAnswers)
@@ -382,17 +390,18 @@ export default {
     if (this.isSnappedAnswer) {
       this.generateSnappedAnswerPreview(this.answer.content)
     }
+
   },
-  created() {
-    // console.log('should check if query has correct-question');
+  async created() {
+    // console.log('should check if query has correct_question');
     // this come from mysoalan redirection
-    if(this.$route.query['correct-questions']){
+    if(this.$route.query['correct_questions']){
       // console.log("redirected from mysoalan, generate image file");
       // this.answer.type = 'snapped';
 
 			const textToImage = new UltimateTextToImage(
         `MySoalan: 
-        ${this.$route.query['correct-questions']} / ${this.$route.query['total-questions']}`, {
+        ${this.$route.query['correct_questions']} / ${this.$route.query['total_questions']}`, {
           width: 400, height: 400, fontColor:"F1F6F9", backgroundColor: "394867", align: "center", valign: "middle", fontSize: 72, textAlign: "center",
         }).render().toDataUrl();
       // this.answer.content.push("")
@@ -403,8 +412,22 @@ export default {
       // also this.answer.type = snapped
       this.answer.type = 'snapped';
       this.answer.content = [dataURLtoBlob(textToImage)];
-      this.answer.mysoalan_correct = this.$route.query['correct-questions'];
-      this.answer.mysoalan_all = this.$route.query['total-questions'];
+      this.answer.mysoalan_correct = this.$route.query['correct_questions'];
+      this.answer.mysoalan_all = this.$route.query['total_questions'];
+      this.answer.mysoalan_result_uuid = this.$route.query['result_uuid'];
+
+      // capture result from mySoalan and put results in local answer object
+			let token = '';
+
+			await MySoalanRepository.getAccessToken(this.$store.getters['getAuthEmail'], this.$store.getters['getAuthUserRole']).then((res) => {
+				token = res.data.accessToken;
+			});
+
+      await MySoalanRepository.getResultSubmission(this.$route.query.result_uuid, token).then(e => {
+        console.log('resultSubmission from mysoalan', e);
+        this.answer.mysoalan_result = e.data;
+        console.log('mysoalan_result', JSON.stringify(this.answer.mysoalan_result) );
+      });
     }
 
     if (!this.hasAnswerContent) {

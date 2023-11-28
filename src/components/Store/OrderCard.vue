@@ -9,7 +9,9 @@
         </div>
         <div class="col-span-1">
           <img v-if=" order.store_product.picture != ''" :src="picture" crossorigin="anonymous" />
-          <img v-else src="@/assets/img/75.jpeg" />
+          <div v-else class="text-center text-6xl p-2 m-auto w-100 flex items-center justify-items-center justify-center">
+            <BoxArchiveIcon />
+          </div>
         </div>
       </div>
     </router-link>
@@ -17,6 +19,8 @@
 </template>
 
 <script>
+import BoxArchiveIcon from '@/components/icons/BoxArchiveIcon.vue';
+
 export default{
   name: "OrderCard",
   computed: {
@@ -30,6 +34,7 @@ export default{
   props: {
     order: {},
     status_codes: [],
-  }
+  },
+  components: { BoxArchiveIcon }
 }
 </script>

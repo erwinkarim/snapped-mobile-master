@@ -28,7 +28,7 @@ export default {
         year_1: "Darjah 1", year_2: "Darjah 2", year_3: "Darjah 3", year_4: "Darjah 4", year_5: "Darjah 5", year_6: "Darjah 6",
         form_1: "Tingkatan 1", form_2: "Tingkatan 2", form_3: "Tingkatan 3", form_4: "Tingkatan 4", form_5: "Tingkatan 5", 
       },
-      mysoalan_subject: {english: "English", sejarah: "Sejarah", mathematics: "Mathematics", geografi: "Geography", 'pendidikan-islam': "Pendidikan Islam", 'bahasa-melayu': "Bahasa Melayu", 'pendidikan-moral': "Pendidikan Moral", 'reka-bentuk-dan-teknologi': "Reka Bentuk Dan Teknologi", 'additional-mathematics': "Additional Mathematics", physics: "Physics", chemistry: "Chemistry", biology: "Biology" },
+      mysoalan_subject: {english: "English", sejarah: "Sejarah", mathematics: "Mathematics", geografi: "Geography", 'pendidikan-islam': "Pendidikan Islam", 'bahasa-melayu': "Bahasa Melayu", 'pendidikan-moral': "Pendidikan Moral", 'reka-bentuk-dan-teknologi': "Reka Bentuk Dan Teknologi", 'additional-mathematics': "Additional Mathematics", physics: "Physics", chemistry: "Chemistry", biology: "Biology", science: "Science" },
 			mysoalan_level_select: "",
 			mysoalan_subject_select: "",
 		}
