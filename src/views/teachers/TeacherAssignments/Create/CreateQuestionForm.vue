@@ -40,10 +40,10 @@
       -->
       <!-- create zoom question button -->
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
-      <div v-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex -mx-1 mb-4" >
+      <div v-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isShowingVideoMenu'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex -mx-1 mb-4" >
         <!-- zoom meeting-->
         <div class="w-full h-28 px-1">
-          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+          <button @click="$store.dispatch('teacherCreateAssignment/beginShowingVideoMenu')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
             <div class="flex col-span-1 row-span-1 justify-center py-4">
@@ -53,6 +53,33 @@
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
               Zoom
+            </div>
+          </button>
+        </div>
+      </div>
+      <div v-else-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && $store.getters['teacherCreateAssignment/isShowingVideoMenu'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']">
+        <!-- menu to create video or use mysoalan video bank -->
+        <div class="w-full h-36 px-1">
+          <button
+            class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              MySoalan
+            </div>
+          </button>
+          <button
+            class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Zoom
+            </div>
+          </button>
+          <button
+            class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Cancel
             </div>
           </button>
         </div>
