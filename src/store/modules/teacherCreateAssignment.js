@@ -487,6 +487,12 @@ export default {
 		beginShowingVideoMenu({state, commit}) {
 			commit('setVideoMenuToTrue');
 		},
+		endShowingVideoMenu({state, commit}) {
+			commit('setVideoMenuToFalse');
+		},
+		beginRedirectToMySoalanVideo({ state, commit}){
+			alert('should redirect to mysoalan');
+		}, 
 		beginWritingMySoalanQuestion({state, commit, getters}){
 			console.log('attempt to start writing mysoalan question');
 			commit('toggleMySoalanQuestionMode');

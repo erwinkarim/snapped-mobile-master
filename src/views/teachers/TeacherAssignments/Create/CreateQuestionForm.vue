@@ -62,6 +62,7 @@
         <div class="w-full h-36 px-1">
           <button
             class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            @click="$store.dispatch('teacherCreateAssignment/beginRedirectToMySoalanVideo')"
           >
             <div class="flex col-span-1 row-span-2 justify-center py-2">
               MySoalan
@@ -77,6 +78,7 @@
           </button>
           <button
             class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            @click="cancelCreateVideo()"
           >
             <div class="flex col-span-1 row-span-2 justify-center py-2">
               Cancel
@@ -445,6 +447,10 @@ export default {
           email: this.$store.state.authUser.email,
         }
       );
+    }, 
+    cancelCreateVideo(){
+      console.log('reset video menu');
+      this.$store.dispatch('teacherCreateAssignment/endShowingVideoMenu');
     }
   },
   mounted() {
