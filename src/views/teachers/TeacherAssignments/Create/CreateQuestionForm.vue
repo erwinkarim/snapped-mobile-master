@@ -134,7 +134,8 @@
         <!-- FORM: Zoom Question 
           should add a preview / trash icon so can either edit  or preview the video
         -->
-        <ZoomQuestionForm />
+        <NewVideoForm />
+        <!--ZoomQuestionForm /-->
       </div>
 
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
@@ -380,6 +381,7 @@ import ZoomIcon from "@/components/icons/ZoomIcon";
 import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
 import VueMarkdown from 'vue-markdown';
 import MySoalanSelector from "@/components/MySoalanSelector.vue";
+import NewVideoForm from "@/components/NewVideoForm.vue";
 
 const VueCropper = () => import('vue-cropperjs');
 // import VueCropper from 'vue-cropperjs';
@@ -506,7 +508,8 @@ export default {
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
     VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
-    MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector
+    MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector,
+    NewVideoForm,
   }
 }
 </script>
