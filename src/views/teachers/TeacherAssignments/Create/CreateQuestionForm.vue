@@ -307,9 +307,10 @@
         <hr />
         <div class="py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <p class="text-sm">MySoalan Exercise</p>
-          <p class="text-3xl">{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.collection.name }}</p>
-          <p>{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.totalObjQuestions }} Question(s)</p>
-          <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.id }}</p>
+          <!--p class="text-3xl">{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.collection.name }}</p-->
+          <p class="text-3xl">{{ $store.getters['teacherCreateAssignment/getMySoalanInfo'].collection.name }}</p>
+          <!--p>{{ $store.state.teacherCreateAssignment.states.mySoalanInfo.totalObjQuestions }} Question(s)</p-->
+          <p>mySoalan ID: {{ $store.state.teacherCreateAssignment.states.mySoalanInfo.uuid }}</p>
         </div>
         <MySoalanSelector @change="detectChange" select_mysoalan_level select_mysoalan_subject />
         <div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
@@ -420,7 +421,7 @@ export default {
       );
     }
   },
-  mounted() {
+  async mounted() {
     /*
     if query got assign_paper, load the uuid in the question draft remove it from the query.
     - this is done to handle redirected from mysoalan site
@@ -438,13 +439,15 @@ export default {
       // if not loaded, load mysoalan and set sessionStorage to true
       if(!mySoalanLoaded || mySoalanPaperChanged){
         console.log('mysoalan have not loaded before');
+        console.log('assign_paper', this.$route.query.assign_paper);
+        console.log('teacherCreateAssignment.states.mySoalanInfo', this.$store.state.teacherCreateAssignment.states.mySoalanInfo);
 
         //setMySoalanAssignID 
         this.$store.dispatch('teacherCreateAssignment/setMySoalanAssignID', this.$route.query.assign_paper);
 
         // load basic info about the paper from mysoalan
         // this done by getting info
-        this.$store.dispatch('teacherCreateAssignment/getMySoalanInfo');
+        await this.$store.dispatch('teacherCreateAssignment/getMySoalanInfo');
 
         // load the mysoalan level/subject once and delete the items from sessionStorage
         if(sessionStorage.getItem("mysoalan_level")){
