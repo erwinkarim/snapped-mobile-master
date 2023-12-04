@@ -1015,7 +1015,6 @@ export default {
 			state.state.creatingQuestionDetails.type='mySoalan';
 		},
 		async getMySoalanInfo(state){// 
-			// console.log('teacherCreateAssignment: getting mysoalan info');
 
 			let access_t = '';
 			let assign_info_url = `https://api.mysoalan.com/v1/assign-papers/${state.state.questionDraft.mySoalan}`;
@@ -1040,6 +1039,7 @@ export default {
 			}).then((res) => {
 				// console.log('assign info', res);
 				state.state.states.mySoalanInfo = res.data;
+				// console.log('got mySoalan Info');
 			}).catch((e) => {
 				console.log('failed to get assignment info');
 			});
@@ -1123,5 +1123,9 @@ export default {
 		hasZoomMic(state) { return state.states.isMicOn; },
 		hasZoomScreenShare(state) { return state.states.isScreenShare; },
 		hasZoomRecording(state) { return state.states.isRecording; },
+		getMySoalanInfo(state) { 
+			console.log('mysoalanInfo', state.states.mySoalanInfo);
+			return state.states.mySoalanInfo; 
+		}, 
 	}
 }

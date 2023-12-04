@@ -122,7 +122,7 @@
 				<div class="border border-solid border-black p-2 m-0 mt-2">
 					<div v-if="this.mySoalan != null ">
 						<p>{{ this.mySoalan.name }}</p>
-						<p>{{  this.mySoalan.questions }} questions(s)</p>
+						<!--p>{{  this.mySoalan.questions }} questions(s)</p-->
 					</div>
 				</div>
 			</div>
