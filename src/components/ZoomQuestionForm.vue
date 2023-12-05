@@ -316,7 +316,11 @@ export default {
     */
 
     // should  add the video element after loging in. 
-    if(typeof SharedArrayBuffer === 'function'){
+    if(window.safari != undefined){
+      // somehow safari video needs to be painted to canvas instead of video.
+      canvasHandler = document.createElement('canvas');
+      canvasHandler.id='self-view-canvas';
+    } else if(typeof SharedArrayBuffer === 'function'){
       // have shared array buffer enabled
       canvasHandler = document.createElement('canvas');
       canvasHandler.id='self-view-canvas';
