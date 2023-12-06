@@ -451,9 +451,20 @@ export default {
 				// sessionStorage.removeItem('states');
 			}, 
 
+			togglePenalty(state){
+				state.assignmentDetails.penalty = !state.assignmentDetails.penalty;
+			},
+
 			toggleAutoMarking(state){
 				state.assignmentDetails.auto_marking = !state.assignmentDetails.auto_marking;
 			},
+
+			setVideoMenuToTrue(state){
+				state.states.isShowingVideoMenu = true;
+			}, 
+			setVideoMenuToFalse(state){
+				state.states.isShowingVideoMenu = false;
+			}, 
 
 	},
 	actions: {
