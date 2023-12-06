@@ -52,7 +52,7 @@
               </icon-base-two>
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Zoom
+              Video
             </div>
           </button>
         </div>
@@ -73,7 +73,7 @@
             @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
           >
             <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Zoom
+              Create Video
             </div>
           </button>
           <button
