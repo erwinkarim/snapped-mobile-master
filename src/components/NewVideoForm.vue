@@ -6,11 +6,10 @@
 				<button @click="toggleVideoButton"
 					id="video-button"
 					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-					:disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
 				>
 					<div class="flex col-span-1 row-span-1 justify-center py-4">
 						<icon-base-two class="w-12">
-							<video-icon v-if="$store.state.teacherCreateAssignment.states.isVideoOn" class="w-12" />
+							<video-icon v-if="this.videoOn" class="w-12" />
 							<video-slash-icon v-else class="w-12" />
 						</icon-base-two>
 					</div>
@@ -23,11 +22,10 @@
 				<button @click="toggleMicButton"
 					id="mic-button"
 					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-					:disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
 				>
 					<div class="flex col-span-1 row-span-1 justify-center py-4">
 						<icon-base-two class="w-12">
-							<microphone-icon v-if="$store.state.teacherCreateAssignment.states.isMicOn" class="w-12"/>
+							<microphone-icon v-if="this.audioOn" class="w-12"/>
 							<microphone-slash-icon v-else class="w-12"/>
 						</icon-base-two>
 					</div>
@@ -40,11 +38,10 @@
 				<button @click="toggleShareScreenButton"
 					id="screen-button"
 					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-					:disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting']"
 				>
 					<div class="flex col-span-1 row-span-1 justify-center py-4">
 						<icon-base-two class="w-12">
-							<display-icon v-if="$store.state.teacherCreateAssignment.states.isScreenShare" class="w-12" />
+							<display-icon v-if="this.screenShare" class="w-12" />
 							<display-slash-icon v-else class="w-12"/>
 						</icon-base-two>
 					</div>
@@ -55,8 +52,13 @@
 			</div>
 		</div>
 
-		<div class="flex flex-row items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-			Canvas Here. Appear and disappear based on camera/screen controls.
+		<div class="flex flex-col items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+			<div class="w-full border-1">
+				<video autoplay></video>
+			</div>
+			<div class="w-full">
+				Canvas Here. Appear and disappear based on camera/screen controls.
+			</div>
 		</div>
 
 		<!-- recording controls -->
@@ -65,11 +67,11 @@
 			<div class="px-1 w-full h-28">
 				<button @click="toggleRecording"
 					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
-					:disabled="!$store.getters['teacherCreateAssignment/hasZoomMeeting'] || $store.getters['teacherCreateAssignment/hasZoomRecording']"
 				>
 					<div class="flex col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
 						<icon-base-two class="w-12">
-							<circle-icon class="w-12"/>
+							<stop-icon v-if="this.recording" class="w-12"/>
+							<circle-icon v-else />
 						</icon-base-two>
 					</div>
 					<div class="flex col-span-1 row-span-2 justify-center py-2">
@@ -104,6 +106,14 @@ import CircleIcon from "@/components/icons/CircleIcon";
 
 export default {
 	name: "NewVideoForm", 
+	data(){
+		return {
+			videoOn: false, 
+			audioOn: false, 
+			screenShare: false, 
+			recording: false,
+		};
+	},
 	methods: {
 		cancelRecording: function() {
 			console.log('cancel recording, reset' );
@@ -113,18 +123,39 @@ export default {
 		saveRecording: () => {
 			console.log('save recording');
 		}, 
-		toggleVideoButton: () => {
-			console.log('start/stop camera');
+		toggleVideoButton: function (){
+			if(this.videoOn){
+				console.log('stop camera');
+			} else {
+				console.log('start camera')
+			}
+
+			this.videoOn = !this.videoOn;
 
 		}, 
-		toggleMicButton: () => {
-			console.log('start/stop mic');
+		toggleMicButton: function() {
+			if(this.audioOn){
+				console.log('stop mic');
+			} else {
+				console.log('start mic')
+			}
+			this.audioOn = !this.audioOn;
 		}, 
-		toggleShareScreenButton: () => {
-			console.log('start/stop share screen')
+		toggleShareScreenButton: function() {
+			if(this.screenShare){
+				console.log('stop share screen');
+			} else {
+				console.log('start share screen')
+			}
+			this.screenShare = !this.screenShare;
 		}, 
-		toggleRecording: () => {
-			console.log('start/stop record canvas');
+		toggleRecording: function(){
+			if(this.recording){
+				console.log('stop recording');
+			} else {
+				console.log('start recording')
+			}
+			this.recording = !this.recording;
 		}, 
 	}, 
 	components: {
