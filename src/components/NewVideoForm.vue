@@ -54,7 +54,7 @@
 
 		<div class="flex flex-col items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
 			<div class="w-full border-1">
-				<video autoplay></video>
+				<video autoplay ref="videoElm" id="video"></video>
 			</div>
 			<div class="w-full">
 				Canvas Here. Appear and disappear based on camera/screen controls.
@@ -104,6 +104,11 @@ import VideoSlashIcon from "@/components/icons/VideoSlashIcon";
 import StopIcon from "@/components/icons/StopIcon";
 import CircleIcon from "@/components/icons/CircleIcon";
 
+let cameraStream, audioStream, screenStream = null;
+let videoElm = null;
+let mediaRecorder = null;
+let blobs = [];
+
 export default {
 	name: "NewVideoForm", 
 	data(){
@@ -114,6 +119,11 @@ export default {
 			recording: false,
 		};
 	},
+	mounted: function(){
+		console.log('setup media recorder and streamer');
+		videoElm = document.querySelector('#video');
+		
+	}, 
 	methods: {
 		cancelRecording: function() {
 			console.log('cancel recording, reset' );
@@ -123,11 +133,27 @@ export default {
 		saveRecording: () => {
 			console.log('save recording');
 		}, 
-		toggleVideoButton: function (){
+		toggleVideoButton: async function (){
 			if(this.videoOn){
 				console.log('stop camera');
+				let tracks = cameraStream.getTracks();
+
+				for(var i=0; i < tracks.length; i++){
+					tracks[i].stop();
+				}
+				video.srcObject = null;
+
+				/*
+					kill video feed.
+				*/
 			} else {
 				console.log('start camera')
+				/*
+					- start video media stream and push to canvas/video elm
+				*/
+				cameraStream = await navigator.mediaDevices.getUserMedia({ video: true })
+				console.log('videoElm', videoElm);
+				videoElm.srcObject = cameraStream;
 			}
 
 			this.videoOn = !this.videoOn;
@@ -138,6 +164,9 @@ export default {
 				console.log('stop mic');
 			} else {
 				console.log('start mic')
+				/*
+					if videoOn is false, put a audio graphics on video/canvas elm
+				*/
 			}
 			this.audioOn = !this.audioOn;
 		}, 
