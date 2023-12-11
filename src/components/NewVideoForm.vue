@@ -57,6 +57,9 @@
 				<video autoplay ref="videoElm" id="video"></video>
 			</div>
 			<div class="w-full">
+				<canvas id="canvas"></canvas>
+			</div>
+			<div class="w-full">
 				Canvas Here. Appear and disappear based on camera/screen controls.
 			</div>
 		</div>
@@ -90,6 +93,10 @@
 				<button>Save</button>
 			</div>
 		</div>
+
+		<!-- results gallery -->
+		<div class="flex flex-row -mx-1 mb-4" id="video-preview-gallery">
+		</div>
 	</div>
 </template>
 
@@ -104,8 +111,8 @@ import VideoSlashIcon from "@/components/icons/VideoSlashIcon";
 import StopIcon from "@/components/icons/StopIcon";
 import CircleIcon from "@/components/icons/CircleIcon";
 
-let cameraStream, audioStream, screenStream = null;
-let videoElm = null;
+let cameraStream, audioStream, screenStream, mixStream = null;
+let videoElm, canvasElm, canvasCtx = null;
 let mediaRecorder = null;
 let blobs = [];
 
@@ -122,6 +129,64 @@ export default {
 	mounted: function(){
 		console.log('setup media recorder and streamer');
 		videoElm = document.querySelector('#video');
+		canvasElm = document.querySelector('#canvas');
+		canvasCtx = canvasElm.getContext('2d', { alpha: false });
+
+		/*
+			The composite stream
+			- will combine streams from audio/vidoe/screen for recording.
+		*/
+		mixStream = new MediaStream();
+		canvasElm.srcObject = mixStream;
+
+		/*
+			the media recorder
+		 */
+		mediaRecorder = new MediaRecorder(mixStream, { type: "video/mp4"});
+		mediaRecorder.onstart = () => {
+			console.log('start recording');
+		}
+		mediaRecorder.onstop = () => {
+			console.log('stop recording');
+
+      const blob = new Blob(blobs, { type: "video/mp4" });
+      blobs = [];
+
+			//put the blob in a video gallery
+      var url = URL.createObjectURL(blob);
+      // console.log('url', url);
+      var videoTag = document.createElement('video');
+      videoTag.autoplay = true;
+      videoTag.controls = true;
+      videoTag.height = 480;
+      videoTag.width = 854;
+      videoTag.src = url;
+
+      //always replace what's ever in the preview gallery
+			// future plan to append
+      document.querySelector('#video-preview-gallery').textContent = '';
+      document.querySelector('#video-preview-gallery').appendChild(videoTag);
+
+		}
+		mediaRecorder.ondataavailable = (e) => {
+			console.log('video data available');
+
+      //pump data in the blobs array.
+      blobs.push(e.data);
+
+      // after stop `dataavilable` event run one more time
+      if (mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+      }
+		}
+
+		function drawCanvas(){
+			canvasCtx.drawImage(video, 0, 0, canvasElm.width, canvasElm.height);
+		}
+
+		let canvasInterval = window.setInterval(() => {
+			drawCanvas(videoElm);
+		}, 1000 / 60);
 		
 	}, 
 	methods: {
@@ -152,18 +217,32 @@ export default {
 					- start video media stream and push to canvas/video elm
 				*/
 				cameraStream = await navigator.mediaDevices.getUserMedia({ video: true })
-				console.log('videoElm', videoElm);
 				videoElm.srcObject = cameraStream;
+
+				console.log('add video track to mixstream');
+				mixStream.addTrack(cameraStream.getVideoTracks()[0]);
 			}
 
 			this.videoOn = !this.videoOn;
 
 		}, 
-		toggleMicButton: function() {
+		toggleMicButton: async function() {
 			if(this.audioOn){
 				console.log('stop mic');
+				let tracks = audioStream.getTracks();
+
+				for(var i=0; i < tracks.length; i++){
+					tracks[i].stop();
+				}
+
 			} else {
 				console.log('start mic')
+				/*
+					some issues when starting in safari.
+				*/
+				audioStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+				mixStream.addTrack(audioStream.getAudioTracks()[0]);
+
 				/*
 					if videoOn is false, put a audio graphics on video/canvas elm
 				*/
@@ -181,8 +260,16 @@ export default {
 		toggleRecording: function(){
 			if(this.recording){
 				console.log('stop recording');
+				mediaRecorder.stop();
 			} else {
-				console.log('start recording')
+				console.log('start recording clicked')
+				mediaRecorder.start();
+
+				/*
+					get all the streams (video/audio/screen) and put it on a capture that
+					once done, push it on to the gallery
+				*/
+
 			}
 			this.recording = !this.recording;
 		}, 
