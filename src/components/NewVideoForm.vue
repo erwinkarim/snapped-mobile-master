@@ -249,11 +249,23 @@ export default {
 			}
 			this.audioOn = !this.audioOn;
 		}, 
-		toggleShareScreenButton: function() {
+		toggleShareScreenButton: async function() {
 			if(this.screenShare){
 				console.log('stop share screen');
+
+				let tracks = screenStream.getTracks();
+
+				for(var i=0; i < tracks.length; i++){
+					tracks[i].stop();
+				}
+				video.srcObject = null;
 			} else {
 				console.log('start share screen')
+				screenStream = await navigator.mediaDevices.getDisplayMedia();
+				videoElm.srcObject = screenStream;
+
+				// add screen stream to mixstream
+				mixStream.addTrack(screenStream.getTracks()[0]);
 			}
 			this.screenShare = !this.screenShare;
 		}, 
