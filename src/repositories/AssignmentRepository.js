@@ -57,11 +57,9 @@ export default {
 		return Repository.get('/duedates')
 	},
 
-	update(assignmentID, dueDateTime) {
+	update(assignmentID, payload) {
 	  console.log('push to server');
-		return Repository.put(`${resource}/${assignmentID}/update`, {
-			due_datetime: dueDateTime
-		});
+		return Repository.put(`${resource}/${assignmentID}/update`, payload);
 	},
 
 	delete(assignmentID) {

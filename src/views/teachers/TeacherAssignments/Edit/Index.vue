@@ -86,7 +86,21 @@
       <!-- INPUTS     -->
       <div class="w-full px-7 mt-3 pb-3">
 
+        <!-- Input: title -->
+        <div class="flex">
+          <label class="text-left">Title</label>
+        </div>
+        <div>
+          <input 
+						class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary"
+          type="text" name="title" v-model="title" />
+        </div>
+        <!-- subject: unable to change -->
+        <input type="hidden" name="subject_id" :value="subject_id" />
         <!--  INPUT: SELECT DUE DATE      -->
+        <div class="flex mt-2">
+          <label>Due Date:</label>
+        </div>
         <div
             class="flex mb-2 pl-6 pr-2 py-5 mt-2 grid grid-cols-2 appearance-none border rounded-md border-none w-full bg-gray-secondary text-purple-secondary text-lg font-normal leading-tight focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div class="text-left place-self-start truncate">
@@ -152,7 +166,9 @@ export default {
       isDeleted: false,
 
       // models
-      due_datetime: ''
+      due_datetime: '',
+      title: '',
+      subject_id: '',
     }
   },
   methods: {
@@ -160,7 +176,7 @@ export default {
     submit() {
 
       if (this.due_datetime) {
-        AssignmentRepository.update(this.assignmentID, this.format_date(this.due_datetime))
+        AssignmentRepository.update(this.assignmentID, { due_datetime: this.format_date(this.due_datetime), subject_id: this.subject_id, title: this.title })
             .then(response => {
               if (response.data.success) {
                 this.isShowingSuccessModal = true;
@@ -206,6 +222,15 @@ export default {
 
       this.isSelectingDueDate = !this.isSelectingDueDate
     },
+  },
+  mounted(){
+    console.log('load assignment data');
+    AssignmentRepository.find(this.assignmentID).then((e) => {
+      console.log('e', e.data.data.assignment_details);
+      this.due_datetime = e.data.data.assignment_details.due_datetime;
+      this.title = e.data.data.assignment_details.title;
+      this.subject_id = e.data.data.assignment_details.subject_id;
+    });
   },
   components: {ClockIcon, IconBaseTwo, Modal, NavBack, PageHeaderThree, DashboardLayout}
 }
