@@ -56,8 +56,11 @@
 			<div class="w-full border-1">
 				<video autoplay ref="videoElm" id="video"></video>
 			</div>
+			<div class="w-full border-1">
+				<video autoplay ref="screenElm" id="screen"></video>
+			</div>
 			<div class="w-full">
-				<canvas id="canvas"></canvas>
+				<canvas class="w-full" ref="resultCanvas" id="canvas"></canvas>
 			</div>
 			<div class="w-full">
 				Canvas Here. Appear and disappear based on camera/screen controls.
@@ -111,8 +114,9 @@ import VideoSlashIcon from "@/components/icons/VideoSlashIcon";
 import StopIcon from "@/components/icons/StopIcon";
 import CircleIcon from "@/components/icons/CircleIcon";
 
-let cameraStream, audioStream, screenStream, mixStream = null;
-let videoElm, canvasElm, canvasCtx = null;
+let cameraStream = null, audioStream = null, screenStream = null, canvasStream = null, mixStream = null;
+let videoElm = null, canvasElm = null, screenElm = null, canvasCtx = null;
+let screenInfo = { width: 640, height: 320}, videoInfo = { width: 640, height: 320 };
 let mediaRecorder = null;
 let blobs = [];
 
@@ -129,20 +133,22 @@ export default {
 	mounted: function(){
 		console.log('setup media recorder and streamer');
 		videoElm = document.querySelector('#video');
+		screenElm = document.querySelector('#screen');
 		canvasElm = document.querySelector('#canvas');
+		canvasStream = canvasElm.captureStream();
 		canvasCtx = canvasElm.getContext('2d', { alpha: false });
 
 		/*
 			The composite stream
 			- will combine streams from audio/vidoe/screen for recording.
 		*/
-		mixStream = new MediaStream();
-		canvasElm.srcObject = mixStream;
+		// mixStream = new MediaStream();
+		// canvasElm.srcObject = mixStream;
 
 		/*
 			the media recorder
 		 */
-		mediaRecorder = new MediaRecorder(mixStream, { type: "video/mp4"});
+		mediaRecorder = new MediaRecorder(canvasStream, { type: "video/mp4"});
 		mediaRecorder.onstart = () => {
 			console.log('start recording');
 		}
@@ -180,12 +186,56 @@ export default {
       }
 		}
 
-		function drawCanvas(){
-			canvasCtx.drawImage(video, 0, 0, canvasElm.width, canvasElm.height);
+		function drawCanvas(context){
+			// console.log('context', context);
+
+			canvasCtx.drawImage(video, 0, 0, screenInfo.width, screenInfo.height);
+			/*
+				draw based on which stream is on
+				- if video/and share screen together, make picture-in-picture w/ the screen is the dominant one
+
+				issues - need to make the video to canvas ratio 1:1
+			*/
+			if(context.videoOn && context.screenShare){
+				// video and screen share
+				// typically screen size > video size
+				canvasElm.width = screenInfo.width;
+				canvasElm.height = screenInfo.height;
+				canvasCtx.drawImage(screenElm, 0, 0, screenInfo.width, screenInfo.height);
+				canvasCtx.drawImage(videoElm, 0, 0, videoInfo.width, videoInfo.height);
+			} else if(context.videoOn && !context.screenShare){
+				// video only
+				canvasElm.width = videoInfo.width;
+				canvasElm.height = videoInfo.height;
+				canvasCtx.drawImage(videoElm, 0, 0, videoInfo.width, videoInfo.height);
+			} else if(!context.videoOn && context.screenShare){
+				// screen share only
+				canvasElm.width = screenInfo.width;
+				canvasElm.height = screenInfo.height;
+				canvasCtx.drawImage(screenElm, 0, 0, screenInfo.width, screenInfo.height);
+
+			} else if(!context.videoOn && !context.screenShare && context.audioOn){
+				// only mic is on
+				// draw audio only now.
+				canvasElm.width = 640;
+				canvasElm.height = 320;
+				canvasCtx.fillStyle = '#fff';
+				canvasCtx.font = "48px serif";
+				canvasCtx.textAlign = "center";
+				canvasCtx.fillText("Mic On", 320, 160);
+			} else {
+				// default: draw no input
+				canvasElm.width = 640;
+				canvasElm.height = 320;
+				canvasCtx.fillStyle = '#fff';
+				canvasCtx.font = "48px serif";
+				canvasCtx.textAlign = "center";
+				canvasCtx.fillText("No Input", 320, 160);
+			}
 		}
 
 		let canvasInterval = window.setInterval(() => {
-			drawCanvas(videoElm);
+			drawCanvas({ videoOn: this.videoOn, screenShare: this.screenShare, audioOn: this.audioOn});
 		}, 1000 / 60);
 		
 	}, 
@@ -201,6 +251,7 @@ export default {
 		toggleVideoButton: async function (){
 			if(this.videoOn){
 				console.log('stop camera');
+
 				let tracks = cameraStream.getTracks();
 
 				for(var i=0; i < tracks.length; i++){
@@ -217,10 +268,12 @@ export default {
 					- start video media stream and push to canvas/video elm
 				*/
 				cameraStream = await navigator.mediaDevices.getUserMedia({ video: true })
+				videoInfo = cameraStream.getVideoTracks()[0].getSettings();
+
 				videoElm.srcObject = cameraStream;
 
-				console.log('add video track to mixstream');
-				mixStream.addTrack(cameraStream.getVideoTracks()[0]);
+				// console.log('add video track to mixstream');
+				// mixStream.addTrack(cameraStream.getVideoTracks()[0]);
 			}
 
 			this.videoOn = !this.videoOn;
@@ -241,7 +294,7 @@ export default {
 					some issues when starting in safari.
 				*/
 				audioStream = await navigator.mediaDevices.getUserMedia({ audio: true })
-				mixStream.addTrack(audioStream.getAudioTracks()[0]);
+				canvasStream.addTrack(audioStream.getAudioTracks()[0]);
 
 				/*
 					if videoOn is false, put a audio graphics on video/canvas elm
@@ -258,14 +311,13 @@ export default {
 				for(var i=0; i < tracks.length; i++){
 					tracks[i].stop();
 				}
-				video.srcObject = null;
+				screen.srcObject = null;
 			} else {
 				console.log('start share screen')
 				screenStream = await navigator.mediaDevices.getDisplayMedia();
-				videoElm.srcObject = screenStream;
+				screenInfo = screenStream.getTracks()[0].getSettings();
 
-				// add screen stream to mixstream
-				mixStream.addTrack(screenStream.getTracks()[0]);
+				screenElm.srcObject = screenStream;
 			}
 			this.screenShare = !this.screenShare;
 		}, 
