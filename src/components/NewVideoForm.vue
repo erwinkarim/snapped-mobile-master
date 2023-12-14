@@ -53,6 +53,10 @@
 		</div>
 
 		<div class="flex flex-col items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+			<div class="w-full border-1 text-left p-2 mb-2">
+				<p>Debug msg:</p>
+				{{ debug }}
+			</div>
 			<div class="w-full border-1 hidden">
 				<video autoplay ref="videoElm" id="video"></video>
 			</div>
@@ -128,6 +132,8 @@ export default {
 			audioOn: false, 
 			screenShare: false, 
 			recording: false,
+			debug: "",
+			activateDevice: false,
 		};
 	},
 	mounted: function(){
@@ -258,6 +264,7 @@ export default {
 					tracks[i].stop();
 				}
 				video.srcObject = null;
+				this.debug = '';
 
 				/*
 					kill video feed.
@@ -274,6 +281,7 @@ export default {
 
 				// console.log('add video track to mixstream');
 				// mixStream.addTrack(cameraStream.getVideoTracks()[0]);
+				this.debug= `Camera resolution: ${videoInfo.width}x${videoInfo.height}`;
 			}
 
 			this.videoOn = !this.videoOn;
@@ -317,7 +325,7 @@ export default {
 				console.log('start share screen')
 				screenStream = await navigator.mediaDevices.getDisplayMedia();
 				screenInfo = screenStream.getTracks()[0].getSettings();
-				console.log('screenInfo', screenInfo);
+				this.debug= `Screen resolution: ${screenInfo.width}x${screenInfo.height}`;
 
 				screenElm.srcObject = screenStream;
 			}
