@@ -53,10 +53,10 @@
 		</div>
 
 		<div class="flex flex-col items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-			<div class="w-full border-1">
+			<div class="w-full border-1 hidden">
 				<video autoplay ref="videoElm" id="video"></video>
 			</div>
-			<div class="w-full border-1">
+			<div class="w-full border-1 hidden">
 				<video autoplay ref="screenElm" id="screen"></video>
 			</div>
 			<div class="w-full">
@@ -310,12 +310,14 @@ export default {
 
 				for(var i=0; i < tracks.length; i++){
 					tracks[i].stop();
+					screenStream.removeTrack(tracks[i]);
 				}
 				screen.srcObject = null;
 			} else {
 				console.log('start share screen')
 				screenStream = await navigator.mediaDevices.getDisplayMedia();
 				screenInfo = screenStream.getTracks()[0].getSettings();
+				console.log('screenInfo', screenInfo);
 
 				screenElm.srcObject = screenStream;
 			}
