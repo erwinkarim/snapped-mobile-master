@@ -53,10 +53,10 @@
 		</div>
 
 		<div class="flex flex-col items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-			<div class="w-full border-1 text-left p-2 mb-2">
+			<!--div class="w-full border-1 text-left p-2 mb-2">
 				<p>Debug msg:</p>
 				{{ debug }}
-			</div>
+			</div-->
 			<div class="w-full border-1 hidden">
 				<video autoplay ref="videoElm" id="video"></video>
 			</div>
@@ -65,9 +65,6 @@
 			</div>
 			<div class="w-full">
 				<canvas class="w-full" ref="resultCanvas" id="canvas"></canvas>
-			</div>
-			<div class="w-full">
-				Canvas Here. Appear and disappear based on camera/screen controls.
 			</div>
 		</div>
 
@@ -121,7 +118,7 @@ import CircleIcon from "@/components/icons/CircleIcon";
 let cameraStream = null, audioStream = null, screenStream = null, canvasStream = null, mixStream = null;
 let videoElm = null, canvasElm = null, screenElm = null, canvasCtx = null;
 let screenInfo = { width: 640, height: 320}, videoInfo = { width: 640, height: 320 };
-let mediaRecorder = null;
+let mediaRecorder = null, canvasInterval;
 let blobs = [];
 
 export default {
@@ -133,7 +130,6 @@ export default {
 			screenShare: false, 
 			recording: false,
 			debug: "",
-			activateDevice: false,
 		};
 	},
 	mounted: function(){
@@ -240,19 +236,42 @@ export default {
 			}
 		}
 
-		let canvasInterval = window.setInterval(() => {
+		canvasInterval = window.setInterval(() => {
 			drawCanvas({ videoOn: this.videoOn, screenShare: this.screenShare, audioOn: this.audioOn});
 		}, 1000 / 60);
 		
 	}, 
 	methods: {
-		cancelRecording: function() {
+		switchOffHardware: async function(){
+			// if the video/mic/screen share is on, turn it off
+			// don't draw the canvas anymore.
+			if(this.videoOn){
+				await this.toggleVideoButton();
+			}
+			if(this.audioOn){
+				await this.toggleMicButton();
+			}
+			if(this.screenShare){
+				await this.toggleShareScreenButton();
+			}
+			if(this.recording){
+				await this.toggleRecording();
+			}
+			clearInterval(canvasInterval);
+
+		},
+		cancelRecording: async function() {
 			console.log('cancel recording, reset' );
+
+			this.switchOffHardware();
+
       this.$store.dispatch('teacherCreateAssignment/endShowingVideoMenu');
       this.$store.commit('teacherCreateAssignment/cancelZoomEditMode');
 		}, 
-		saveRecording: () => {
+		saveRecording: function() {
 			console.log('save recording');
+
+			this.switchOffHardware();
 		}, 
 		toggleVideoButton: async function (){
 			if(this.videoOn){
