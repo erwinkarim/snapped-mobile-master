@@ -75,7 +75,7 @@
 				<button @click="toggleRecording"
 					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
 				>
-					<div class="flex col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
+					<div class="flex text-red-500 col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
 						<icon-base-two class="w-12">
 							<stop-icon v-if="this.recording" class="w-12"/>
 							<circle-icon v-else />
