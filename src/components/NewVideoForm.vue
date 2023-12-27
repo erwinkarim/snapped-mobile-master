@@ -175,6 +175,9 @@ export default {
       document.querySelector('#video-preview-gallery').textContent = '';
       document.querySelector('#video-preview-gallery').appendChild(videoTag);
 
+      //trigger to push video content to questionDetails.zoomMeetings
+      this.$store.dispatch('teacherCreateAssignment/handleZoomQuestion', url);
+
 		}
 		mediaRecorder.ondataavailable = (e) => {
 			console.log('video data available');
@@ -271,7 +274,12 @@ export default {
 		saveRecording: function() {
 			console.log('save recording');
 
+      this.$store.dispatch('teacherCreateAssignment/saveZoomQuestionToDraft')
 			this.switchOffHardware();
+
+      this.$store.dispatch('teacherCreateAssignment/endShowingVideoMenu');
+      this.$store.commit('teacherCreateAssignment/cancelZoomEditMode');
+
 		}, 
 		toggleVideoButton: async function (){
 			if(this.videoOn){
