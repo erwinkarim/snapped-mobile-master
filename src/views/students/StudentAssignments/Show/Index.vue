@@ -402,6 +402,12 @@ export default {
 
 		answerText(){
 			console.log('answer question w/ text input');
+
+			router.push({
+				name: 'student.assignments.answer.storeText', params: {
+					assignmentDetails: this.assignmentDetails,
+				}
+			});
 		},
 
 		handleTogglePreview() {
