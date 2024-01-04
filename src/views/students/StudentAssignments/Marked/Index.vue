@@ -39,6 +39,15 @@
             </div>
           </div>
         </div>
+        <!-- showing text answer and feedback-->
+        <div v-if="hasTextAnswer" class="ml-5 text-left">
+          <div class="text-lg font-bold">Marks</div>
+          <div>{{  details.marks }} / 100</div>
+          <div class="text-lg mt-2 font-bold">Your Answer</div>
+          <div>{{  details.writtenAnswer }}</div>
+          <div class="text-lg mt-2 font-bold">Feedback</div>
+          <div>{{  details.feedback }}</div>
+        </div>
       </div>
 
       <!-- SHOW FEEDBACK -->
@@ -48,6 +57,7 @@
       >
         {{ details.feedback || 'No feedback available.' }}
       </div>
+
     </template>
 
     <template v-slot:bottomBar>
@@ -99,8 +109,10 @@ export default {
       isShowingFeedback: false,
 
       details: {
+        marks: 0,
         markingPicturePaths: [],
-        feedback: null
+        feedback: null, 
+        writtenAnswer: null,
       },
 
       swiperOption: {
@@ -143,6 +155,9 @@ export default {
         return ''
       }
     },
+    hasTextAnswer(){
+      return this.details.writtenAnswer != null;
+    }
   },
   methods: {
     fetchData() {
@@ -162,8 +177,12 @@ export default {
                   }
                 })
               } else {
-                this.details.markingPicturePaths = data.marking_picture_url.split(',');
+                if(data.marking_picture_url != undefined){
+                  this.details.markingPicturePaths = data.marking_picture_url.split(',');
+                }
+                this.details.marks = data.marks;
                 this.details.feedback = data.marks_feedback;
+                this.details.writtenAnswer = data.written_answer
               }
             }
 
