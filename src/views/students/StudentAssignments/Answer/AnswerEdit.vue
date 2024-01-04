@@ -47,7 +47,6 @@
 
     <template v-slot:content v-if="isMainPage">
 
-
       <!-- OVERLAYS -->
       <div v-if="isShowingModal" @click="toggleModal"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
@@ -202,6 +201,16 @@
 
         </div>
 
+        <div v-if="isWrittenAnswer" class="mt-10">
+          <div>Your written answer</div>
+          <div class="mt-4">
+            <textarea v-model="answer.content"
+              class="resize-y text-purple-primary py-4 px-5 h-full w-full bg-gray-secondary rounded focus:outline-none placeholder-purple-secondary"
+            >
+            </textarea>
+          </div>
+        </div>
+
         <div class="mt-6">
           <div>
             Your remarks
@@ -212,15 +221,8 @@
                               placeholder="Remarks"></textarea>
           </div>
         </div>
+        
 
-      </div>
-    </template>
-
-    <template v-if="isEditingWrittenAnswer" slot="content">
-      <div class=" pt-32 px-6 h-full">
-        <textarea v-model="newAnswer"
-                  class="resize-y text-purple-primary  w-full h-full  rounded focus:outline-none"
-        />
       </div>
     </template>
 
@@ -445,6 +447,7 @@ export default {
             answerType: this.answer.type,
             answerContent: data,
             remarks: this.remarks,
+            written_answer: this.answer.content,
           })
           .then(response => {
             if (response.data.success) {

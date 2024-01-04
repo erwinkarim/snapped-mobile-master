@@ -19,6 +19,7 @@
 			<p>Answer Text Here</p>
 			<textarea placeholder="Type your answer here. Markdown supported." 
 				class="block py-5 px-5 mt-4 w-full text-lg leading-snug text-left break-words rounded-md h-half-screen bg-gray-secondary form-textarea focus:outline-none focus:shadow-outline text-purple-secondary placeholder-purple-secondary text-m"
+				v-model="textAnswer"
 			rows="20">
 			</textarea>
 		</template>
@@ -43,10 +44,18 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import router from "@/router";
-import VueMarkdown from 'vue-markdown';
 
 export default {
 	name: "AnswerTextSave",
+  props: {
+    answer: Object,
+    assignmentDetails: Object,
+	},
+	data() {
+		return {
+			textAnswer: "",
+		};
+	}, 
 	methods: {
 		goBack(){
 			console.log('goback');
@@ -54,8 +63,15 @@ export default {
 		},
 		saveAnswer(){
 			// store text answer in repo and go back
-			// somehow submitting by using $emit, but don't know where it emits to
+			// emit submits to StudentAssignment/Answer/Index.vue
+			console.log('sending', this.textAnswer);
+			this.answer.type = 'written';
+			this.answer.content = this.textAnswer;
+			this.$emit('submit', this.textAnswer);
 		}
+	},
+	created(){
+		console.log('should update the answer object', this.answer, this.assignmentDetails);
 	},
 	components: {
 		DashboardLayout, IconBaseTwo, ArrowBackIcon, PageHeaderThree,

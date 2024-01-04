@@ -14,6 +14,7 @@ export default {
         let formData = new FormData()
 
         formData.append('assignment_id', args.assignmentID);
+        formData.append('answer_type', args.answerType);
         formData.append('remarks', args.remarks);
         formData.append('mysoalan_all', args.mysoalan_all);
         formData.append('mysoalan_correct', args.mysoalan_correct);
@@ -43,7 +44,8 @@ export default {
                assignmentID: assignmentID,
                answerType: answerType,
                answerContent: answerContent,
-               remarks: remarks
+               remarks: remarks,
+               written_answer: written_answer,
            }) {
 
         let formData = new FormData()
@@ -52,7 +54,7 @@ export default {
         formData.append('remarks', remarks)
 
         if (answerType === 'written') {
-            formData.append('written_answer', answerContent)
+            formData.append('written_answer', written_answer)
         }
         if (answerType === 'snapped') {
 
