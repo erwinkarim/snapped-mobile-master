@@ -225,7 +225,7 @@ export default {
     IconBaseTwo,
     StickerLoader,
     faCheckCircle,
-    FontAwesomeIcon
+    FontAwesomeIcon,
   }
 }
 </script>

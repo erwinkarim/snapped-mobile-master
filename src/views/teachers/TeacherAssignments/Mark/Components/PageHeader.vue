@@ -15,6 +15,11 @@
                   :stroke-color="navBackColor"
         />
       </template>
+      <template v-slot:rightAction>
+        <button @click="toggleOptions">
+            <gear-icon />
+        </button>
+      </template>
 
     </page-header-three>
 
@@ -133,6 +138,7 @@ import NavBack from "@/components/NavBack";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import UndoIcon from "@/components/icons/UndoIcon";
+import GearIcon from "@/components/icons/GearIcon.vue";
 import router from "@/router";
 
 import {faCircle, faMarker, faEraser, faTrash} from '@fortawesome/free-solid-svg-icons'
@@ -228,9 +234,15 @@ export default {
 
     undoEdits() {
       this.$store.dispatch('teacherMarking/undoEditedSnappedAnswer')
+    },
+
+    toggleOptions(){
+      console.log('show options page');
+      router.push({name: 'teacher.assignments.marking.options'});
     }
+
   },
-  components: {UndoIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree, FontAwesomeIcon, FontAwesomeLayers}
+  components: {UndoIcon, ArrowBackIcon, IconBaseTwo, NavBack, PageHeaderThree, FontAwesomeIcon, FontAwesomeLayers, GearIcon}
 }
 </script>
 

@@ -11,6 +11,7 @@ const AssignmentEdit = () =>  import("@/views/teachers/TeacherAssignments/Edit/I
 const AssignmentExport = () =>  import("@/views/teachers/TeacherAssignments/Export/Index.vue");
 const GroupAnalytics = () => import("@/views/analytics/Group.vue");
 const IndividualAnalytics = () => import("@/views/analytics/Individual.vue");
+const AssignmentMarkOptions = () => import("@/views/teachers/TeacherAssignments/Mark/Options.vue");
 // import AssignmentDetails from "@/views/teachers/TeacherAssignments/Index"
 // import AssignmentShow from "@/views/teachers/TeacherAssignments/Show/Index";
 // import AssignmentCreate from "@/views/teachers/TeacherAssignments/Create/Index";
@@ -146,10 +147,17 @@ export default {
                                     return next()
                                 }
                             }
-                        }
+                        },
 
                     ]
-                }
+                },
+                {
+                    path: 'submission/:submissionID/options',
+                    name: 'teacher.assignments.marking.options',
+                    component: AssignmentMarkOptions,
+                    meta: teacherAccessControlMeta,
+                    props: true,
+                },
             ]
         }
     ]
