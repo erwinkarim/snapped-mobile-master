@@ -18,11 +18,17 @@
 		<template v-slot:content>
 			<div class="pt-10">
 				<p>Info about the answer object.</p>
+				<p>{{  mark }}</p>
 			</div>
+			<p class="text-left p-2">
+				Status: Mark/Unmakred/Request to resubmit.
+			</p>
 			<div class="">
 				<p class="w-full text-left p-2">Actions: </p>
 				<button
-					class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary">
+					class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary"
+					@click="requestToResubmit"
+				>
 				Ask Student To Resubmit Answer</button>
 			</div>
 		</template>
@@ -39,12 +45,26 @@ import SubmissionRepository from "@/repositories/SubmissionRepository";
 
 export default {
 	name: "MarkOptions",
+	data(){ 
+		return {
+			mark: null,
+		};
+	},
 	mounted(){
 		SubmissionRepository.find(this.$attrs.submissionID).then((e) => {
 			console.log('data found', e);
+			this.mark = e.data.data;
 		});
 
 	}, 
+	methods: {
+		requestToResubmit(){
+			console.log('request to resubmit clicked');
+			SubmissionRepository.requestToResubmit(this.$attrs.submissionID).then((e) => {
+				console.log('request ok');
+			});
+		},
+	},
 	components: {
 		ArrowBackIcon, PageHeaderThree, DashboardLayout, IconBaseTwo,
 	}
