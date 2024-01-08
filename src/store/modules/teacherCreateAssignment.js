@@ -41,6 +41,7 @@ export default {
 			isMain: true,
 			isCreatingQuestion: false,
 			isCreatingZoomQuestion: false,
+			isShowingVideoMenu: false, 
 			isCreatingMySoalanQuestion: false,
 			isSelectingDuration: false,
 			isSelectingQuestionType: false,
@@ -354,6 +355,7 @@ export default {
 							isMain: true,
 							isCreatingQuestion: false,
 							isCreatingZoomQuestion: false,
+							isShowingVideoMenu: false, 
 							isCreatingMySoalanQuestion: false,
 							isInZoomMeeting: false,
 							isSelectingDuration: false,
@@ -449,13 +451,21 @@ export default {
 				// sessionStorage.removeItem('states');
 			}, 
 
+			togglePenalty(state){
+				state.assignmentDetails.penalty = !state.assignmentDetails.penalty;
+			},
+
 			toggleAutoMarking(state){
 				state.assignmentDetails.auto_marking = !state.assignmentDetails.auto_marking;
 			},
 
-			togglePenalty(state){
-				state.assignmentDetails.penalty = !state.assignmentDetails.penalty;
-			},
+			setVideoMenuToTrue(state){
+				state.states.isShowingVideoMenu = true;
+			}, 
+			setVideoMenuToFalse(state){
+				state.states.isShowingVideoMenu = false;
+			}, 
+
 	},
 	actions: {
 		selectQuestionType(type) {
@@ -472,8 +482,18 @@ export default {
 		beginWritingZoomQuestion({state, commit, getters}) {
 			// triggered when user select zoom meeting question
 			commit('toogleZoomQuestionMode');
+			commit('setVideoMenuToFalse');
 			state.creatingQuestionDetails.type ='zoom';
 		},
+		beginShowingVideoMenu({state, commit}) {
+			commit('setVideoMenuToTrue');
+		},
+		endShowingVideoMenu({state, commit}) {
+			commit('setVideoMenuToFalse');
+		},
+		beginRedirectToMySoalanVideo({ state, commit}){
+			alert('should redirect to mysoalan');
+		}, 
 		beginWritingMySoalanQuestion({state, commit, getters}){
 			console.log('attempt to start writing mysoalan question');
 			commit('toggleMySoalanQuestionMode');
@@ -1083,6 +1103,9 @@ export default {
 				// return state.questionDraft.type ? (state.questionDraft.type === 'written' && state.questionDraft.writtenQuestion) : false;
 				return state.questionDraft.writtenQuestion !== null;
 		},
+		isShowingVideoMenu: (state) => {
+			return state.states.isShowingVideoMenu;
+		}, 
 		isEditingWrittenQuestion: (state) => {
 			return state.states.isWritingQuestion;
 		},

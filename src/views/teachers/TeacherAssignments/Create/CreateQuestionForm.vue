@@ -40,10 +40,15 @@
       -->
       <!-- create zoom question button -->
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
-      <div v-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex -mx-1 mb-4" >
+      <div v-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && !$store.getters['teacherCreateAssignment/isShowingVideoMenu'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']" class="flex -mx-1 mb-4" >
         <!-- zoom meeting-->
+        <!-- 
+            to show the video menu instead of the video form, replace click with this one.
+            @click="$store.dispatch('teacherCreateAssignment/beginShowingVideoMenu')"
+        -->
         <div class="w-full h-28 px-1">
-          <button @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+          <button 
+            @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
             <div class="flex col-span-1 row-span-1 justify-center py-4">
@@ -52,7 +57,37 @@
               </icon-base-two>
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
-              Zoom
+              Video
+            </div>
+          </button>
+        </div>
+      </div>
+      <div v-else-if="!$store.getters['teacherCreateAssignment/hasZoomQuestionDraft'] && $store.getters['teacherCreateAssignment/isShowingVideoMenu'] && !$store.getters['teacherCreateAssignment/isEditingZoomQuestion']">
+        <!-- menu to create video or use mysoalan video bank -->
+        <!-- disabled for now, but will use when MySoalan video bank start happening -->
+        <div class="w-full h-24 px-1">
+          <button
+            class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            @click="$store.dispatch('teacherCreateAssignment/beginRedirectToMySoalanVideo')"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              MySoalan
+            </div>
+          </button>
+          <button
+            class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Create Video
+            </div>
+          </button>
+          <button
+            class="mt-2 w-2/3 text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+            @click="cancelCreateVideo()"
+          >
+            <div class="flex col-span-1 row-span-2 justify-center py-2">
+              Cancel
             </div>
           </button>
         </div>
@@ -105,7 +140,8 @@
         <!-- FORM: Zoom Question 
           should add a preview / trash icon so can either edit  or preview the video
         -->
-        <ZoomQuestionForm />
+        <NewVideoForm />
+        <!--ZoomQuestionForm /-->
       </div>
 
       <!--div v-if="$store.state.teacherCreateAssignment.states.isSelectingQuestionType && !$store.getters['teacherCreateAssignment/hasEditableQuestion']" class="flex -mx-1 mb-4" -->
@@ -352,6 +388,7 @@ import ZoomIcon from "@/components/icons/ZoomIcon";
 import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
 import VueMarkdown from 'vue-markdown';
 import MySoalanSelector from "@/components/MySoalanSelector.vue";
+import NewVideoForm from "@/components/NewVideoForm.vue";
 
 const VueCropper = () => import('vue-cropperjs');
 // import VueCropper from 'vue-cropperjs';
@@ -419,6 +456,10 @@ export default {
           email: this.$store.state.authUser.email,
         }
       );
+    }, 
+    cancelCreateVideo(){
+      console.log('reset video menu');
+      this.$store.dispatch('teacherCreateAssignment/endShowingVideoMenu');
     }
   },
   async mounted() {
@@ -476,7 +517,8 @@ export default {
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
     VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
-    MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector
+    MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector,
+    NewVideoForm,
   }
 }
 </script>

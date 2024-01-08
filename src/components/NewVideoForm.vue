@@ -1,0 +1,384 @@
+<template>
+	<div>
+		<!-- camera and mic controls -->
+		<div class="flex flex-row -mx-1 mb-4" >
+			<div class="px-1 w-1/3 h-32">
+				<button @click="toggleVideoButton"
+					id="video-button"
+					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+				>
+					<div class="flex col-span-1 row-span-1 justify-center py-4">
+						<icon-base-two class="w-12">
+							<video-icon v-if="this.videoOn" class="w-12" />
+							<video-slash-icon v-else class="w-12" />
+						</icon-base-two>
+					</div>
+					<div class="flex col-span-1 row-span-2 justify-center py-2">
+						Camera
+					</div>
+				</button>
+			</div>
+			<div class="px-1 w-1/3 h-32">
+				<button @click="toggleMicButton"
+					id="mic-button"
+					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+				>
+					<div class="flex col-span-1 row-span-1 justify-center py-4">
+						<icon-base-two class="w-12">
+							<microphone-icon v-if="this.audioOn" class="w-12"/>
+							<microphone-slash-icon v-else class="w-12"/>
+						</icon-base-two>
+					</div>
+					<div class="flex col-span-1 row-span-2 justify-center py-2">
+						Microphone 
+					</div>
+				</button>
+			</div>
+			<div class="px-1 w-1/3 h-32">
+				<button @click="toggleShareScreenButton"
+					id="screen-button"
+					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+				>
+					<div class="flex col-span-1 row-span-1 justify-center py-4">
+						<icon-base-two class="w-12">
+							<display-icon v-if="this.screenShare" class="w-12" />
+							<display-slash-icon v-else class="w-12"/>
+						</icon-base-two>
+					</div>
+					<div class="flex col-span-1 row-span-2 justify-center py-2">
+						Screen
+					</div>
+				</button>
+			</div>
+		</div>
+
+		<div class="flex flex-col items-center mt-2 mb-2 w-full text-lg font-normal leading-tight border border-none appearance-none text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+			<!--div class="w-full border-1 text-left p-2 mb-2">
+				<p>Debug msg:</p>
+				{{ debug }}
+			</div-->
+			<div class="w-full border-1 hidden">
+				<video autoplay ref="videoElm" id="video"></video>
+			</div>
+			<div class="w-full border-1 hidden">
+				<video autoplay ref="screenElm" id="screen"></video>
+			</div>
+			<div class="w-full">
+				<canvas class="w-full" ref="resultCanvas" id="canvas"></canvas>
+			</div>
+		</div>
+
+		<!-- recording controls -->
+		<!-- show appear/disappear when camera/mic/screen is toggled-->
+		<div class="flex flex-row -mx-1 mb-4" >
+			<div class="px-1 w-full h-28">
+				<button @click="toggleRecording"
+					class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
+				>
+					<div class="flex text-red-500 col-span-1 row-span-1 justify-center py-4" :class="{ 'text-red-500': $store.getters['teacherCreateAssignment/hasZoomRecording'] }">
+						<icon-base-two class="w-12">
+							<stop-icon v-if="this.recording" class="w-12"/>
+							<circle-icon v-else />
+						</icon-base-two>
+					</div>
+					<div class="flex col-span-1 row-span-2 justify-center py-2">
+						Rec Start/Stop
+					</div>
+				</button>
+			</div>
+		</div>
+
+		<!-- cancel session button-->
+		<div class="flex flex-row -mx-1 mb-4" >
+			<div @click="cancelRecording" class="w-1/2 text-center text-blue-secondary mr-2 bg-gray-secondary py-5 rounded-md">
+				<button>Cancel</button>
+			</div>
+			<div @click="saveRecording" class="w-1/2 text-center text-blue-secondary bg-gray-secondary py-5 rounded-md">
+				<button>Save</button>
+			</div>
+		</div>
+
+		<!-- results gallery -->
+		<div class="flex flex-row -mx-1 mb-4" id="video-preview-gallery">
+		</div>
+	</div>
+</template>
+
+<script>
+import IconBaseTwo from "@/components/IconBaseTwo";
+import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
+import MicrophoneSlashIcon from "@/components/icons/MicrophoneSlashIcon";
+import DisplayIcon from "@/components/icons/DisplayIcon";
+import DisplaySlashIcon from "@/components/icons/DisplaySlashIcon";
+import VideoIcon from "@/components/icons/VideoIcon";
+import VideoSlashIcon from "@/components/icons/VideoSlashIcon";
+import StopIcon from "@/components/icons/StopIcon";
+import CircleIcon from "@/components/icons/CircleIcon";
+
+let cameraStream = null, audioStream = null, screenStream = null, canvasStream = null, mixStream = null;
+let videoElm = null, canvasElm = null, screenElm = null, canvasCtx = null;
+let screenInfo = { width: 640, height: 320}, videoInfo = { width: 640, height: 320 };
+let mediaRecorder = null, canvasInterval;
+let blobs = [];
+
+export default {
+	name: "NewVideoForm", 
+	data(){
+		return {
+			videoOn: false, 
+			audioOn: false, 
+			screenShare: false, 
+			recording: false,
+			debug: "",
+		};
+	},
+	mounted: function(){
+		console.log('setup media recorder and streamer');
+		videoElm = document.querySelector('#video');
+		screenElm = document.querySelector('#screen');
+		canvasElm = document.querySelector('#canvas');
+		canvasStream = canvasElm.captureStream();
+		canvasCtx = canvasElm.getContext('2d', { alpha: false });
+
+		/*
+			The composite stream
+			- will combine streams from audio/vidoe/screen for recording.
+		*/
+		// mixStream = new MediaStream();
+		// canvasElm.srcObject = mixStream;
+
+		/*
+			the media recorder
+		 */
+		mediaRecorder = new MediaRecorder(canvasStream, { type: "video/mp4"});
+		mediaRecorder.onstart = () => {
+			console.log('start recording');
+		}
+		mediaRecorder.onstop = () => {
+			console.log('stop recording');
+
+      const blob = new Blob(blobs, { type: "video/mp4" });
+      blobs = [];
+
+			//put the blob in a video gallery
+      var url = URL.createObjectURL(blob);
+      // console.log('url', url);
+      var videoTag = document.createElement('video');
+      videoTag.autoplay = true;
+      videoTag.controls = true;
+      videoTag.height = 480;
+      videoTag.width = 854;
+      videoTag.src = url;
+
+      //always replace what's ever in the preview gallery
+			// future plan to append
+      document.querySelector('#video-preview-gallery').textContent = '';
+      document.querySelector('#video-preview-gallery').appendChild(videoTag);
+
+      //trigger to push video content to questionDetails.zoomMeetings
+      this.$store.dispatch('teacherCreateAssignment/handleZoomQuestion', url);
+
+		}
+		mediaRecorder.ondataavailable = (e) => {
+			console.log('video data available');
+
+      //pump data in the blobs array.
+      blobs.push(e.data);
+
+      // after stop `dataavilable` event run one more time
+      if (mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+      }
+		}
+
+		function drawCanvas(context){
+			// console.log('context', context);
+
+			canvasCtx.drawImage(video, 0, 0, screenInfo.width, screenInfo.height);
+			/*
+				draw based on which stream is on
+				- if video/and share screen together, make picture-in-picture w/ the screen is the dominant one
+
+				issues - need to make the video to canvas ratio 1:1
+			*/
+			if(context.videoOn && context.screenShare){
+				// video and screen share
+				// typically screen size > video size
+				canvasElm.width = screenInfo.width;
+				canvasElm.height = screenInfo.height;
+				canvasCtx.drawImage(screenElm, 0, 0, screenInfo.width, screenInfo.height);
+				canvasCtx.drawImage(videoElm, 0, 0, videoInfo.width, videoInfo.height);
+			} else if(context.videoOn && !context.screenShare){
+				// video only
+				canvasElm.width = videoInfo.width;
+				canvasElm.height = videoInfo.height;
+				canvasCtx.drawImage(videoElm, 0, 0, videoInfo.width, videoInfo.height);
+			} else if(!context.videoOn && context.screenShare){
+				// screen share only
+				canvasElm.width = screenInfo.width;
+				canvasElm.height = screenInfo.height;
+				canvasCtx.drawImage(screenElm, 0, 0, screenInfo.width, screenInfo.height);
+
+			} else if(!context.videoOn && !context.screenShare && context.audioOn){
+				// only mic is on
+				// draw audio only now.
+				canvasElm.width = 640;
+				canvasElm.height = 320;
+				canvasCtx.fillStyle = '#fff';
+				canvasCtx.font = "48px serif";
+				canvasCtx.textAlign = "center";
+				canvasCtx.fillText("Mic On", 320, 160);
+			} else {
+				// default: draw no input
+				canvasElm.width = 640;
+				canvasElm.height = 320;
+				canvasCtx.fillStyle = '#fff';
+				canvasCtx.font = "48px serif";
+				canvasCtx.textAlign = "center";
+				canvasCtx.fillText("No Input", 320, 160);
+			}
+		}
+
+		canvasInterval = window.setInterval(() => {
+			drawCanvas({ videoOn: this.videoOn, screenShare: this.screenShare, audioOn: this.audioOn});
+		}, 1000 / 60);
+		
+	}, 
+	methods: {
+		switchOffHardware: async function(){
+			// if the video/mic/screen share is on, turn it off
+			// don't draw the canvas anymore.
+			if(this.videoOn){
+				await this.toggleVideoButton();
+			}
+			if(this.audioOn){
+				await this.toggleMicButton();
+			}
+			if(this.screenShare){
+				await this.toggleShareScreenButton();
+			}
+			if(this.recording){
+				await this.toggleRecording();
+			}
+			clearInterval(canvasInterval);
+
+		},
+		cancelRecording: async function() {
+			console.log('cancel recording, reset' );
+
+			this.switchOffHardware();
+
+      this.$store.dispatch('teacherCreateAssignment/endShowingVideoMenu');
+      this.$store.commit('teacherCreateAssignment/cancelZoomEditMode');
+		}, 
+		saveRecording: function() {
+			console.log('save recording');
+
+      this.$store.dispatch('teacherCreateAssignment/saveZoomQuestionToDraft')
+			this.switchOffHardware();
+
+      this.$store.dispatch('teacherCreateAssignment/endShowingVideoMenu');
+      this.$store.commit('teacherCreateAssignment/cancelZoomEditMode');
+
+		}, 
+		toggleVideoButton: async function (){
+			if(this.videoOn){
+				console.log('stop camera');
+
+				let tracks = cameraStream.getTracks();
+
+				for(var i=0; i < tracks.length; i++){
+					tracks[i].stop();
+				}
+				video.srcObject = null;
+				this.debug = '';
+
+				/*
+					kill video feed.
+				*/
+			} else {
+				console.log('start camera')
+				/*
+					- start video media stream and push to canvas/video elm
+				*/
+				cameraStream = await navigator.mediaDevices.getUserMedia({ video: true })
+				videoInfo = cameraStream.getVideoTracks()[0].getSettings();
+
+				videoElm.srcObject = cameraStream;
+
+				// console.log('add video track to mixstream');
+				// mixStream.addTrack(cameraStream.getVideoTracks()[0]);
+				this.debug= `Camera resolution: ${videoInfo.width}x${videoInfo.height}`;
+			}
+
+			this.videoOn = !this.videoOn;
+
+		}, 
+		toggleMicButton: async function() {
+			if(this.audioOn){
+				console.log('stop mic');
+				let tracks = audioStream.getTracks();
+
+				for(var i=0; i < tracks.length; i++){
+					tracks[i].stop();
+				}
+
+			} else {
+				console.log('start mic')
+				/*
+					some issues when starting in safari.
+				*/
+				audioStream = await navigator.mediaDevices.getUserMedia({ audio: true })
+				canvasStream.addTrack(audioStream.getAudioTracks()[0]);
+
+				/*
+					if videoOn is false, put a audio graphics on video/canvas elm
+				*/
+			}
+			this.audioOn = !this.audioOn;
+		}, 
+		toggleShareScreenButton: async function() {
+			if(this.screenShare){
+				console.log('stop share screen');
+
+				let tracks = screenStream.getTracks();
+
+				for(var i=0; i < tracks.length; i++){
+					tracks[i].stop();
+					screenStream.removeTrack(tracks[i]);
+				}
+				screen.srcObject = null;
+			} else {
+				console.log('start share screen')
+				screenStream = await navigator.mediaDevices.getDisplayMedia();
+				screenInfo = screenStream.getTracks()[0].getSettings();
+				this.debug= `Screen resolution: ${screenInfo.width}x${screenInfo.height}`;
+
+				screenElm.srcObject = screenStream;
+			}
+			this.screenShare = !this.screenShare;
+		}, 
+		toggleRecording: function(){
+			if(this.recording){
+				console.log('stop recording');
+				mediaRecorder.stop();
+			} else {
+				console.log('start recording clicked')
+				mediaRecorder.start();
+
+				/*
+					get all the streams (video/audio/screen) and put it on a capture that
+					once done, push it on to the gallery
+				*/
+
+			}
+			this.recording = !this.recording;
+		}, 
+	}, 
+	components: {
+		IconBaseTwo, 
+		MicrophoneIcon, MicrophoneSlashIcon, DisplayIcon, DisplaySlashIcon, VideoIcon, VideoSlashIcon, 
+		StopIcon, CircleIcon,
+	}
+}
+</script>

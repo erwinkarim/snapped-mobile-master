@@ -71,4 +71,8 @@ export default {
 	analytics(assignmentID, options = {}){
 		return Repository.get(`${resource}/${assignmentID}/analytics`, { params: options} );
 	},
+	 
+	zoomMp4(assignmentID){
+		return Repository.get(`${resource}/${assignmentID}/mp4Zoom`);
+	},
 }

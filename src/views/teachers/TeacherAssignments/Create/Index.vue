@@ -141,10 +141,10 @@
 
           <!-- CREATE/EDIT QUESTION -->
           <div
-              class="py-5 pr-2 pl-6 mt-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
+              class="mt-2 w-full text-lg font-normal leading-tight text-left rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
             <button v-if="$store.getters['teacherCreateAssignment/hasSavedQuestion']"
                     @click="$store.dispatch('teacherCreateAssignment/editSavedQuestion')"
-                    class="flex flex-row justify-between w-full"
+                    class="flex flex-row justify-between w-full py-5 pl-6"
             >
               <div class="w-4/5 text-left">
                 Question
@@ -153,7 +153,9 @@
                 Edit
               </div>
             </button>
-            <button v-else @click="$store.commit('teacherCreateAssignment/toggleCreatingQuestionMode')">
+            <button v-else @click="$store.commit('teacherCreateAssignment/toggleCreatingQuestionMode')"
+              class="w-full py-5 pl-6 text-left "
+            >
               Create Question
             </button>
           </div>

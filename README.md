@@ -7,7 +7,7 @@ Deployment: [Vercel](https://vercel.com/bbv)
 
 ## Project setup
 ```
-npm install
+npm install --legacy-peer-deps
 ```
 
 ### Environment variables (.env)
@@ -56,3 +56,5 @@ GOOGLE_REDIRECT={frontend_domain}/auth/google/callback
 
 * unable to join zoom session - check ad-blocker
 * swiper package is needed to deployment to netlify, although not really needed if you are building in linux
+* when running, there's a 'digital envelope routines::unsupported' error
+	* run `export NODE_OPTIONS=--openssl-legacy-provider`
