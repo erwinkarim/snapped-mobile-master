@@ -2,6 +2,14 @@
   <router-link :to="route" class="max-w-sm md:max-w-2xl rounded rounded-xl justify-between overflow-hidden bg-gray-secondary flex flex-row px-3 pt-5 pb-3 mb-3" >
     <div class="w-full flex flex-col justify-between">
       <div class="flex flex-row">
+        <div v-if="assignment.answer_status == 'RESUBMIT'"
+            class="bg-red-primary rounded-full py-1 px-4 text-xs font-bold text-white uppercase"
+        >
+          RESUBMIT REQUESTED
+        </div>
+
+      </div>
+      <div class="flex flex-row">
         <div :class="showMarks && hasMarks ? 'w-3/4' : 'w-full'" class="flex justify-between mb-4 truncate">
           <div class="text-left text-purple-primary text-xl pr-10">
             {{ assignment.title }}
@@ -52,7 +60,7 @@
         <div class="w-full text-left text-purple-secondary pr-1">{{  assignment.school_name }}</div>
         <div class="w-full text-right text-purple-secondary pr-1">{{  Boolean(assignment.auto_marking) ? "AUTO-MARKING" : "" }}</div>
       </div>
-      
+
     </div>
 
 

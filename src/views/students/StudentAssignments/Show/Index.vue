@@ -256,7 +256,17 @@ export default {
 		},
 
 		hasEditableSubmission: function () {
-			return this.hasSubmission ? this.submission.id !== null && this.marks_id === null : null;
+			// should return true if answer status is 2 (request to be resubmit)
+			if (this.hasSubmission){
+				if(this.submission.answerStatus == 2){
+					return true;
+				} else {
+					this.submission.id !== null && this.marks_id === null;
+				}
+			} else {
+				return false;
+			}
+			// return this.hasSubmission ? this.submission.id !== null && this.marks_id === null : null;
 		},
 
 		isPastDueDate() {
@@ -362,7 +372,9 @@ export default {
 									studentName: submission.student_name,
 									studentGender: submission.student_gender,
 									submittedAt: submission.submission_created_at,
-									answerTag: submission.answer_tag
+									answerTag: submission.answer_tag,
+									answerStatus: submission.answer_status,
+
 								}
 								this.marks_id = submission.marks_id
 							}

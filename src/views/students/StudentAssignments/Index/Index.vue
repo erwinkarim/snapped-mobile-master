@@ -233,6 +233,7 @@ export default {
                     hasSubmitted: item.has_submitted === "yes",
                     school_name: item.school_name,
                     auto_marking: item.auto_marking,
+                    answer_status: item.answer_status,
                   }
 
                   if (item.marks_id) {

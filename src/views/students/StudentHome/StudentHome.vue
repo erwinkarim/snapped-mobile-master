@@ -139,6 +139,8 @@ export default {
 						dueDatetime: item.due_datetime,
 						hasSubmitted: item.has_submitted === "yes",
 						school_name: item.school_name,
+						answered: item.answered,
+						answer_status: item.answer_status,
 					}
 
 					this.assignments.push(assignmentDetail);
