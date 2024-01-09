@@ -14,6 +14,11 @@
       >
         Unanswered
       </div>
+      <div v-if="askedToResubmit"
+           class="bg-red-primary rounded-full py-1 px-4 text-xs font-bold text-white uppercase"
+      >
+        RESUBMIT REQUESTED
+      </div>
     </div>
 
     <div class="text-left mt-5 text-purple-primary font-bold tracking-normal text-xl truncate">
@@ -67,6 +72,9 @@ export default {
   computed: {
     unanswered() {
       return this.$store.state.teacherMarking.assignmentDetails.answer_tag === 'unanswered';
+    },
+    askedToResubmit(){
+      return this.$store.state.teacherMarking.assignmentDetails.status === 2;
     }
   },
   name: "AssignmentInfo"

@@ -16,13 +16,42 @@
 		</template>
 
 		<template v-slot:content>
-			<div class="pt-10">
-				<p>Info about the answer object.</p>
-				<p>{{  mark }}</p>
+
+			<!---------------------
+				OVERLAYS FOR MODAL
+			--------------------->
+			<div v-if="modalOn" @click="toggleModalMode()" class="fixed w-full bg-black-primary bg-opacity-25 h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 ">
 			</div>
-			<p class="text-left p-2">
-				Status: Mark/Unmakred/Request to resubmit.
-			</p>
+			<div v-if="modalOn" class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
+				<modal @toggleModal="toggleModalMode()" class="w-4/5">
+					<template slot="message">
+						Asked student to resubmit answer ...
+					</template>
+					<template slot="button">
+						Okay
+					</template>
+				</modal>
+			</div>
+
+			<!--
+				ACTUAL PAGE
+			-->
+			<div v-if="mark != null" class="pt-10 text-left">
+				<p>Info about the answer object.</p>
+				<!-- style this later-->
+				<dl class="">
+					<dt>Assignment name:</dt>
+					<dd>{{ mark.assignment_title }}</dd>
+					<dt>Student name:</dt>
+					<dd> {{ mark.student_name }}</dd>
+					<dt>Snap answers:</dt>
+					<dd> {{  mark.snap_answer != null }}</dd>
+					<dt>Text Answer:</dt>
+					<dd>{{  mark.written_answer != null }}</dd>
+					<dt>Status:</dt>
+					<dd>{{  mark.status }}</dd>
+				</dl>
+			</div>
 			<div class="">
 				<p class="w-full text-left p-2">Actions: </p>
 				<button
@@ -41,6 +70,7 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import SubmissionRepository from "@/repositories/SubmissionRepository";
+import Modal from "@/components/Modal";
 
 
 export default {
@@ -48,6 +78,7 @@ export default {
 	data(){ 
 		return {
 			mark: null,
+			modalOn: false,
 		};
 	},
 	mounted(){
@@ -62,11 +93,16 @@ export default {
 			console.log('request to resubmit clicked');
 			SubmissionRepository.requestToResubmit(this.$attrs.submissionID).then((e) => {
 				console.log('request ok');
+				this.toggleModalMode();
 			});
+		},
+		toggleModalMode(){
+			console.log('toggle modal mode');
+			this.modalOn = !this.modalOn;
 		},
 	},
 	components: {
-		ArrowBackIcon, PageHeaderThree, DashboardLayout, IconBaseTwo,
+		ArrowBackIcon, PageHeaderThree, DashboardLayout, IconBaseTwo, Modal
 	}
 }
 </script>

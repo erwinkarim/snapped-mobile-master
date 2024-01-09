@@ -45,7 +45,8 @@ const getDefaultState = () => {
             marksID: null,
             marks: null,
             markedSnappedAnswerPaths: null,
-            answer_tag: null
+            answer_tag: null,
+            status: null,
         },
 
         // Image being marked (temporary)
@@ -136,6 +137,7 @@ export default {
             state.assignmentDetails.marks = data.marks;
             state.assignmentDetails.isFirstSubmission = data.is_first;
             state.assignmentDetails.answer_tag = data.answer_tag;
+            state.assignmentDetails.status = data.status;
 
             if (data.snap_answer) {
                 state.submission.type = 'snapped';
