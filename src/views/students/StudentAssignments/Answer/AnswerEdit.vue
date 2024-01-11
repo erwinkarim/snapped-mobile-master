@@ -495,7 +495,7 @@ export default {
     },
 
     generateSnappedAnswerPreview(files) {
-      files.forEach(f => {
+      for(const f of files) {
 
         if (!f.type.match("image.*")) {
           return;
@@ -513,7 +513,7 @@ export default {
         }
 
         reader.readAsDataURL(f);
-      });
+      };
     },
 
     removeSnappedAnswer(index, type) {
