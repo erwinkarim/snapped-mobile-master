@@ -79,11 +79,7 @@
       <!-- ERROR MODAL -->
       <div v-if="isShowingErrorModal"
            class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
-        <modal v-if="errors"
-               modal-type="error"
-               class="w-4/5 "
-               @toggleModal="toggleErrorModal"
-        >
+        <modal v-if="errors" modal-type="error" class="w-4/5 " @toggleModal="toggleErrorModal" >
           <template slot="message">
             <div>
               {{ errors }}
@@ -364,12 +360,14 @@ export default {
                   })
 
                   // should check if some of the files can't be reached. 
-                  http.open('HEAD', existingAnswerFilePaths[i], false);
-                  http.send();
-                  if(http.status != 200){
-                    console.log('image not found', http.status);
-                    this.errors = "Some pictures are not loading";
-                    this.toggleErrorModal()
+                  // skip if there's already errors, don't want to flood the page
+                  if(this.errors == null){
+                    http.open('HEAD', existingAnswerFilePaths[i], false);
+                    http.send();
+                    if(http.status != 200){
+                      this.errors = "Some pictures are not loading";
+                      this.toggleErrorModal()
+                    }
                   }
 
                 }
