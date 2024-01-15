@@ -37,23 +37,23 @@
 				ACTUAL PAGE
 			-->
 			<div v-if="mark != null" class="pt-10 text-left">
-				<p>Info about the answer object.</p>
+				<p class="text-xl"><strong>Answer Attributes</strong></p>
 				<!-- style this later-->
-				<dl class="">
-					<dt>Assignment name:</dt>
+				<dl class="grid grid-cols-2 gap-2">
+					<dt><strong>Assignment name:</strong></dt>
 					<dd>{{ mark.assignment_title }}</dd>
-					<dt>Student name:</dt>
+					<dt><strong>Student name:</strong></dt>
 					<dd> {{ mark.student_name }}</dd>
-					<dt>Snap answers:</dt>
+					<dt><strong>Snap answers:</strong></dt>
 					<dd> {{  mark.snap_answer != null }}</dd>
-					<dt>Text Answer:</dt>
+					<dt><strong>Text Answer:</strong></dt>
 					<dd>{{  mark.written_answer != null }}</dd>
-					<dt>Status:</dt>
+					<dt><strong>Status:</strong></dt>
 					<dd>{{  mark.status }}</dd>
 				</dl>
 			</div>
 			<div class="">
-				<p class="w-full text-left p-2">Actions: </p>
+				<p class="w-full text-left mt-2 px-4 text-xl"><strong>Actions:</strong></p>
 				<button
 					class="w-full font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary"
 					@click="requestToResubmit"
@@ -82,10 +82,7 @@ export default {
 		};
 	},
 	mounted(){
-		SubmissionRepository.find(this.$attrs.submissionID).then((e) => {
-			console.log('data found', e);
-			this.mark = e.data.data;
-		});
+		this.loadAnswer()
 
 	}, 
 	methods: {
@@ -94,11 +91,18 @@ export default {
 			SubmissionRepository.requestToResubmit(this.$attrs.submissionID).then((e) => {
 				console.log('request ok');
 				this.toggleModalMode();
+				this.loadAnswer();
 			});
 		},
 		toggleModalMode(){
 			console.log('toggle modal mode');
 			this.modalOn = !this.modalOn;
+		},
+		loadAnswer(){
+			SubmissionRepository.find(this.$attrs.submissionID).then((e) => {
+				console.log('data found', e);
+				this.mark = e.data.data;
+			});
 		},
 	},
 	components: {

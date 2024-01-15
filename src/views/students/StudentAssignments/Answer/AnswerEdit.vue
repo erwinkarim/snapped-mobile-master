@@ -49,7 +49,7 @@
 
 
       <!-- OVERLAYS -->
-      <div v-if="isShowingModal" @click="toggleModal"
+      <div v-if="isShowingModal || isShowingErrorModal" @click="toggleModal"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center inset-x-0 block top-0 bg-gray-primary bg-opacity-75 ">
       </div>
 
@@ -74,10 +74,15 @@
           </template>
         </modal>
 
+      </div>
+
+      <!-- ERROR MODAL -->
+      <div v-if="isShowingErrorModal"
+           class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
         <modal v-if="errors"
                modal-type="error"
                class="w-4/5 "
-               @toggleModal="toggleModal"
+               @toggleModal="toggleErrorModal"
         >
           <template slot="message">
             <div>
@@ -267,6 +272,7 @@ export default {
       isEditingWrittenAnswer: false,
       isPreviewingSnappedAnswer: false,
       isShowingModal: false,
+      isShowingErrorModal: false,
       submissionStatus: null,
 
       backendStoragePath: `${process.env.VUE_APP_BACKEND_STORAGE}/submissions/`,
@@ -338,6 +344,7 @@ export default {
             if (response.data.success) {
 
               const data = response.data.data;
+              let http = new XMLHttpRequest();
 
               // Assignment details
               this.assignmentDetails.id = data.assignment_id;
@@ -355,6 +362,16 @@ export default {
                     name: existingAnswerFileNames[i],
                     path: existingAnswerFilePaths[i]
                   })
+
+                  // should check if some of the files can't be reached. 
+                  http.open('HEAD', existingAnswerFilePaths[i], false);
+                  http.send();
+                  if(http.status != 200){
+                    console.log('image not found', http.status);
+                    this.errors = "Some pictures are not loading";
+                    this.toggleErrorModal()
+                  }
+
                 }
 
               }
@@ -566,6 +583,9 @@ export default {
 
     toggleModal() {
       this.isShowingModal = !this.isShowingModal;
+    },
+    toggleErrorModal() {
+      this.isShowingErrorModal = !this.isShowingErrorModal;
     }
   },
   mounted() {
