@@ -46,15 +46,16 @@
             to show the video menu instead of the video form, replace click with this one.
             @click="$store.dispatch('teacherCreateAssignment/beginShowingVideoMenu')"
         -->
-        <div class="w-full h-28 px-1">
+        <div class="w-full h-32 px-1">
           <button 
             @click="$store.dispatch('teacherCreateAssignment/beginWritingZoomQuestion')"
                   class="mt-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline"
           >
             <div class="flex col-span-1 row-span-1 justify-center py-4">
-              <icon-base-two class="w-12">
+              <img src="@/assets/img/zoom-with-words.png" width="192" />
+              <!--icon-base-two class="w-12">
                 <zoom-icon class="w-12"/>
-              </icon-base-two>
+              </icon-base-two-->
             </div>
             <div class="flex col-span-1 row-span-2 justify-center py-2">
               Video
