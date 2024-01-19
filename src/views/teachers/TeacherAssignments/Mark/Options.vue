@@ -52,9 +52,9 @@
 					<dd>{{  mark.status }}</dd>
 				</dl>
 			</div>
-			<div class="mt-2">
+			<div class="mt-2 flex flex-col justify-center justify-items-center items-center">
 				<hr />
-				<p class="w-full text-left mt-2 px-4 text-xl"><strong>Actions:</strong></p>
+				<div class="py-2"></div>
 				<button
 					class="w-3/4 font-bold rounded-full text-purple-primary text-sm border-2 border-purple-primary bg-white py-3 px-1 flex flex-row justify-center hover:text-white hover:bg-purple-primary"
 					@click="requestToResubmit"
