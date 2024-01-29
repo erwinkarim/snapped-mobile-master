@@ -1179,7 +1179,42 @@ export default {
 
                         commit('toggleModalMode', 'is_checking')
 
-                        dispatch('checkAllConvertedToDataURL')
+                        // convert images to data url, then submit
+                        // problem is the answer is in text. 
+                        // so need to cater if the submission type is text instead of snapped. 
+                        if(state.submission.type == "written"){
+                            commit('toggleModalMode')
+                            commit('toggleModalMode', 'is_submitting')
+
+                            MarksRepository.store(
+                                {
+                                    assignmentID: state.assignmentDetails.assignmentID,
+                                    studentID: state.assignmentDetails.studentID,
+                                    answerID: state.assignmentDetails.submissionID,
+                                    submissionType: state.submission.type,
+                                    snappedAnswers: state.marking,
+                                    marks: state.submission.marks,
+                                    feedback: state.submission.feedback
+                                })
+                                .then(response => {
+                                    if (response.data.success) {
+                                        commit('setMainMode')
+                                        resolve(state.assignmentDetails.submissionID);
+                                    } else {
+                                        commit('toggleModalMode')
+                                        commit('toggleModalMode', 'error_submit_markings')
+                                        state.states.errorMessages = response.data.data.error;
+                                    }
+                                })
+                                .catch(error => {
+                                    commit('toggleModalMode')
+                                    commit('toggleModalMode', 'error_submit_markings')
+                                    state.states.errorMessages = error;
+                                })
+
+                        } else {
+
+                            dispatch('checkAllConvertedToDataURL')
 
                             // If all image types are dataURL
                             .then(response => {
@@ -1224,6 +1259,7 @@ export default {
                                 }, 1500)
                             })
 
+                        }
 
                     } else {
                         console.log('Already submitting a marking.')

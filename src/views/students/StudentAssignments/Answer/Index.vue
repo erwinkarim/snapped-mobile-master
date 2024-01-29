@@ -106,6 +106,7 @@ export default {
       answer: {
         type: null,
         content: '', 
+        writtenAnswer: '', 
         mysoalan_all: 0, 
         mysoalan_correct: 0, 
         mysoalan_result_uuid: '',

@@ -166,6 +166,12 @@
 
 					<!-- BUTTON: WRITE ANSWER -->
 					<div v-if="!isMySoalanExclusive && !isAutoMarking" class="flex-grow px-2">
+						<div class="mb-3">
+							<a href="#" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" @click="answerText()">
+								Text Answer
+							</a>
+						</div>
+
 						<!-- don't show if there's only mysoalan question, otherwise show -->
 
 						<label class="flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
@@ -392,6 +398,16 @@ export default {
 					}
 				}
 			})
+		},
+
+		answerText(){
+			console.log('answer question w/ text input');
+
+			router.push({
+				name: 'student.assignments.answer.storeText', params: {
+					assignmentDetails: this.assignmentDetails,
+				}
+			});
 		},
 
 		handleTogglePreview() {

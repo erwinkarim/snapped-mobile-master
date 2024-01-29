@@ -4,6 +4,7 @@ const AssignmentShow = () => import("@/views/students/StudentAssignments/Show/In
 const AnswerIndex = () => import("@/views/students/StudentAssignments/Answer/Index.vue");
 const AnswerWrite = () => import("@/views/students/StudentAssignments/Answer/AnswerWrite.vue");
 const AnswerSave = () => import("@/views/students/StudentAssignments/Answer/AnswerSave.vue");
+const AnswerTextSave = () => import("@/views/students/StudentAssignments/Answer/AnswerTextSave.vue");
 const App = () => import("@/App.vue");
 const AnswerEdit = () => import("@/views/students/StudentAssignments/Answer/AnswerEdit.vue");
 const MarkedShow = () => import("@/views/students/StudentAssignments/Marked/Index.vue");
@@ -54,6 +55,13 @@ export default {
                             path: 'save',
                             name: 'student.assignments.answer.store',
                             component: AnswerSave,
+                            meta: studentAccessControlMeta,
+                            props: true
+                        },
+                        {
+                            path: 'saveText',
+                            name: 'student.assignments.answer.storeText',
+                            component: AnswerTextSave,
                             meta: studentAccessControlMeta,
                             props: true
                         },
