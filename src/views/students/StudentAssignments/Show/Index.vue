@@ -123,7 +123,8 @@
 
 			<div v-if="!isLoading" class="w-full md:max-w-xl">
 
-				<div v-if="hasEditableSubmission && !isPastDueDate" class="w-full">
+				<!-- should allow if request to resubmit-->
+				<div v-if="hasEditableSubmission && (!isPastDueDate || resubmitRequested)" class="w-full">
 					<router-link :to="{name:'student.assignments.answer.edit', params: { submissionID: submission.id}}"
 											 class="flex flex-row justify-center py-3 px-1 w-full text-sm font-bold bg-white rounded-full border-2 text-purple-primary border-purple-primary">
 						Edit Answer
@@ -262,6 +263,20 @@ export default {
 		},
 
 		hasEditableSubmission: function () {
+			// should return true if answer status is 2 (request to be resubmit)
+			// console.log('check submission status', this.submission.answerStatus);
+
+			/*
+			if (this.hasSubmission){
+				if(this.submission.answerStatus == 2){
+					return false;
+				} else {
+					return this.submission.id !== null && this.marks_id === null;
+				}
+			} else {
+				return false;
+			}
+			*/
 			return this.hasSubmission ? this.submission.id !== null && this.marks_id === null : null;
 		},
 
@@ -311,7 +326,11 @@ export default {
 		},
 		isAutoMarking() {
 			return this.assignment.auto_marking;
+		},
+		resubmitRequested(){
+			return this.submission != null && this.submission.answerStatus == 2;
 		}
+
 	},
 	methods: {
 		async fetchData() {
@@ -368,7 +387,9 @@ export default {
 									studentName: submission.student_name,
 									studentGender: submission.student_gender,
 									submittedAt: submission.submission_created_at,
-									answerTag: submission.answer_tag
+									answerTag: submission.answer_tag,
+									answerStatus: submission.answer_status,
+
 								}
 								this.marks_id = submission.marks_id
 							}

@@ -81,5 +81,9 @@ export default {
                 image_path: path
             }
         );
+    },
+
+    requestToResubmit(submissionID){
+        return Repository.post(`${resource}/${submissionID}/resubmitReq`)
     }
 }
