@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <infinite-loading :identifier="filterCount"
+    <!--infinite-loading :identifier="filterCount"
                       @infinite="handleInfiniteScroll"
                       spinner="bubbles"
                       force-use-infinite-wrapper
@@ -29,7 +29,7 @@
       <div slot="spinner" class="mt-10">Loading...</div>
       <div slot="no-more"></div>
       <div slot="no-results">No results message</div>
-    </infinite-loading>
+    </infinite-loading-->
 
   </div>
 </template>
@@ -42,7 +42,7 @@ import router from "@/router";
 import TaggingIcon from "../../../components/icons/TaggingIcon";
 import IconBaseTwo from "../../../components/IconBaseTwo";
 import StudentRepository from "@/repositories/StudentRepository";
-import InfiniteLoading from "vue-infinite-loading";
+// import InfiniteLoading from "vue-infinite-loading";
 
 
 export default {
@@ -166,7 +166,9 @@ export default {
   mounted() {
     this.getStudentPerformance()
   },
-  components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase, InfiniteLoading},
+  components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase, 
+    // InfiniteLoading
+  },
 
 }
 </script>

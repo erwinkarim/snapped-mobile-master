@@ -344,8 +344,8 @@
 
 // Register components in your 'main.js'
 import Vue from "vue";
-import Calendar from "v-calendar/lib/components/calendar.umd";
-import DatePicker from "v-calendar/lib/components/date-picker.umd";
+// import Calendar from "v-calendar/lib/components/calendar.umd";
+// import DatePicker from "v-calendar/lib/components/date-picker.umd";
 import Multiselect from "vue-multiselect";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from "moment";

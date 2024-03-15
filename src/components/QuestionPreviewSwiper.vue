@@ -25,7 +25,7 @@
 
 <script>
 import {directive} from "vue-awesome-swiper";
-import 'swiper/css/swiper.css'
+// import 'swiper/css/swiper.css'
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 

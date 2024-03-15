@@ -49,7 +49,7 @@
       </div>
     </router-link>
 
-    <infinite-loading :identifier="$store.state.studentRanking.schoolRankings.infiniteScrollIdentifier"
+    <!--infinite-loading :identifier="$store.state.studentRanking.schoolRankings.infiniteScrollIdentifier"
                       @infinite="handleSchoolRankingData"
                       spinner="bubbles"
                       force-use-infinite-wrapper
@@ -61,7 +61,7 @@
           No data available
         </div>
       </div>
-    </infinite-loading>
+    </infinite-loading-->
   </div>
 </template>
 
@@ -70,7 +70,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import GoldMedalIcon from "@/components/icons/GoldMedalIcon";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import StudentRepository from "@/repositories/StudentRepository";
-import InfiniteLoading from "vue-infinite-loading";
+// import InfiniteLoading from "vue-infinite-loading";
 
 export default {
   name: "SchoolRanking",
@@ -86,7 +86,9 @@ export default {
           })
     }
   },
-  components: {ProfilePhoto, GoldMedalIcon, IconBaseTwo, InfiniteLoading}
+  components: {ProfilePhoto, GoldMedalIcon, IconBaseTwo, 
+    // InfiniteLoading
+  }
 }
 </script>
 

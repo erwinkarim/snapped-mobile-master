@@ -45,7 +45,7 @@
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 // this causes installation issues
 // import 'swiper/swiper-bundle.css'
-import 'swiper/css/swiper.css';
+// import 'swiper/css/swiper.css';
 import StackedProfilePhoto from "@/components/icons/ProfilePhotoStacked";
 import IconBase from "@/components/IconBase";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";

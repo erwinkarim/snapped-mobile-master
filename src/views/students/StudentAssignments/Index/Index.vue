@@ -51,7 +51,7 @@
               </template>
             </assignment-card>
 
-            <infinite-loading :identifier="filterCount"
+            <!--infinite-loading :identifier="filterCount"
                               @infinite="handleInfiniteScroll"
                               spinner="bubbles"
                               force-use-infinite-wrapper
@@ -61,7 +61,7 @@
               <div slot="no-results" class="text-purple-secondary mt-12">
                 No available data.
               </div>
-            </infinite-loading>
+            </infinite-loading-->
           </div>
 
         </div>
@@ -145,7 +145,7 @@ import SelectYear from "@/components/SelectYear";
 import SelectSubject from "@/components/SelectSubject";
 import moment from "moment";
 // import StudentRepository from "@/repositories/StudentRepository";
-import InfiniteLoading from "vue-infinite-loading";
+// import InfiniteLoading from "vue-infinite-loading";
 
 
 export default {
@@ -314,7 +314,7 @@ export default {
     IconBaseTwo,
     SectionTitle,
     PageTitle,
-    InfiniteLoading
+    // InfiniteLoading
   },
 }
 </script>

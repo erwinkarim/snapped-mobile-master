@@ -20,7 +20,7 @@
 <script>
 import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 // import 'swiper/swiper-bundle.css'
-import 'swiper/css/swiper.css'
+// import 'swiper/css/swiper.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from 'moment'
 import AssignmentRepository from "@/repositories/AssignmentRepository";
