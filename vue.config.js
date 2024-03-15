@@ -15,6 +15,22 @@ module.exports = {
   chainWebpack: config => {
     // remove the prefetch plugin
     config.plugins.delete('prefetch')
+
+    config.resolve.alias.set('vue', '@vue/compat')
+
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2
+            }
+          }
+        }
+      })
   },
   configureWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
