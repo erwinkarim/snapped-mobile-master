@@ -32,11 +32,19 @@ module.exports = {
         }
       })
   },
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-    } else {
-      // for dev only
-      plugins: [new BundleAnalyzerPlugin()]
-    }
+  configureWebpack: {
+    resolve: {
+      fallback: {
+        "stream": require.resolve("stream-browserify"),
+        "buffer": require.resolve("buffer"),
+        "http": require.resolve("stream-http"),
+        "https": require.resolve("https-browserify"),
+        "querystring": require.resolve("querystring-es3"),
+        "url": require.resolve("url/"),
+        "crypto": require.resolve("crypto-browserify"),
+        "vm": require.resolve("vm-browserify"),
+        "fs": false,
+      }
+    },
   },
 };

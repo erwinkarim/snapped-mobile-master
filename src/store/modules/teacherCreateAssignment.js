@@ -2,6 +2,7 @@ import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from "moment";
 import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
+import {Buffer} from 'buffer';
 // import {get} from "v-calendar/src/utils/_";
 
 // shoud move to repository later.
