@@ -30,10 +30,12 @@ export default {
   },
   computed: {
     username() {
-      return this.$store.getters.getAuthUsername
+      // return this.$store.getters.getAuthUsername
+      return 'userName';
     },
     gender() {
-      return this.$store.getters.getAuthUserGender
+      return 'male';
+      // return this.$store.getters.getAuthUserGender
     },
     nowDate() {
       const date = moment(this.nowDatetime, "YYYY-MM-DD hh:mm:ss").format('DD MMMM YYYY')
