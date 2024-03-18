@@ -29,7 +29,8 @@ export default {
                 .catch(error => {
                     commit('auth_error')
                     localStorage.removeItem('token')
-                    reject(error.response.data)
+                    console.log('auth login error', error);
+                    // reject(error.response.data)
                 })
         })
     },

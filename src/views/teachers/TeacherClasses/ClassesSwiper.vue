@@ -58,7 +58,7 @@ import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
-import router from "@/router";
+import { router } from "@/main.js";
 import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {

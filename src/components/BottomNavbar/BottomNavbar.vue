@@ -37,8 +37,8 @@ export default {
   },
   methods: {
     getTabs() {
-      let userRole = 'Student';
-      // let userRole = this.$store.getters.getAuthUserRole;
+      // let userRole = 'Student';
+      let userRole = this.$store.getters.getAuthUserRole;
 
 
       if (userRole === 'Teacher') {

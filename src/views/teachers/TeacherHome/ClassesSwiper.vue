@@ -51,7 +51,8 @@ import IconBase from "@/components/IconBase";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import TeacherRepository from "@/repositories/TeacherRepository";
-import router from "@/router";
+// import router from "@/router";
+import { router } from "@/main.js";
 import IconBaseTwo from "@/components/IconBaseTwo";
 
 

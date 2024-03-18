@@ -1,5 +1,6 @@
 import axios from "axios"
-import store from "@/store/index"
+// import store from "@/store/index"
+import { store } from "@/main.js"
 
 const baseURL = process.env.VERCEL_GITHUB_COMMIT_REF === 'staging' ? process.env.VUE_APP_STAGING_BACKEND_ENDPOINT : process.env.VUE_APP_BACKEND_ENDPOINT;
 
