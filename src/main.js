@@ -24,10 +24,13 @@ const app = createApp({
   App
 });
 
-app.use(store)
-app.use(router)
-
 router.beforeEach((to, from, next) => {
+//router.beforeEach(async (to, from) => {
+    /*
+    console.log('to.path', to.path);
+    console.log('from.path', from.path);
+    console.log('to.matched.length', to.matched.length);
+    */
 
   // Check if route does not exist. If true, redirect to login
   if (to.matched.length === 0 && to.path !== '/') {
@@ -35,32 +38,31 @@ router.beforeEach((to, from, next) => {
   }
 
   // When entering root path '/'
-  if (to.path === from.path) {
-
+  if (to.path === from.path && from.path == '/') {
       if (localStorage.getItem('token')) {
 
           store.commit('auth_success', localStorage.getItem('token'))
           store.dispatch('setAuthUser')
               .then(userRole => {
-
                       if (userRole === 'Student') {
-                          return next({name: 'student.home'})
-                      }
+                        console.log('should show student home')
+                        return next({name: 'student.home'})
+                      } 
 
                       if (userRole === 'Teacher') {
-                          return next({name: 'teacher.home'})
+                        return next({name: 'teacher.home'})
                       }
                   }
               )
 
       } else {
-          return next({name: 'login'})
+          next({name: 'login'})
+          return
       }
   }
 
   // If path is login, check if user is logged in. If yes, then redirect to home
   if (to.path === '/login') {
-
       if (store.getters.isLoggedIn) {
 
           // Check if authenticated user's details does not exist. If no, get.
@@ -143,13 +145,17 @@ router.beforeEach((to, from, next) => {
       }
 
   }
-
-  // If route is open to public, allow next
   else {
-      return next()
+      // If route is open to public, allow next
+      // return next()
+      return
   }
 
+  return;
 });
+
+app.use(store)
+app.use(router)
 
 app.mount('#app')
 
