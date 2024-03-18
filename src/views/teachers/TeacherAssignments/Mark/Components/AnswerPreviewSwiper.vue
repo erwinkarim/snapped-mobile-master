@@ -21,7 +21,7 @@
 
 <script>
 import {directive} from "vue-awesome-swiper";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "AnswerPreviewSwiper",
@@ -73,7 +73,7 @@ export default {
             .then(() => {
               setTimeout(() => {
                 this.$store.commit('teacherMarking/setMarkingMode')
-                router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
+                this.$router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
               }, 1200);
 
 

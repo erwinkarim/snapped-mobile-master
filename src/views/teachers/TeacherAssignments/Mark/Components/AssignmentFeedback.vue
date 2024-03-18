@@ -42,7 +42,7 @@ import PageTitleTwo from "@/components/PageTitleTwo";
 import NavBack from "@/components/NavBack";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
-import router from "@/router";
+//import router from "@/router";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
@@ -57,7 +57,7 @@ export default {
   methods: {
     exitWritingFeedbackMode() {
       this.$store.commit('teacherMarking/exitWritingFeedbackMode')
-      router.push({name: 'teacher.assignments.marking.details'})
+      this.$router.push({name: 'teacher.assignments.marking.details'})
     },
     save() {
       this.$store.dispatch('teacherMarking/addFeedback', this.draft)

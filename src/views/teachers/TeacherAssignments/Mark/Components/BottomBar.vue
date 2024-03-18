@@ -122,7 +122,7 @@ import StickerLoader from "@/views/teachers/TeacherAssignments/Mark/Components/S
 import IconBaseTwo from "@/components/IconBaseTwo";
 import TickedBoxIcon from "@/components/icons/TickedBoxIcon";
 import DialogBubbleIcon from "@/components/icons/DialogBubbleIcon";
-import router from "@/router";
+//import router from "@/router";
 
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faCheckCircle} from '@fortawesome/free-regular-svg-icons'
@@ -191,7 +191,7 @@ export default {
     doneEditSnappedAnswer() {
       this.$store.dispatch('teacherMarking/doneEditSnappedAnswer')
           .then(() => {
-            router.push({name: 'teacher.assignments.marking.details'});
+            this.$router.push({name: 'teacher.assignments.marking.details'});
           })
     },
 

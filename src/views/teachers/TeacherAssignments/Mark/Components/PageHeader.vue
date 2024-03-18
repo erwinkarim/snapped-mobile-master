@@ -139,7 +139,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import UndoIcon from "@/components/icons/UndoIcon";
 import GearIcon from "@/components/icons/GearIcon.vue";
-import router from "@/router";
+// import router from "@/router";
 
 import {faCircle, faMarker, faEraser, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon, FontAwesomeLayers} from '@fortawesome/vue-fontawesome'
@@ -214,7 +214,7 @@ export default {
 
     exitMarkingMode() {
       this.$store.commit('teacherMarking/setPreviewingMode')
-      router.push({name: 'teacher.assignments.marking.details'})
+      this.$router.push({name: 'teacher.assignments.marking.details'})
     },
 
 
@@ -238,7 +238,7 @@ export default {
 
     toggleOptions(){
       console.log('show options page');
-      router.push({name: 'teacher.assignments.marking.options'});
+      this.$router.push({name: 'teacher.assignments.marking.options'});
     }
 
   },

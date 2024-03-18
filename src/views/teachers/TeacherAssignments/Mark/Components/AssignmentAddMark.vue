@@ -52,7 +52,7 @@
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import NavBack from "@/components/NavBack";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "AssignmentAddMark",
@@ -69,7 +69,7 @@ export default {
         this.$store.dispatch('teacherMarking/addMark', this.marks)
             .then(() => {
               this.errorMessage = null
-              router.push({name: 'teacher.assignments.marking.details'})
+              this.$router.push({name: 'teacher.assignments.marking.details'})
             })
       } else {
         this.errorMessage  = 'Please enter a value between 0 and 100.'

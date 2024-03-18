@@ -208,7 +208,7 @@ import moment from "moment";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import CountdownTimer from "@/components/CountdownTimer";
 import Modal from "@/components/Modal";
-import router from "@/router";
+// import router from "@/router";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
@@ -410,7 +410,7 @@ export default {
 			}
 
 			// move to another page when answering something.
-			router.push({
+			this.$router.push({
 				name: 'student.assignments.answer.store', params: {
 					assignmentDetails: this.assignmentDetails,
 					answer: {
@@ -424,7 +424,7 @@ export default {
 		answerText(){
 			console.log('answer question w/ text input');
 
-			router.push({
+			this.$router.push({
 				name: 'student.assignments.answer.storeText', params: {
 					assignmentDetails: this.assignmentDetails,
 				}

@@ -43,7 +43,7 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import PageHeaderThree from "@/components/PageHeaderThree";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
 	name: "AnswerTextSave",
@@ -59,7 +59,7 @@ export default {
 	methods: {
 		goBack(){
 			console.log('goback');
-			router.go(-2);
+			this.$router.go(-2);
 		},
 		saveAnswer(){
 			// store text answer in repo and go back

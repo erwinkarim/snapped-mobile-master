@@ -64,7 +64,7 @@ import moment from "moment";
 import StudentRepository from "@/repositories/StudentRepository";
 import CircleProgressBar from "@/components/CircleProgressBar";
 import RankingPanel from "@/views/students/StudentDetails/components/RankingPanel";
-import router from "@/router";
+// import router from "@/router";
 import PageTitleTwo from "@/components/PageTitleTwo";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import TabBar from "@/views/students/StudentDetails/components/TabBar";
@@ -130,7 +130,7 @@ export default {
     handleRouteChange() {
       if (this.userRole !== 'Teacher' && !this.isAuthStudent) {
         if (this.$route.name !== 'student.profile.show') {
-          router.push({name: 'student.profile.show'})
+          this.$router.push({name: 'student.profile.show'})
         }
       }
     },
@@ -180,7 +180,7 @@ export default {
 
   created() {
     if (this.$route.name !== 'student.profile.show') {
-      router.push({name: 'student.profile.show'})
+      this.$router.push({name: 'student.profile.show'})
     }
     this.fetchData()
     this.getAuthUser()

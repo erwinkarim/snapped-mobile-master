@@ -149,7 +149,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ClockIcon from "@/components/icons/ClockIcon";
 import moment from "moment";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "Index",
@@ -190,7 +190,7 @@ export default {
           .then(response => {
             if (response.data.success) {
               this.toggleDeleteModal();
-              router.push({ name: 'teacher.assignments'})
+              this.$router.push({ name: 'teacher.assignments'})
             }
           })
     },

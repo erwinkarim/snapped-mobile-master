@@ -38,7 +38,7 @@
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
-import router from "@/router";
+// import router from "@/router";
 import TaggingIcon from "../../../components/icons/TaggingIcon";
 import IconBaseTwo from "../../../components/IconBaseTwo";
 import StudentRepository from "@/repositories/StudentRepository";
@@ -143,7 +143,7 @@ export default {
     },
 
     goToStudentShow(studentID) {
-      router.push({name: 'student.profile.show', params: {studentID: studentID}})
+      this.$router.push({name: 'student.profile.show', params: {studentID: studentID}})
     },
 
     taggingClass(statusColor) {

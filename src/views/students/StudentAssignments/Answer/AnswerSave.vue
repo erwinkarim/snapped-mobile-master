@@ -159,7 +159,7 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import Modal from "@/components/Modal";
 import DashboardLayout from "@/views/layout/DashboardLayout";
 import PageHeaderThree from "@/components/PageHeaderThree";
-import router from "@/router";
+// import router from "@/router";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import CropIcon from "@/components/icons/CropIcon";
 import { UltimateTextToImage} from "ultimate-text-to-image";
@@ -431,7 +431,7 @@ export default {
     }
 
     if (!this.hasAnswerContent) {
-      router.push({name: 'student.assignments.show'})
+      this.$router.push({name: 'student.assignments.show'})
     }
   },
   components: {
