@@ -52,7 +52,7 @@ import BookmarkIcon from "@/components/icons/BookmarkIcon";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import TeacherRepository from "@/repositories/TeacherRepository";
 // import router from "@/router";
-import { router } from "@/main.js";
+// import { router } from "@/main.js";
 import IconBaseTwo from "@/components/IconBaseTwo";
 
 
@@ -112,7 +112,7 @@ export default {
     },
 
     goToClass (classID) {
-      router.push({ name: 'teacher.class.details', params: { classID: classID } })
+      this.$router.push({ name: 'teacher.class.details', params: { classID: classID } })
     },
 
   },

@@ -58,7 +58,6 @@ import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
-import { router } from "@/main.js";
 import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
@@ -131,7 +130,7 @@ export default {
           })
     },
     goToClass (classID, className) {
-      router.push({ name: 'teacher.class.details', params: { classID: classID , className: className} })
+      this.$router.push({ name: 'teacher.class.details', params: { classID: classID , className: className} })
     },
     emitNumOfClasses () {
       this.$emit('numOfClasses', this.numOfClasses)
