@@ -179,7 +179,8 @@ export default {
           this.$store.dispatch("teacherMarking/bulkConvertSubmissionsToDataURL")
         })
   },
-  destroyed() {
+  //destroyed() {
+  unmounted() {
     this.$store.commit('teacherMarking/resetState')
   },
   components: {

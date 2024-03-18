@@ -54,7 +54,8 @@ export default {
   mounted() {
     this.interval = setInterval(this.datetime, 1000)
   },
-  beforeDestroy() {
+  // beforeDestroy() {
+  beforeUnmount() {
     clearInterval(this.interval)
   },
   components: {IconBaseTwo, PlusIcon, ProfilePhoto}
