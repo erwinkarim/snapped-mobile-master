@@ -109,7 +109,8 @@ export default {
 		// this.interval = setInterval(this.datetime, 1000)
 	},
 
-	beforeDestroy() {
+	//beforeDestroy() {
+	beforeUnmount() {
 		clearInterval(this.interval)
 	}
 }
