@@ -18,10 +18,9 @@ export { store, router };
 const app = createApp({
   // router,
   // store,
-  // render: () => h(App)
+  render: () => h(App)
   //...App,
-  render: () => h(App),
-  App
+  //App
 });
 
 router.beforeEach((to, from, next) => {
