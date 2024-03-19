@@ -1,9 +1,14 @@
 <template>
   <div>
-    <div v-my-swiper:mySwiper="swiperOption">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide" @click="goToClass(item.classID)" :key="item.classID" v-for="item in classes">
-          <div class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
+    <!--div v-my-swiper:mySwiper="swiperOption"-->
+    <swiper>
+      <!--div class="swiper-wrapper"-->
+        <!--div class="swiper-slide" @click="goToClass(item.classID)" :key="item.classID" v-for="item in classes"-->
+        <swiper-slide 
+          :key="item.classID" v-for="item in classes">
+          <div 
+            @click="goToClass(item.classID)" 
+            class="max-w-sm h-46 rounded rounded-xl overflow-hidden bg-gray-secondary flex flex-col px-3 py-3">
 
             <div class="flex-grow">
               <icon-base width="100" height="50" icon-name="app-logo" icon-color="white" view-box="0 0 105 50">
@@ -30,19 +35,26 @@
             </div>
 
           </div>
-        </div>
-      </div>
-      <div class="swiper-pagination"></div>
-<!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
-<!--      <div class="swiper-button-next" slot="button-next"></div>-->
-    </div>
+        </swiper-slide>
+      <!--/div-->
+      <!--div class="swiper-pagination"></div-->
+      <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
+      <!--      <div class="swiper-button-next" slot="button-next"></div>-->
+    </swiper>
   </div>
 
 </template>
 
 <script>
 
-import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+// import { Pagination, } from 'swiper/modules';
+// Import Swiper styles
+import 'swiper/css';
+// do this later
+//import 'swiper/css/pagination';
+
+// import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 // this causes installation issues
 // import 'swiper/swiper-bundle.css'
 // import 'swiper/css/swiper.css';
@@ -57,10 +69,16 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 
 
 export default {
-  components: {IconBaseTwo, ProfilePhotoStacked, BookmarkIcon, IconBase, StackedProfilePhoto},
+  components: {
+    IconBaseTwo, ProfilePhotoStacked, BookmarkIcon, IconBase, StackedProfilePhoto,
+    Swiper, SwiperSlide
+
+  },
+  /*
   directives: {
     mySwiper: directive
   },
+  */
   data() {
     return {
       classes: [],

@@ -1,6 +1,7 @@
 <template>
 	<div class="w-full">
-		<div v-my-swiper="swiperOption">
+		<!--div v-my-swiper="swiperOption"-->
+		<swiper>
 			<div class="swiper-wrapper">
 
 				<assignment-card
@@ -13,12 +14,14 @@
 				/>
 			</div>
 			<div class="swiper-pagination"></div>
-		</div>
+		</swiper>
 	</div>
 </template>
 
 <script>
-import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
+// import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+
 // import 'swiper/swiper-bundle.css'
 // import 'swiper/css/swiper.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
@@ -28,12 +31,14 @@ import AssignmentCard from "@/components/AssignmentCard";
 
 export default {
 	components: {
-		AssignmentCard
-
+		AssignmentCard,
+		Swiper,
 	},
+	/*
 	directives: {
 		mySwiper: directive
 	},
+	*/
 	data() {
 		return {
 			numOfAssignments: 0,
@@ -112,7 +117,7 @@ export default {
 	//beforeDestroy() {
 	beforeUnmount() {
 		clearInterval(this.interval)
-	}
+	},
 }
 </script>
 
