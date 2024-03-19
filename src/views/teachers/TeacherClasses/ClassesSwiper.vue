@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div v-my-swiper="swiperOption">
-      <div class="swiper-wrapper">
+    <!--div v-my-swiper="swiperOption"-->
+    <swiper>
+      <!--div class="swiper-wrapper"-->
 
-        <div class="swiper-slide" v-for="(column, index) in classes">
+        <!--div class="swiper-slide" v-for="(column, index) in classes"-->
+        <swiper-slide class="swiper-slide" v-for="(column, index) in classes">
 
           <!-- CARD: CLASS DETAILS -->
           <div v-for="(item, index) in column"
@@ -39,20 +41,22 @@
             </div>
           </div>
 
-        </div>
+        </swiper-slide>
 
-      </div>
+      <!--/div-->
       <div class="swiper-pagination"></div>
       <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
       <!--      <div class="swiper-button-next" slot="button-next"></div>-->
-    </div>
+    </swiper>
   </div>
 </template>
 
 <script>
-import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
+// import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 // import 'swiper/swiper-bundle.css'
 // import 'swiper/css/swiper.css'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
@@ -62,10 +66,15 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "ClassesSwiper",
-  components: {IconBaseTwo, BookmarkIcon, ProfilePhotoStacked, IconBase},
+  components: {
+    IconBaseTwo, BookmarkIcon, ProfilePhotoStacked, IconBase,
+    Swiper, SwiperSlide,
+  },
+  /*
   directives: {
     mySwiper: directive
   },
+  */
   watch: {
     'numOfClasses' : 'emitNumOfClasses'
   },

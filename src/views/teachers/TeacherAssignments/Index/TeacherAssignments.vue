@@ -64,7 +64,7 @@
             </template>
           </assignment-card>
 
-          <!--infinite-loading :identifier="filterCount"
+          <infinite-loading :identifier="filterCount"
                             @infinite="handleInfiniteScroll"
                             spinner="bubbles"
                             force-use-infinite-wrapper
@@ -74,7 +74,7 @@
             <div slot="no-results" class="text-purple-secondary mt-12">
               No available data.
             </div>
-          </infinite-loading-->
+          </infinite-loading>
         </div>
       </div>
     </template>
@@ -145,7 +145,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import FilterIcon from "@/components/icons/FilterIcon";
 import SectionTitle from "@/components/SectionTitle";
 import AssignmentCalendar from "@/components/AssignmentCalendar";
-// import InfiniteLoading from "vue-infinite-loading";
+import InfiniteLoading from "vue-infinite-loading";
 
 import moment from "moment";
 import SelectMonth from "@/components/SelectMonth";
@@ -316,7 +316,7 @@ export default {
     IconBaseTwo,
     PageTitle,
     DashboardLayout,
-    // InfiniteLoading
+    InfiniteLoading
   }
 }
 </script>
