@@ -1,5 +1,7 @@
 import Vue, { createApp, h } from 'vue'
 import App from './App.vue'
+import { setupCalendar } from 'v-calendar';
+
 // import router from './router'
 // import store from './store'
 
@@ -155,6 +157,7 @@ router.beforeEach((to, from, next) => {
 
 app.use(store)
 app.use(router)
+app.use(setupCalendar, {})
 
 app.mount('#app')
 

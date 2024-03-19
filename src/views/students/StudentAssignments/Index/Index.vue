@@ -51,17 +51,20 @@
               </template>
             </assignment-card>
 
-            <!--infinite-loading :identifier="filterCount"
-                              @infinite="handleInfiniteScroll"
-                              spinner="bubbles"
-                              force-use-infinite-wrapper
+            <infinite-loading 
+              :identifier="filterCount"
+              @infinite="handleInfiniteScroll"
+              spinner="bubbles"
+              force-use-infinite-wrapper
+              :message = "message"
+              :noResult = "noResult"
             >
               <div slot="spinner" class="mt-10">Loading...</div>
               <div slot="no-more"></div>
               <div slot="no-results" class="text-purple-secondary mt-12">
                 No available data.
               </div>
-            </infinite-loading-->
+            </infinite-loading>
           </div>
 
         </div>
@@ -145,8 +148,7 @@ import SelectYear from "@/components/SelectYear";
 import SelectSubject from "@/components/SelectSubject";
 import moment from "moment";
 // import StudentRepository from "@/repositories/StudentRepository";
-// import InfiniteLoading from "vue-infinite-loading";
-
+import InfiniteLoading from "vue-infinite-loading";
 
 export default {
   name: "Index",
@@ -169,16 +171,20 @@ export default {
       },
 
       assignments: [],
-      meta: null
+      meta: null,
     }
   },
   watch: {
-    'filters.date': function (newSelect) {
-      if (newSelect != null) {
-        this.updateFilter()
-      }
+    'filters.date': {
+      handler(newSelect) {
+        console.log('watch triggered');
+        if (newSelect != null) {
+          this.updateFilter()
+        }
+      }, 
+      deep: true,
     }
-  },
+  }, 
   computed: {
     selectedDate() {
       if (this.filters.date) {
@@ -207,6 +213,7 @@ export default {
   methods: {
 
     handleInfiniteScroll($state) {
+      console.log('handleInfiniteScroll triggered');
 
       if (this.hasLoadMore) {
 
@@ -314,7 +321,7 @@ export default {
     IconBaseTwo,
     SectionTitle,
     PageTitle,
-    // InfiniteLoading
+    InfiniteLoading,
   },
 }
 </script>
