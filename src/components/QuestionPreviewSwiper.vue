@@ -1,31 +1,34 @@
 <template>
 
   <div>
-    <div v-my-swiper="swiperOption"
+    <swiper
          @slideChangeTransitionEnd="handleSlideChange"
          v-on:imagesReady ="handleSwiperImagesReady"
          class="w-full"
     >
-      <div class="swiper-wrapper">
-        <div v-for="path in snappedAnswerPaths"
+      <!--div class="swiper-wrapper"-->
+        <swiper-slide v-for="path in snappedAnswerPaths"
              :class="swiperClass"
              class="swiper-slide rounded-2xl h-full overflow-hidden"
         >
           <div class="w-full py-2 px-4 h-full object-cover top-0 items-center absolute">
             <img crossorigin="anonymous" :src="path">
           </div>
-        </div>
-      </div>
+        </swiper-slide>
+      <!--/div-->
       <div class="swiper-pagination"></div>
-    </div>
+    </swiper>
   </div>
 
 
 </template>
 
 <script>
-import {directive} from "vue-awesome-swiper";
+// import {directive} from "vue-awesome-swiper";
 // import 'swiper/css/swiper.css'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/css';
+
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 
@@ -88,6 +91,7 @@ export default {
       this.swiperDetails.activeSlideIndex = swiper.activeIndex
     },
     getSwiperDetails() {
+      return true;
       this.swiperDetails = {
         slidesCount: this.$swiper.imagesLoaded,
         activeSlideIndex: this.$swiper.activeIndex,
@@ -101,11 +105,15 @@ export default {
     this.getSwiperDetails()
   },
 
+  /*
   directives: {
     mySwiper: directive
   },
-  components: {ExpandImageIcon, IconBaseTwo},
-
+  */
+  components: {
+    ExpandImageIcon, IconBaseTwo,
+    Swiper, SwiperSlide
+  },
 }
 </script>
 

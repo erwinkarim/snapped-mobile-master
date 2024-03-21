@@ -174,7 +174,9 @@ export default {
       },
 
       assignments: [],
-      meta: null
+      meta: null, 
+
+      date: new Date(),
 
     };
   },

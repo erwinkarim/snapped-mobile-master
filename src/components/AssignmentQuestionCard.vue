@@ -167,6 +167,8 @@ export default {
 					name: res.data.collection.name,
 					questions: res.data.totalObjQuestions,
 				};
+			}).catch(e => {
+				console.log('error getting mysoalan', e);
 			});
 		}
 

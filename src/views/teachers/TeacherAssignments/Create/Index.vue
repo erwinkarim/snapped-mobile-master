@@ -18,7 +18,7 @@
           New Assignment
         </template>
         <template v-slot:title>
-          New Assignment
+          New Assignment 
         </template>
       </page-header-three>
 
@@ -226,7 +226,8 @@
 
           <template v-slot:message>
             <div class="grid grid-cols-1 w-full divide-y divide-transparent">
-              <date-picker v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime"
+              <date-picker 
+                v-model="date"
                 mode="dateTime"
                 :min-date="new Date()"
                 class="place-self-center"
@@ -341,11 +342,10 @@
 
 <script>
 
-
 // Register components in your 'main.js'
-import Vue from "vue";
 // import Calendar from "v-calendar/lib/components/calendar.umd";
 // import DatePicker from "v-calendar/lib/components/date-picker.umd";
+import { ref } from 'vue';
 import { Calendar, DatePicker } from 'v-calendar';
 import Multiselect from "vue-multiselect";
 import TeacherRepository from "@/repositories/TeacherRepository";
@@ -383,7 +383,10 @@ export default {
     strokeColor: String,
   },
   data() {
-    return {}
+    return {
+      date: new Date(),
+      startDate: ref(new Date()),
+    }
   },
   computed: {},
   watch: {},
@@ -438,7 +441,7 @@ export default {
   components: {
     ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, 
     CalendarIcon, IconBaseTwo,
-    Calendar, DatePicker, Multiselect,
+    Calendar, DatePicker,  Multiselect,
   }
 }
 </script>
