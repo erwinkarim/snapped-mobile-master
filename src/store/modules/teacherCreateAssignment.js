@@ -350,6 +350,7 @@ export default {
 
 			// init, basically everything to null.
 			initialise(state) {
+				console.log('teacherCreateAssignment.intialise() fired');
 
 					// STATES
 					state.states = {
@@ -665,6 +666,8 @@ export default {
 			this.toggleDuration = !this.toggleDuration
 		},
 		getSchools({state}){
+			console.log('teacherCreateAssignment.getSchools() fired');
+			
 			TeacherRepository
 				.getTeacherSchools()
 				.then(res => {

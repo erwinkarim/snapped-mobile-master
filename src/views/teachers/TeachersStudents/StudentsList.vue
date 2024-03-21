@@ -11,25 +11,25 @@
         </icon-base-two>
         <div class="w-5/6 ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
       </div>
-      <div v-for="performance in performances"
+      <!--div v-for="performance in performances"
            v-if="performance.student_id === student.id "
            class=" w-1/12"
       >
         <icon-base-two :class="taggingClass(performance.status_color)" class="w-5/6">
           <tagging-icon/>
         </icon-base-two>
-      </div>
+      </div-->
     </div>
 
-    <!--infinite-loading :identifier="filterCount"
-                      @infinite="handleInfiniteScroll"
-                      spinner="bubbles"
-                      force-use-infinite-wrapper
+    <infinite-loading :identifier="filterCount"
+      @infinite="handleInfiniteScroll"
+      spinner="bubbles"
+      force-use-infinite-wrapper
     >
       <div slot="spinner" class="mt-10">Loading...</div>
       <div slot="no-more"></div>
       <div slot="no-results">No results message</div>
-    </infinite-loading-->
+    </infinite-loading>
 
   </div>
 </template>
@@ -42,7 +42,7 @@ import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import TaggingIcon from "../../../components/icons/TaggingIcon";
 import IconBaseTwo from "../../../components/IconBaseTwo";
 import StudentRepository from "@/repositories/StudentRepository";
-// import InfiniteLoading from "vue-infinite-loading";
+import InfiniteLoading from "vue-infinite-loading";
 
 
 export default {
@@ -72,7 +72,7 @@ export default {
     }
   },
   watch: {
-    '$route': 'fetchData',
+    // '$route': 'fetchData',
     'search': 'searchName'
   },
   computed: {
@@ -167,7 +167,7 @@ export default {
     this.getStudentPerformance()
   },
   components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase, 
-    // InfiniteLoading
+    InfiniteLoading
   },
 
 }

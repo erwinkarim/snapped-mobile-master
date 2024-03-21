@@ -226,10 +226,10 @@
 
           <template v-slot:message>
             <div class="grid grid-cols-1 w-full divide-y divide-transparent">
-              <v-date-picker v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime"
-                             mode="dateTime"
-                             :min-date="new Date()"
-                             class="place-self-center"
+              <date-picker v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime"
+                mode="dateTime"
+                :min-date="new Date()"
+                class="place-self-center"
               />
             </div>
           </template>
@@ -252,7 +252,7 @@
             <div>
               <p class="mb-3">Pick date and time to publish the assignment.</p>
             </div>
-            <v-date-picker class="place-self-center"
+            <date-picker class="place-self-center"
 							v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
 							mode="dateTime"
 						/>
@@ -346,6 +346,7 @@
 import Vue from "vue";
 // import Calendar from "v-calendar/lib/components/calendar.umd";
 // import DatePicker from "v-calendar/lib/components/date-picker.umd";
+import { Calendar, DatePicker } from 'v-calendar';
 import Multiselect from "vue-multiselect";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from "moment";
@@ -368,9 +369,13 @@ import 'cropperjs/dist/cropper.css';
 import CreateQuestionForm from "@/views/teachers/TeacherAssignments/Create/CreateQuestionForm";
 import ErrorModal from "@/views/teachers/TeacherAssignments/Create/Modals/ErrorModal";
 
+/*
 Vue.component('v-calendar', Calendar)
 Vue.component('v-date-picker', DatePicker)
 Vue.component('multiselect', Multiselect)
+*/
+
+import 'v-calendar/style.css';
 
 export default {
   name: "Index",
@@ -431,12 +436,14 @@ export default {
     }
   },
   components: {
-    ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo
+    ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, 
+    CalendarIcon, IconBaseTwo,
+    Calendar, DatePicker, Multiselect,
   }
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style>
 	.multiselect__placeholder {
 		color: #7B7F9E;
