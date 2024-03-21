@@ -17,13 +17,16 @@ const store = createStore(router)
 export { store, router };
 
 //new Vue({ 
+/*
 const app = createApp({
   // router,
   // store,
-  render: () => h(App)
+  //render: () => h(App)
   //...App,
   //App
 });
+*/
+const app = createApp(App);
 
 router.beforeEach((to, from, next) => {
 //router.beforeEach(async (to, from) => {

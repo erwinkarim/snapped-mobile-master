@@ -9,9 +9,10 @@
 <template>
   <!-- HEADER -->
   <div :class="containerClass"
-       v-scroll="handleScroll"
        class="w-full flex flex-col z-40 md:max-w-xl"
   >
+    <!--custom directive before-->
+    <!--v-scroll="handleScroll"-->
 
     <!-- LEFT ACTION (NAVBACK/CANCEL) + MINI TITLE + RIGHT ACTION -->
     <div :class="headerClass" class="flex flex-row w-full md:max-w-xl justify-between px-1 ">
