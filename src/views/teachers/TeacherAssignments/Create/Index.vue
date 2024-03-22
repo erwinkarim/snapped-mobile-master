@@ -15,10 +15,10 @@
           <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
-          New Assignment
+          New Assignment 
         </template>
         <template v-slot:title>
-          New Assignment 
+          New Assignment {{ $store.state.teacherCreateAssignment.assignmentDetails.due_datetime }}
         </template>
       </page-header-three>
 
@@ -226,11 +226,15 @@
 
           <template v-slot:message>
             <div class="grid grid-cols-1 w-full divide-y divide-transparent">
-              <date-picker 
-                v-model="date"
-                mode="dateTime"
+              <!--date-picker 
+                v-model=date
                 :min-date="new Date()"
                 class="place-self-center"
+              /-->
+              <VueDatePicker 
+                v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime" 
+                inline auto-apply 
+                :min-date="new Date()"
               />
             </div>
           </template>
@@ -256,11 +260,17 @@
               <div>
                 <p class="mb-3">Pick date and time to publish the assignment.</p>
               </div>
-              <date-picker 
+              <!--date-picker 
                 class="place-self-center"
                 v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
                 mode="dateTime"
+              /-->
+              <VueDatePicker 
+                v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
+                auto-apply inline
+                :min-date="new Date()"
               />
+
             </div>
           </template>
           <template v-slot:button>
@@ -285,11 +295,13 @@
                :has-button="false"
                class="w-4/5"
         >
-          <p slot="message">
-            Publishing your assignment.
-            <br>
-            Please wait...
-          </p>
+          <template v-slot:message>
+            <p>
+              Publishing your assignment.
+              <br>
+              Please wait...
+            </p>
+          </template>
         </modal>
       </div>
 
@@ -301,11 +313,15 @@
                :redirect-route="{name: 'teacher.assignments'}"
                class="w-4/5"
         >
-          <h3 slot="title" class="text-4xl font-bold text-purple-primary">Published!</h3>
-          <p slot="message">
-            Got something to change? Don't worry! You can always edit your published homework
-          </p>
-          <template slot="button">
+          <template v-slot:title>
+            <h3 class="text-4xl font-bold text-purple-primary">Published!</h3>
+          </template>
+          <template v-slot:message>
+            <p>
+              Got something to change? Don't worry! You can always edit your published homework
+            </p>
+          </template>
+          <template v-slot:button>
             <button class="px-2 w-4/5 font-bold tracking-wider leading-relaxed rounded-full">
               Okay
             </button>
@@ -375,6 +391,8 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import CreateQuestionForm from "@/views/teachers/TeacherAssignments/Create/CreateQuestionForm";
 import ErrorModal from "@/views/teachers/TeacherAssignments/Create/Modals/ErrorModal";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 /*
 Vue.component('v-calendar', Calendar)
@@ -449,6 +467,7 @@ export default {
     ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, 
     CalendarIcon, IconBaseTwo,
     Calendar, DatePicker,  Multiselect,
+    VueDatePicker,
   }
 }
 </script>

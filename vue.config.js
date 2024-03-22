@@ -10,7 +10,7 @@ module.exports = {
       // somehow breaks firefox
     },
     // proxy: 'http://localhost:8000/',
-    proxy: 'http://192.168.0.105:8000/',
+    // proxy: 'http://192.168.0.105:8000/',
   },
   chainWebpack: config => {
     // remove the prefetch plugin
