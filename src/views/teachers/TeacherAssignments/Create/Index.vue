@@ -248,24 +248,31 @@
            @click.self="$store.commit('teacherCreateAssignment/toggleShowingSchedulerMode')"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
         <modal class="fixed mx-1/24" modal-type="no-icon">
-          <h3 slot="title" class="font-bold">Schedule Publish</h3>
-          <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
-            <div>
-              <p class="mb-3">Pick date and time to publish the assignment.</p>
+          <template v-slot:title>
+            <h3 class="font-bold">Schedule Publish</h3>
+          </template>
+          <template v-slot:message>
+            <div class="w-full grid grid-cols-1 divide-y divide-transparent">
+              <div>
+                <p class="mb-3">Pick date and time to publish the assignment.</p>
+              </div>
+              <date-picker 
+                class="place-self-center"
+                v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
+                mode="dateTime"
+              />
             </div>
-            <date-picker class="place-self-center"
-							v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
-							mode="dateTime"
-						/>
-          </div>
-          <span slot="button">
-						<button @click="$store.dispatch('teacherCreateAssignment/sendData')"
-							:disabled="$store.state.teacherCreateAssignment.states.isPublishing"
-							class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
-						>
-							Schedule Publish
-						</button>
-					</span>
+          </template>
+          <template v-slot:button>
+            <span slot="button">
+              <button @click="$store.dispatch('teacherCreateAssignment/sendData')"
+                :disabled="$store.state.teacherCreateAssignment.states.isPublishing"
+                class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
+              >
+                Schedule Publish
+              </button>
+            </span>
+          </template>
         </modal>
       </div>
 
@@ -306,7 +313,7 @@
         </modal>
       </div>
 
-      <error-modal v-if="$store.state.teacherCreateAssignment.states.isShowingError"/>
+      <error-modal v-if="$store.state.teacherCreateAssignment.states.isShowingError" />
     </template>
 
     <template v-slot:bottomBar v-if="$store.state.teacherCreateAssignment.states.isMain">

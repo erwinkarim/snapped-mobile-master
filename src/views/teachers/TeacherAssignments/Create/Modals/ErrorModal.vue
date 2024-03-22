@@ -6,7 +6,7 @@
     <modal class="w-4/5"
            modal-type="error"
     >
-      <div slot="message">
+      <template v-slot:message>
         <p>
           <b>Please ensure that you have entered all the important inputs</b>
         </p>
@@ -15,8 +15,8 @@
             {{ error }}
           </li>
         </ul>
-      </div>
-      <template slot="button">
+      </template>
+      <template v-slot:button>
         <button @click="$store.commit('teacherCreateAssignment/toggleShowingErrorMode')"
                 class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider"
         >
