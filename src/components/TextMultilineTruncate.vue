@@ -1,11 +1,13 @@
 <template>
-  <VueMarkdown class="leading-relaxed" :style="style">
-    <slot/>
-  </VueMarkdown>
+  <VMarkdownView class="leading-relaxed" :style="style">
+    <slot />
+  </VMarkdownView>
 </template>
 
 <script>
-import VueMarkdown from 'vue-markdown';
+// import VueMarkdown from 'vue-markdown';
+import { VMarkdownView } from 'vue3-markdown'
+import 'vue3-markdown/dist/style.css'
 
 export default {
   name: "TextMultilineTruncate",
@@ -30,7 +32,7 @@ export default {
     }
   },
   components: {
-    VueMarkdown,
+    VMarkdownView,
   },
 }
 </script>

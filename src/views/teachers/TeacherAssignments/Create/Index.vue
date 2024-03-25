@@ -18,7 +18,7 @@
           New Assignment 
         </template>
         <template v-slot:title>
-          New Assignment {{ $store.state.teacherCreateAssignment.assignmentDetails.due_datetime }}
+          New Assignment
         </template>
       </page-header-three>
 

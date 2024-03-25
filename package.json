@@ -46,12 +46,12 @@
     "vue-awesome-swiper": "^5.0.0",
     "vue-cropperjs": "^4.2.0",
     "vue-infinite-loading": "^3.0.0-alpha.0-0",
-    "vue-markdown": "^2.2.4",
     "vue-moment": "^4.1.0",
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-qrcode-reader": "^3.1.0",
     "vue-radial-progress": "^0.3.2",
     "vue-router": "^4.0.0",
+    "vue3-markdown": "^1.1.9",
     "vuex": "^4.0.0"
   },
   "devDependencies": {

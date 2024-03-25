@@ -273,7 +273,8 @@
         <!-- something already written, so display the preview -->
         <hr />
         <div v-if="$store.getters['teacherCreateAssignment/hasWrittenQuestionDraft']" class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
-          <VueMarkdown :source="writtenQuestion" class="w-full text-left" />
+          <!--VueMarkdown :source="writtenQuestion" class="w-full text-left" /-->
+          <VMarkdownView :content="writtenQuestion" class="w-full text-left" />
         </div>
         <div v-if="!$store.getters['teacherCreateAssignment/isEditingWrittenQuestion']" class="flex flex-row items-center py-5 pr-2 pl-6 mt-2 mb-2 w-full text-lg font-normal leading-tight rounded-md border border-none appearance-none bg-gray-secondary text-purple-secondary focus:outline-none focus:shadow-outline placeholder-purple-secondary">
           <div class="w-4/5 text-left text-blue-secondary">
@@ -387,7 +388,9 @@ import PlusIcon from "@/components/icons/PlusIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import ZoomIcon from "@/components/icons/ZoomIcon";
 import MicrophoneIcon from "@/components/icons/MicrophoneIcon";
-import VueMarkdown from 'vue-markdown';
+// import VueMarkdown from 'vue-markdown';
+import { VMarkdownView } from 'vue3-markdown'
+import 'vue3-markdown/dist/style.css'
 import MySoalanSelector from "@/components/MySoalanSelector.vue";
 import NewVideoForm from "@/components/NewVideoForm.vue";
 
@@ -519,7 +522,7 @@ export default {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
     VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
     MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector,
-    NewVideoForm,
+    NewVideoForm, VMarkdownView
   }
 }
 </script>

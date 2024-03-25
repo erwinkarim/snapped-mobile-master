@@ -82,9 +82,10 @@
 					<h2 v-if="assignment.written_question.title" class="mb-2" >
 						{{ assignment.written_question.title }}
 					</h2>
-					<VueMarkdown v-if="isReadingMore" class="text-lg" >
+					<!--VueMarkdown v-if="isReadingMore" class="text-lg" >
 						{{ assignment.written_question.description }}
-					</VueMarkdown>
+					</VueMarkdown-->
+					<VMarkdownView v-if="isReadingMore" class="text-lg" :content="assignment.written_question.description" />
 					<text-multiline-truncate v-else :lines="7">
 						{{ assignment.written_question.description }}
 					</text-multiline-truncate>
@@ -130,7 +131,8 @@
 			<!-- REMARKS -->
 			<div class="flex flex-col mt-8 text-purple-primary text-xs-plus">
 				<strong>Remarks: </strong><br />
-				<VueMarkdown> {{ assignment.remarks }} </VueMarkdown>
+				<!--VueMarkdown> {{ assignment.remarks }} </VueMarkdown-->
+				<VMarkdownView :content="assignment.remarks" />
 			</div>
 		</div>
 	</div>
@@ -142,7 +144,9 @@ import QuestionPreviewSwiper from "@/components/QuestionPreviewSwiper";
 import moment from "moment";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
-import VueMarkdown from 'vue-markdown';
+// import VueMarkdown from 'vue-markdown';
+import { VMarkdownView } from 'vue3-markdown'
+import 'vue3-markdown/dist/style.css'
 import MySoalanRepository from "@/repositories/MySoalanRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 
@@ -299,7 +303,10 @@ export default {
 			this.$emit('swiperDetails', this.swiperDetails)
 		},
 	},
-	components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate, VueMarkdown }
+	components: {ExpandImageIcon, IconBaseTwo, QuestionPreviewSwiper, TextMultilineTruncate, 
+		// VueMarkdown, 
+		VMarkdownView,
+	}
 }
 </script>
 

@@ -411,7 +411,10 @@ export default {
 
 			// move to another page when answering something.
 			this.$router.push({
-				name: 'student.assignments.answer.store', params: {
+				name: 'student.assignments.answer.store', 
+				params: {
+				}, 
+				query: {
 					assignmentDetails: this.assignmentDetails,
 					answer: {
 						type: 'snapped',
