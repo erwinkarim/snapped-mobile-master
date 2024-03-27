@@ -243,6 +243,8 @@ export default {
     },
 
     onFileSelected(e) {
+      console.log('onFileSelected fired');
+
       let files = e.target.files || e.dataTransfer.files
 
       if (!files.length) {
@@ -250,6 +252,7 @@ export default {
       }
 
       if (files[0].type.match("image.*")) {
+        console.log('this is an array', files);
         this.generateSnappedAnswerPreview(files)
       }
 
@@ -280,7 +283,9 @@ export default {
     },
 
     generateSnappedAnswerPreview(files) {
-      files.forEach(f => {
+      console.log('inside generateSnappedAnswer', files);
+
+      Array.from(files).forEach(f => {
 
         if (!f.type.match("image.*")) {
           return;
