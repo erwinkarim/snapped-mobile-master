@@ -31,7 +31,7 @@
       </page-header-three>
     </template>
 
-    <template slot="content" v-if="isMainPage">
+    <template v-slot:content v-if="isMainPage">
 
       <div class="relative pt-40 px-6 h-full text-left text-purple-primary">
 
@@ -162,7 +162,7 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 // import router from "@/router";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import CropIcon from "@/components/icons/CropIcon";
-import { UltimateTextToImage} from "ultimate-text-to-image";
+// import { UltimateTextToImage } from "ultimate-text-to-image";
 import MySoalanRepository from "@/repositories/MySoalanRepository";
 
 // Vue Cropper
@@ -186,8 +186,8 @@ let dataURLtoBlob = (dataurl) => {
 export default {
   name: "AnswerSave",
   props: {
-    answer: Object,
-    assignmentDetails: Object,
+    // answer: Object,
+    // assignmentDetails: Object,
   },
   data() {
     return {
@@ -211,6 +211,9 @@ export default {
         trash: faTrash
       },
       imageData: null,
+
+      assignmentDetails:{},
+      answer: {},
     }
   },
   computed: {
@@ -386,6 +389,9 @@ export default {
 
   },
   mounted() {
+    //load answers from query
+    // console.log(this.$route.query['answer']);
+    // this.answer = this.$route.query['answer'];
 
     if (this.isSnappedAnswer) {
       this.generateSnappedAnswerPreview(this.answer.content)
@@ -393,6 +399,10 @@ export default {
 
   },
   async created() {
+    // load from store
+    this.answer = this.$store.getters['studentAssignment/answer'];
+    this.assignmentDetails = this.$store.getters['studentAssignment/assignmentDetails'];
+
     // console.log('should check if query has correct_question');
     // this come from mysoalan redirection
     if(this.$route.query['correct_questions']){
@@ -431,18 +441,28 @@ export default {
     }
 
     if (!this.hasAnswerContent) {
-      this.$router.push({name: 'student.assignments.show'})
+      console.log('no answer content');
+      // this.$router.push({name: 'student.assignments.show'})
     }
   },
   components: {
-    CropIcon,
-    ArrowBackIcon,
-    PageHeaderThree,
-    DashboardLayout, Modal, TrashIcon, IconBaseTwo, NavBack, PageTitleTwo,
     FontAwesomeIcon,
-    VueCropper
+    faCropAlt,
+    faTrash,
+    VueCropper,
+    ArrowBackIcon,
+    CropIcon,
+    PageHeaderThree,
+    DashboardLayout, 
+    // UltimateTextToImage,
+    Modal, 
+    TrashIcon, 
+    IconBaseTwo, 
+    NavBack, 
+    PageTitleTwo,
   }
 }
+
 </script>
 
 <style>

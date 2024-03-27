@@ -7,6 +7,7 @@ import mutations from "@/store/mutations";
 import teacherMarking from "@/store/modules/teacherMarking";
 import teacherCreateAssignment from "@/store/modules/teacherCreateAssignment";
 import studentRanking from "@/store/modules/studentRanking";
+import studentAssignment from '@/store/modules/studentAssignment';
 
 // Vue.use(Vuex)
 
@@ -29,6 +30,7 @@ export function createStore(){
             teacherMarking: teacherMarking,
             teacherCreateAssignment: teacherCreateAssignment,
             studentRanking: studentRanking,
+            studentAssignment: studentAssignment,
         }
     });
 }
