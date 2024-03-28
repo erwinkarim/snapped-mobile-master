@@ -54,6 +54,11 @@ export default {
 	data() {
 		return {
 			textAnswer: "",
+			answer: {
+				type: "",
+				content: "",
+			},
+			assignmentDetails: {},
 		};
 	}, 
 	methods: {
@@ -65,12 +70,20 @@ export default {
 			// store text answer in repo and go back
 			// emit submits to StudentAssignment/Answer/Index.vue
 			console.log('sending', this.textAnswer);
+			/*
 			this.answer.type = 'written';
 			this.answer.content = this.textAnswer;
+			*/
+
+			this.$emit('writtenAnswer', this.textAnswer);
 			this.$emit('submit', this.textAnswer);
 		}
 	},
 	created(){
+    // load from store
+    this.answer = this.$store.getters['studentAssignment/answer'];
+    this.assignmentDetails = this.$store.getters['studentAssignment/assignmentDetails'];
+
 		console.log('should update the answer object', this.answer, this.assignmentDetails);
 	},
 	components: {

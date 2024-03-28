@@ -168,13 +168,13 @@
 					<!-- BUTTON: WRITE ANSWER -->
 					<div v-if="!isMySoalanExclusive && !isAutoMarking" class="flex-grow px-2">
 						<div class="mb-3">
-							<router-link :to="{ name: 'student.assignments.answer.storeText', params: { assignmentID: this.assignmentID }}" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" >
+							<!--router-link :to="{ name: 'student.assignments.answer.storeText', params: { assignmentID: this.assignmentID }}" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" >
 
 								Text Answer
-							</router-link>
-							<!--a href="#" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary">
+							</router-link-->
+							<a href="#" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" @click="answerText()">
 								Text Answer
-							</a-->
+							</a>
 						</div>
 
 						<!-- don't show if there's only mysoalan question, otherwise show -->
@@ -429,9 +429,12 @@ export default {
 
 		},
 
-		/*
 		answerText(){
 			console.log('answer question w/ text input');
+
+			// push to store
+			this.$store.commit('studentAssignment/setAssignmentDetails', this.assignmentDetails);
+			this.$store.commit('studentAssignment/setAnswer', {type: 'written', content: ""});
 
 			this.$router.push({
 				name: 'student.assignments.answer.storeText', params: {
@@ -440,7 +443,6 @@ export default {
 				}
 			});
 		},
-		*/
 
 		handleTogglePreview() {
 			this.isPreviewing = !this.isPreviewing;
