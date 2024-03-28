@@ -415,7 +415,6 @@ export default {
 				return
 			}
 
-			// console.log('should push to answer page');
 			
 			// put in store instead of in router params because of vue-router 4
 			this.$store.commit('studentAssignment/setAssignmentDetails', this.assignmentDetails);

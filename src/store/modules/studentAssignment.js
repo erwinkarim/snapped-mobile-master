@@ -6,7 +6,7 @@ export default {
 		answer: {},
 	}),
 	mutations:{
-		setAssignmentDetail(state, payload){
+		setAssignmentDetails(state, payload){
 			state.assignmentDetails = payload;
 		},
 		setAnswer(state, payload){

@@ -17,13 +17,13 @@
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           <div class="w-full">
             Got something to change? Don't worry! You can always edit your published homework
           </div>
         </template>
-        <template slot="button">
-          Okay
+        <template v-slot:button>
+          <p>Okay</p>
         </template>
       </modal>
       <modal v-if="submissionStatus === 'error'"
@@ -31,12 +31,12 @@
              @toggleModal="toggleModal"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           <div class="w-full">
             {{ error }}
           </div>
         </template>
-        <template slot="button">
+        <template v-slot:button>
           Okay
         </template>
       </modal>
@@ -45,11 +45,14 @@
              :has-button="false"
              class="w-4/5 "
       >
-        <p slot="message">
-          Submitting your answer.
-          <br>
-          Please wait...
-        </p>
+        <template v-slot:message>
+          <p>
+            Submitting your answer.
+            <br>
+            Please wait...
+
+          </p>
+        </template>
       </modal>
     </div>
 
@@ -75,9 +78,12 @@ export default {
   name: "Index",
   components: {Modal},
   props: {
-    assignmentDetails: Object
+    // assignmentDetails: Object
   },
   async mounted() {
+    // load from store.
+    this.assignmentDetails = this.$store.getters['studentAssignment/assignmentDetails'];
+
     // this just redirected from MySoalan
     if(this.$route.query['correct_questions']){
       // fetch and re-load assignment details
@@ -111,7 +117,9 @@ export default {
         mysoalan_correct: 0, 
         mysoalan_result_uuid: '',
         mysoalan_result: {},
-      }
+      },
+
+      assignmentDetails: {},
     }
   },
   methods: {
@@ -123,13 +131,17 @@ export default {
       this.answer.type = 'snapped';
       this.answer.content = value;
     },
-    handleSubmit(remarks) {
+    async handleSubmit(remarks) {
 
       this.resetError();
 
       this.isSubmitting = true;
+      // wait 2 sec
+      await setTimeout(() => {}, 2000);
+
       this.toggleModal();
 
+      console.log()
       SubmissionRepository.store(
           {
             assignmentID: this.assignmentDetails.id,
