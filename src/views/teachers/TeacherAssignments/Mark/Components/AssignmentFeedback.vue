@@ -63,7 +63,7 @@ export default {
       this.$store.dispatch('teacherMarking/addFeedback', this.draft)
           .then(() => {
             this.$store.commit('teacherMarking/exitWritingFeedbackMode')
-            router.push({name: 'teacher.assignments.marking.details'})
+            this.$router.push({name: 'teacher.assignments.marking.details'})
           });
     }
   },

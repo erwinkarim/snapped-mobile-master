@@ -60,7 +60,7 @@
                :redirect-route="{name: 'student.assignments.show'}"
                @toggleModal="toggleModal"
         >
-          <template slot="message">
+          <template v-slot:message>
             <div v-if="submissionStatus === 'success'" class="w-full">
               Got something to change? Don't worry! You can always edit your published homework
             </div>
@@ -68,7 +68,7 @@
               Oops! There seems to be an error in your submission.
             </div>
           </template>
-          <template slot="button">
+          <template v-slot:button>
             Okay
           </template>
         </modal>
@@ -79,12 +79,12 @@
       <div v-if="isShowingErrorModal"
            class="fixed left-0 w-full items-center flex flex-col items-center justify-center top-1/4 z-70">
         <modal v-if="errors" modal-type="error" class="w-4/5 " @toggleModal="toggleErrorModal" >
-          <template slot="message">
+          <template v-slot:message>
             <div>
               {{ errors }}
             </div>
           </template>
-          <template slot="button">
+          <template v-slot=button>
             Okay
           </template>
         </modal>

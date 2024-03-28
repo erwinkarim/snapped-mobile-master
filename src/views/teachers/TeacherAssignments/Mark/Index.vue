@@ -26,10 +26,10 @@
              @toggleModal="toggleModalMode()"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           You must add mark for this assignment.
         </template>
-        <template slot="button">
+        <template v-slot:button>
           Okay
         </template>
       </modal>
@@ -40,10 +40,10 @@
              @toggleModal="toggleModalMode()"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           Please retry.
         </template>
-        <template slot="button">
+        <template v-slot:button>
           Okay
         </template>
       </modal>
@@ -54,10 +54,10 @@
              @toggleModal="toggleModalMode()"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           {{ $store.state.teacherMarking.states.errorMessages || 'Oops! There seems to be an error in your submission.'}}
         </template>
-        <template slot="button">
+        <template v-slot:button>
           Okay
         </template>
       </modal>
@@ -68,7 +68,7 @@
              :has-button="false"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           Checking...
         </template>
       </modal>
@@ -78,7 +78,7 @@
              :has-button="false"
              class="w-4/5 "
       >
-        <template slot="message">
+        <template v-slot:message>
           Submitting marking...
         </template>
       </modal>
