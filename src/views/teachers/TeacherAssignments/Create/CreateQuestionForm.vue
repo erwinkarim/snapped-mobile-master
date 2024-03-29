@@ -521,7 +521,9 @@ export default {
   components: {
     CropIcon, PenIcon, CameraIcon, TrashIcon, IconBaseTwo,
     VueCropper, PhoneIcon, PlusIcon, ArrowRightIcon, ZoomIcon,
-    MicrophoneIcon, ZoomQuestionForm, VueMarkdown, MySoalanSelector,
+    MicrophoneIcon, ZoomQuestionForm, 
+    // VueMarkdown, 
+    MySoalanSelector,
     NewVideoForm, VMarkdownView
   }
 }
