@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--div v-my-swiper="swiperOption"-->
-    <swiper>
+    <swiper :modules="modules" :pagination="{ clickable: true }">
       <!--div class="swiper-wrapper"-->
 
         <!--div class="swiper-slide" v-for="(column, index) in classes"-->
@@ -56,7 +56,9 @@
 // import 'swiper/swiper-bundle.css'
 // import 'swiper/css/swiper.css'
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/pagination';
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
@@ -70,11 +72,11 @@ export default {
     IconBaseTwo, BookmarkIcon, ProfilePhotoStacked, IconBase,
     Swiper, SwiperSlide,
   },
-  /*
-  directives: {
-    mySwiper: directive
+  setup(){
+    return {
+      modules: [Pagination],
+    };
   },
-  */
   watch: {
     'numOfClasses' : 'emitNumOfClasses'
   },

@@ -22,7 +22,7 @@
 
 <script>
 import SectionTitle from "@/components/SectionTitle";
-import {directive} from "vue-awesome-swiper";
+// import {directive} from "vue-awesome-swiper";
 
 export default {
   name: "SubjectScorePanel",
@@ -67,9 +67,11 @@ export default {
       }
     }
   },
+  /*
   directives: {
     mySwiper: directive
   },
+  */
   components: {SectionTitle}
 }
 </script>

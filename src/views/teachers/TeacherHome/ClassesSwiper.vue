@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--div v-my-swiper:mySwiper="swiperOption"-->
-    <swiper>
+    <swiper :modules="modules" :pagination="{ clickable: true }">
       <!--div class="swiper-wrapper"-->
         <!--div class="swiper-slide" @click="goToClass(item.classID)" :key="item.classID" v-for="item in classes"-->
         <swiper-slide 
@@ -48,11 +48,10 @@
 <script>
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
-// import { Pagination, } from 'swiper/modules';
+import { Pagination, } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
-// do this later
-//import 'swiper/css/pagination';
+import 'swiper/css/pagination';
 
 // import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 // this causes installation issues
@@ -74,11 +73,11 @@ export default {
     Swiper, SwiperSlide
 
   },
-  /*
-  directives: {
-    mySwiper: directive
+  setup(){
+    return {
+      modules: [Pagination],
+    };
   },
-  */
   data() {
     return {
       classes: [],
