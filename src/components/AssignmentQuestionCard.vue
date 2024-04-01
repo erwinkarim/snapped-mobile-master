@@ -133,7 +133,6 @@
 				<strong>Remarks: </strong><br />
 				<!--VueMarkdown> {{ assignment.remarks }} </VueMarkdown-->
 				<VMarkdownView :content="assignment.remarks" />
-				{{ assignment.remarks }}
 			</div>
 		</div>
 	</div>

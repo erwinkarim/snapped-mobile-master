@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <!--div v-my-swiper="swiperOption"-->
-    <swiper>
+    <swiper :modules="modules" :pagination="{ clickable: true }" navigation>
 
       <!--div class="swiper-wrapper"-->
         <swiper-slide v-for="(path, index) in $store.getters['teacherMarking/images']"
@@ -24,7 +24,10 @@
 
 <script>
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 export default {
   name: "AnswerPreviewSwiper",
@@ -36,6 +39,11 @@ export default {
         return 'pb-5/4';
       }
     }
+  },
+  setup(){
+    return {
+      modules: [Pagination, Navigation],
+    };
   },
   data() {
     return {
