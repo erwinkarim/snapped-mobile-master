@@ -258,7 +258,6 @@ export default {
           .then(response => {
 
             if (response.data.success) {
-              this.isLoading = false;
 
               let data = response.data.data;
 
@@ -269,9 +268,9 @@ export default {
               this.assignment.createdAt = data.assignment_details.assignment_created_at;
               this.assignment.dueDatetime = data.assignment_details.due_datetime;
               this.assignment.written_question.title = data.assignment_details.written_question_title;
-              this.assignment.written_question.description = data.assignment_details.written_question_description;
+              this.assignment.written_question.description = data.assignment_details.written_question_description || "";
               this.assignment.mysoalan = data.assignment_details.mysoalan;
-              this.assignment.remarks = data.assignment_details.remarks;
+              this.assignment.remarks = data.assignment_details.remarks || ""; // vue markdown can't handle null;
               this.assignment.school_name = data.assignment_details.school_name;
               this.assignment.auto_marking = Boolean(data.assignment_details.auto_marking);
 
@@ -330,6 +329,8 @@ export default {
 
                 this.not_submitted.push(details)
               }
+
+              this.isLoading = false;
             }
 
           });

@@ -133,6 +133,7 @@
 				<strong>Remarks: </strong><br />
 				<!--VueMarkdown> {{ assignment.remarks }} </VueMarkdown-->
 				<VMarkdownView :content="assignment.remarks" />
+				{{ assignment.remarks }}
 			</div>
 		</div>
 	</div>
@@ -145,8 +146,8 @@ import moment from "moment";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ExpandImageIcon from "@/components/icons/ExpandImageIcon";
 // import VueMarkdown from 'vue-markdown';
-import { VMarkdownView } from 'vue3-markdown'
-import 'vue3-markdown/dist/style.css'
+import { VMarkdownView } from 'vue3-markdown';
+import 'vue3-markdown/dist/style.css';
 import MySoalanRepository from "@/repositories/MySoalanRepository";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 
