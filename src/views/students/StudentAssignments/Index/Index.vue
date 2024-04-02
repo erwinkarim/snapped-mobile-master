@@ -164,7 +164,7 @@ export default {
         pageNum: 1,
         perPage: 20,
         search: '',
-        date: null,
+        date: new Date(),
         month: null,
         year: null,
         subjects: null
@@ -213,7 +213,7 @@ export default {
   methods: {
 
     handleInfiniteScroll($state) {
-      console.log('handleInfiniteScroll triggered');
+      console.log('handleInfiniteScroll triggered', this.requestFilter);
 
       if (this.hasLoadMore) {
 
