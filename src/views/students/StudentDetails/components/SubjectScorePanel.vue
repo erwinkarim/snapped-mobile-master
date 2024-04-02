@@ -3,31 +3,41 @@
     <section-title class="text-left" title="Overall Subject Score"/>
     <!-- SUBJECTS  -->
     <div class="mt-5">
-      <div v-my-swiper="swiperOption">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide" :key="subject.subject_id" v-for="(subject, index) in subjects">
+      <!--div v-my-swiper="swiperOption"-->
+      <swiper :modules="modules" :pagination="{ clickable: true }">
+        <!--div class="swiper-wrapper"-->
+          <!--div class="swiper-slide" :key="subject.subject_id" v-for="(subject, index) in subjects"-->
+          <swiper-slide class="swiper-slide" :key="subject.subject_id" v-for="(subject, index) in subjects">
             <div :style="cardStyle(index)" class="max-w-sm  rounded rounded-xl text-left text-white overflow-hidden bg-gray-secondary flex flex-col justify-between px-4 py-8">
               <div class="text-lg items-start multi-line-truncate h-14 mb-4">{{subject.subject_name}}</div>
               <div><span class="text-3xl font-bold pr-1">{{subject.overall_mark}}</span> <span class="text-sm">Marks</span></div>
             </div>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
+          </swiper-slide>
+        <!--/div-->
+        <!--div class="swiper-pagination"></div-->
         <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
         <!--      <div class="swiper-button-next" slot="button-next"></div>-->
-      </div>
+      </swiper>
     </div>
   </div>
 </template>
 
 <script>
 import SectionTitle from "@/components/SectionTitle";
-// import {directive} from "vue-awesome-swiper";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 export default {
   name: "SubjectScorePanel",
   props: {
     subjects: Array
+  },
+  setup(){
+    return {
+      modules: [Pagination],
+    };
   },
   data() {
     return {
@@ -67,12 +77,7 @@ export default {
       }
     }
   },
-  /*
-  directives: {
-    mySwiper: directive
-  },
-  */
-  components: {SectionTitle}
+  components: {SectionTitle, Swiper, SwiperSlide}
 }
 </script>
 

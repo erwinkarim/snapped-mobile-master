@@ -4,7 +4,7 @@
     <template v-slot:pageHeader>
       <page-header-three>
         <template v-slot:leftAction>
-          <nav-back :to="handleNavBackRoute" class="w-2/7" stroke-color="red-primary"/>
+          <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
       </page-header-three>
     </template>
@@ -186,6 +186,7 @@ export default {
     this.getAuthUser()
   },
   mounted() {
+    /*
     if (this.prevRoute.name) {
       this.navBackRoute = {
         name: this.prevRoute.name,
@@ -194,6 +195,7 @@ export default {
     } else {
       this.navBackRoute = 'home'
     }
+    */
   },
   components: {
     IconBaseTwo,
