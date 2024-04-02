@@ -9,7 +9,7 @@ import { createStore } from './store'
 import { createRouter } from './router'
 import '@/assets/styles/tailwind.css'
 
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 const router = createRouter()
 const store = createStore(router)

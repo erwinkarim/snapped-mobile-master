@@ -14,7 +14,6 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.2",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "@fortawesome/vue-fontawesome": "^3.0.2",
-    "@vue/compat": "^3.1.0",
     "@vue/compiler-dom": "^3.2.44",
     "@vue/test-utils": "^2.4.5",
     "@vuepic/vue-datepicker": "^8.3.1",

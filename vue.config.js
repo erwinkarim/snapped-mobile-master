@@ -16,8 +16,9 @@ module.exports = {
     // remove the prefetch plugin
     config.plugins.delete('prefetch')
 
-    config.resolve.alias.set('vue', '@vue/compat')
+    // config.resolve.alias.set('vue', '@vue/compat')
 
+    /*
     config.module
       .rule('vue')
       .use('vue-loader')
@@ -31,6 +32,7 @@ module.exports = {
           }
         }
       })
+      */
     
     // to remove warnings about these not defined
     config.plugin('define').tap((definitions) => {
