@@ -1,19 +1,17 @@
 <template>
 	<div class="w-full">
 		<!--div v-my-swiper="swiperOption"-->
-		<swiper>
-			<div class="swiper-wrapper">
+		<swiper :modules="modules" :pagination="{ clickable: true }">
+			<swiper-slide v-for="assignment in assignments" >
 
 				<assignment-card
-						v-for="assignment in assignments"
 						:key="assignment.assignmentID"
 						:assignment="assignment"
 						:route="{name: 'teacher.assignments.show', params: { assignmentID: assignment.assignmentID }}"
 						:description-lines="2"
 						class="mt-4 swiper-slide h-32 min-h-1/6"
 				/>
-			</div>
-			<div class="swiper-pagination"></div>
+			</swiper-slide>
 		</swiper>
 	</div>
 </template>
@@ -21,9 +19,10 @@
 <script>
 // import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
-// import 'swiper/swiper-bundle.css'
-// import 'swiper/css/swiper.css'
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from 'moment'
 import AssignmentRepository from "@/repositories/AssignmentRepository";
@@ -32,13 +31,13 @@ import AssignmentCard from "@/components/AssignmentCard";
 export default {
 	components: {
 		AssignmentCard,
-		Swiper,
+		Swiper, SwiperSlide
 	},
-	/*
-	directives: {
-		mySwiper: directive
-	},
-	*/
+  setup(){
+    return {
+      modules: [Pagination],
+    };
+  },
 	data() {
 		return {
 			numOfAssignments: 0,
