@@ -87,16 +87,12 @@ import PageHeaderThree from "@/components/PageHeaderThree";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import AnswerPreviewSwiper from "@/views/teachers/TeacherAssignments/Mark/Components/AnswerPreviewSwiper";
 import MarksRepository from "@/repositories/teachers/MarksRepository";
-import {directive} from "vue-awesome-swiper";
-import router from "@/router";
+// import router from "@/router";
 import AuthenticationRepository from "@/repositories/AuthenticationRepository";
 import axios from "axios";
 
 export default {
   name: "Index",
-  directives: {
-    mySwiper: directive
-  },
   props: {
     assignmentID: [String, Number],
     marksID: [String, Number]
@@ -171,7 +167,7 @@ export default {
               let isUnanswered = data.marks_tag ? data.marks_tag === 'unanswered' : false;
 
               if (isUnanswered) {
-                router.push({
+                this.$router.push({
                   name: 'student.assignments.show', params: {
                     assignmentID: data.assignment_id,
                   }

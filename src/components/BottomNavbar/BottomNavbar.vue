@@ -18,6 +18,7 @@
 
 <script>
 
+import { shallowRef,  ref, computed } from 'vue'
 import BottomNavbarIconBase from "@/components/BottomNavbar/BottomNavbarIconBase";
 import teacher_tabs from "@/components/BottomNavbar/teacher_tabs";
 import student_tabs from "@/components/BottomNavbar/student_tabs";
@@ -37,13 +38,15 @@ export default {
   },
   methods: {
     getTabs() {
+      // let userRole = 'Student';
       let userRole = this.$store.getters.getAuthUserRole;
 
+
       if (userRole === 'Teacher') {
-        this.tabs = teacher_tabs;
+        this.tabs = shallowRef(teacher_tabs);
       }
       if (userRole === 'Student') {
-        this.tabs = student_tabs;
+        this.tabs = shallowRef(student_tabs);
       }
 
     }

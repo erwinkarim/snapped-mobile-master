@@ -1,10 +1,11 @@
 <template>
-  <v-date-picker is-expanded
-                 title-position="left"
-                 v-model="date"
-                 :attributes="attributes"
-                 :select-attribute="selectAttribute"
-                 @dayclick="onDayClick"
+  <Calendar 
+    is-expanded
+    title-position="left"
+    v-model="date"
+    :attributes="attributes"
+    :select-attribute="selectAttribute"
+    @dayclick="onDayClick"
   />
 </template>
 
@@ -12,14 +13,19 @@
 
 
 import Vue from 'vue';
-import VCalendar from 'v-calendar';
+// import VCalendar from 'v-calendar';
+import { Calendar, DatePicker } from 'v-calendar';
 import moment from 'moment';
 import AssignmentRepository from "../repositories/AssignmentRepository";
+import 'v-calendar/style.css';
 
-Vue.use(VCalendar);
+// Vue.use(VCalendar);
 
 export default {
   name: "AssignmentCalendar",
+  components: {
+    Calendar, DatePicker,
+  },
   data() {
     return {
       days: [],
@@ -56,6 +62,7 @@ export default {
   },
   methods: {
     onDayClick(day) {
+      console.log('onDayClick fired');
       const idx = this.selectedDay.findIndex(d => d.id === day.id);
       if (idx >= 0) {
         this.selectedDay.splice(idx, 1);
@@ -68,12 +75,14 @@ export default {
     },
 
     emitSelectedDate () {
+      console.log('emitSelectedData fired');
       if (this.selectedDay.length > 0) {
         this.$emit('selectedDate', this.selectedDay[0]['date'])
       }
     },
 
     getDuedates () {
+      console.log('getDuedates fired');
       AssignmentRepository.getDueDates()
               .then(response => {
 

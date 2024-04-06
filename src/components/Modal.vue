@@ -37,7 +37,7 @@
 
 import ErrorIcon from "@/components/icons/ErrorIcon";
 import SuccessIcon from "@/components/icons/SuccessIcon";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "Modal",
@@ -98,7 +98,7 @@ export default {
       this.$emit('toggleModal');
 
       if (Object.keys(this.redirectRoute).length > 0) {
-        router.push(this.redirectRoute);
+        this.$router.push(this.redirectRoute);
       }
     }
   },

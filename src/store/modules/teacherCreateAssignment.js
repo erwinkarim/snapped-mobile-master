@@ -2,7 +2,8 @@ import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from "moment";
 import Repository from "@/repositories/Repository";
 import getters from "@/store/getters";
-import {get} from "v-calendar/src/utils/_";
+import {Buffer} from 'buffer';
+// import {get} from "v-calendar/src/utils/_";
 
 // shoud move to repository later.
 import axios from "axios";
@@ -349,6 +350,7 @@ export default {
 
 			// init, basically everything to null.
 			initialise(state) {
+				console.log('teacherCreateAssignment.intialise() fired');
 
 					// STATES
 					state.states = {
@@ -664,6 +666,8 @@ export default {
 			this.toggleDuration = !this.toggleDuration
 		},
 		getSchools({state}){
+			console.log('teacherCreateAssignment.getSchools() fired');
+			
 			TeacherRepository
 				.getTeacherSchools()
 				.then(res => {

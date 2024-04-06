@@ -14,7 +14,7 @@
 <script>
 import IconBase from "@/components/IconBase";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
-import router from "@/router";
+// import router from "@/router";
 import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
@@ -38,9 +38,9 @@ export default {
     goBack () {
 
       if (this.to === null) {
-        router.go(this.counter)
+        this.$router.go(this.counter)
       } else {
-        router.push(this.to)
+        this.$router.push(this.to)
       }
     }
   },

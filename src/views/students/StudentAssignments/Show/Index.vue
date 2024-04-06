@@ -168,6 +168,10 @@
 					<!-- BUTTON: WRITE ANSWER -->
 					<div v-if="!isMySoalanExclusive && !isAutoMarking" class="flex-grow px-2">
 						<div class="mb-3">
+							<!--router-link :to="{ name: 'student.assignments.answer.storeText', params: { assignmentID: this.assignmentID }}" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" >
+
+								Text Answer
+							</router-link-->
 							<a href="#" class="mb-3 flex flex-row justify-center items-center py-3 px-1 w-full h-full text-sm font-bold rounded-full text-purple-primary bg-yellow-primary" @click="answerText()">
 								Text Answer
 							</a>
@@ -208,11 +212,13 @@ import moment from "moment";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
 import CountdownTimer from "@/components/CountdownTimer";
 import Modal from "@/components/Modal";
-import router from "@/router";
+// import router from "@/router";
 import AssignmentQuestionCard from "@/components/AssignmentQuestionCard";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import MySoalanRepository from "@/repositories/MySoalanRepository";
+const axios = require('axios');
+
 
 export default {
 	name: "Index",
@@ -409,24 +415,31 @@ export default {
 				return
 			}
 
-			// move to another page when answering something.
-			router.push({
-				name: 'student.assignments.answer.store', params: {
-					assignmentDetails: this.assignmentDetails,
-					answer: {
-						type: 'snapped',
-						content: [files[0]]
-					}
-				}
-			})
+			
+			// put in store instead of in router params because of vue-router 4
+			this.$store.commit('studentAssignment/setAssignmentDetails', this.assignmentDetails);
+			this.$store.commit('studentAssignment/setAnswer', {type: 'snapped', content: [files[0]]});
+
+			this.$router.push({
+				name: 'student.assignments.answer.store', 
+				params: {
+					assignmentID: this.assignmentID,
+				}, 
+			});
+
 		},
 
 		answerText(){
 			console.log('answer question w/ text input');
 
-			router.push({
+			// push to store
+			this.$store.commit('studentAssignment/setAssignmentDetails', this.assignmentDetails);
+			this.$store.commit('studentAssignment/setAnswer', {type: 'written', content: ""});
+
+			this.$router.push({
 				name: 'student.assignments.answer.storeText', params: {
-					assignmentDetails: this.assignmentDetails,
+					// assignmentDetails: this.assignmentDetails,
+					assignmentID: this.assignmentID,
 				}
 			});
 		},
@@ -471,6 +484,10 @@ export default {
 		}
 	},
 	async mounted() {
+		//reset the store
+		this.$store.commit('studentAssignment/resetState');
+
+
 		await this.fetchData();
 
 		// show the modal if comes from submitted an answer.

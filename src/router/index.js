@@ -1,20 +1,31 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+// import Vue from 'vue'
+// import VueRouter from 'vue-router'
 
+import { createRouter as _createRouter, createWebHistory } from 'vue-router'
 import routes from "@/router/routes"
 import store from '@/store/index'
 
-Vue.use(VueRouter)
+// Vue.use(VueRouter)
 
+/*
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
 })
+*/
 
-export default router
+// export default router
 
+export function createRouter () {
+    return _createRouter({
+        history: createWebHistory(),
+        scrollBehavior: () => ({ top: 0 }),
+        routes,
+    });
+};
 
+/*
 router.beforeEach((to, from, next) => {
 
     // Check if route does not exist. If true, redirect to login
@@ -138,3 +149,4 @@ router.beforeEach((to, from, next) => {
     }
 
 })
+*/

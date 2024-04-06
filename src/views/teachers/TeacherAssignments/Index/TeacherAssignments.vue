@@ -167,14 +167,16 @@ export default {
         pageNum: 1,
         perPage: 50,
         search: '',
-        date: null,
+        date: new Date(),
         month: null,
         year: null,
         subjects: null
       },
 
       assignments: [],
-      meta: null
+      meta: null, 
+
+      date: new Date(),
 
     };
   },

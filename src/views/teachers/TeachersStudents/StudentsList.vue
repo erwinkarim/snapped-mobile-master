@@ -11,20 +11,20 @@
         </icon-base-two>
         <div class="w-5/6 ml-5 text-purple-primary  truncate pr-4"> {{ student.name }}</div>
       </div>
-      <div v-for="performance in performances"
+      <!--div v-for="performance in performances"
            v-if="performance.student_id === student.id "
            class=" w-1/12"
       >
         <icon-base-two :class="taggingClass(performance.status_color)" class="w-5/6">
           <tagging-icon/>
         </icon-base-two>
-      </div>
+      </div-->
     </div>
 
     <infinite-loading :identifier="filterCount"
-                      @infinite="handleInfiniteScroll"
-                      spinner="bubbles"
-                      force-use-infinite-wrapper
+      @infinite="handleInfiniteScroll"
+      spinner="bubbles"
+      force-use-infinite-wrapper
     >
       <div slot="spinner" class="mt-10">Loading...</div>
       <div slot="no-more"></div>
@@ -38,7 +38,7 @@
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
-import router from "@/router";
+// import router from "@/router";
 import TaggingIcon from "../../../components/icons/TaggingIcon";
 import IconBaseTwo from "../../../components/IconBaseTwo";
 import StudentRepository from "@/repositories/StudentRepository";
@@ -72,7 +72,7 @@ export default {
     }
   },
   watch: {
-    '$route': 'fetchData',
+    // '$route': 'fetchData',
     'search': 'searchName'
   },
   computed: {
@@ -143,7 +143,7 @@ export default {
     },
 
     goToStudentShow(studentID) {
-      router.push({name: 'student.profile.show', params: {studentID: studentID}})
+      this.$router.push({name: 'student.profile.show', params: {studentID: studentID}})
     },
 
     taggingClass(statusColor) {
@@ -166,7 +166,9 @@ export default {
   mounted() {
     this.getStudentPerformance()
   },
-  components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase, InfiniteLoading},
+  components: {IconBaseTwo, TaggingIcon, ProfilePhoto, IconBase, 
+    InfiniteLoading
+  },
 
 }
 </script>

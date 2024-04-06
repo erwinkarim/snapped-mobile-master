@@ -4,7 +4,7 @@
     <template v-slot:pageHeader>
       <page-header-three>
         <template v-slot:leftAction>
-          <nav-back :to="handleNavBackRoute" class="w-2/7" stroke-color="red-primary"/>
+          <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
       </page-header-three>
     </template>
@@ -64,7 +64,7 @@ import moment from "moment";
 import StudentRepository from "@/repositories/StudentRepository";
 import CircleProgressBar from "@/components/CircleProgressBar";
 import RankingPanel from "@/views/students/StudentDetails/components/RankingPanel";
-import router from "@/router";
+// import router from "@/router";
 import PageTitleTwo from "@/components/PageTitleTwo";
 import PageHeaderThree from "@/components/PageHeaderThree";
 import TabBar from "@/views/students/StudentDetails/components/TabBar";
@@ -130,7 +130,7 @@ export default {
     handleRouteChange() {
       if (this.userRole !== 'Teacher' && !this.isAuthStudent) {
         if (this.$route.name !== 'student.profile.show') {
-          router.push({name: 'student.profile.show'})
+          this.$router.push({name: 'student.profile.show'})
         }
       }
     },
@@ -180,12 +180,13 @@ export default {
 
   created() {
     if (this.$route.name !== 'student.profile.show') {
-      router.push({name: 'student.profile.show'})
+      this.$router.push({name: 'student.profile.show'})
     }
     this.fetchData()
     this.getAuthUser()
   },
   mounted() {
+    /*
     if (this.prevRoute.name) {
       this.navBackRoute = {
         name: this.prevRoute.name,
@@ -194,6 +195,7 @@ export default {
     } else {
       this.navBackRoute = 'home'
     }
+    */
   },
   components: {
     IconBaseTwo,

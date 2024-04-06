@@ -29,9 +29,10 @@
 </style>
 
 <script>
-export default {
-  components: {
+import { h } from 'vue'
 
-  }
+export default {
+  render(){ return h('div'); },
+  components: { }
 }
 </script>

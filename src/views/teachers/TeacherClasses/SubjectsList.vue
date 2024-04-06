@@ -37,7 +37,7 @@
 <script>
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
-import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
+// import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import '@/directives/scroll'
 import router from "@/router";
@@ -118,7 +118,7 @@ export default {
     },
 
     goToStudentShow(studentID) {
-      router.push({name: 'student.profile.show', params: {studentID: studentID}})
+      this.$router.push({name: 'student.profile.show', params: {studentID: studentID}})
     },
     handleScroll: function (evt, el) {
 

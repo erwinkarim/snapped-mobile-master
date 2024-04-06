@@ -3,6 +3,7 @@
 */
 
 import Repository from "@/repositories/Repository";
+import {Buffer} from 'buffer';
 import axios from "axios"
 let id = process.env.VUE_APP_MYSOALAN_KEY;
 let secret = process.env.VUE_APP_MYSOALAN_SECRET;

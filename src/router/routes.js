@@ -11,6 +11,13 @@ import googleAuthCallback from "@/views/integrations/googleAuthCallback";
 import UserProfileEdit from "@/views/auth/Edit"
 
 export default [
+    /*
+    {
+        path: '/',
+        name: 'home',
+        component: Login,
+    },
+    */
     {
         path: '/login',
         name: 'login',

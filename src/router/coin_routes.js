@@ -47,50 +47,58 @@ export default {
         meta: authControlMeta,
       },
       {
+        path: 'top_up',
+        component: CoinTopUp,
+        name : 'coin.top_up',
+        meta: authControlMeta,
+      },
+      {
+        path: '/top_up/redeem_marks',
+        component: CoinTopUpRedeemMarks,
+        name : 'coin.top_up_redeem_marks',
+        meta: authControlMeta,
+      },
+      {
         path: 'scan_qr',
         component: CoinScanQR,
         name : 'coin.scan_qr',
+        meta: authControlMeta,
       },
       {
         path: 'show_qr',
         component: CoinShowQR,
         name : 'coin.show_qr',
-      },
-      {
-        path: 'top_up',
-        component: CoinTopUp,
-        name : 'coin.top_up',
+        meta: authControlMeta,
       },
       {
         path: 'top_up/buy',
         component: CoinTopUpBuy,
         name : 'coin.top_up_buy',
+        meta: authControlMeta,
       },
       {
         path: 'top_up/buy/ack',
         component: CoinTopUpBuyAck,
         name : 'coin.top_up_buy_ack',
-      },
-      {
-        path: 'top_up/redeem_marks',
-        component: CoinTopUpRedeemMarks,
-        name : 'coin.top_up_redeem_marks',
+        meta: authControlMeta,
       },
       {
         path: 'top_up/redeem_marks/:mark_id',
         component: CoinTopUpMarkDetail,
         name : 'coin.top_up_redeem_marks_detail',
+        meta: authControlMeta,
       },
       {
         path: 'top_up/redeem_marks/:mark_id/attempt',
         component: CoinTopUpMarkAttempt,
         name : 'coin.top_up_redeem_marks_attempt',
+        meta: authControlMeta,
       },
       {
         path: 'top_up/gamified',
         component: CoinTopUpGamified,
         name : 'coin.top_up_gamified',
+        meta: authControlMeta,
       },
-
     ],
 }

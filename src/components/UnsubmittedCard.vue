@@ -27,7 +27,7 @@
     import IconBaseTwo from "@/components/IconBaseTwo";
     import ProfilePhoto from "@/components/icons/ProfilePhoto";
     import moment from "moment";
-    import router from "@/router";
+    // import router from "@/router";
     import SuccessIcon from "@/components/icons/SuccessIcon";
     import ErrorIcon from "@/components/icons/ErrorIcon";
 
@@ -79,7 +79,7 @@
             },
             showSubmission(submissionID) {
                 if (this.allowShowSubmission) {
-                    router.push({name: 'teacher.assignments.marking.details', params: { assignmentID: this.submission.assignmentID, submissionID: this.submission.id }})
+                    this.$router.push({name: 'teacher.assignments.marking.details', params: { assignmentID: this.submission.assignmentID, submissionID: this.submission.id }})
                 }
             }
         },

@@ -38,7 +38,7 @@ import StudentRepository from "@/repositories/StudentRepository";
 import moment from "moment";
 import CircleProgressBar from "@/components/CircleProgressBar";
 import AssignmentScoreCircle from "@/views/students/StudentDetails/components/AssignmentScoreCircle";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "StudentAssignments",
@@ -84,7 +84,7 @@ export default {
   },
   created() {
     if (this.userRole !== 'Teacher' && !this.isAuthStudent ) {
-      router.push({name:'student.profile.show'})
+      this.$router.push({name:'student.profile.show'})
     }
   }
 }

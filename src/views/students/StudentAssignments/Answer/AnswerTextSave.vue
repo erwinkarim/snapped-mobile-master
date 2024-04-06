@@ -43,7 +43,7 @@ import DashboardLayout from "@/views/layout/DashboardLayout";
 import IconBaseTwo from "@/components/IconBaseTwo";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import PageHeaderThree from "@/components/PageHeaderThree";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
 	name: "AnswerTextSave",
@@ -54,23 +54,36 @@ export default {
 	data() {
 		return {
 			textAnswer: "",
+			answer: {
+				type: "",
+				content: "",
+			},
+			assignmentDetails: {},
 		};
 	}, 
 	methods: {
 		goBack(){
 			console.log('goback');
-			router.go(-2);
+			this.$router.go(-2);
 		},
 		saveAnswer(){
 			// store text answer in repo and go back
 			// emit submits to StudentAssignment/Answer/Index.vue
 			console.log('sending', this.textAnswer);
+			/*
 			this.answer.type = 'written';
 			this.answer.content = this.textAnswer;
+			*/
+
+			this.$emit('writtenAnswer', this.textAnswer);
 			this.$emit('submit', this.textAnswer);
 		}
 	},
 	created(){
+    // load from store
+    this.answer = this.$store.getters['studentAssignment/answer'];
+    this.assignmentDetails = this.$store.getters['studentAssignment/assignmentDetails'];
+
 		console.log('should update the answer object', this.answer, this.assignmentDetails);
 	},
 	components: {

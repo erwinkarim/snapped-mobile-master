@@ -12,7 +12,7 @@
       </page-header-three>
     </template>
 
-    <template v-slot:content>
+    <template v-slot:content v-if="this.loaded">
       <div class="h-30">Empty Space</div>
       <div class="grid grid-cols-8">
         <img v-if="order.store_product.picture != ''" class="col-span-1" :src="picture" crossorigin="anonymous" />
@@ -30,6 +30,9 @@
         <h2 class="text-lg font-bold">Order Progress</h2>
         <OrderProgressCard :status="order.status" />
       </div>
+    </template>
+    <template v-slot:content v-else>
+      <p>Loading ...</p>
     </template>
 
     <template v-slot:bottomBar>
@@ -50,9 +53,12 @@ import OrderProgressCard from "@/components/Store/OrderProgressCard.vue";
 import BoxArchiveIcon from '@/components/icons/BoxArchiveIcon.vue';
 
 export default {
-  name: 'StoresOrdersNew',
+  name: 'StoresOrdersShow',
   data() {
-    return { order: {}};
+    return { 
+      loaded: false,
+      order: {},
+    };
   },
   computed: {
     picture(){
@@ -62,6 +68,7 @@ export default {
   mounted() {
     StoresRepository.storeGetOrder(this.$route.params.orderID).then((res) => {
       this.order = res.data;
+      this.loaded = true;
     })
   },
   components: {

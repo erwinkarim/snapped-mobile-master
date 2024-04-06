@@ -51,10 +51,13 @@
               </template>
             </assignment-card>
 
-            <infinite-loading :identifier="filterCount"
-                              @infinite="handleInfiniteScroll"
-                              spinner="bubbles"
-                              force-use-infinite-wrapper
+            <infinite-loading 
+              :identifier="filterCount"
+              @infinite="handleInfiniteScroll"
+              spinner="bubbles"
+              force-use-infinite-wrapper
+              :message = "message"
+              :noResult = "noResult"
             >
               <div slot="spinner" class="mt-10">Loading...</div>
               <div slot="no-more"></div>
@@ -147,7 +150,6 @@ import moment from "moment";
 // import StudentRepository from "@/repositories/StudentRepository";
 import InfiniteLoading from "vue-infinite-loading";
 
-
 export default {
   name: "Index",
   data() {
@@ -162,23 +164,27 @@ export default {
         pageNum: 1,
         perPage: 20,
         search: '',
-        date: null,
+        date: new Date(),
         month: null,
         year: null,
         subjects: null
       },
 
       assignments: [],
-      meta: null
+      meta: null,
     }
   },
   watch: {
-    'filters.date': function (newSelect) {
-      if (newSelect != null) {
-        this.updateFilter()
-      }
+    'filters.date': {
+      handler(newSelect) {
+        console.log('watch triggered');
+        if (newSelect != null) {
+          this.updateFilter()
+        }
+      }, 
+      deep: true,
     }
-  },
+  }, 
   computed: {
     selectedDate() {
       if (this.filters.date) {
@@ -207,6 +213,7 @@ export default {
   methods: {
 
     handleInfiniteScroll($state) {
+      console.log('handleInfiniteScroll triggered', this.requestFilter);
 
       if (this.hasLoadMore) {
 
@@ -314,7 +321,7 @@ export default {
     IconBaseTwo,
     SectionTitle,
     PageTitle,
-    InfiniteLoading
+    InfiniteLoading,
   },
 }
 </script>

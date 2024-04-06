@@ -15,7 +15,7 @@
           <nav-back class="w-2/7" stroke-color="red-primary"/>
         </template>
         <template v-slot:mini-title>
-          New Assignment
+          New Assignment 
         </template>
         <template v-slot:title>
           New Assignment
@@ -226,10 +226,15 @@
 
           <template v-slot:message>
             <div class="grid grid-cols-1 w-full divide-y divide-transparent">
-              <v-date-picker v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime"
-                             mode="dateTime"
-                             :min-date="new Date()"
-                             class="place-self-center"
+              <!--date-picker 
+                v-model=date
+                :min-date="new Date()"
+                class="place-self-center"
+              /-->
+              <VueDatePicker 
+                v-model="$store.state.teacherCreateAssignment.assignmentDetails.due_datetime" 
+                inline auto-apply 
+                :min-date="new Date()"
               />
             </div>
           </template>
@@ -247,24 +252,37 @@
            @click.self="$store.commit('teacherCreateAssignment/toggleShowingSchedulerMode')"
            class="fixed w-full h-screen z-70 flex flex-col justify-center items-center top-0 bg-gray-primary bg-opacity-75 ">
         <modal class="fixed mx-1/24" modal-type="no-icon">
-          <h3 slot="title" class="font-bold">Schedule Publish</h3>
-          <div slot="message" class="w-full grid grid-cols-1 divide-y divide-transparent">
-            <div>
-              <p class="mb-3">Pick date and time to publish the assignment.</p>
+          <template v-slot:title>
+            <h3 class="font-bold">Schedule Publish</h3>
+          </template>
+          <template v-slot:message>
+            <div class="w-full grid grid-cols-1 divide-y divide-transparent">
+              <div>
+                <p class="mb-3">Pick date and time to publish the assignment.</p>
+              </div>
+              <!--date-picker 
+                class="place-self-center"
+                v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
+                mode="dateTime"
+              /-->
+              <VueDatePicker 
+                v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
+                auto-apply inline
+                :min-date="new Date()"
+              />
+
             </div>
-            <v-date-picker class="place-self-center"
-							v-model="$store.state.teacherCreateAssignment.assignmentDetails.published_at"
-							mode="dateTime"
-						/>
-          </div>
-          <span slot="button">
-						<button @click="$store.dispatch('teacherCreateAssignment/sendData')"
-							:disabled="$store.state.teacherCreateAssignment.states.isPublishing"
-							class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
-						>
-							Schedule Publish
-						</button>
-					</span>
+          </template>
+          <template v-slot:button>
+            <span slot="button">
+              <button @click="$store.dispatch('teacherCreateAssignment/sendData')"
+                :disabled="$store.state.teacherCreateAssignment.states.isPublishing"
+                class="font-bold w-full rounded-full px-2 font-bold leading-relaxed tracking-wider"
+              >
+                Schedule Publish
+              </button>
+            </span>
+          </template>
         </modal>
       </div>
 
@@ -277,11 +295,13 @@
                :has-button="false"
                class="w-4/5"
         >
-          <p slot="message">
-            Publishing your assignment.
-            <br>
-            Please wait...
-          </p>
+          <template v-slot:message>
+            <p>
+              Publishing your assignment.
+              <br>
+              Please wait...
+            </p>
+          </template>
         </modal>
       </div>
 
@@ -293,11 +313,15 @@
                :redirect-route="{name: 'teacher.assignments'}"
                class="w-4/5"
         >
-          <h3 slot="title" class="text-4xl font-bold text-purple-primary">Published!</h3>
-          <p slot="message">
-            Got something to change? Don't worry! You can always edit your published homework
-          </p>
-          <template slot="button">
+          <template v-slot:title>
+            <h3 class="text-4xl font-bold text-purple-primary">Published!</h3>
+          </template>
+          <template v-slot:message>
+            <p>
+              Got something to change? Don't worry! You can always edit your published homework
+            </p>
+          </template>
+          <template v-slot:button>
             <button class="px-2 w-4/5 font-bold tracking-wider leading-relaxed rounded-full">
               Okay
             </button>
@@ -305,7 +329,7 @@
         </modal>
       </div>
 
-      <error-modal v-if="$store.state.teacherCreateAssignment.states.isShowingError"/>
+      <error-modal v-if="$store.state.teacherCreateAssignment.states.isShowingError" />
     </template>
 
     <template v-slot:bottomBar v-if="$store.state.teacherCreateAssignment.states.isMain">
@@ -341,11 +365,11 @@
 
 <script>
 
-
 // Register components in your 'main.js'
-import Vue from "vue";
-import Calendar from "v-calendar/lib/components/calendar.umd";
-import DatePicker from "v-calendar/lib/components/date-picker.umd";
+// import Calendar from "v-calendar/lib/components/calendar.umd";
+// import DatePicker from "v-calendar/lib/components/date-picker.umd";
+import { ref } from 'vue';
+import { Calendar, DatePicker } from 'v-calendar';
 import Multiselect from "vue-multiselect";
 import TeacherRepository from "@/repositories/TeacherRepository";
 import moment from "moment";
@@ -367,10 +391,16 @@ import VueCropper from 'vue-cropperjs';
 import 'cropperjs/dist/cropper.css';
 import CreateQuestionForm from "@/views/teachers/TeacherAssignments/Create/CreateQuestionForm";
 import ErrorModal from "@/views/teachers/TeacherAssignments/Create/Modals/ErrorModal";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
+/*
 Vue.component('v-calendar', Calendar)
 Vue.component('v-date-picker', DatePicker)
 Vue.component('multiselect', Multiselect)
+*/
+
+import 'v-calendar/style.css';
 
 export default {
   name: "Index",
@@ -378,7 +408,10 @@ export default {
     strokeColor: String,
   },
   data() {
-    return {}
+    return {
+      date: new Date(),
+      startDate: ref(new Date()),
+    }
   },
   computed: {},
   watch: {},
@@ -431,12 +464,15 @@ export default {
     }
   },
   components: {
-    ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, CalendarIcon, IconBaseTwo
+    ErrorModal, CreateQuestionForm, VueCropper, ClockIcon, TrashIcon, Modal, ArrowBackIcon, CameraIcon, PenIcon, DashboardLayout, PageHeaderThree, PageTitleTwo, NavBack, PageTitle, 
+    CalendarIcon, IconBaseTwo,
+    Calendar, DatePicker,  Multiselect,
+    VueDatePicker,
   }
 }
 </script>
 
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style src="vue-multiselect/dist/vue-multiselect.css"></style>
 <style>
 	.multiselect__placeholder {
 		color: #7B7F9E;

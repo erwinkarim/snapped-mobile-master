@@ -1,9 +1,11 @@
 <template>
   <div>
-    <div v-my-swiper="swiperOption">
-      <div class="swiper-wrapper">
+    <!--div v-my-swiper="swiperOption"-->
+    <swiper :modules="modules" :pagination="{ clickable: true }">
+      <!--div class="swiper-wrapper"-->
 
-        <div class="swiper-slide" v-for="(column, index) in classes">
+        <!--div class="swiper-slide" v-for="(column, index) in classes"-->
+        <swiper-slide class="swiper-slide" v-for="(column, index) in classes">
 
           <!-- CARD: CLASS DETAILS -->
           <div v-for="(item, index) in column"
@@ -39,33 +41,41 @@
             </div>
           </div>
 
-        </div>
+        </swiper-slide>
 
-      </div>
+      <!--/div-->
       <div class="swiper-pagination"></div>
       <!--      <div class="swiper-button-prev" slot="button-prev"></div>-->
       <!--      <div class="swiper-button-next" slot="button-next"></div>-->
-    </div>
+    </swiper>
   </div>
 </template>
 
 <script>
-import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
+// import {Swiper, SwiperSlide, directive} from 'vue-awesome-swiper'
 // import 'swiper/swiper-bundle.css'
-import 'swiper/css/swiper.css'
+// import 'swiper/css/swiper.css'
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 import TeacherRepository from "@/repositories/TeacherRepository";
 import IconBase from "@/components/IconBase";
 import ProfilePhoto from "@/components/icons/ProfilePhoto";
 import ProfilePhotoStacked from "@/components/icons/ProfilePhotoStacked";
 import BookmarkIcon from "@/components/icons/BookmarkIcon";
-import router from "@/router";
 import IconBaseTwo from "@/components/IconBaseTwo";
 
 export default {
   name: "ClassesSwiper",
-  components: {IconBaseTwo, BookmarkIcon, ProfilePhotoStacked, IconBase},
-  directives: {
-    mySwiper: directive
+  components: {
+    IconBaseTwo, BookmarkIcon, ProfilePhotoStacked, IconBase,
+    Swiper, SwiperSlide,
+  },
+  setup(){
+    return {
+      modules: [Pagination],
+    };
   },
   watch: {
     'numOfClasses' : 'emitNumOfClasses'
@@ -131,7 +141,7 @@ export default {
           })
     },
     goToClass (classID, className) {
-      router.push({ name: 'teacher.class.details', params: { classID: classID , className: className} })
+      this.$router.push({ name: 'teacher.class.details', params: { classID: classID , className: className} })
     },
     emitNumOfClasses () {
       this.$emit('numOfClasses', this.numOfClasses)

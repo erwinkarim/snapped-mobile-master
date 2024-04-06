@@ -25,11 +25,13 @@
                modal-type="success"
                class="w-4/5 "
         >
-          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Published!</h3>
-          <p slot="message">
-            Assignment updated!
-          </p>
-          <template slot="button">
+          <template v-slot:title>
+            <h3 class="text-purple-primary font-bold text-4xl">Published!</h3>
+          </template>
+          <template v-slot:message>
+            <p> Assignment updated!  </p>
+          </template>
+          <template v-slot:button>
             <button class="font-bold w-4/5 rounded-full px-2 font-bold leading-relaxed tracking-wider">
               Okay
             </button>
@@ -44,11 +46,15 @@
                modal-type="no-icon"
                class="w-4/5 "
         >
-          <h3 slot="title" class="text-purple-primary font-bold text-4xl">Delete this assignment</h3>
-          <p slot="message">
-            Are you sure?
-          </p>
-          <template slot="button">
+          <template v-slot:title>
+            <h3 class="text-purple-primary font-bold text-4xl">Delete this assignment</h3>
+          </template>
+          <template v-slot:message>
+            <p>
+              Are you sure?
+            </p>
+          </template>
+          <template v-slot:button>
             <div @click="deleteAssignment">
               DELETE THIS
             </div>
@@ -149,7 +155,7 @@ import IconBaseTwo from "@/components/IconBaseTwo";
 import ClockIcon from "@/components/icons/ClockIcon";
 import moment from "moment";
 import AssignmentRepository from "@/repositories/AssignmentRepository";
-import router from "@/router";
+// import router from "@/router";
 
 export default {
   name: "Index",
@@ -190,7 +196,7 @@ export default {
           .then(response => {
             if (response.data.success) {
               this.toggleDeleteModal();
-              router.push({ name: 'teacher.assignments'})
+              this.$router.push({ name: 'teacher.assignments'})
             }
           })
     },

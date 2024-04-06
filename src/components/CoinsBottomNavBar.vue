@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { shallowRef,  ref, computed } from 'vue'
 import coins_tabs from "@/components/BottomNavbar/coins_tabs";
 import BottomNavbarIconBase from "@/components/BottomNavbar/BottomNavbarIconBase";
 
@@ -24,7 +25,7 @@ export default {
   }, 
   mounted() {
     console.log('mounted CoinsBottomNavBar');
-    this.tabs = coins_tabs;
+    this.tabs = shallowRef(coins_tabs);
   },
   components: {
     BottomNavbarIconBase,

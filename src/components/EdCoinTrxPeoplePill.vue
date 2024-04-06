@@ -42,7 +42,8 @@ export default {
       if(this.finalModel.studentDetail === undefined){
         StudentRepository.getStudentDetails().then((res) => {
           console.log('loaded extra data')
-          this.$set(this.finalModel, "studentDetail", res.data.data[0]);
+          // this.$set(this.finalModel, "studentDetail", res.data.data[0]);
+          this.finalModel['studentDetail'] = res.data.data[0];
           this.finalDesc = "Student of " + this.finalModel.studentDetail.school.name;
         });
       }

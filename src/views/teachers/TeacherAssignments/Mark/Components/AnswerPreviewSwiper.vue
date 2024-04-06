@@ -1,27 +1,33 @@
 <template>
   <div class="w-full">
-    <div v-my-swiper="swiperOption">
-      <div class="swiper-wrapper">
-        <div v-for="(path, index) in $store.getters['teacherMarking/images']"
+    <!--div v-my-swiper="swiperOption"-->
+    <swiper :modules="modules" :pagination="{ clickable: true }" navigation>
+
+      <!--div class="swiper-wrapper"-->
+        <swiper-slide v-for="(path, index) in $store.getters['teacherMarking/images']"
              @click="enterMarkingMode(path, index)"
              :class="swiperClass"
              class=" swiper-slide rounded-2xl h-full overflow-hidden">
           <div
               class="w-full py-2 px-4 h-full flex flex-col justify-start items-center object-cover top-0 items-center absolute">
-            <img :src="path" crossorigin="anonymous">
+            <img :src="path" crossorigin="anonymous" />
           </div>
-        </div>
-      </div>
+        </swiper-slide>
+      <!--/div-->
       <div class="swiper-pagination"></div>
       <!--            <div class="swiper-button-prev" slot="button-prev"></div>-->
       <!--            <div class="swiper-button-next" slot="button-next"></div>-->
-    </div>
+    </swiper>
+    <!--/div-->
   </div>
 </template>
 
 <script>
-import {directive} from "vue-awesome-swiper";
-import router from "@/router";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Pagination, Navigation } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 export default {
   name: "AnswerPreviewSwiper",
@@ -33,6 +39,11 @@ export default {
         return 'pb-5/4';
       }
     }
+  },
+  setup(){
+    return {
+      modules: [Pagination, Navigation],
+    };
   },
   data() {
     return {
@@ -73,7 +84,7 @@ export default {
             .then(() => {
               setTimeout(() => {
                 this.$store.commit('teacherMarking/setMarkingMode')
-                router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
+                this.$router.push({name: 'teacher.assignments.marking.snapped_answer.edit'})
               }, 1200);
 
 
@@ -93,9 +104,9 @@ export default {
       });
     },
   },
-  directives: {
-    mySwiper: directive
-  },
+  components: {
+    Swiper, SwiperSlide,
+  }
 }
 </script>
 

@@ -21,7 +21,7 @@ import {fabric} from 'fabric';
 import PenIcon from "@/components/icons/PenIcon";
 import stickers from "@/components/Stickers/Stickers";
 import Login from "@/views/Login";
-import router from "@/router";
+// import router from "@/router";
 import UndoIcon from "@/components/icons/UndoIcon";
 
 export default {
@@ -31,7 +31,7 @@ export default {
       this.scrollToTop();
       this.$store.dispatch('teacherMarking/initialiseMarkingCanvas')
     } else {
-      router.push({name: 'teacher.assignments.marking.details'})
+      this.$router.push({name: 'teacher.assignments.marking.details'})
     }
   },
   computed: {
